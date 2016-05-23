@@ -59,6 +59,26 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<changeLogFile>src/main/resources/liquibase/db.changelog-master.xml</changeLogFile>
+					<driver>org.postgresql.Driver</driver>
+					<url>jdbc:postgresql://127.0.0.1/test</url>
+					<username>tyler</username>
+					<password></password>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>update</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 
 	</build>
@@ -97,11 +117,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.36</version>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.4.1208.jre7</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -114,11 +133,6 @@
 			<version>1.3.1</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.github.tchoulihan</groupId>
-			<artifactId>musicbrainz-tagger</artifactId>
-			<version>1.2.7</version>
-		</dependency>
 		<dependency>
 			<groupId>com.esotericsoftware</groupId>
 			<artifactId>kryo</artifactId>
@@ -142,6 +156,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
