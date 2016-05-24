@@ -1,4 +1,4 @@
-package service;
+package com.chat.webservice;
 
 
 import com.google.gson.Gson;

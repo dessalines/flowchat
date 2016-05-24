@@ -2,50 +2,51 @@
 
 --changeset tyler:1
 
-CREATE TABLE user_ (
+create table user_ (
     id bigserial primary key,
-    name varchar(255) NOT NULL,
+    name varchar(255) not null,
     created timestamp default current_timestamp
 );
 
-CREATE TABLE comment (
+create table comment (
     id bigserial primary key,
-    user_id bigserial NOT NULL,
-    text_ text NOT NULL,
+    user_id bigserial not null,
+    text_ text not null,
     created timestamp default current_timestamp,
-    CONSTRAINT fk1_user FOREIGN KEY (user_id)
-        REFERENCES user_ (id)
-        ON UPDATE CASCADE ON DELETE CASCADE
+    constraint fk1_user foreign key (user_id)
+        references user_ (id)
+        on update cascade on delete cascade
 );
 
-CREATE TABLE comment_tree (
+create table comment_tree (
     id bigserial primary key,
-    parent_id bigserial NOT NULL,
-    child_id bigserial NOT NULL,
-    path_length integer NOT NULL,
+    parent_id bigserial not null,
+    child_id bigserial not null,
+    path_length integer not null,
     created timestamp default current_timestamp,
-    CONSTRAINT fk1_parent_id FOREIGN KEY (parent_id)
-        REFERENCES comment (id)
-        ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk2_child_id FOREIGN KEY (child_id)
-        REFERENCES comment (id)
-        ON UPDATE CASCADE ON DELETE CASCADE
+    constraint fk1_parent_id foreign key (parent_id)
+        references comment (id)
+        on update cascade on delete cascade,
+    constraint fk2_child_id foreign key (child_id)
+        references comment (id)
+        on update cascade on delete cascade
 );
 
-INSERT INTO user_ (id, name)
-    VALUES (1,'user_1'),(2,'user_2'),(3,'user_3');
+insert into user_ (id, name)
+    values (1,'user_1'),(2,'user_2'),(3,'user_3');
 
-INSERT INTO comment (id, text_, user_id)
-	VALUES (1,'Level 1',1),(2,'Level 2',2),(3,'Level 2',3),(4,'Level 3',2),(5,'Level 4',1),
-	(6,'Level 1',2);
+insert into comment (id, text_, user_id)
+	values (1,'Node 1',1),(2,'Node 1.1',2),(3,'Node 2',3),(4,'Node 1.1.1',2),(5,'Node 2.1',1),
+	(6,'Node 1.2',2);
 
-INSERT INTO comment_tree (parent_id, child_id, path_length)
-	VALUES 	(1,1,0) , (1,2,1) , (1,3,1) , (1,4,2) , (1,5,3)	,
-			(2,2,0) ,
-			(3,3,0) ,                     (3,4,1) ,	(3,5,2)	,
-			(4,4,0) ,					  			(4,5,1)	,
-			(5,5,0)	,
-			(6,6,0)
-			;
+insert into comment_tree (parent_id, child_id, path_length)
+	values 	  (1,1,0), (1,2,1), (1,4,2), (1,6,1),
+              (2,2,0), (2,4,1),
+              (3,3,0), (3,5,1),
+              (4,4,0),
+              (5,5,0),
+              (6,6,0);
+
+ --rollback drop table comment cascade ; drop table user_ cascade; drop table comment_tree cascade;
 
 
