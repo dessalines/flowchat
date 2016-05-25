@@ -19,4 +19,8 @@ public class Tables {
     @Table("comment_tree")
     public static class CommentTree extends Model {}
     public static final CommentTree COMMENT_TREE = new CommentTree();
+
+    @Table("comment_breadcrumbs")
+    public static class CommentBreadcrumbs extends Model {}
+    public static final CommentBreadcrumbs COMMENT_BREADCRUMBS = new CommentBreadcrumbs();
 }
