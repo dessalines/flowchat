@@ -8,9 +8,16 @@ create table user_ (
     created timestamp default current_timestamp
 );
 
+create table discussion (
+    id bigserial primary key,
+    subject varchar(140) not null,
+    created timestamp default current_timestamp
+);
+
 create table comment (
     id bigserial primary key,
     user_id bigserial not null,
+    discussion_id bigserial not null,
     text_ text not null,
     created timestamp default current_timestamp,
     constraint fk1_user foreign key (user_id)
@@ -35,9 +42,12 @@ create table comment_tree (
 insert into user_ (id, name)
     values (1,'user_1'),(2,'user_2'),(3,'user_3');
 
-insert into comment (id, text_, user_id)
-	values (1,'Node 1',1),(2,'Node 1.1',2),(3,'Node 2',3),(4,'Node 1.1.1',2),(5,'Node 2.1',1),
-	(6,'Node 1.2',2);
+insert into discussion (id, subject)
+    values (1,'Cats'),(2,'Dogs');
+
+insert into comment (id, text_, user_id, discussion_id)
+	values (1,'Node 1',1,1),(2,'Node 1.1',2,1),(3,'Node 2',3,1),(4,'Node 1.1.1',2,1),(5,'Node 2.1',1,1),
+	(6,'Node 1.2',2,1);
 
 insert into comment_tree (parent_id, child_id, path_length)
 	values 	  (1,1,0), (1,2,1), (1,4,2), (1,6,1),
