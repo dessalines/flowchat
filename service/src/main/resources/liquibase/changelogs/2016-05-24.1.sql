@@ -14,6 +14,7 @@ order by p.parent_id asc;
 create view comment_breadcrumbs_view as
 select d.id,
 --       concat(repeat('-', p.path_length), d.text_) as hier,
+       d.discussion_id,
        text_,
        p.path_length, p.parent_id, p.child_id,
        array_agg(crumbs.parent_id order by crumbs.id) as breadcrumbs,
