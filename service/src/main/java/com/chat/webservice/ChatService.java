@@ -20,7 +20,7 @@ public class ChatService {
 
 	public static void main(String[] args) {
 
-        staticFiles.externalLocation("../chat-practice-ui/dist");
+        staticFiles.externalLocation("../ui/dist");
 //        staticFiles.expireTime(600);
 
 		webSocket("/chat", ChatWebSocket.class);
