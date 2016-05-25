@@ -13,16 +13,17 @@ order by p.parent_id asc;
 
 create view comment_breadcrumbs_view as
 select d.id,
-       concat(repeat('-', p.path_length), d.text_) as hier,
+--       concat(repeat('-', p.path_length), d.text_) as hier,
+       text_,
        p.path_length, p.parent_id, p.child_id,
-       array_agg(crumbs.parent_id) as breadcrumbs,
+       array_agg(crumbs.parent_id order by crumbs.id) as breadcrumbs,
        count(crumbs.parent_id)-1 as num_of_parents,
        cv.num_of_children
 from comment as d
 join comment_tree as p on d.id = p.child_id
 join comment_tree as crumbs on crumbs.child_id = p.child_id
 join children_view as cv on d.id = cv.parent_id
-where p.parent_id = 1
+--where p.parent_id = 1
 group by d.id, p.path_length, p.parent_id, p.child_id, cv.num_of_children
 order by breadcrumbs;
 
