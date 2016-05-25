@@ -57,6 +57,6 @@ insert into comment_tree (parent_id, child_id, path_length)
               (5,5,0),
               (6,6,0);
 
- --rollback drop table comment cascade ; drop table user_ cascade; drop table comment_tree cascade;
+ --rollback drop table comment cascade ; drop table user_ cascade; drop table comment_tree cascade; drop table discussion cascade;
 
 
