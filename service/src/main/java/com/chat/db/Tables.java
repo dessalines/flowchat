@@ -20,7 +20,13 @@ public class Tables {
     public static class CommentTree extends Model {}
     public static final CommentTree COMMENT_TREE = new CommentTree();
 
-    @Table("comment_breadcrumbs")
-    public static class CommentBreadcrumbs extends Model {}
-    public static final CommentBreadcrumbs COMMENT_BREADCRUMBS = new CommentBreadcrumbs();
+    @Table("comment_breadcrumbs_view")
+    public static class CommentBreadcrumbsView extends Model {}
+    public static final CommentBreadcrumbsView COMMENT_BREADCRUMBS_VIEW = new CommentBreadcrumbsView();
+
+    @Table("comment_threaded_view")
+    public static class CommentThreadedView extends Model {}
+    public static final CommentThreadedView COMMENT_THREADED_VIEW = new CommentThreadedView();
+
+
 }
