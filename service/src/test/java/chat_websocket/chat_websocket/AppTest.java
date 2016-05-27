@@ -23,46 +23,5 @@ public class AppTest {
         
     }
 
-    public static class CommentObj {
-        private Integer id, topParentId, parentId, childId, pathLength;
-        private Timestamp created;
-        private List<CommentObj> embedded;
-        private List<Integer> breadcrumbs;
 
-        public CommentObj(Integer id,
-                          Integer topParentId,
-                          Integer childId,
-                          Integer pathLength,
-                          Timestamp created,
-                          String breadcrumbs) {
-            this.id = id;
-            this.topParentId = topParentId;
-            this.childId = childId;
-            this.pathLength = pathLength;
-            this.created = created;
-            this.embedded = new ArrayList<>();
-
-            setBreadCrumbsArr(breadcrumbs);
-            setParentId();
-
-        }
-
-        private void setBreadCrumbsArr(String breadCrumbs) {
-            breadcrumbs = new ArrayList<>();
-            for (String br : breadCrumbs.split(",")) {
-                breadcrumbs.add(Integer.valueOf(br));
-            }
-        }
-
-        private void setParentId() {
-            Integer cIndex = breadcrumbs.indexOf(id);
-
-            if (cIndex > 0) {
-                parentId = breadcrumbs.get(cIndex - 1);
-            }
-
-//            topParentId = breadcrumbs.get(0);
-
-        }
-    }
 }
