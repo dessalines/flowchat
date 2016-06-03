@@ -11,7 +11,10 @@ module.exports = function(defaults) {
       'es6-shim/es6-shim.js',
       'reflect-metadata/*.js',
       'rxjs/**/*.js',
-      '@angular/**/*.js'
+      '@angular/**/*.js',
+      'jquery/dist/jquery.min.js',
+      'tether/dist/js/tether.min.js',
+      'bootstrap/dist/js/bootstrap.min.js'
     ]
   });
 };

@@ -1,20 +1,20 @@
 package com.chat.webservice;
 
 
-import com.google.gson.Gson;
+import com.chat.db.Tables;
+import com.chat.db.Transformations;
+import com.chat.tools.Tools;
 import org.eclipse.jetty.websocket.api.Session;
+import org.javalite.activejdbc.LazyList;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static spark.Spark.get;
-import static spark.Spark.init;
-import static spark.Spark.webSocket;
-import static spark.Spark.staticFiles;
+import static com.chat.db.Tables.COMMENT_THREADED_VIEW;
+import static spark.Spark.*;
 
 public class ChatService {
 
-    static Gson gson = new Gson();
     static Map<Session, String> userNameMap = new HashMap<>();
     static Integer nextUserNumber = 1;
 
@@ -30,6 +30,19 @@ public class ChatService {
 			return "{\"data\": [{\"message\":\"derp\"}]}";
 		});
 
+        before((req, res) -> {
+            Tools.dbInit();
+        });
+        after((req, res) -> {
+            Tools.dbClose();
+        });
+
+        get("/temp", (req, res) -> {
+            LazyList<Tables.CommentThreadedView> ctv = COMMENT_THREADED_VIEW.where("discussion_id = ?", 1);
+            List<Transformations.CommentObj> cos = Transformations.convertCommentsToEmbeddedObjects(ctv);
+            return Tools.JACKSON.writeValueAsString(cos);
+        });
+
 
 
 		init();
@@ -40,7 +53,7 @@ public class ChatService {
 		userNameMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
 			try {
                 FullData fd = new FullData(new Message(sender, message), new ArrayList<>(userNameMap.values()));
-                String json = gson.toJson(fd);
+                String json = Tools.JACKSON.writeValueAsString(fd);
                 System.out.println(json);
 				session.getRemote().sendString(json);
 			} catch (Exception e) {

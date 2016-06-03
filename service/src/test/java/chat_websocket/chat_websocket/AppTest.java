@@ -30,7 +30,7 @@ public class AppTest {
     @Test
     public void testJDBC() {
         LazyList<CommentTree> ct = COMMENT_TREE.where("parent_id = ?", 1);
-        System.out.println(ct.toJson(true));
+        assertTrue(ct.get(0).getInteger("id").equals(1));
 
     }
 
@@ -44,6 +44,8 @@ public class AppTest {
         for (CommentObj co : cos) {
             System.out.println(co);
         }
+
+        assertTrue(cos.get(0).getEmbedded().get(0).getId().equals(2));
     }
 
 
