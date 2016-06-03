@@ -1,6 +1,7 @@
 package com.chat.tools;
 
 import com.chat.DataSources;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.javalite.activejdbc.DB;
 import org.javalite.activejdbc.DBException;
 
@@ -13,6 +14,7 @@ import java.util.Properties;
  * Created by tyler on 5/24/16.
  */
 public class Tools {
+    public static ObjectMapper JACKSON = new ObjectMapper();
 
     public static final void dbInit() {
 

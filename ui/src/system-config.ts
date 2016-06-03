@@ -3,6 +3,9 @@
  **********************************************************************************************/
 /** Map relative paths to URLs. */
 const map: any = {
+    'jquery': 'vendor/jquery/dist/jquery.min.js',
+    'tether': 'vendor/tether/dist/js/tether.min.js',
+    'bootstrap': 'vendor/bootstrap/dist/js/bootstrap.min.js'
 };
 
 /** User packages configuration. */
