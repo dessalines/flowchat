@@ -4,9 +4,7 @@ import ch.qos.logback.classic.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.chat.db.Tables.*;
 
@@ -51,9 +49,8 @@ public class Transformations {
         }
 
         private void setBreadCrumbsArr(String breadCrumbs) {
-            log.info(breadCrumbs);
             breadcrumbs = new ArrayList<>();
-            for (String br : breadCrumbs.split(",")) {
+            for (String br : breadCrumbs.replaceAll("\\{|\\}", "").split(",")) {
                 breadcrumbs.add(Integer.valueOf(br));
             }
         }
@@ -66,12 +63,93 @@ public class Transformations {
             }
 
         }
+
+
+        public static CommentObj findInEmbeddedById(List<CommentObj> cos, CommentObj co) {
+            Integer id = co.getParentId();
+
+            for (CommentObj c : cos) {
+                if (c.getId() == id) {
+                    return c;
+                }
+            }
+
+            return co;
+
+        }
+
+        @Override
+        public String toString() {
+            return "{" +
+                    "\"id\":" + id +
+                    ", \"discussionId\":" + discussionId +
+                    ", \"parentId\":" + parentId +
+                    ", \"topParentId\":" + topParentId +
+                    ", \"pathLength\":" + pathLength +
+                    ", \"numOfParents\":" + numOfParents +
+                    ", \"numOfChildren\":" + numOfChildren +
+                    ", \"text\":\"" + text + "\"" +
+                    ", \"created\":\"" + created + "\"" +
+                    ", \"embedded\":" + embedded +
+                    ", \"breadcrumbs\":\"" + breadcrumbs + "\"" +
+                    "}";
+        }
+
+        public Integer getNumOfChildren() {
+            return numOfChildren;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+
+        public Integer getDiscussionId() {
+            return discussionId;
+        }
+
+        public Integer getParentId() {
+            return parentId;
+        }
+
+        public Integer getTopParentId() {
+            return topParentId;
+        }
+
+        public Integer getPathLength() {
+            return pathLength;
+        }
+
+        public Integer getNumOfParents() {
+            return numOfParents;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public Timestamp getCreated() {
+            return created;
+        }
+
+        public List<CommentObj> getEmbedded() {
+            return embedded;
+        }
+
+        public List<Integer> getBreadcrumbs() {
+            return breadcrumbs;
+        }
     }
 
 
     public static List<CommentObj> convertCommentsToEmbeddedObjects(List<CommentThreadedView> cvs) {
         List<CommentObj> cos = new ArrayList<>();
+
+        // create a top level map of ids to comments
+        Map<Integer, CommentObj> commentObjMap = new LinkedHashMap<>();
+
         for (CommentThreadedView cv : cvs) {
+
+            Integer id = cv.getInteger("id");
 
             // Create the comment object
             CommentObj co = new CommentObj(cv.getInteger("id"),
@@ -84,7 +162,34 @@ public class Transformations {
                     cv.getInteger("num_of_children"),
                     cv.getTimestamp("created"));
 
+            commentObjMap.put(id, co);
+        }
+
+
+        for (Map.Entry<Integer, CommentObj> e : commentObjMap.entrySet()) {
+            int cCos = 0;
+
+            Integer id = e.getKey();
+            CommentObj co = e.getValue();
+
+            Integer parentId = commentObjMap.get(id).getParentId();
+
+            // If its top level, add it
+            if (parentId == null) {
+                cos.add(co);
             }
+            else {
+                // Get the immediate parent
+                CommentObj parent = commentObjMap.get(parentId);
+
+                // Add it to the embedded object
+                parent.getEmbedded().add(co);
+
+            }
+
+        }
+
+
 
 
         return cos;
