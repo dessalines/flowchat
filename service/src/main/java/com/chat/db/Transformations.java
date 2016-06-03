@@ -18,22 +18,31 @@ public class Transformations {
     public static Logger log = (Logger) LoggerFactory.getLogger(Transformations.class);
 
     public static class CommentObj {
-        private Integer id, topParentId, parentId, childId, pathLength;
+        private Integer id, discussionId, parentId, topParentId, pathLength, numOfParents, numOfChildren;
+        private String text;
         private Timestamp created;
         private List<CommentObj> embedded;
         private List<Integer> breadcrumbs;
 
         public CommentObj(Integer id,
-                          Integer topParentId,
-                          Integer childId,
+                          Integer discussionId,
+                          String text,
                           Integer pathLength,
-                          Timestamp created,
-                          String breadcrumbs) {
+                          Integer topParentId,
+                          String breadcrumbs,
+                          Integer numOfParents,
+                          Integer numOfChildren,
+                          Timestamp created
+                          ) {
             this.id = id;
             this.topParentId = topParentId;
-            this.childId = childId;
+            this.text = text;
+            this.discussionId = discussionId;
+            this.numOfChildren = numOfChildren;
+            this.numOfParents = numOfParents;
             this.pathLength = pathLength;
             this.created = created;
+
             this.embedded = new ArrayList<>();
 
             setBreadCrumbsArr(breadcrumbs);
@@ -56,8 +65,6 @@ public class Transformations {
                 parentId = breadcrumbs.get(cIndex - 1);
             }
 
-//            topParentId = breadcrumbs.get(0);
-
         }
     }
 
@@ -69,13 +76,13 @@ public class Transformations {
             // Create the comment object
             CommentObj co = new CommentObj(cv.getInteger("id"),
                     cv.getInteger("discussion_id"),
-                    cv.getInteger("user_id"),
                     cv.getString("text_"),
+                    cv.getInteger("path_length"),
+                    cv.getInteger("parent_id"),
                     cv.getString("breadcrumbs"),
+                    cv.getInteger("num_of_parents"),
+                    cv.getInteger("num_of_children"),
                     cv.getTimestamp("created"));
-
-
-
 
             }
 
