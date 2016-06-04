@@ -1,7 +1,5 @@
-<li> {{comment.breadcrumbs}} - {{comment.text}}
-    <ul *ngIf="comment.embedded">
-        <li *ngFor="let emb of comment.embedded">
-            <app-comment [comment]="emb"></app-comment>
-        </li>
+<li> {{comment.text}}
+    <ul *ngFor="let emb of comment.embedded">
+        <app-comment [comment]="emb"></app-comment>
     </ul>
 </li>
