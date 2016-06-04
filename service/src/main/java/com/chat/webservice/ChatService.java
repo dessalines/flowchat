@@ -26,7 +26,6 @@ public class ChatService {
 		webSocket("/chat", ChatWebSocket.class);
 		
 		get("/test", (req, res) -> {
-			res.header("Access-Control-Allow-Origin", "*");
 			return "{\"data\": [{\"message\":\"derp\"}]}";
 		});
 
@@ -35,6 +34,7 @@ public class ChatService {
         });
         after((req, res) -> {
             Tools.dbClose();
+            res.header("Access-Control-Allow-Origin", "*");
         });
 
         get("/temp", (req, res) -> {
