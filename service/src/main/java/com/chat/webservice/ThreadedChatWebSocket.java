@@ -13,7 +13,6 @@ import org.javalite.activejdbc.LazyList;
 
 import java.io.IOException;
 import java.sql.Array;
-import org.postgresql.jdbc.PgArray;
 import java.util.*;
 
 import static com.chat.db.Tables.*;
@@ -29,19 +28,15 @@ public class ThreadedChatWebSocket {
     private String sender, msg;
 
     static Map<Session, Long> userMap = new HashMap<>();
-    static Long nextUserNumber;
 
     // The comment rows
     static LazyList<CommentThreadedView> comments;
 
     public ThreadedChatWebSocket() {
         Tools.dbInit();
-        nextUserNumber = USER.findAll().orderBy("id desc").limit(1).get(0).getLong("id") + 1;
 
         comments = fetchComments();
 
-        new FullData(Transformations.convertCommentsToEmbeddedObjects(comments),
-                new ArrayList<>(userMap.values()));
         Tools.dbClose();
     }
 
@@ -49,20 +44,27 @@ public class ThreadedChatWebSocket {
     @OnWebSocketConnect
     public void onConnect(Session user) throws Exception {
 
+        Tools.dbInit();
         Long userId = userMap.get(user);
 
         if (userId == null) {
             // Create the user if necessary
-            Tools.dbInit();
+
             User dbUser = Actions.createUser();
             userId = dbUser.getLongId();
-            Tools.dbClose();
+
 
             userMap.put(user, userId);
         }
 
-        // Send the comments to them
-        user.getRemote().sendString(convertToCommentsJson());
+        // Send all data to them
+        user.getRemote().sendString(convertAllDataToJson());
+
+        // Send the updated users to everyone
+        broadcastMessage(userMap.get(user), convertUsersToJson());
+
+        Tools.dbClose();
+
 
     }
 
@@ -96,7 +98,7 @@ public class ThreadedChatWebSocket {
 
         comments = fetchComments();
 
-        broadcastMessage(userMap.get(user), convertToCommentsJson());
+        broadcastMessage(userMap.get(user), convertCommentsToJson());
 
         // TODO either fetch all the data *bad*, or just add that row to the lazylist
 
@@ -151,10 +153,22 @@ public class ThreadedChatWebSocket {
         return COMMENT_THREADED_VIEW.where("discussion_id = ?", 1);
     }
 
-    public static String convertToCommentsJson() {
+    public static String convertAllDataToJson() {
         return new FullData(Transformations.convertCommentsToEmbeddedObjects(comments),
                 new ArrayList<>(userMap.values())).json();
     }
+
+    public static String convertCommentsToJson() {
+        return new FullData(Transformations.convertCommentsToEmbeddedObjects(comments),
+                null).json();
+    }
+
+    public static String convertUsersToJson() {
+        return new FullData(null,
+                new ArrayList<>(userMap.values())).json();
+    }
+
+
 
     private static class FullData {
         private List<CommentObj> comments;

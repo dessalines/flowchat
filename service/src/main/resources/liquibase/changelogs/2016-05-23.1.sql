@@ -39,15 +39,15 @@ create table comment_tree (
         on update cascade on delete cascade
 );
 
-insert into user_ (id, name)
-    values (1,'user_1'),(2,'user_2'),(3,'user_3');
+insert into user_ (name)
+    values ('user_1'),('user_2'),('user_3');
 
-insert into discussion (id, subject)
-    values (1,'Cats'),(2,'Dogs');
+insert into discussion (subject)
+    values ('Cats'),('Dogs');
 
-insert into comment (id, text_, user_id, discussion_id)
-	values (1,'Node 1',1,1),(2,'Node 1.1',2,1),(3,'Node 2',3,1),(4,'Node 1.1.1',2,1),(5,'Node 2.1',1,1),
-	(6,'Node 1.2',2,1);
+insert into comment (text_, user_id, discussion_id)
+	values ('Node 1',1,1),('Node 1.1',2,1),('Node 2',3,1),('Node 1.1.1',2,1),('Node 2.1',1,1),
+	('Node 1.2',2,1);
 
 insert into comment_tree (parent_id, child_id, path_length)
 	values 	  (1,1,0), (1,2,1), (1,4,2), (1,6,1),
