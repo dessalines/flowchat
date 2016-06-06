@@ -5,11 +5,15 @@
 const map: any = {
     'jquery': 'vendor/jquery/dist/jquery.min.js',
     'tether': 'vendor/tether/dist/js/tether.min.js',
-    'bootstrap': 'vendor/bootstrap/dist/js/bootstrap.min.js'
+    'bootstrap': 'vendor/bootstrap/dist/js/bootstrap.min.js',
+    'moment': 'vendor/moment/moment.js'
 };
 
 /** User packages configuration. */
 const packages: any = {
+    'moment': {
+        format: 'cjs'
+    }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////

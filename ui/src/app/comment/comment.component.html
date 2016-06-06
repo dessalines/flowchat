@@ -1,7 +1,28 @@
-<li> {{comment.userName}} - {{comment.text}}
-    <input [(ngModel)]="reply" placeholder="Type your message here ... " />
-    <button (click)="sendMessage()">Send</button>
-    <ul *ngFor="let emb of comment.embedded">
-        <app-comment [comment]="emb"></app-comment>
-    </ul>
-</li>
+<div class="card-block"> 
+	<ul class="list-inline">
+		<li class="text-muted list-inline-item" 
+			role="button" 
+			(click)="collapsed = !collapsed">{{collapseText()}}</li>
+		<li class="text-primary list-inline-item">{{comment.userName}}</li>
+		<li class="text-muted list-inline-item">{{comment.created | moment}}</li>
+	</ul>
+</div>
+<div *ngIf="!collapsed" class="card-block">
+
+	<p class="card-text">{{comment.text}}</p>
+	
+	<small>
+		<ul class="list-inline">
+			<li role="button" class="list-inline-item" (click)="showReply = !showReply">reply</li>
+			<li class="list-inline-item">edit</li>
+		</ul>
+	</small>
+	<fieldset *ngIf="showReply" class="form-group">
+    	<textarea class="form-control" ngDefaultControl [(ngModel)]="reply" rows="3"></textarea>
+    	<br>
+    	<button class="btn btn-primary" (click)="sendMessage()">Send</button>
+    </fieldset>
+    <div class="card" *ngFor="let emb of comment.embedded">
+       	<app-comment [comment]="emb"></app-comment>
+    </div>
+</div>

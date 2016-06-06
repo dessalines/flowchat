@@ -57,9 +57,9 @@ public class Actions {
 
     public static User createUser() {
         User user = USER.createIt(
-                "name", "user_" + UUID.randomUUID());
+                "name", "asdf");
 
-
+        user.set("name", "user_" + user.getLongId()).saveIt();
 
         return user;
 
