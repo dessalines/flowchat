@@ -16,23 +16,27 @@ public class Transformations {
     public static Logger log = (Logger) LoggerFactory.getLogger(Transformations.class);
 
     public static class CommentObj {
-        private Integer id, discussionId, parentId, topParentId, pathLength, numOfParents, numOfChildren;
-        private String text;
+        private Long id, userId, discussionId, parentId, topParentId, pathLength, numOfParents, numOfChildren;
+        private String userName, text;
         private Timestamp created;
         private List<CommentObj> embedded;
-        private List<Integer> breadcrumbs;
+        private List<Long> breadcrumbs;
 
-        public CommentObj(Integer id,
-                          Integer discussionId,
+        public CommentObj(Long id,
+                          Long userId,
+                          String userName,
+                          Long discussionId,
                           String text,
-                          Integer pathLength,
-                          Integer topParentId,
+                          Long pathLength,
+                          Long topParentId,
                           String breadcrumbs,
-                          Integer numOfParents,
-                          Integer numOfChildren,
+                          Long numOfParents,
+                          Long numOfChildren,
                           Timestamp created
                           ) {
             this.id = id;
+            this.userId = userId;
+            this.userName = userName;
             this.topParentId = topParentId;
             this.text = text;
             this.discussionId = discussionId;
@@ -43,16 +47,17 @@ public class Transformations {
 
             this.embedded = new ArrayList<>();
 
-            setBreadCrumbsArr(breadcrumbs);
+            this.breadcrumbs = setBreadCrumbsArr(breadcrumbs);
             setParentId();
 
         }
 
-        private void setBreadCrumbsArr(String breadCrumbs) {
-            breadcrumbs = new ArrayList<>();
+        public static List<Long> setBreadCrumbsArr(String breadCrumbs) {
+            List<Long> breadcrumbs = new ArrayList<>();
             for (String br : breadCrumbs.replaceAll("\\{|\\}", "").split(",")) {
-                breadcrumbs.add(Integer.valueOf(br));
+                breadcrumbs.add(Long.valueOf(br));
             }
+            return breadcrumbs;
         }
 
         private void setParentId() {
@@ -66,7 +71,7 @@ public class Transformations {
 
 
         public static CommentObj findInEmbeddedById(List<CommentObj> cos, CommentObj co) {
-            Integer id = co.getParentId();
+            Long id = co.getParentId();
 
             for (CommentObj c : cos) {
                 if (c.getId() == id) {
@@ -82,6 +87,8 @@ public class Transformations {
         public String toString() {
             return "{" +
                     "\"id\":" + id +
+                    ", \"user_id\":" + userId +
+                    ", \"user_name\":\"" + userName + "\"" +
                     ", \"discussionId\":" + discussionId +
                     ", \"parentId\":" + parentId +
                     ", \"topParentId\":" + topParentId +
@@ -95,31 +102,31 @@ public class Transformations {
                     "}";
         }
 
-        public Integer getNumOfChildren() {
+        public Long getNumOfChildren() {
             return numOfChildren;
         }
 
-        public Integer getId() {
+        public Long getId() {
             return id;
         }
 
-        public Integer getDiscussionId() {
+        public Long getDiscussionId() {
             return discussionId;
         }
 
-        public Integer getParentId() {
+        public Long getParentId() {
             return parentId;
         }
 
-        public Integer getTopParentId() {
+        public Long getTopParentId() {
             return topParentId;
         }
 
-        public Integer getPathLength() {
+        public Long getPathLength() {
             return pathLength;
         }
 
-        public Integer getNumOfParents() {
+        public Long getNumOfParents() {
             return numOfParents;
         }
 
@@ -135,44 +142,54 @@ public class Transformations {
             return embedded;
         }
 
-        public List<Integer> getBreadcrumbs() {
+        public List<Long> getBreadcrumbs() {
             return breadcrumbs;
         }
+
+        public Long getUserId() { return userId; }
+
+        public String getUserName() { return userName;}
     }
 
 
-    public static List<CommentObj> convertCommentsToEmbeddedObjects(List<CommentThreadedView> cvs) {
-        List<CommentObj> cos = new ArrayList<>();
+    public static Map<Long, CommentObj> convertCommentThreadedViewToMap(List<CommentThreadedView> cvs) {
 
-        // create a top level map of ids to comments
-        Map<Integer, CommentObj> commentObjMap = new LinkedHashMap<>();
+        // Create a top level map of ids to comments
+        Map<Long, CommentObj> commentObjMap = new LinkedHashMap<>();
 
         for (CommentThreadedView cv : cvs) {
 
-            Integer id = cv.getInteger("id");
+            Long id = cv.getLong("id");
 
             // Create the comment object
-            CommentObj co = new CommentObj(cv.getInteger("id"),
-                    cv.getInteger("discussion_id"),
+            CommentObj co = new CommentObj(cv.getLong("id"),
+                    cv.getLong("user_id"),
+                    cv.getString("user_name"),
+                    cv.getLong("discussion_id"),
                     cv.getString("text_"),
-                    cv.getInteger("path_length"),
-                    cv.getInteger("parent_id"),
+                    cv.getLong("path_length"),
+                    cv.getLong("parent_id"),
                     cv.getString("breadcrumbs"),
-                    cv.getInteger("num_of_parents"),
-                    cv.getInteger("num_of_children"),
+                    cv.getLong("num_of_parents"),
+                    cv.getLong("num_of_children"),
                     cv.getTimestamp("created"));
 
             commentObjMap.put(id, co);
         }
 
+        return commentObjMap;
+    }
 
-        for (Map.Entry<Integer, CommentObj> e : commentObjMap.entrySet()) {
-            int cCos = 0;
+    public static List<CommentObj> convertCommentsMapToEmbeddedObjects(Map<Long, CommentObj> commentObjMap) {
 
-            Integer id = e.getKey();
+        List<CommentObj> cos = new ArrayList<>();
+
+        for (Map.Entry<Long, CommentObj> e : commentObjMap.entrySet()) {
+
+            Long id = e.getKey();
             CommentObj co = e.getValue();
 
-            Integer parentId = commentObjMap.get(id).getParentId();
+            Long parentId = commentObjMap.get(id).getParentId();
 
             // If its top level, add it
             if (parentId == null) {
@@ -189,8 +206,14 @@ public class Transformations {
 
         }
 
+        return cos;
+    }
 
+    public static List<CommentObj> convertCommentsToEmbeddedObjects(List<CommentThreadedView> cvs) {
 
+        Map<Long, CommentObj> commentObjMap = convertCommentThreadedViewToMap(cvs);
+
+        List<CommentObj> cos = convertCommentsMapToEmbeddedObjects(commentObjMap);
 
         return cos;
     }

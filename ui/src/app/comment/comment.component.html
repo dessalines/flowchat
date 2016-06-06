@@ -1,4 +1,6 @@
-<li> {{comment.text}}
+<li> {{comment.userName}} - {{comment.text}}
+    <input [(ngModel)]="reply" placeholder="Type your message here ... " />
+    <button (click)="sendMessage()">Send</button>
     <ul *ngFor="let emb of comment.embedded">
         <app-comment [comment]="emb"></app-comment>
     </ul>

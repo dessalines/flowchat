@@ -1,8 +1,8 @@
 import {Component, Input, provide, OnInit} from '@angular/core';
 import { HTTP_PROVIDERS }    from '@angular/http';
-import {ChatService}       from './services/chat.service';
-import {TempService} from './services/temp.service';
-import {Comment} from '../shared/comment.interface';
+import {ChatService}       from '../services/chat.service';
+import {ThreadedChatService} from '../services/threaded-chat.service';
+import {Comment} from '../shared';
 import {CommentComponent} from '../comment';
 
 
@@ -12,7 +12,7 @@ import {CommentComponent} from '../comment';
   selector: 'app-chat',
   templateUrl: 'chat.component.html',
   styleUrls: ['chat.component.css'],
-  providers: [HTTP_PROVIDERS, ChatService, TempService],
+  providers: [HTTP_PROVIDERS, ChatService, ThreadedChatService],
   directives: [CommentComponent]
 })
 export class ChatComponent implements OnInit {
@@ -22,26 +22,24 @@ export class ChatComponent implements OnInit {
     private messages: Array<string> = [];
     private userList: Array<string> = [];
 
-    private tempObj: Array<Comment>;
+    private comments: Array<Comment>;
+    private users: Array<string> = [];
 
 
-    constructor(private chatService: ChatService, private tempService: TempService) {
+    constructor(private chatService: ChatService, private threadedChatService: ThreadedChatService) {
         this.chatService.ws.getDataStream().subscribe(res => {
             this.updateChat(res.data);
         });
 
-        this.tempService.getData().subscribe(res => {
-            this.tempObj = res;
-            console.log(this.tempObj);
+        this.threadedChatService.ws.getDataStream().subscribe(res => {
+            this.updateThreadedChat(res.data);
         });
        
 
         
     }
 
-    ngOnInit() {
-
-    }
+    ngOnInit() {}
 
 
     updateChat(msg) {
@@ -53,9 +51,15 @@ export class ChatComponent implements OnInit {
 
     }
 
+    updateThreadedChat(msg) {
+            let data = JSON.parse(msg);
+            console.log(data);
+            this.comments = data.comments;
+            this.users = data.users;
+    }
+
     sendMessage() {
         this.chatService.ws.send(this.message);
-        // this.messages.push(this.message);
     }
 
 

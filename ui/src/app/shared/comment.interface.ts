@@ -1,5 +1,7 @@
 export interface Comment {
 	id: number;
+	userId: number;
+	userName: string;
 	discussionId: number;
 	parentId: number;
 	topParentId: number;
