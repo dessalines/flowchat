@@ -1,26 +1,14 @@
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-10">
         <h1>Threaded messages</h1>
         <ul *ngFor="let comment of comments">
             <app-comment [comment]="comment"></app-comment>
         </ul>
     </div>
-    <div class="col-md-12">
-        <h1>Angular2 + Spark Websocket Threaded Chat</h1>
-        <h2>Users</h2>
+    <div class="col-md-2">
+        <h1>Users</h1>
         <ul>
-            <li *ngFor="let user of users">
-                {{user}}
-            </li>
+            <li *ngFor="let user of users">{{user}}</li>
         </ul>
-        <h2>Chat</h2>
-        <ul>
-            <li *ngFor="let message of messages">
-                {{message.message}} - {{message.sender}} - {{message.time}}
-            </li>
-        </ul>
-        <input [(ngModel)]="message" placeholder="Type your message here ... " />
-        <button (click)="sendMessage()">Send</button>
     </div>
-
 </div>
