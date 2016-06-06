@@ -14,6 +14,8 @@ order by p.parent_id asc;
 create view comment_breadcrumbs_view as
 select d.id,
 --       concat(repeat('-', p.path_length), d.text_) as hier,
+       d.user_id,
+       u.name as user_name,
        d.discussion_id,
        d.text_,
        p.path_length, p.parent_id, p.child_id,
@@ -25,8 +27,9 @@ from comment as d
 join comment_tree as p on d.id = p.child_id
 join comment_tree as crumbs on crumbs.child_id = p.child_id
 join children_view as cv on d.id = cv.parent_id
+join user_ as u on d.user_id = u.id
 --where p.parent_id = 1
-group by d.id, p.path_length, p.parent_id, p.child_id, cv.num_of_children
+group by d.id, p.path_length, p.parent_id, p.child_id, cv.num_of_children, u.name
 order by breadcrumbs;
 
 select * from comment_breadcrumbs_view where parent_id = 1;

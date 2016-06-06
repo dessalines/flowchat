@@ -4,11 +4,18 @@ import com.chat.DataSources;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.javalite.activejdbc.DB;
 import org.javalite.activejdbc.DBException;
+import org.postgresql.jdbc.PgArray;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Array;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
+
+import static javafx.scene.input.KeyCode.T;
 
 /**
  * Created by tyler on 5/24/16.
@@ -50,5 +57,19 @@ public class Tools {
         }
         return prop;
 
+    }
+
+    public static <T> List<T> convertArrayToList(Array arr) {
+        try {
+            T[] larr = (T[]) arr.getArray();
+
+            List<T> list = Arrays.asList(larr);
+
+            return list;
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
