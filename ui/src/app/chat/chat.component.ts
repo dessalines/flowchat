@@ -25,6 +25,9 @@ export class ChatComponent implements OnInit {
         this.threadedChatService.ws.getDataStream().subscribe(res => {
             this.updateThreadedChat(res.data);
         });
+        this.threadedChatService.ws.onClose(res => {
+            console.log("u disconnected");
+        });
        
     }
 
@@ -36,6 +39,7 @@ export class ChatComponent implements OnInit {
 
         if (data.comments) {
             this.comments = data.comments;
+            // location.href = "#myDiv";
         }
 
         if (data.users) {

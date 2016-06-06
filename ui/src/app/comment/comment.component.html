@@ -1,15 +1,17 @@
-<div class="card-block"> 
+<div [id]="'comment_' + comment.id" class="card-block"> 
 	<ul class="list-inline">
 		<li class="text-muted list-inline-item" 
 			role="button" 
 			(click)="collapsed = !collapsed">{{collapseText()}}</li>
 		<li class="text-primary list-inline-item">{{comment.userName}}</li>
-		<li class="text-muted list-inline-item">{{comment.created | moment}}</li>
+		<li class="text-muted list-inline-item"><small>{{comment.created | moment}}</small></li>
 	</ul>
 </div>
 <div *ngIf="!collapsed" class="card-block">
 
-	<p class="card-text">{{comment.text}}</p>
+	<p class="card-text" 
+		[class.mark]="!highlight">
+    {{comment.text}}</p>
 	
 	<small>
 		<ul class="list-inline">
@@ -21,7 +23,8 @@
     	<textarea class="form-control" ngDefaultControl [(ngModel)]="reply" rows="3"></textarea>
     	<br>
     	<button class="btn btn-primary" (click)="sendMessage()">Send</button>
-    </fieldset>
+    	<button class="btn btn-danger" (click)="showReply = false">Cancel</button>
+    </fieldset> 
     <div class="card" *ngFor="let emb of comment.embedded">
        	<app-comment [comment]="emb"></app-comment>
     </div>
