@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Array;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -63,7 +64,7 @@ public class Tools {
         try {
             T[] larr = (T[]) arr.getArray();
 
-            List<T> list = Arrays.asList(larr);
+            List<T> list = new ArrayList<>(Arrays.asList(larr));
 
             return list;
         } catch(SQLException e) {

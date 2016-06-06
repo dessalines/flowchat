@@ -13,6 +13,7 @@ import org.javalite.activejdbc.LazyList;
 
 import java.io.IOException;
 import java.sql.Array;
+import org.postgresql.jdbc.PgArray;
 import java.util.*;
 
 import static com.chat.db.Tables.*;
@@ -48,7 +49,17 @@ public class ThreadedChatWebSocket {
     @OnWebSocketConnect
     public void onConnect(Session user) throws Exception {
 
-        userMap.put(user, ++nextUserNumber);
+        Long userId = userMap.get(user);
+
+        if (userId == null) {
+            // Create the user if necessary
+            Tools.dbInit();
+            User dbUser = Actions.createUser();
+            userId = dbUser.getLongId();
+            Tools.dbClose();
+
+            userMap.put(user, userId);
+        }
 
         // Send the comments to them
         user.getRemote().sendString(convertToCommentsJson());
@@ -73,6 +84,9 @@ public class ThreadedChatWebSocket {
         // Save the data
         Tools.dbInit();
 
+        // Collect only works on refetch
+        comments = fetchComments();
+
         // Necessary for comment tree
         Array arr = (Array) comments.collect("breadcrumbs", "id", reply.getParentId()).get(0);
 
@@ -80,22 +94,22 @@ public class ThreadedChatWebSocket {
 
         Actions.createComment(userMap.get(user), 1L, parentBreadCrumbs, reply.getReply());
 
-        // TODO either fetch all the data *bad*, or just add that row to the lazylist
+        comments = fetchComments();
 
+        broadcastMessage(userMap.get(user), convertToCommentsJson());
+
+        // TODO either fetch all the data *bad*, or just add that row to the lazylist
 
         Tools.dbClose();
 
 
-
-
-//        broadcastMessage(userMap.get(user), message);
     }
 
     //Sends a message from one user to all users, along with a list of current usernames
-    public static void broadcastMessage(String sender, String message) {
+    public static void broadcastMessage(Long userId, String json) {
         userMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
             try {
-
+                session.getRemote().sendString(json);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -110,6 +124,8 @@ public class ThreadedChatWebSocket {
             this.parentId = parentId;
             this.reply = reply;
         }
+
+        public Reply() {}
 
         public Long getParentId() {
             return parentId;
