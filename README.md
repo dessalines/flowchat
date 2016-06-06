@@ -5,9 +5,18 @@ http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way
 # TODO
 
 - Start adding [bootstrap-markdown.](http://www.codingdrama.com/bootstrap-markdown/)
-- Automatically Scroll to new comment
-- Comment editing(on your own comments)
+- Comment editing(on your own comments).
 - A working user / user login system
-- Comment collapsing
+- ~~Comment collapsing~~
 - Comment subset loading
-- 
+  - What happens when you get too many comments?
+  - Do you not load new ones, if they aren't under your branch?
+  - Get comment_threaded_view working for 
+- Refresh only specific changed content
+  - For now, use newCommentId.
+  - Automatically Scroll to new comment - location.href = "#myDiv";
+  - Change them to a new highlighted color, then remove that.
+  - Should you scroll when you are currently replying, or wait till after, or not at all?
+- Reconnect websocket if disconnected
+  - http://stackoverflow.com/questions/3479734/javascript-jquery-test-if-window-has-focus
+  

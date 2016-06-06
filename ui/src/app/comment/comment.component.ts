@@ -22,7 +22,11 @@ export class CommentComponent implements OnInit {
 
   private collapsed: boolean = false;
 
-  constructor(private threadedChatService: ThreadedChatService) { }
+  private highlight: boolean = false;
+
+  constructor(private threadedChatService: ThreadedChatService) {
+      setTimeout(() => { this.highlight = true; }, 2000);
+  }
 
   ngOnInit() {}
 
