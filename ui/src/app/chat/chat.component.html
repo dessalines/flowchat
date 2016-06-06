@@ -1,9 +1,10 @@
 <div class="row">
     <div class="col-md-10">
         <h1>Threaded messages</h1>
-        <ul *ngFor="let comment of comments">
+        <div *ngFor="let comment of comments"
+        class="card">
             <app-comment [comment]="comment"></app-comment>
-        </ul>
+        </div>
     </div>
     <div class="col-md-2">
         <h1>Users</h1>

@@ -14,7 +14,8 @@ module.exports = function(defaults) {
       '@angular/**/*.+(js|js.map)',
       'jquery/dist/jquery.min.js',
       'tether/dist/js/tether.min.js',
-      'bootstrap/dist/js/bootstrap.min.js'
+      'bootstrap/dist/js/bootstrap.min.js',
+      'moment/moment.js'
     ]
   });
 };

@@ -74,6 +74,9 @@ public class ThreadedChatWebSocket {
         userMap.remove(user);
 
         log.info("user " + userId + " left, " + statusCode + " " + reason);
+
+        // Send the updated users to everyone
+        broadcastMessage(userMap.get(user), convertUsersToJson());
     }
 
     @OnWebSocketMessage
