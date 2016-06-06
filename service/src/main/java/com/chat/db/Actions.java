@@ -4,14 +4,19 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
+import ch.qos.logback.classic.Logger;
 import com.chat.db.Tables.*;
+import org.slf4j.LoggerFactory;
+
 import static com.chat.db.Tables.*;
 /**
  * Created by tyler on 6/5/16.
  */
 public class Actions {
 
+    public static Logger log = (Logger) LoggerFactory.getLogger(Actions.class);
 
 
     public static String createComment(Long userId, Long discussionId,
@@ -23,7 +28,7 @@ public class Actions {
 
         // find the candidate
         Comment c = COMMENT.createIt("discussion_id", discussionId,
-                "text", text,
+                "text_", text,
                 "user_id", userId);
 
 
@@ -47,6 +52,16 @@ public class Actions {
         }
 
         return "Comment created";
+
+    }
+
+    public static User createUser() {
+        User user = USER.createIt(
+                "name", "user_" + UUID.randomUUID());
+
+
+
+        return user;
 
     }
 }

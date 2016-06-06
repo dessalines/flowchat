@@ -56,7 +56,7 @@ public class AppTest {
             System.out.println(co);
         }
 
-        assertTrue(cos.get(0).getEmbedded().get(0).getId().equals(2));
+        assertTrue(cos.get(0).getEmbedded().get(0).getId().equals(2L));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class AppTest {
 
         assertTrue(test.equals(Long.valueOf(2)));
 
-        Array parentBreadCrumbsStr = (Array) ctv.collect("breadcrumbs", "id", 4L).get(0);
+        PgArray parentBreadCrumbsStr = (PgArray) ctv.collect("breadcrumbs", "id", 4L).get(0);
 
         List<Long> list = Tools.convertArrayToList(parentBreadCrumbsStr);
 

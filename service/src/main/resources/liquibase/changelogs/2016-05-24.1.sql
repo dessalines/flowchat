@@ -19,7 +19,7 @@ select d.id,
        d.discussion_id,
        d.text_,
        p.path_length, p.parent_id, p.child_id,
-       array_agg(crumbs.parent_id order by crumbs.id) as breadcrumbs,
+       array_agg(crumbs.parent_id order by crumbs.parent_id) as breadcrumbs,
        count(crumbs.parent_id)-1 as num_of_parents,
        cv.num_of_children,
        d.created
@@ -46,4 +46,4 @@ order by a.id, b.breadcrumbs;
 
 
 
---rollback drop view comment_threaded_view, comment_breadcrumbs_view; drop view children_view;
+--rollback drop view comment_threaded_view cascade; drop view comment_breadcrumbs_view cascade; drop view children_view cascade;
