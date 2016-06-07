@@ -18,20 +18,18 @@ export class ChatComponent implements OnInit {
 
     private comments: Array<Comment>;
     private users: Array<string> = [];
-
+    private newCommentId: number;
 
     constructor(private threadedChatService: ThreadedChatService) {
 
         this.threadedChatService.ws.getDataStream().subscribe(res => {
             this.updateThreadedChat(res.data);
         });
-        this.threadedChatService.ws.onClose(res => {
-            console.log("u disconnected");
-        });
-       
+
+
     }
 
-    ngOnInit() {}
+    ngOnInit() { }
 
     updateThreadedChat(someData) {
         let data = JSON.parse(someData);
@@ -39,11 +37,16 @@ export class ChatComponent implements OnInit {
 
         if (data.comments) {
             this.comments = data.comments;
-            // location.href = "#myDiv";
+            
         }
 
         if (data.users) {
             this.users = data.users;
+        }
+
+        if (data.newCommentId) {
+            this.newCommentId = data.newCommentId;
+            setTimeout(() => { location.href = "#comment_" + this.newCommentId; }, 0);
         }
 
     }

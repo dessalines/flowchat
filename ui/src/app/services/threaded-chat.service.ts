@@ -12,6 +12,8 @@ export class ThreadedChatService {
   constructor() {
     this.ws = new $WebSocket(this.messagesUrl);
     this.ws.connect();
-  };
+  }
+
+
 
 }

@@ -19,7 +19,7 @@ public class Actions {
     public static Logger log = (Logger) LoggerFactory.getLogger(Actions.class);
 
 
-    public static String createComment(Long userId, Long discussionId,
+    public static Comment createComment(Long userId, Long discussionId,
                                        List<Long> parentBreadCrumbs, String text) {
 
         List<Long> pbs = (parentBreadCrumbs != null) ? new ArrayList<Long>(parentBreadCrumbs) :
@@ -51,7 +51,7 @@ public class Actions {
                     "path_length", i);
         }
 
-        return "Comment created";
+        return c;
 
     }
 
