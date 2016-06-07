@@ -28,6 +28,6 @@
     	<button class="btn btn-danger" (click)="showReply = false">Cancel</button>
     </fieldset> 
     <div class="card" *ngFor="let emb of comment.embedded">
-       	<app-comment [comment]="emb"></app-comment>
+       	<app-comment [comment]="emb" [newCommentId]="newCommentId"></app-comment>
     </div>
 </div>

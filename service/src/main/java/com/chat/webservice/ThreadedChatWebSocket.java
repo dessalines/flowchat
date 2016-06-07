@@ -3,6 +3,7 @@ package com.chat.webservice;
 import com.chat.db.Actions;
 import com.chat.db.Transformations;
 import com.chat.tools.Tools;
+import com.chat.types.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -57,11 +58,11 @@ public class ThreadedChatWebSocket {
             userMap.put(user, userId);
         }
 
-        // Send all data to them
-        user.getRemote().sendString(convertAllDataToJson());
+        // Send comments to just them
+        user.getRemote().sendString(new Comments(comments).json());
 
         // Send the updated users to everyone
-        broadcastMessage(userMap.get(user), convertUsersToJson());
+        broadcastMessage(userMap.get(user), new Users(userMap).json());
 
         Tools.dbClose();
 
@@ -76,7 +77,7 @@ public class ThreadedChatWebSocket {
         log.info("user " + userId + " left, " + statusCode + " " + reason);
 
         // Send the updated users to everyone
-        broadcastMessage(userMap.get(user), convertUsersToJson());
+        broadcastMessage(userMap.get(user), new Users(userMap).json());
     }
 
     @OnWebSocketMessage
@@ -99,11 +100,22 @@ public class ThreadedChatWebSocket {
 
         Comment newComment = Actions.createComment(userMap.get(user), 1L, parentBreadCrumbs, reply.getReply());
 
-        comments = fetchComments();
+        // Fetch the comment threaded view
+        CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", newComment.getLongId());
 
-        broadcastMessage(userMap.get(user), convertCommentsToJson(newComment.getLongId()));
+        // Add it to the current lazy list
+        comments.add(ctv);
 
-        // TODO either fetch all the data *bad*, or just add that row to the lazylist
+
+        // Convert to a proper commentObj
+        CommentObj co = Transformations.convertCommentThreadedView(ctv);
+
+
+//        comments = fetchComments();
+
+//        broadcastMessage(userMap.get(user), convertCommentsToJson(newComment.getLongId()));
+
+        broadcastMessage(userMap.get(user), co.json());
 
         Tools.dbClose();
 
@@ -121,93 +133,18 @@ public class ThreadedChatWebSocket {
         });
     }
 
-    public static class Reply {
-        private Long parentId;
-        private String reply;
 
-        public Reply(Long parentId, String reply) {
-            this.parentId = parentId;
-            this.reply = reply;
-        }
-
-        public Reply() {}
-
-        public Long getParentId() {
-            return parentId;
-        }
-
-        public String getReply() {
-            return reply;
-        }
-
-        private static Reply fromJson(String replyDataStr) {
-
-            try {
-                return Tools.JACKSON.readValue(replyDataStr, Reply.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-    }
 
     private static LazyList<CommentThreadedView> fetchComments() {
         return COMMENT_THREADED_VIEW.where("discussion_id = ?", 1);
     }
 
-    public static String convertAllDataToJson() {
-        return new FullData(Transformations.convertCommentsToEmbeddedObjects(comments),
-                new ArrayList<>(userMap.values()),
-                null).json();
-    }
-
-    public static String convertCommentsToJson(Long newCommentId) {
-        return new FullData(Transformations.convertCommentsToEmbeddedObjects(comments),
-                null,
-                newCommentId).json();
-    }
-
-    public static String convertUsersToJson() {
-        return new FullData(null,
-                new ArrayList<>(userMap.values()),
-                null).json();
-    }
 
 
 
-    private static class FullData {
-        private List<CommentObj> comments;
-        private List<Long> users;
-        private Long newCommentId;
 
-        public FullData(List<CommentObj> comments, List<Long> users, Long newCommentId) {
-            this.comments = comments;
-            this.users = users;
-            this.newCommentId = newCommentId;
-        }
 
-        public String json() {
-            try {
-                return Tools.JACKSON.writeValueAsString(this);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
 
-        public List<Long> getUsers() {
-            return users;
-        }
-
-        public List<CommentObj> getComments() {
-            return comments;
-        }
-
-        public Long getNewCommentId() {
-            return newCommentId;
-        }
-    }
 
 
 }
