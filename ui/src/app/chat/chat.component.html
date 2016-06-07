@@ -3,7 +3,7 @@
         <h1>Threaded messages</h1>
         <div *ngFor="let comment of comments"
         class="card">
-            <app-comment [comment]="comment"></app-comment>
+            <app-comment [comment]="comment" [newCommentId]="newCommentId"></app-comment>
         </div>
     </div>
     <div class="col-md-2">

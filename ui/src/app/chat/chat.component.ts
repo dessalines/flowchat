@@ -31,13 +31,16 @@ export class ChatComponent implements OnInit {
 
     ngOnInit() { }
 
+
+    // TODO only send specifically added comment object
+    // alter the comments by searching through them, and only changing the specific one
+    // use push, set,etc. Don't replace all the comments
     updateThreadedChat(someData) {
         let data = JSON.parse(someData);
         console.log(data);
 
         if (data.comments) {
-            this.comments = data.comments;
-            
+            this.comments = data.comments; 
         }
 
         if (data.users) {
@@ -46,7 +49,6 @@ export class ChatComponent implements OnInit {
 
         if (data.newCommentId) {
             this.newCommentId = data.newCommentId;
-            setTimeout(() => { location.href = "#comment_" + this.newCommentId; }, 0);
         }
 
     }

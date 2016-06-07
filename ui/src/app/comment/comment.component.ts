@@ -26,6 +26,8 @@ export class CommentComponent implements OnInit {
 
   private highlight: boolean = false;
 
+  @Input() newCommentId: number;
+
   constructor(private threadedChatService: ThreadedChatService) {
   }
 
@@ -33,6 +35,7 @@ export class CommentComponent implements OnInit {
 
   ngOnInit() { 
     this.highlight = this.isCommentNew();
+    this.focusToNewComment();
   }
 
   sendMessage() {
@@ -57,6 +60,13 @@ export class CommentComponent implements OnInit {
     let then = moment(this.comment.created);
 
     return now.isBefore(then);
+  }
+
+  private focusToNewComment() {
+    // Only show the new comment if you aren't currently replying to one
+    if (!this.showReply && this.comment.id == this.newCommentId) {
+      setTimeout(() => { location.href = "#comment_" + this.newCommentId; }, 0);
+    }
   }
 
 }
