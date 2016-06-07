@@ -4,7 +4,6 @@ import com.chat.db.Actions;
 import com.chat.db.Transformations;
 import com.chat.tools.Tools;
 import com.chat.types.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -12,7 +11,6 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.javalite.activejdbc.LazyList;
 
-import java.io.IOException;
 import java.sql.Array;
 import java.util.*;
 
@@ -46,19 +44,9 @@ public class ThreadedChatWebSocket {
     public void onConnect(Session user) throws Exception {
 
         Tools.dbInit();
-        Long userId = userMap.get(user);
+        setupUser(user);
 
-        if (userId == null) {
-            // Create the user if necessary
-
-            User dbUser = Actions.createUser();
-            userId = dbUser.getLongId();
-
-
-            userMap.put(user, userId);
-        }
-
-        // Send comments to just them
+        // Send all the comments to just them
         user.getRemote().sendString(new Comments(comments).json());
 
         // Send the updated users to everyone
@@ -113,7 +101,6 @@ public class ThreadedChatWebSocket {
 
 //        comments = fetchComments();
 
-//        broadcastMessage(userMap.get(user), convertCommentsToJson(newComment.getLongId()));
 
         broadcastMessage(userMap.get(user), co.json());
 
@@ -122,7 +109,7 @@ public class ThreadedChatWebSocket {
 
     }
 
-    //Sends a message from one user to all users, along with a list of current usernames
+    //Sends a message from one user to all users
     public static void broadcastMessage(Long userId, String json) {
         userMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
             try {
@@ -134,6 +121,19 @@ public class ThreadedChatWebSocket {
     }
 
 
+    private void setupUser(Session user) {
+        Long userId = userMap.get(user);
+
+        if (userId == null) {
+            // Create the user if necessary
+
+            User dbUser = Actions.createUser();
+            userId = dbUser.getLongId();
+
+
+            userMap.put(user, userId);
+        }
+    }
 
     private static LazyList<CommentThreadedView> fetchComments() {
         return COMMENT_THREADED_VIEW.where("discussion_id = ?", 1);
