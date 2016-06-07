@@ -36,7 +36,12 @@ export class CommentComponent implements OnInit {
   }
 
   sendMessage() {
-    this.threadedChatService.ws.send(this.replyData());
+      try {
+        this.threadedChatService.ws.send(this.replyData());
+      } catch(e) {
+          this.threadedChatService.ws.reconnect();
+          this.threadedChatService.ws.send(this.replyData());
+      }
   }
 
   private replyData(): string {
