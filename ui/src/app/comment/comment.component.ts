@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import {Comment} from '../shared/comment.interface';
 import {ThreadedChatService} from '../services/threaded-chat.service';
 import { MomentPipe } from '../pipes/moment.pipe';
+import * as moment from 'moment';
+
 
 @Component({
   moduleId: module.id,
@@ -14,9 +16,9 @@ import { MomentPipe } from '../pipes/moment.pipe';
 
 export class CommentComponent implements OnInit {
 
-	@Input() comment: any; // Couldn't get strict typing of this to work for recursive templates
+  @Input() comment: any; // Couldn't get strict typing of this to work for recursive templates
 
-	private reply: string;
+  private reply: string;
 
   private showReply: boolean = false;
 
@@ -25,21 +27,31 @@ export class CommentComponent implements OnInit {
   private highlight: boolean = false;
 
   constructor(private threadedChatService: ThreadedChatService) {
-      setTimeout(() => { this.highlight = true; }, 2000);
   }
 
-  ngOnInit() {}
 
-	sendMessage() {
-		this.threadedChatService.ws.send(this.replyData());
-	}
+
+  ngOnInit() { 
+    this.highlight = this.isCommentNew();
+  }
+
+  sendMessage() {
+    this.threadedChatService.ws.send(this.replyData());
+  }
 
   private replyData(): string {
     return JSON.stringify({ parentId: this.comment.id, reply: this.reply });
   }
 
   private collapseText(): string {
-      return (this.collapsed) ? "[+]" : "[-]";
+    return (this.collapsed) ? "[+]" : "[-]";
+  }
+
+  private isCommentNew(): boolean {
+    let now = moment().subtract(2, 'minutes');
+    let then = moment(this.comment.created);
+
+    return now.isBefore(then);
   }
 
 }

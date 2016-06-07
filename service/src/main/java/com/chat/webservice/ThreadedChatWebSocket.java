@@ -97,11 +97,11 @@ public class ThreadedChatWebSocket {
 
         List<Long> parentBreadCrumbs = Tools.convertArrayToList(arr);
 
-        Actions.createComment(userMap.get(user), 1L, parentBreadCrumbs, reply.getReply());
+        Comment newComment = Actions.createComment(userMap.get(user), 1L, parentBreadCrumbs, reply.getReply());
 
         comments = fetchComments();
 
-        broadcastMessage(userMap.get(user), convertCommentsToJson());
+        broadcastMessage(userMap.get(user), convertCommentsToJson(newComment.getLongId()));
 
         // TODO either fetch all the data *bad*, or just add that row to the lazylist
 
@@ -158,17 +158,20 @@ public class ThreadedChatWebSocket {
 
     public static String convertAllDataToJson() {
         return new FullData(Transformations.convertCommentsToEmbeddedObjects(comments),
-                new ArrayList<>(userMap.values())).json();
+                new ArrayList<>(userMap.values()),
+                null).json();
     }
 
-    public static String convertCommentsToJson() {
+    public static String convertCommentsToJson(Long newCommentId) {
         return new FullData(Transformations.convertCommentsToEmbeddedObjects(comments),
-                null).json();
+                null,
+                newCommentId).json();
     }
 
     public static String convertUsersToJson() {
         return new FullData(null,
-                new ArrayList<>(userMap.values())).json();
+                new ArrayList<>(userMap.values()),
+                null).json();
     }
 
 
@@ -176,10 +179,12 @@ public class ThreadedChatWebSocket {
     private static class FullData {
         private List<CommentObj> comments;
         private List<Long> users;
+        private Long newCommentId;
 
-        public FullData(List<CommentObj> comments, List<Long> users) {
+        public FullData(List<CommentObj> comments, List<Long> users, Long newCommentId) {
             this.comments = comments;
             this.users = users;
+            this.newCommentId = newCommentId;
         }
 
         public String json() {
@@ -197,6 +202,10 @@ public class ThreadedChatWebSocket {
 
         public List<CommentObj> getComments() {
             return comments;
+        }
+
+        public Long getNewCommentId() {
+            return newCommentId;
         }
     }
 
