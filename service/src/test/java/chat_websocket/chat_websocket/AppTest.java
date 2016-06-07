@@ -2,6 +2,7 @@ package chat_websocket.chat_websocket;
 
 import ch.qos.logback.classic.Logger;
 import com.chat.db.Transformations;
+import com.chat.types.CommentObj;
 import org.javalite.activejdbc.LazyList;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -17,7 +18,6 @@ import org.postgresql.jdbc.PgArray;
 import org.slf4j.LoggerFactory;
 
 import static com.chat.db.Tables.*;
-import static com.chat.db.Transformations.CommentObj;
 
 /**
  * Unit test for simple App.

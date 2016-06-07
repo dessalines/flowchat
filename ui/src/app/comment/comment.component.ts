@@ -35,7 +35,7 @@ export class CommentComponent implements OnInit {
 
   ngOnInit() { 
     this.highlight = this.isCommentNew();
-    this.focusToNewComment();
+    // this.focusToNewComment();
   }
 
   sendMessage() {
