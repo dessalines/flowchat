@@ -18,7 +18,12 @@
 			<li role="button" class="list-inline-item" (click)="toggleShowReply()">
 				<i class="fa fa-fw fa-reply"></i>
 			</li>
-			<li class="list-inline-item">edit</li>
+			<li *ngIf="editable" class="list-inline-item">
+				<i class="fa fa-fw fa-edit"></i>
+			</li>
+			<li class="list-inline-item">
+				<i class="fa fa-fw fa-comments"></i>
+			</li>
 		</ul>
 	</small>
 	<fieldset *ngIf="showReply" class="form-group">
