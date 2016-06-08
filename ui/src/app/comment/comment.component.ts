@@ -45,6 +45,8 @@ export class CommentComponent implements OnInit {
           this.threadedChatService.ws.reconnect();
           this.threadedChatService.ws.send(this.replyData());
       }
+      this.showReply = false;
+      this.reply = "";
   }
 
   private replyData(): string {
