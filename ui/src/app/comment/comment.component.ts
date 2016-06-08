@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {Comment} from '../shared/comment.interface';
 import {ThreadedChatService} from '../services/threaded-chat.service';
 import { MomentPipe } from '../pipes/moment.pipe';
@@ -18,6 +18,10 @@ export class CommentComponent implements OnInit {
 
   @Input() comment: any; // Couldn't get strict typing of this to work for recursive templates
 
+  // This emits an event to the higher level chat component, because you only
+  // want to focus on new comments when not replying
+  @Output() replyingEvent = new EventEmitter();
+
   private reply: string;
 
   private showReply: boolean = false;
@@ -26,12 +30,24 @@ export class CommentComponent implements OnInit {
 
   private highlight: boolean = false;
 
-  @Input() newCommentId: number;
 
-  constructor(private threadedChatService: ThreadedChatService) {
+
+  constructor(private threadedChatService: ThreadedChatService) {}
+
+  toggleShowReply() {
+    this.showReply = !this.showReply;
+    this.replyingEvent.emit(this.showReply);
   }
 
+  hideReply() {
+    this.showReply = false;
+    this.replyingEvent.emit(this.showReply);
+  }
 
+  // This sends the event up the chain
+  setIsReplying($event) {
+    this.replyingEvent.emit($event);
+  }
 
   ngOnInit() { 
     this.highlight = this.isCommentNew();
@@ -64,11 +80,5 @@ export class CommentComponent implements OnInit {
     return now.isBefore(then);
   }
 
-  private focusToNewComment() {
-    // Only show the new comment if you aren't currently replying to one
-    if (!this.showReply && this.comment.id == this.newCommentId) {
-      setTimeout(() => { location.href = "#comment_" + this.newCommentId; }, 0);
-    }
-  }
 
 }
