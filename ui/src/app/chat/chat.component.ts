@@ -22,6 +22,8 @@ export class ChatComponent implements OnInit {
 
   private recursiveCommentStopper: boolean = false;
 
+  private isReplying: boolean = false;
+
   constructor(private threadedChatService: ThreadedChatService) {
 
     this.threadedChatService.ws.getDataStream().subscribe(res => {
@@ -77,9 +79,12 @@ export class ChatComponent implements OnInit {
     // Do a recursive loop to find and push the new comment
     this.recursiveComment(newComment, topLevel);
     this.recursiveCommentStopper = false;
+
+    // Focus on the new comment if not replying
+    if (!this.isReplying) {
+      setTimeout(() => { location.href = "#comment_" + newComment.id; }, 0);
+    }
   }
-
-
 
   private recursiveComment(newComment: Comment, parent: Comment) {
 
@@ -93,6 +98,10 @@ export class ChatComponent implements OnInit {
         }
       }
     }
+  }
+
+  setIsReplying($event) {
+    this.isReplying = $event;
   }
 
 }

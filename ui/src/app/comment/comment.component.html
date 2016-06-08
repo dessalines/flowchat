@@ -15,7 +15,7 @@
 	
 	<small>
 		<ul class="list-inline">
-			<li role="button" class="list-inline-item" (click)="showReply = !showReply">
+			<li role="button" class="list-inline-item" (click)="toggleShowReply()">
 				<i class="fa fa-fw fa-reply"></i>
 			</li>
 			<li class="list-inline-item">edit</li>
@@ -25,9 +25,9 @@
     	<textarea class="form-control" ngDefaultControl [(ngModel)]="reply" rows="3"></textarea>
     	<br>
     	<button class="btn btn-primary" (click)="sendMessage()">Send</button>
-    	<button class="btn btn-danger" (click)="showReply = false">Cancel</button>
+    	<button class="btn btn-danger" (click)="hideReply()">Cancel</button>
     </fieldset> 
     <div class="card" *ngFor="let emb of comment.embedded">
-       	<app-comment [comment]="emb" [newCommentId]="newCommentId"></app-comment>
+       	<app-comment [comment]="emb" (replyingEvent)="setIsReplying($event)"></app-comment>
     </div>
 </div>
