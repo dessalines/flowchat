@@ -30,6 +30,8 @@ export class CommentComponent implements OnInit {
 
   private highlight: boolean = false;
 
+  private editable: boolean = false;
+
 
 
   constructor(private threadedChatService: ThreadedChatService) {}
