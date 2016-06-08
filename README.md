@@ -18,6 +18,7 @@ http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way
   - Change them to a new highlighted color, then remove that.
   - Should you scroll when you are currently replying, or wait till after, or not at all?
   - http://stackoverflow.com/questions/34522306/angular-2-focus-on-newly-added-input-element
+  - Recursion: [1](http://stackoverflow.com/a/2549333/1655478) [2](http://stackoverflow.com/questions/16228467/how-do-i-break-out-of-loops-in-recursive-functions)
 - Reconnect websocket if disconnected
   - http://stackoverflow.com/questions/3479734/javascript-jquery-test-if-window-has-focus
   
