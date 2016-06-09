@@ -2,7 +2,11 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {Comment} from '../shared/comment.interface';
 import {ThreadedChatService} from '../services/threaded-chat.service';
 import { MomentPipe } from '../pipes/moment.pipe';
+import {MarkdownEditComponent} from '../markdown-edit';
 import * as moment from 'moment';
+// import * as markdown from 'bootstrap-markdown';
+// import * as mit from 'markdown-it';
+
 
 
 @Component({
@@ -10,7 +14,7 @@ import * as moment from 'moment';
   selector: 'app-comment',
   templateUrl: 'comment.component.html',
   styleUrls: ['comment.component.css'],
-  directives: [CommentComponent],
+  directives: [CommentComponent, MarkdownEditComponent],
   pipes: [MomentPipe]
 })
 
@@ -80,6 +84,10 @@ export class CommentComponent implements OnInit {
     let then = moment(this.comment.created);
 
     return now.isBefore(then);
+  }
+
+  setReply($event) {
+    this.reply = $event;
   }
 
 

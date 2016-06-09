@@ -15,7 +15,8 @@ module.exports = function(defaults) {
       'jquery/dist/jquery.min.js',
       'tether/dist/js/tether.min.js',
       'bootstrap/dist/js/bootstrap.min.js',
-      'moment/moment.js'
+      'moment/moment.js',
+      'markdown-it/dist/markdown-it.min.js',
     ]
   });
 };

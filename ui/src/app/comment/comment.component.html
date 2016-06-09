@@ -13,7 +13,7 @@
 		[class.mark]="highlight">
     {{comment.text}}</p>
 	
-	<small>
+	<small *ngIf="!showReply">
 		<ul class="list-inline">
 			<li role="button" class="list-inline-item" (click)="toggleShowReply()">
 				<i class="fa fa-fw fa-reply"></i>
@@ -27,7 +27,7 @@
 		</ul>
 	</small>
 	<fieldset *ngIf="showReply" class="form-group">
-    	<textarea class="form-control" ngDefaultControl [(ngModel)]="reply" rows="3"></textarea>
+    	<app-markdown-edit (textEvent)="setReply($event)"></app-markdown-edit>
     	<br>
     	<button class="btn btn-primary" (click)="sendMessage()">Send</button>
     	<button class="btn btn-danger" (click)="hideReply()">Cancel</button>
