@@ -7,7 +7,8 @@ const map: any = {
     'tether': 'vendor/tether/dist/js/tether.min.js',
     'bootstrap': 'vendor/bootstrap/dist/js/bootstrap.min.js',
     'moment': 'vendor/moment/moment.js',
-    'markdown-it': 'vendor/markdown-it/dist/markdown-it.min.js'
+    'markdown-it': 'vendor/markdown-it/dist/markdown-it.min.js',
+    'autosize': 'vendor/autosize/dist/autosize.min.js'
 };
 
 /** User packages configuration. */

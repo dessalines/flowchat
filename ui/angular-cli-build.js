@@ -17,6 +17,7 @@ module.exports = function(defaults) {
       'bootstrap/dist/js/bootstrap.min.js',
       'moment/moment.js',
       'markdown-it/dist/markdown-it.min.js',
+      'autosize/dist/autosize.min.js'
     ]
   });
 };

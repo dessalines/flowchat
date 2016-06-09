@@ -4,8 +4,8 @@ import {ThreadedChatService} from '../services/threaded-chat.service';
 import { MomentPipe } from '../pipes/moment.pipe';
 import {MarkdownEditComponent} from '../markdown-edit';
 import * as moment from 'moment';
-// import * as markdown from 'bootstrap-markdown';
-// import * as mit from 'markdown-it';
+import {MarkdownPipe} from '../pipes/markdown.pipe';
+
 
 
 
@@ -14,8 +14,9 @@ import * as moment from 'moment';
   selector: 'app-comment',
   templateUrl: 'comment.component.html',
   styleUrls: ['comment.component.css'],
+  styles: [':host >>> p { margin-bottom: .2rem; }'],
   directives: [CommentComponent, MarkdownEditComponent],
-  pipes: [MomentPipe]
+  pipes: [MomentPipe, MarkdownPipe]
 })
 
 export class CommentComponent implements OnInit {
