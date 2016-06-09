@@ -82,7 +82,7 @@ export class ChatComponent implements OnInit {
 
     // Focus on the new comment if not replying
     if (!this.isReplying) {
-      setTimeout(() => { location.href = "#comment_" + newComment.id; }, 0);
+      setTimeout(() => { location.href = "#comment_" + newComment.id; }, 50);
     }
   }
 

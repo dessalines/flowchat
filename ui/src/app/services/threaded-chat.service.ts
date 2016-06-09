@@ -1,5 +1,5 @@
 import {Injectable}    from '@angular/core';
-import {$WebSocket}    from './ng2-websocket';
+import {$WebSocket, WebSocketConfig}    from './ng2-websocket';
 
 
 @Injectable()
@@ -9,11 +9,18 @@ export class ThreadedChatService {
 
   public ws: $WebSocket;
 
+  public config: WebSocketConfig;
+
   constructor() {
-    this.ws = new $WebSocket(this.messagesUrl);
+		this.config = {
+			initialTimeout: 30000,
+			maxTimeout: 120000,
+			reconnectIfNotNormalClose: true
+		}
+
+    this.ws = new $WebSocket(this.messagesUrl, null, this.config);
     this.ws.connect();
   }
-
 
 
 }
