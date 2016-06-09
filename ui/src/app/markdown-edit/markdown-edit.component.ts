@@ -11,19 +11,19 @@ declare var autosize: any;
 })
 export class MarkdownEditComponent implements OnInit {
 
-  private md: any;
-
   @Output() textEvent = new EventEmitter();
+
+  @ViewChild('textArea') textArea;
 
   private textBox: string;
   private html: string;
 
   private previewMode: boolean = false;
 
-  @ViewChild('textArea') textArea; 
+  private markdownIt: any;
 
   constructor() {
-    this.md = new markdown_it();
+    this.markdownIt = new markdown_it();
   }
 
   ngOnInit() {
@@ -31,17 +31,16 @@ export class MarkdownEditComponent implements OnInit {
 
   ngAfterViewInit() {
     autosize(this.textArea.nativeElement);
+    this.textArea.nativeElement.focus();
   }
 
   setText() {
-    console.log(this.textBox);
     this.textEvent.emit(this.textBox);
   }
 
   preview() {
     this.previewMode = !this.previewMode;
-    this.html = this.md.render(this.textBox);
-    console.log(this.html);
+    this.html = this.markdownIt.render(this.textBox);
   }
 
   bold() {
@@ -74,7 +73,7 @@ export class MarkdownEditComponent implements OnInit {
     this.setText();
   }
   orderedList() {
-    this.textBox = this.surroundAtCursor(this.textArea.nativeElement, "1. ", ""); 
+    this.textBox = this.surroundAtCursor(this.textArea.nativeElement, "1. ", "");
     this.setText();
   }
 
@@ -89,25 +88,24 @@ export class MarkdownEditComponent implements OnInit {
   }
 
 
-private surroundAtCursor(myField, beforeMyValue, afterMyValue) {
-  //MOZILLA and others
-  if (myField.selectionStart || myField.selectionStart == '0') {
-    var startPos = myField.selectionStart;
-    var endPos = myField.selectionEnd;
-    var beforeSelection = myField.value.substring(0, startPos);
-    var afterSelection = myField.value.substring(endPos, myField.value.length);
-    var selection = myField.value.substring(startPos, endPos);
+  private surroundAtCursor(myField, beforeMyValue, afterMyValue) {
 
-    myField.value = beforeSelection + beforeMyValue + selection + 
-      afterMyValue + afterSelection;
-  }
-  else {
-    myField.value += beforeMyValue + afterMyValue;
-  }
-  myField.focus();
-  return myField.value;
+    if (myField.selectionStart || myField.selectionStart == '0') {
+      var startPos = myField.selectionStart;
+      var endPos = myField.selectionEnd;
+      var beforeSelection = myField.value.substring(0, startPos);
+      var afterSelection = myField.value.substring(endPos, myField.value.length);
+      var selection = myField.value.substring(startPos, endPos);
 
-}
+      myField.value = beforeSelection + beforeMyValue + selection +
+        afterMyValue + afterSelection;
+    }
+    else {
+      myField.value += beforeMyValue + afterMyValue;
+    }
+    myField.focus();
+    return myField.value;
+  }
 
 
 

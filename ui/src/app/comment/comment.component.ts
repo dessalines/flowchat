@@ -6,9 +6,6 @@ import {MarkdownEditComponent} from '../markdown-edit';
 import * as moment from 'moment';
 import {MarkdownPipe} from '../pipes/markdown.pipe';
 
-
-
-
 @Component({
   moduleId: module.id,
   selector: 'app-comment',
@@ -39,7 +36,7 @@ export class CommentComponent implements OnInit {
 
 
 
-  constructor(private threadedChatService: ThreadedChatService) {}
+  constructor(private threadedChatService: ThreadedChatService) { }
 
   toggleShowReply() {
     this.showReply = !this.showReply;
@@ -56,20 +53,21 @@ export class CommentComponent implements OnInit {
     this.replyingEvent.emit($event);
   }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.highlight = this.isCommentNew();
     // this.focusToNewComment();
   }
 
   sendMessage() {
-      try {
-        this.threadedChatService.ws.send(this.replyData());
-      } catch(e) {
-          this.threadedChatService.ws.reconnect();
-          this.threadedChatService.ws.send(this.replyData());
-      }
-      this.showReply = false;
-      this.reply = "";
+    try {
+      this.threadedChatService.ws.send(this.replyData());
+    } catch (e) {
+      console.log(e);
+    }
+    this.showReply = false;
+    this.replyingEvent.emit(this.showReply);
+    this.reply = "";
+
   }
 
   private replyData(): string {
