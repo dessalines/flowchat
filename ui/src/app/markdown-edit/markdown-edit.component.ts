@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild} from '@angular/core';
 import * as markdown_it from 'markdown-it';
-// declare var autosize: any;
+
 declare var autosize: any;
 
 @Component({
@@ -27,7 +27,6 @@ export class MarkdownEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    // autosize(this.textArea.nativeElement);
   }
 
   ngAfterViewInit() {
@@ -105,7 +104,7 @@ private surroundAtCursor(myField, beforeMyValue, afterMyValue) {
   else {
     myField.value += beforeMyValue + afterMyValue;
   }
-
+  myField.focus();
   return myField.value;
 
 }

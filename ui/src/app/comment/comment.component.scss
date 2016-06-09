@@ -3,16 +3,17 @@ $card-padding-left: 1rem;
 $card-padding-top: .2rem;
 $card-radius: .25rem;
 
-p, .list-inline {
-	margin-bottom: .2rem;
+p,
+.list-inline {
+    margin-bottom: .2rem;
 }
 
 .card-block {
-	padding: $card-padding-top 0px $card-padding-top $card-padding-left;
+    padding: $card-padding-top 0px $card-padding-top $card-padding-left;
 }
 
 .card {
-	border-right: 0px hidden;
-	border-radius: $card-radius 0 0 $card-radius;
-	margin-bottom: $card-padding-top;
+    border-right: 0px hidden;
+    border-radius: $card-radius 0 0 $card-radius;
+    margin-bottom: $card-padding-top;
 }
