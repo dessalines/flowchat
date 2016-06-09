@@ -9,5 +9,8 @@
     "jquery": "registry:dt/jquery#1.10.0+20160417213236",
     "moment": "registry:dt/moment#2.8.0+20160316155526",
     "tether": "registry:dt/tether#1.1.0+20160316155526"
+  },
+  "dependencies": {
+    "markdown-it": "registry:npm/markdown-it#4.0.0+20160323212212"
   }
 }

@@ -6,7 +6,8 @@ const map: any = {
     'jquery': 'vendor/jquery/dist/jquery.min.js',
     'tether': 'vendor/tether/dist/js/tether.min.js',
     'bootstrap': 'vendor/bootstrap/dist/js/bootstrap.min.js',
-    'moment': 'vendor/moment/moment.js'
+    'moment': 'vendor/moment/moment.js',
+    'markdown-it': 'vendor/markdown-it/dist/markdown-it.min.js'
 };
 
 /** User packages configuration. */
@@ -38,6 +39,9 @@ const barrels: string[] = [
   'app/shared',
   'app/chat',
   'app/comment',
+  'app/markdown-textarea',
+  'app/markdown',
+  'app/markdown-edit',
   /** @cli-barrel */
 ];
 
