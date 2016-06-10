@@ -3,5 +3,5 @@ export interface User {
   name: number;
   full_user_id?: number;
   email?: string;
-  created: number;
+  created?: number;
 }

@@ -8,6 +8,7 @@ import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
   templateUrl: 'navbar.component.html',
   styleUrls: ['navbar.component.css'],
   directives: [MODAL_DIRECTVES, CORE_DIRECTIVES],
+  providers: [],
   viewProviders:[BS_VIEW_PROVIDERS]
 })
 export class NavbarComponent implements OnInit {

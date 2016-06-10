@@ -56,6 +56,7 @@ public class ChatService {
 
         post("/login", (req, res) -> {
             try {
+                log.info(req.body());
 
                 Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
 
@@ -76,6 +77,8 @@ public class ChatService {
 
         post("/signup", (req, res) -> {
             try {
+
+                log.info(req.body());
 
                 Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
 

@@ -10,26 +10,93 @@
       </li>
     </ul>
     <form class="form-inline pull-xs-right">
-    	<input class="form-control" type="text" placeholder="Search">
-    	<button class="btn btn-secondary-outline" type="submit">Search</button>
-  	</form>
+      <input class="form-control" type="text" placeholder="Search">
+      <button class="btn btn-secondary-outline" type="submit">Search</button>
+    </form>
   </div>
 </nav>
-
 <!-- Large modal -->
-<button class="btn btn-primary" (click)="lgModal.show()">Large modal</button>
-
-<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<button class="btn btn-primary" (click)="sampleModal.show()">Large modal</button>
+<button class="btn btn-primary" (click)="loginModal.show()">Large modal</button>
+<!-- sample -->
+<div bsModal #sampleModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" (click)="lgModal.hide()" aria-label="Close">
+        <button type="button" class="close" (click)="sampleModal.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
         <h4 class="modal-title">Large modal</h4>
       </div>
       <div class="modal-body">
         ...
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modals -->
+<div bsModal #loginModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" (click)="loginModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="row">
+          <div class="col-md-6 vertical-line-right">
+            <h4 class="text-xs-center"> Create a new account </h4>
+            <br>
+            <form id="signup_form" class="form-horizontal" role="form">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input name="username" class="form-control" placeholder="choose a username" minlength="5" maxlength="140" data-bv-notempty="true" data-bv-notempty-message="A username is required" />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="password" data-bv-notempty="true" data-bv-notempty-message="The password is required and cannot be empty" data-bv-identical="true" data-bv-identical-field="verifyPassword" data-bv-identical-message="The password and its confirm are not the same" data-bv-different="true" data-bv-different-field="username" data-bv-different-message="The password cannot be the same as username" />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input name="verifyPassword" type="password" class="form-control" id="inputPassword3" placeholder="verify password" data-bv-notempty="true" data-bv-notempty-message="The confirm password is required and cannot be empty" data-bv-identical="true" data-bv-identical-field="password" data-bv-identical-message="The password and its confirm are not the same" data-bv-different="true" data-bv-different-field="username" data-bv-different-message="The password cannot be the same as username" />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input name="email" type="inputEmail3" class="form-control" id="inputEmail3" placeholder="email (optional)" data-bv-emailaddress="true" data-bv-emailaddress-message="The input is not a valid email address" />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <button id="signinBtn" type="submit" class="btn btn-primary btn-lg btn-block" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Sign up</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <!-- The sign up tab -->
+          <div class="col-md-6">
+            <h4 class="text-xs-center"> Log in </h4>
+            <br>
+            <form id="login_form" class="form-horizontal">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input name="user_or_email" class="form-control" placeholder="username or email" minlength="5" maxlength="140" data-bv-notempty="true" data-bv-notempty-message="A username or email is required" />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="password" data-bv-notempty="true" data-bv-notempty-message="The password is required and cannot be empty" data-bv-different-field="username" data-bv-different-message="The password cannot be the same as username" />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <button id="signinBtn" type="submit" class="btn btn-primary btn-lg btn-block" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Login</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </div>
