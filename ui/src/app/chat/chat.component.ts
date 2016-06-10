@@ -1,10 +1,8 @@
 import {Component, Input, provide, OnInit} from '@angular/core';
 import { HTTP_PROVIDERS }    from '@angular/http';
 import {ThreadedChatService} from '../services/threaded-chat.service';
-import {Comment} from '../shared';
+import {Comment, User} from '../shared';
 import {CommentComponent} from '../comment';
-
-
 
 @Component({
   moduleId: module.id,
@@ -23,6 +21,8 @@ export class ChatComponent implements OnInit {
   private recursiveCommentStopper: boolean = false;
 
   private isReplying: boolean = false;
+
+  private user: User;
 
   constructor(private threadedChatService: ThreadedChatService) {
 
@@ -54,10 +54,13 @@ export class ChatComponent implements OnInit {
       this.users = data.users;
     }
 
-    if (data.id) {
-      console.log('its only new comment');
+    if (data.user) {
 
-      let newComment: Comment = data;
+    }
+
+    // For only new comments
+    if (data.comment) {
+      let newComment: Comment = data.comment;
 
       // Gotta basically place this in the correct location in the array of comments
       this.addNewComment(newComment);

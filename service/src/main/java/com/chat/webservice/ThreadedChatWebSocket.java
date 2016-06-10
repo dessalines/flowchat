@@ -44,7 +44,10 @@ public class ThreadedChatWebSocket {
     public void onConnect(Session user) throws Exception {
 
         Tools.dbInit();
-        setupUser(user);
+        User dbUser = setupUser(user);
+
+        // Send them their user info
+        user.getRemote().sendString(dbUser.toJson(false));
 
         // Send all the comments to just them
         user.getRemote().sendString(new Comments(comments).json());
@@ -121,8 +124,9 @@ public class ThreadedChatWebSocket {
     }
 
 
-    private void setupUser(Session user) {
+    private User setupUser(Session user) {
         Long userId = userMap.get(user);
+
 
         if (userId == null) {
             // Create the user if necessary
@@ -132,7 +136,10 @@ public class ThreadedChatWebSocket {
 
 
             userMap.put(user, userId);
+
+            return dbUser;
         }
+
     }
 
     private static LazyList<CommentThreadedView> fetchComments() {
