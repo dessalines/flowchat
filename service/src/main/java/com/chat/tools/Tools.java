@@ -4,17 +4,17 @@ import com.chat.DataSources;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.javalite.activejdbc.DB;
 import org.javalite.activejdbc.DBException;
+import org.javalite.http.Http;
 import org.postgresql.jdbc.PgArray;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpCookie;
 import java.sql.Array;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static javafx.scene.input.KeyCode.T;
 
@@ -72,5 +72,10 @@ public class Tools {
         }
 
         return null;
+    }
+
+    public static Map<String, String> cookieListToMap(List<HttpCookie> list) {
+        return list.stream().collect(Collectors.toMap(
+                HttpCookie::getName, HttpCookie::getValue));
     }
 }
