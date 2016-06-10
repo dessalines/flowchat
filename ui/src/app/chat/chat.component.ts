@@ -15,7 +15,7 @@ import {CommentComponent} from '../comment';
 export class ChatComponent implements OnInit {
 
   private comments: Array<Comment>;
-  private users: Array<string> = [];
+  private users: Array<User>;
   private newCommentId: number;
 
   private recursiveCommentStopper: boolean = false;
@@ -29,7 +29,6 @@ export class ChatComponent implements OnInit {
     this.threadedChatService.ws.getDataStream().subscribe(res => {
       this.updateThreadedChat(res.data);
     });
-
 
   }
 
@@ -54,13 +53,9 @@ export class ChatComponent implements OnInit {
       this.users = data.users;
     }
 
-    if (data.user) {
-
-    }
-
     // For only new comments
-    if (data.comment) {
-      let newComment: Comment = data.comment;
+    if (data.numOfParents) {
+      let newComment: Comment = data;
 
       // Gotta basically place this in the correct location in the array of comments
       this.addNewComment(newComment);

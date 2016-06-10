@@ -26,7 +26,7 @@ public class ThreadedChatWebSocket {
 
     private String sender, msg;
 
-    static Map<Session, Long> userMap = new HashMap<>();
+    static Map<Session, UserObj> sessionToUserMap = new HashMap<>();
 
     // The comment rows
     static LazyList<CommentThreadedView> comments;
@@ -41,19 +41,23 @@ public class ThreadedChatWebSocket {
 
 
     @OnWebSocketConnect
-    public void onConnect(Session user) throws Exception {
+    public void onConnect(Session session) throws Exception {
+
+        Map<String, String> cookieMap = Tools.cookieListToMap(session.getUpgradeRequest().getCookies());
 
         Tools.dbInit();
-        User dbUser = setupUser(user);
+
+        // Get or create the user
+        UserObj userObj = setupUser(session, cookieMap.get("user_id"));
 
         // Send them their user info
-        user.getRemote().sendString(dbUser.toJson(false));
+        session.getRemote().sendString(userObj.json());
 
         // Send all the comments to just them
-        user.getRemote().sendString(new Comments(comments).json());
+        session.getRemote().sendString(new Comments(comments).json());
 
         // Send the updated users to everyone
-        broadcastMessage(userMap.get(user), new Users(userMap).json());
+        broadcastMessage(sessionToUserMap.get(session), new Users(sessionToUserMap).json());
 
         Tools.dbClose();
 
@@ -61,18 +65,19 @@ public class ThreadedChatWebSocket {
     }
 
     @OnWebSocketClose
-    public void onClose(Session user, int statusCode, String reason) {
-        Long userId = userMap.get(user);
-        userMap.remove(user);
+    public void onClose(Session session, int statusCode, String reason) {
 
-        log.info("user " + userId + " left, " + statusCode + " " + reason);
+        UserObj userObj = sessionToUserMap.get(session);
+        sessionToUserMap.remove(session);
+
+        log.info("user " + userObj.getId() + " left, " + statusCode + " " + reason);
 
         // Send the updated users to everyone
-        broadcastMessage(userMap.get(user), new Users(userMap).json());
+        broadcastMessage(sessionToUserMap.get(session), new Users(sessionToUserMap).json());
     }
 
     @OnWebSocketMessage
-    public void onMessage(Session user, String replyDataStr) {
+    public void onMessage(Session session, String replyDataStr) {
 
 
         // Get the object
@@ -89,7 +94,10 @@ public class ThreadedChatWebSocket {
 
         List<Long> parentBreadCrumbs = Tools.convertArrayToList(arr);
 
-        Comment newComment = Actions.createComment(userMap.get(user), 1L, parentBreadCrumbs, reply.getReply());
+        Comment newComment = Actions.createComment(sessionToUserMap.get(session).getId(),
+                1L,
+                parentBreadCrumbs,
+                reply.getReply());
 
         // Fetch the comment threaded view
         CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", newComment.getLongId());
@@ -105,7 +113,7 @@ public class ThreadedChatWebSocket {
 //        comments = fetchComments();
 
 
-        broadcastMessage(userMap.get(user), co.json());
+        broadcastMessage(sessionToUserMap.get(session), co.json());
 
         Tools.dbClose();
 
@@ -113,8 +121,8 @@ public class ThreadedChatWebSocket {
     }
 
     //Sends a message from one user to all users
-    public static void broadcastMessage(Long userId, String json) {
-        userMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
+    public static void broadcastMessage(UserObj user, String json) {
+        sessionToUserMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
             try {
                 session.getRemote().sendString(json);
             } catch (Exception e) {
@@ -124,34 +132,31 @@ public class ThreadedChatWebSocket {
     }
 
 
-    private User setupUser(Session user) {
-        Long userId = userMap.get(user);
+    private UserObj setupUser(Session session, String userId) {
+        User dbUser = null;
 
 
-        if (userId == null) {
-            // Create the user if necessary
+        while (dbUser == null) {
+            if (userId != null) {
+                dbUser = USER.findFirst("id = ?", userId);
+            }
 
-            User dbUser = Actions.createUser();
-            userId = dbUser.getLongId();
+            if (dbUser != null) break;
 
-
-            userMap.put(user, userId);
-
-            return dbUser;
+            dbUser = Actions.createUser();
         }
+
+        UserObj userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));
+
+        sessionToUserMap.put(session, userObj);
+
+        return userObj;
 
     }
 
     private static LazyList<CommentThreadedView> fetchComments() {
         return COMMENT_THREADED_VIEW.where("discussion_id = ?", 1);
     }
-
-
-
-
-
-
-
 
 
 }
