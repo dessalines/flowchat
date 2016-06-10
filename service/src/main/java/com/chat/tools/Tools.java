@@ -1,18 +1,27 @@
 package com.chat.tools;
 
+import ch.qos.logback.classic.Logger;
 import com.chat.DataSources;
+import com.chat.db.Actions;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.javalite.activejdbc.DB;
 import org.javalite.activejdbc.DBException;
 import org.javalite.http.Http;
 import org.postgresql.jdbc.PgArray;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.HttpCookie;
+import java.net.URLDecoder;
+import java.security.SecureRandom;
 import java.sql.Array;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,7 +31,14 @@ import static javafx.scene.input.KeyCode.T;
  * Created by tyler on 5/24/16.
  */
 public class Tools {
+
+    public static Logger log = (Logger) LoggerFactory.getLogger(Tools.class);
+
+
     public static ObjectMapper JACKSON = new ObjectMapper();
+    private static final SecureRandom RANDOM = new SecureRandom();
+
+    public static final BasicPasswordEncryptor PASS_ENCRYPT = new BasicPasswordEncryptor();
 
     public static final void dbInit() {
 
@@ -77,5 +93,35 @@ public class Tools {
     public static Map<String, String> cookieListToMap(List<HttpCookie> list) {
         return list.stream().collect(Collectors.toMap(
                 HttpCookie::getName, HttpCookie::getValue));
+    }
+
+    public static String generateSecureRandom() {
+        return new BigInteger(256, RANDOM).toString(32);
+    }
+
+    public static Timestamp newExpireTimestamp() {
+        return new Timestamp(new Date().getTime() + 1000 * DataSources.EXPIRE_SECONDS);
+    }
+
+    public static final Map<String, String> createMapFromAjaxPost(String reqBody) {
+        log.debug(reqBody);
+        Map<String, String> postMap = new HashMap<String, String>();
+        String[] split = reqBody.split("&");
+        for (int i = 0; i < split.length; i++) {
+            String[] keyValue = split[i].split("=");
+            try {
+                if (keyValue.length > 1) {
+                    postMap.put(URLDecoder.decode(keyValue[0], "UTF-8"),URLDecoder.decode(keyValue[1], "UTF-8"));
+                }
+            } catch (UnsupportedEncodingException |ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();
+                throw new NoSuchElementException(e.getMessage());
+            }
+        }
+
+//		log.info(GSON2.toJson(postMap));
+
+        return postMap;
+
     }
 }
