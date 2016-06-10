@@ -73,9 +73,7 @@ public class Actions {
             }
 
             // Create the user
-            User user = USER.createIt(
-                    "name", Tools.generateSecureRandom());
-            user.set("name", "user_" + user.getLongId()).saveIt();
+            User user = createUser();
 
             // Generate the login
             auth = Tools.generateSecureRandom();
@@ -91,6 +89,14 @@ public class Actions {
 
 
         return uv;
+    }
+
+    public static User createUser() {
+        User user = USER.createIt(
+                "name", Tools.generateSecureRandom());
+        user.set("name", "user_" + user.getLongId()).saveIt();
+
+        return user;
     }
 
     public static String login(String userOrEmail, String password, Request req, Response res) {

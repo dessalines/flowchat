@@ -46,30 +46,40 @@
           <div class="col-md-6 vertical-line-right">
             <h4 class="text-xs-center"> Create a new account </h4>
             <br>
-            <form id="signup_form" class="form-horizontal" role="form">
+            <form #signupForm="ngForm" (ngSubmit)="signup()" class="form-horizontal" role="form">
               <div class="form-group">
                 <div class="col-sm-12">
-                  <input name="username" class="form-control" placeholder="choose a username" minlength="5" maxlength="140" data-bv-notempty="true" data-bv-notempty-message="A username is required" />
+                  <input [(ngModel)]="signup.username" #signupName="ngForm" ngControl="signupName" class="form-control" placeholder="choose a username" required minlength="5" maxlength="140" />
+                  <div *ngIf="signupName.dirty" class="row col-sm-12 help-block text-danger">
+                    <small *ngIf="signupName.errors?.required">A username is required</small>
+                    <small *ngIf="signupName.errors?.minlength">Username must be more than 5 characters</small>
+                  </div>
                 </div>
               </div>
               <div class="form-group">
                 <div class="col-sm-12">
-                  <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="password" data-bv-notempty="true" data-bv-notempty-message="The password is required and cannot be empty" data-bv-identical="true" data-bv-identical-field="verifyPassword" data-bv-identical-message="The password and its confirm are not the same" data-bv-different="true" data-bv-different-field="username" data-bv-different-message="The password cannot be the same as username" />
+                  <input [(ngModel)]="signup.password" #signupPassword="ngForm" ngControl="signupPassword" type="password" class="form-control" placeholder="password" required />
+                  <div *ngIf="signupPassword.dirty" class="row col-sm-12 help-block text-danger">
+                    <small *ngIf="signupPassword.errors?.required">a password is required</small>
+                  </div>
                 </div>
               </div>
               <div class="form-group">
                 <div class="col-sm-12">
-                  <input name="verifyPassword" type="password" class="form-control" id="inputPassword3" placeholder="verify password" data-bv-notempty="true" data-bv-notempty-message="The confirm password is required and cannot be empty" data-bv-identical="true" data-bv-identical-field="password" data-bv-identical-message="The password and its confirm are not the same" data-bv-different="true" data-bv-different-field="username" data-bv-different-message="The password cannot be the same as username" />
+                  <input [(ngModel)]="signup.verifyPassword" #signupVerifyPassword="ngForm" ngControl="signupVerifyPassword" type="password" class="form-control" placeholder="verify password" required />
+                  <div *ngIf="signupVerifyPassword.dirty" class="row col-sm-12 help-block text-danger">
+                    <small *ngIf="signupVerifyPassword.errors?.required">a password is required</small>
+                  </div>
                 </div>
               </div>
               <div class="form-group">
                 <div class="col-sm-12">
-                  <input name="email" type="inputEmail3" class="form-control" id="inputEmail3" placeholder="email (optional)" data-bv-emailaddress="true" data-bv-emailaddress-message="The input is not a valid email address" />
+                  <input [(ngModel)]="signup.email" ngControl="signupEmail" class="form-control" placeholder="email (optional)" />
                 </div>
               </div>
               <div class="form-group">
                 <div class="col-sm-12">
-                  <button id="signinBtn" type="submit" class="btn btn-primary btn-lg btn-block" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Sign up</button>
+                  <button [disabled]="!signupForm.form.valid" type="submit" class="btn btn-primary btn-lg btn-block">Sign up</button>
                 </div>
               </div>
             </form>

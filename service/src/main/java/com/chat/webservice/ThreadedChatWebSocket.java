@@ -136,14 +136,13 @@ public class ThreadedChatWebSocket {
         User dbUser = null;
 
 
-        while (dbUser == null) {
+        if (dbUser == null) {
             if (userId != null) {
                 dbUser = USER.findFirst("id = ?", userId);
+            } else {
+                dbUser = Actions.createUser();
             }
 
-            if (dbUser != null) break;
-
-            dbUser = Actions.createUser();
         }
 
         UserObj userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));

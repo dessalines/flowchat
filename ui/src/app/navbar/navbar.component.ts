@@ -9,13 +9,29 @@ import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
   styleUrls: ['navbar.component.css'],
   directives: [MODAL_DIRECTVES, CORE_DIRECTIVES],
   providers: [],
-  viewProviders:[BS_VIEW_PROVIDERS]
+  viewProviders: [BS_VIEW_PROVIDERS]
 })
 export class NavbarComponent implements OnInit {
 
-  constructor() {}
+  private signup: Signup = {};
+  private login: Login;
+
+  constructor() {
+  }
 
   ngOnInit() {
   }
 
+}
+
+interface Signup {
+  username?: string;
+  password?: string;
+  verifyPassword?: string;
+  email?: string;
+}
+
+interface Login {
+  username: string;
+  password: string;
 }
