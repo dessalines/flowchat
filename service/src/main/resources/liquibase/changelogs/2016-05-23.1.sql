@@ -4,8 +4,19 @@
 
 create table user_ (
     id bigserial primary key,
-    name varchar(255) not null,
+    name varchar(255) not null unique,
     created timestamp default current_timestamp
+);
+
+CREATE TABLE full_user (
+    id bigserial primary key,
+    user_id bigserial not null,
+    email varchar(255) not null unique,
+    password_encrypted varchar(512),
+    created timestamp default current_timestamp,
+    constraint fk1_user foreign key (user_id)
+        references user_ (id)
+        on update cascade on delete cascade
 );
 
 create table discussion (
@@ -57,6 +68,6 @@ insert into comment_tree (parent_id, child_id, path_length)
               (5,5,0),
               (6,6,0);
 
- --rollback drop table comment cascade ; drop table user_ cascade; drop table comment_tree cascade; drop table discussion cascade;
+ --rollback drop table full_user cascade; drop table comment cascade ; drop table user_ cascade; drop table comment_tree cascade; drop table discussion cascade;
 
 

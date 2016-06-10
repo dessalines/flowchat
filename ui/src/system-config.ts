@@ -8,7 +8,8 @@ const map: any = {
     'bootstrap': 'vendor/bootstrap/dist/js/bootstrap.min.js',
     'moment': 'vendor/moment/moment.js',
     'markdown-it': 'vendor/markdown-it/dist/markdown-it.min.js',
-    'autosize': 'vendor/autosize/dist/autosize.min.js'
+    'autosize': 'vendor/autosize/dist/autosize.min.js',
+    'ng2-bootstrap': 'vendor/ng2-bootstrap'
 };
 
 /** User packages configuration. */
@@ -34,6 +35,7 @@ const barrels: string[] = [
 
   // Thirdparty barrels.
   'rxjs',
+  'vendor/ng2-bootstrap',
 
   // App specific barrels.
   'app',
@@ -43,6 +45,7 @@ const barrels: string[] = [
   'app/markdown-textarea',
   'app/markdown',
   'app/markdown-edit',
+  'app/navbar',
   /** @cli-barrel */
 ];
 
@@ -59,7 +62,7 @@ System.config({
   map: {
     '@angular': 'vendor/@angular',
     'rxjs': 'vendor/rxjs',
-    'main': 'main.js'
+    'main': 'main.js',
   },
   packages: cliSystemConfigPackages
 });

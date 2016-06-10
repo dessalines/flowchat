@@ -18,7 +18,12 @@ http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way
 - Front page is for creating discussions
 - Make comments editable
 - Serving multiple discussions
+	- Discussions on left
+	- Set up like Stash
+- Search bar, search for discussions
+- Top level replying
 - Possibly add range voting?
+	- Use default html sliders [1](http://stackoverflow.com/questions/15935837/how-to-display-a-range-input-slider-vertically) [styling](http://danielstern.ca/range.css/#/) [fiddle](http://jsfiddle.net/Mmgxg/)
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - ~~Refresh only specific changed content~~
   - ~~For now, use newCommentId.~~

@@ -1,6 +1,17 @@
 --liquibase formatted sql
 --changeset tyler:2
 
+-- create the user view
+create view user_view as
+select u.id,
+    u.name,
+    fu.id as full_user_id,
+    fu.email
+from user_ as u
+join full_user as fu on u.id = fu.user_id;
+
+
+
 
 -- create children_view, basically id, and # of children
 create view children_view as

@@ -15,9 +15,10 @@ module.exports = function(defaults) {
       'jquery/dist/jquery.min.js',
       'tether/dist/js/tether.min.js',
       'bootstrap/dist/js/bootstrap.min.js',
-      'moment/moment.js',
       'markdown-it/dist/markdown-it.min.js',
-      'autosize/dist/autosize.min.js'
+      'autosize/dist/autosize.min.js',
+      'ng2-bootstrap/**/*.js',
+      'moment/moment.js',
     ]
   });
 };
