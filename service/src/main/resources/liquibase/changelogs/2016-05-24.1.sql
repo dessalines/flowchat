@@ -10,7 +10,16 @@ select u.id,
 from user_ as u
 join full_user as fu on u.id = fu.user_id;
 
-
+create view user_login_view as
+select u.id,
+    u.name,
+    fu.email,
+    fu.password_encrypted,
+    l.auth,
+    l.expire_time
+from user_ as u
+join full_user as fu on fu.user_id = u.id
+join login as l on l.user_id = u.id;
 
 
 -- create children_view, basically id, and # of children

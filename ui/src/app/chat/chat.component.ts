@@ -57,7 +57,7 @@ export class ChatComponent implements OnInit {
     if (data.numOfParents) {
       let newComment: Comment = data;
 
-      // Gotta basically place this in the correct location in the array of comments
+      // Gotta place this new comment in the correct location in the array of comments
       this.addNewComment(newComment);
     }
 
