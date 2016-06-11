@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {CORE_DIRECTIVES} from '@angular/common';
-import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
+import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS, DROPDOWN_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 import {LoginService} from '../services/login.service';
+import {UserService} from '../services/user.service'
 import {User, Tools} from '../shared';
 
 
@@ -10,8 +11,8 @@ import {User, Tools} from '../shared';
   selector: 'app-navbar',
   templateUrl: 'navbar.component.html',
   styleUrls: ['navbar.component.css'],
-  directives: [MODAL_DIRECTVES, CORE_DIRECTIVES],
-  providers: [],
+  directives: [MODAL_DIRECTVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES],
+  providers: [LoginService],
   viewProviders: [BS_VIEW_PROVIDERS]
 })
 export class NavbarComponent implements OnInit {
@@ -19,9 +20,9 @@ export class NavbarComponent implements OnInit {
   private signup: Signup = {};
   private login: Login = {};
 
-  private user: User;
+  constructor(private userService: UserService,
+    private loginService: LoginService) {
 
-  constructor(private loginService: LoginService) {
   }
 
   ngOnInit() {
@@ -32,9 +33,9 @@ export class NavbarComponent implements OnInit {
       this.signup.password, 
       this.signup.email).subscribe(
       user => {
-        this.user = user;
-        this.setCookies(this.user);
-        console.log(this.user);
+        this.userService.setUser(user);
+        console.log(this.userService.getUser());
+        document.getElementById('closeModalButton').click();
       },
       error => console.log(error));
 
@@ -44,29 +45,15 @@ export class NavbarComponent implements OnInit {
     this.loginService.login(this.login.usernameOrEmail,
       this.login.password).subscribe(
       user => {
-        this.user = user;
-        this.setCookies(this.user);
-        console.log(this.user);
+        this.userService.setUser(user);
+        console.log(this.userService.getUser());
+        document.getElementById('closeModalButton').click();
       },
       error => console.log(error));
   }
 
-  public getUser(): User {
-    return this.user;
-  }
 
-  setCookies(user: User) {
-    Tools.createCookie("uid", user.id, user.expire_time);
-    Tools.createCookie("auth", user.auth, user.expire_time);
-    Tools.createCookie("name", user.name, user.expire_time);
-  }
-
-  clearCookies() {
-    Tools.eraseCookie("uid");
-    Tools.eraseCookie("auth");
-    Tools.eraseCookie("name");
-  }
-
+  
 }
 
 interface Signup {

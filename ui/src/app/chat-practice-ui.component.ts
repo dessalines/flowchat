@@ -1,7 +1,7 @@
 import { Component, ViewContainerRef} from '@angular/core';
 import { ChatComponent } from './chat';
 import { NavbarComponent } from './navbar';
-import {LoginService} from './services/login.service';
+import {UserService} from './services/user.service';
 
 @Component({
   moduleId: module.id,
@@ -9,7 +9,7 @@ import {LoginService} from './services/login.service';
   templateUrl: 'chat-practice-ui.component.html',
   styleUrls: ['chat-practice-ui.component.css'],
   directives: [ChatComponent, NavbarComponent],
-  providers: [LoginService]
+  providers: [UserService]
 })
 export class ChatPracticeUiAppComponent {
   public title = 'derp';
