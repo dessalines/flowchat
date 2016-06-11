@@ -1,50 +1,45 @@
-<nav class="navbar navbar-full navbar-dark bg-primary">
+<nav class="navbar navbar-full navbar-light" style="background-color: #e3f2fd;">
   <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
     &#9776;
   </button>
   <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
     <a class="navbar-brand" href="#">Flow</a>
     <ul class="nav navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Heh <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <form class="form-inline">
+          <input class="form-control" type="text" placeholder="Search">
+          <button class="btn btn-primary-outline" type="submit">Search</button>
+        </form>
       </li>
     </ul>
-    <form class="form-inline pull-xs-right">
-      <input class="form-control" type="text" placeholder="Search">
-      <button class="btn btn-secondary-outline" type="submit">Search</button>
-    </form>
-  </div>
-</nav>
-<!-- Large modal -->
-<button class="btn btn-primary" (click)="sampleModal.show()">Large modal</button>
-<button class="btn btn-primary" (click)="loginModal.show()">Large modal</button>
-<!-- sample -->
-<div bsModal #sampleModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" (click)="sampleModal.hide()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title">Large modal</h4>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
+    <button *ngIf="!userService.getUser()" class="btn btn-primary-outline pull-xs-right" (click)="loginModal.show()">Login/Signup</button>
+    <div *ngIf="userService.getUser()" class="btn-group pull-xs-right" dropdown keyboardNav="true">
+      <button id="simple-btn-keyboard-nav" type="button" class="btn btn-primary-outline" dropdownToggle>
+        {{userService.getUser().name}}<span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="simple-btn-keyboard-nav">
+        <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
+        <li class="divider dropdown-divider"></li>
+        <li role="menuitem"><a (click)="userService.logout()" class="dropdown-item" href="#">Logout</a></li>
+      </ul>
     </div>
   </div>
-</div>
+</nav>
+
 <!-- Modals -->
 <div bsModal #loginModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
-        <button type="button" class="close" (click)="loginModal.hide()" aria-label="Close">
+        <button id="closeModalButton" type="button" class="close" (click)="loginModal.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
         <div class="row">
           <div class="col-md-6 vertical-line-right">
-            <h4 class="text-xs-center"> Create a new account </h4>
+            <h4 class="text-xs-center"> Signup </h4>
             <br>
             <form #signupForm="ngForm" (ngSubmit)="signupSubmit()" class="form-horizontal" role="form">
               <div class="form-group">

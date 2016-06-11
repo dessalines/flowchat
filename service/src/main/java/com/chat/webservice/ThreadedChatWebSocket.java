@@ -48,7 +48,7 @@ public class ThreadedChatWebSocket {
         Tools.dbInit();
 
         // Get or create the user
-        UserObj userObj = setupUser(session, cookieMap.get("user_id"));
+        UserObj userObj = setupUser(session, cookieMap.get("auth"));
 
         // Send them their user info
         session.getRemote().sendString(userObj.json());
@@ -132,20 +132,18 @@ public class ThreadedChatWebSocket {
     }
 
 
-    private UserObj setupUser(Session session, String userId) {
-        User dbUser = null;
+    private UserObj setupUser(Session session, String auth) {
+        
+        UserObj userObj;
 
+        if (auth != null) {
+            UserLoginView uv = USER_LOGIN_VIEW.findFirst("auth = ?", auth);
+            userObj = new UserObj(uv.getLongId(), uv.getString("name"));
 
-        if (dbUser == null) {
-            if (userId != null) {
-                dbUser = USER.findFirst("id = ?", userId);
-            } else {
-                dbUser = Actions.createUser();
-            }
-
+        } else {
+            User dbUser = Actions.createUser();
+            userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));
         }
-
-        UserObj userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));
 
         sessionToUserMap.put(session, userObj);
 

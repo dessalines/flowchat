@@ -22,8 +22,6 @@ export class ChatComponent implements OnInit {
 
   private isReplying: boolean = false;
 
-  private user: User;
-
   constructor(private threadedChatService: ThreadedChatService) {
 
     this.threadedChatService.ws.getDataStream().subscribe(res => {
@@ -31,6 +29,8 @@ export class ChatComponent implements OnInit {
     });
 
   }
+
+  // TODO do an event emitter from userService to reconnect to the ws when you logged in
 
   ngOnInit() { }
 
@@ -41,7 +41,7 @@ export class ChatComponent implements OnInit {
 
   // The replying mode should be event emitters pushed up to this top component,
   // not the specific one
-  updateThreadedChat(someData) {
+  updateThreadedChat(someData: string) {
     let data = JSON.parse(someData);
     console.log(data);
 
