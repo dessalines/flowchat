@@ -11,7 +11,7 @@ create table user_ (
 CREATE TABLE full_user (
     id bigserial primary key,
     user_id bigserial not null,
-    email varchar(255) not null unique,
+    email varchar(255) unique,
     password_encrypted varchar(512),
     created timestamp default current_timestamp,
     constraint fk1_user foreign key (user_id)

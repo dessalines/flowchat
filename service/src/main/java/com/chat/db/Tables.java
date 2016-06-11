@@ -16,6 +16,10 @@ public class Tables {
     public static class FullUser extends Model {}
     public static final FullUser FULL_USER = new FullUser();
 
+    @Table("user_view")
+    public static class UserView extends Model {}
+    public static final UserView USER_VIEW = new UserView();
+
     @Table("login")
     public static class Login extends Model {}
     public static final Login LOGIN = new Login();

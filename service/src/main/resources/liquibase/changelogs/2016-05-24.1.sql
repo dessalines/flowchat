@@ -14,9 +14,11 @@ create view user_login_view as
 select u.id,
     u.name,
     fu.email,
-    fu.password_encrypted,
+    fu.id as full_user_id,
+    l.id as login_id,
     l.auth,
-    l.expire_time
+    l.expire_time,
+    u.created
 from user_ as u
 join full_user as fu on fu.user_id = u.id
 join login as l on l.user_id = u.id;

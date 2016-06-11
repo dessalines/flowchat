@@ -99,15 +99,18 @@ public class Actions {
         return user;
     }
 
-    public static String login(String userOrEmail, String password, Request req, Response res) {
+    public static UserLoginView login(String userOrEmail, String password, Request req, Response res) {
 
         // Find the user, then create a login for them
 
-        FullUser fu = FULL_USER.findFirst("name = ? or email = ?", userOrEmail, userOrEmail);
+        UserView uv = USER_VIEW.findFirst("name = ? or email = ?", userOrEmail, userOrEmail);
 
-        if (fu == null) {
+        Login login;
+        if (uv == null) {
             throw new NoSuchElementException("Incorrect user/email");
         } else {
+            FullUser fu = FULL_USER.findFirst("user_id = ?", uv.getLongId());
+
             String encryptedPassword = fu.getString("password_encrypted");
 
             Boolean correctPass = Tools.PASS_ENCRYPT.checkPassword(password, encryptedPassword);
@@ -115,28 +118,33 @@ public class Actions {
             if (correctPass) {
 
                 String auth = Tools.generateSecureRandom();
-                LOGIN.createIt("user_id", fu.getInteger("user_id"),
+                login = LOGIN.createIt("user_id", fu.getInteger("user_id"),
                         "auth", auth,
                         "expire_time", Tools.newExpireTimestamp());
 
-                return Actions.setCookiesForLogin(fu, auth, res);
+                Actions.setCookiesForLogin(fu, auth, res);
 
             } else {
                 throw new NoSuchElementException("Incorrect Password");
             }
         }
 
+        UserLoginView ulv = USER_LOGIN_VIEW.findFirst("login_id = ?", login.getLongId());
+
+        return ulv;
+
     }
 
-    public static String signup(String userName, String password, String email, Request req, Response res) {
+    public static UserLoginView signup(String userName, String password, String email, Request req, Response res) {
 
 
         // Find the user, then create a login for them
 
-        FullUser fu = FULL_USER.findFirst("name = ? or email = ?", userName, userName);
+        UserView uv = USER_VIEW.findFirst("name = ? or email = ?", userName, email);
 
+        Login login;
 
-        if (fu == null) {
+        if (uv == null) {
 
             // Create the user and full user
             User user = USER.createIt(
@@ -145,23 +153,25 @@ public class Actions {
             log.info("encrypting the user password");
             String encryptedPassword = Tools.PASS_ENCRYPT.encryptPassword(password);
 
-            fu = FULL_USER.createIt("user_id", user.getId(),
+            FullUser fu = FULL_USER.createIt("user_id", user.getId(),
                     "email", email,
                     "password_encrypted", encryptedPassword);
 
             // now login that user
             String auth = Tools.generateSecureRandom();
-            LOGIN.createIt("user_id", user.getId(),
+            login = LOGIN.createIt("user_id", user.getId(),
                     "auth", auth,
                     "expire_time", Tools.newExpireTimestamp());
 
             Actions.setCookiesForLogin(fu, auth, res);
 
-            return "Logged in";
-
         } else {
             throw new NoSuchElementException("Username/email already exists");
         }
+
+        UserLoginView ulv = USER_LOGIN_VIEW.findFirst("login_id = ?", login.getLongId());
+
+        return ulv;
 
     }
 

@@ -46,7 +46,7 @@
           <div class="col-md-6 vertical-line-right">
             <h4 class="text-xs-center"> Create a new account </h4>
             <br>
-            <form #signupForm="ngForm" (ngSubmit)="signup()" class="form-horizontal" role="form">
+            <form #signupForm="ngForm" (ngSubmit)="signupSubmit()" class="form-horizontal" role="form">
               <div class="form-group">
                 <div class="col-sm-12">
                   <input [(ngModel)]="signup.username" #signupName="ngForm" ngControl="signupName" class="form-control" placeholder="choose a username" required minlength="5" maxlength="140" />
@@ -88,20 +88,27 @@
           <div class="col-md-6">
             <h4 class="text-xs-center"> Log in </h4>
             <br>
-            <form id="login_form" class="form-horizontal">
+            <form #loginForm="ngForm" (ngSubmit)="loginSubmit()" class="form-horizontal">
               <div class="form-group">
                 <div class="col-sm-12">
-                  <input name="user_or_email" class="form-control" placeholder="username or email" minlength="5" maxlength="140" data-bv-notempty="true" data-bv-notempty-message="A username or email is required" />
+                  <input [(ngModel)]="login.usernameOrEmail" #loginName="ngForm" ngControl="loginName" class="form-control" placeholder="username or email" minlength="5" maxlength="140" required />
+                  <div *ngIf="loginName.dirty" class="row col-sm-12 help-block text-danger">
+                    <small *ngIf="loginName.errors?.required">A username is required</small>
+                    <small *ngIf="loginName.errors?.minlength">Username must be more than 5 characters</small>
+                  </div>
                 </div>
               </div>
               <div class="form-group">
                 <div class="col-sm-12">
-                  <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="password" data-bv-notempty="true" data-bv-notempty-message="The password is required and cannot be empty" data-bv-different-field="username" data-bv-different-message="The password cannot be the same as username" />
+                  <input [(ngModel)]="login.password" #loginPassword="ngForm" ngControl="loginPassword" type="password" type="password" class="form-control" placeholder="password" required />
+                  <div *ngIf="loginPassword.dirty" class="row col-sm-12 help-block text-danger">
+                    <small *ngIf="loginPassword.errors?.required">a password is required</small>
+                  </div>
                 </div>
               </div>
               <div class="form-group">
                 <div class="col-sm-12">
-                  <button id="signinBtn" type="submit" class="btn btn-primary btn-lg btn-block" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Login</button>
+                  <button [disabled]="!loginForm.form.valid" type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
                 </div>
               </div>
             </form>
