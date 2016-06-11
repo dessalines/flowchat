@@ -4,6 +4,8 @@ import ch.qos.logback.classic.Logger;
 import com.chat.DataSources;
 import com.chat.db.Actions;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.MapType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.javalite.activejdbc.DB;
 import org.javalite.activejdbc.DBException;
@@ -36,6 +38,12 @@ public class Tools {
 
 
     public static ObjectMapper JACKSON = new ObjectMapper();
+    public static TypeFactory typeFactory = JACKSON.getTypeFactory();
+
+    public static MapType mapType = typeFactory.constructMapType(HashMap.class, String.class, String.class);
+
+
+
     private static final SecureRandom RANDOM = new SecureRandom();
 
     public static final BasicPasswordEncryptor PASS_ENCRYPT = new BasicPasswordEncryptor();
@@ -123,5 +131,17 @@ public class Tools {
 
         return postMap;
 
+    }
+
+    public static final Map<String, String> createMapFromReqBody(String reqBody) {
+
+        Map<String, String> map = new HashMap<>();
+        try {
+            map = JACKSON.readValue(reqBody, mapType);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
+        return map;
     }
 }

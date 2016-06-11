@@ -58,14 +58,14 @@ public class ChatService {
             try {
                 log.info(req.body());
 
-                Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
+                Map<String, String> vars = Tools.createMapFromReqBody(req.body());
 
-                String userOrEmail = vars.get("user_or_email");
+                String userOrEmail = vars.get("usernameOrEmail");
                 String password = vars.get("password");
 
-                String message = Actions.login(userOrEmail, password, req, res);
+                UserLoginView ulv = Actions.login(userOrEmail, password, req, res);
 
-                return message;
+                return ulv.toJson(false);
 
             } catch (Exception e) {
                 res.status(666);
@@ -80,15 +80,15 @@ public class ChatService {
 
                 log.info(req.body());
 
-                Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
+                Map<String, String> vars = Tools.createMapFromReqBody(req.body());
 
                 String userName = vars.get("username");
                 String password = vars.get("password");
                 String email = vars.get("email");
 
-                String message = Actions.signup(userName, password, email, req, res);
+                UserLoginView ulv = Actions.signup(userName, password, email, req, res);
 
-                return message;
+                return ulv.toJson(false);
 
             } catch (Exception e) {
                 res.status(666);
@@ -105,6 +105,8 @@ public class ChatService {
             Tools.dbClose();
             res.header("Access-Control-Allow-Origin", "*");
             res.header("Content-Encoding", "gzip");
+            res.header("Access-Control-Allow-Credentials", "true");
+
         });
 
 //        get("/temp", (req, res) -> {
