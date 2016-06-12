@@ -11,7 +11,7 @@ import java.util.List;
 public class CommentObj implements JSONWriter{
     private Long id, userId, discussionId, parentId, topParentId, pathLength, numOfParents, numOfChildren;
     private String userName, text;
-    private Timestamp created;
+    private Timestamp created, modified;
     private List<CommentObj> embedded;
     private List<Long> breadcrumbs;
 
@@ -25,7 +25,8 @@ public class CommentObj implements JSONWriter{
                       String breadcrumbs,
                       Long numOfParents,
                       Long numOfChildren,
-                      Timestamp created
+                      Timestamp created,
+                      Timestamp modified
     ) {
         this.id = id;
         this.userId = userId;
@@ -37,6 +38,7 @@ public class CommentObj implements JSONWriter{
         this.numOfParents = numOfParents;
         this.pathLength = pathLength;
         this.created = created;
+        this.modified = modified;
 
         this.embedded = new ArrayList<>();
 
@@ -76,26 +78,6 @@ public class CommentObj implements JSONWriter{
 
     }
 
-    // TODO remove
-    @Override
-    public String toString() {
-        return "{" +
-                "\"id\":" + id +
-                ", \"user_id\":" + userId +
-                ", \"user_name\":\"" + userName + "\"" +
-                ", \"discussionId\":" + discussionId +
-                ", \"parentId\":" + parentId +
-                ", \"topParentId\":" + topParentId +
-                ", \"pathLength\":" + pathLength +
-                ", \"numOfParents\":" + numOfParents +
-                ", \"numOfChildren\":" + numOfChildren +
-                ", \"text\":\"" + text + "\"" +
-                ", \"created\":\"" + created + "\"" +
-                ", \"embedded\":" + embedded +
-                ", \"breadcrumbs\":\"" + breadcrumbs + "\"" +
-                "}";
-    }
-
     public Long getNumOfChildren() {
         return numOfChildren;
     }
@@ -131,6 +113,11 @@ public class CommentObj implements JSONWriter{
     public Timestamp getCreated() {
         return created;
     }
+
+    public Timestamp getModified() {
+        return modified;
+    }
+
 
     public List<CommentObj> getEmbedded() {
         return embedded;

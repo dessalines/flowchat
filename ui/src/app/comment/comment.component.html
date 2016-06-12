@@ -4,7 +4,8 @@
 			role="button" 
 			(click)="collapsed = !collapsed">{{collapseText()}}</li>
 		<li class="text-primary list-inline-item">{{comment.userName}}</li>
-		<li class="text-muted list-inline-item"><small>{{comment.created | moment}}</small></li>
+		<li *ngIf="!comment.modified" class="text-muted list-inline-item"><small>{{comment.created | moment}}</small></li>
+		<li *ngIf="comment.modified" class="text-muted list-inline-item"><small><i>modified {{comment.modified | moment}}</i></small></li>
 	</ul>
 </div>
 <div *ngIf="!collapsed" class="card-block">
@@ -14,6 +15,11 @@
 	</div>
 	<div *ngIf="showEdit" class="card-text">
 		<app-markdown-edit [inputText]="comment.text" (textEvent)="setEdit($event)"></app-markdown-edit>
+		<br>
+		<div class="btn-group" role="group">
+   		<button class="btn btn-primary" (click)="editMessage()">Edit</button>
+    	<button class="btn btn-danger" (click)="hideReply()">Cancel</button>
+   	</div>
 	</div>
 	
 	<small *ngIf="!showReply">
@@ -32,8 +38,10 @@
 	<fieldset *ngIf="showReply" class="form-group">
     	<app-markdown-edit (textEvent)="setReply($event)"></app-markdown-edit>
     	<br>
-    	<button class="btn btn-primary" (click)="sendMessage()">Send</button>
-    	<button class="btn btn-danger" (click)="hideReply()">Cancel</button>
+    	<div class="btn-group" role="group">
+    		<button class="btn btn-primary" (click)="sendMessage()">Send</button>
+    		<button class="btn btn-danger" (click)="hideReply()">Cancel</button>
+    	</div>
     </fieldset> 
     <div class="card" *ngFor="let emb of comment.embedded">
        	<app-comment [comment]="emb" (replyingEvent)="setIsReplying($event)"></app-comment>

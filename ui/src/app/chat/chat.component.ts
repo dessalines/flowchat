@@ -54,13 +54,32 @@ export class ChatComponent implements OnInit {
     }
 
     // For only new comments
-    if (data.numOfParents) {
-      let newComment: Comment = data;
+    if (data.reply) {
+      let newComment: Comment = data.reply;
 
       // Gotta place this new comment in the correct location in the array of comments
       this.addNewComment(newComment);
     }
 
+    if (data.edit) {
+      let editedComment: Comment = data.edit;
+      this.editComment(editedComment);
+    }
+
+  }
+
+  private editComment(editedComment: Comment) {
+    // filter to find correct top level
+    // let topLevel: Comment = this.comments.filter(item => item.id == editedComment.topParentId)[0];
+
+    // Do a recursive loop to find and push the new comment
+    this.recursiveComment(editedComment, this.comments, false);
+    this.recursiveCommentStopper = false;
+
+    // Focus on the new comment if not replying
+    if (!this.isReplying) {
+      setTimeout(() => { location.href = "#comment_" + editedComment.id; }, 50);
+    }
   }
 
   private addNewComment(newComment: Comment) {
@@ -72,10 +91,10 @@ export class ChatComponent implements OnInit {
     }
 
     // filter to find correct top level
-    let topLevel: Comment = this.comments.filter(item => item.id == newComment.topParentId)[0];
+    // let topLevel: Comment = this.comments.filter(item => item.id == newComment.topParentId)[0];
 
     // Do a recursive loop to find and push the new comment
-    this.recursiveComment(newComment, topLevel);
+    this.recursiveComment(newComment, this.comments, true);
     this.recursiveCommentStopper = false;
 
     // Focus on the new comment if not replying
@@ -84,19 +103,32 @@ export class ChatComponent implements OnInit {
     }
   }
 
-  private recursiveComment(newComment: Comment, parent: Comment) {
+  private recursiveComment(newComment: Comment, comments: Array<Comment>, isNew: boolean) {
 
-    if (parent.id == newComment.parentId) {
-      parent.embedded.push(newComment);
-      this.recursiveCommentStopper = true;
-    } else {
-      for (let emb of parent.embedded) {
-        if (!this.recursiveCommentStopper) {
-          this.recursiveComment(newComment, emb);
+
+    // isNew is for edited comments
+    for (let parent of comments) {
+      if (!this.recursiveCommentStopper) {
+
+        // For new comments
+        if (parent.id == newComment.parentId) {
+          if (isNew) {
+            parent.embedded.push(newComment);
+            this.recursiveCommentStopper = true;
+          } else {
+            let child = parent.embedded.filter(item => item.id == newComment.id)[0];
+            let index = parent.embedded.indexOf(child);
+
+            parent.embedded[index] = newComment;
+            this.recursiveCommentStopper = true;
+          }
+        } else {
+          this.recursiveComment(newComment, parent.embedded, isNew);
         }
       }
     }
   }
+
 
   setIsReplying($event) {
     this.isReplying = $event;

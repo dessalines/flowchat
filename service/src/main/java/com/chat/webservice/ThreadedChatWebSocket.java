@@ -160,7 +160,7 @@ public class ThreadedChatWebSocket {
 //        comments = fetchComments();
 
 
-        broadcastMessage(sessionToUserMap.get(session), co.json());
+        broadcastMessage(sessionToUserMap.get(session), co.json("reply"));
 
     }
 
@@ -170,16 +170,25 @@ public class ThreadedChatWebSocket {
 
         Comment c = Actions.editComment(editData.getId(), editData.getEdit());
 
-        CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", c.getLongId());
+        // You need to get the breadcrumbs, since there could be many sub comments to this one
+        List<CommentBreadcrumbsView> cbvs = COMMENT_BREADCRUMBS_VIEW.where("parent_id = ?", c.getLongId());
 
         // Convert to a proper commentObj
-        CommentObj co = Transformations.convertCommentThreadedView(ctv);
+        CommentObj co = Transformations.convertCommentsToEmbeddedObjects(cbvs).get(0);
+        log.info(co.json());
 
         // Refetch the comments
 //        comments = fetchComments();
 
+        // TODO A temp workaround until i find out a more generic way to do this
+        CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", c.getLongId());
+
+        // Set the comment to its new value
+        Integer index = Tools.findIndexByIdInLazyList(comments, c.getLongId());
+        comments.set(index, ctv);
+
         // TODO not sure if this is going to work correctly
-        broadcastMessage(sessionToUserMap.get(session), co.json());
+        broadcastMessage(sessionToUserMap.get(session), co.json("edit"));
 
     }
 

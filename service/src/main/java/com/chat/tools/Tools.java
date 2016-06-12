@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.javalite.activejdbc.DB;
 import org.javalite.activejdbc.DBException;
+import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
 import org.javalite.http.Http;
 import org.postgresql.jdbc.PgArray;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static javafx.scene.input.KeyCode.T;
 
@@ -143,5 +146,10 @@ public class Tools {
         }
 
         return map;
+    }
+
+    public static Integer findIndexByIdInLazyList(LazyList<? extends Model> ctv, Long searchId) {
+        Integer index = IntStream.range(0, ctv.size()).filter(c -> ctv.get(c).getLongId() == searchId).toArray()[0];
+        return index;
     }
 }

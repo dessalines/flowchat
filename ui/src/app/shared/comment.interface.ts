@@ -10,6 +10,7 @@ export interface Comment {
 	numOfParents: number;
 	numOfChildren: number;
 	created: number;
+	modified?: number;
 	embedded: Array<Comment>;
 	breadcrumbs: Array<number>;
 }
