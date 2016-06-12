@@ -39,8 +39,6 @@ export class CommentComponent implements OnInit {
 
   private editable: boolean = false;
 
-
-
   constructor(private threadedChatService: ThreadedChatService,
     private userService: UserService) { }
 
@@ -56,6 +54,11 @@ export class CommentComponent implements OnInit {
   hideReply() {
     this.showReply = false;
     this.replyingEvent.emit(this.showReply);
+  }
+
+  hideEdit() {
+    this.showEdit = false;
+    this.replyingEvent.emit(this.showEdit);
   }
 
   // This sends the event up the chain
@@ -110,8 +113,8 @@ export class CommentComponent implements OnInit {
 
   private isCommentNew(): boolean {
     let now = moment().subtract(2, 'minutes');
-    let then = moment(this.comment.created);
-
+    let then = (this.comment.modified != null) ? moment(this.comment.modified) :
+      moment(this.comment.created);
     return now.isBefore(then);
   }
 
@@ -124,7 +127,8 @@ export class CommentComponent implements OnInit {
   }
 
   setEditable() {
-    if (this.comment.userId == this.userService.getUser().id) {
+    if (this.userService.getUser() != null &&
+      this.comment.userId == this.userService.getUser().id) {
       this.editable = true;
     }
   }

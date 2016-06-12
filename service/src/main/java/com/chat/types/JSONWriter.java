@@ -9,13 +9,23 @@ import java.io.IOException;
  * Created by tyler on 6/7/16.
  */
 public interface JSONWriter {
-    default String json() {
+    default String json(String wrappedName) {
         try {
-            return Tools.JACKSON.writeValueAsString(this);
+            String val = Tools.JACKSON.writeValueAsString(this);
+
+            String json = (wrappedName != null) ? "{\"" + wrappedName + "\":" +
+                    val +
+                    "}" : val;
+
+            return json;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    default String json() {
+        return json(null);
     }
 
 }

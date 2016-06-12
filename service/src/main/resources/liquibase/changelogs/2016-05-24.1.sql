@@ -44,7 +44,8 @@ select d.id,
        array_agg(crumbs.parent_id order by crumbs.parent_id) as breadcrumbs,
        count(crumbs.parent_id)-1 as num_of_parents,
        cv.num_of_children,
-       d.created
+       d.created,
+       d.modified
 from comment as d
 join comment_tree as p on d.id = p.child_id
 join comment_tree as crumbs on crumbs.child_id = p.child_id

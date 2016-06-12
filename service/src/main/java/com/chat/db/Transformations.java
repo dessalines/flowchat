@@ -2,6 +2,7 @@ package com.chat.db;
 
 import ch.qos.logback.classic.Logger;
 import com.chat.types.CommentObj;
+import org.javalite.activejdbc.Model;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Timestamp;
@@ -17,7 +18,7 @@ public class Transformations {
     public static Logger log = (Logger) LoggerFactory.getLogger(Transformations.class);
 
 
-    public static CommentObj convertCommentThreadedView(CommentThreadedView cv) {
+    public static CommentObj convertCommentThreadedView(Model cv) {
         return new CommentObj(cv.getLong("id"),
                 cv.getLong("user_id"),
                 cv.getString("user_name"),
@@ -28,16 +29,18 @@ public class Transformations {
                 cv.getString("breadcrumbs"),
                 cv.getLong("num_of_parents"),
                 cv.getLong("num_of_children"),
-                cv.getTimestamp("created"));
+                cv.getTimestamp("created"),
+                cv.getTimestamp("modified"));
     }
 
 
-    public static Map<Long, CommentObj> convertCommentThreadedViewToMap(List<CommentThreadedView> cvs) {
+
+    public static Map<Long, CommentObj> convertCommentThreadedViewToMap(List<? extends Model> cvs) {
 
         // Create a top level map of ids to comments
         Map<Long, CommentObj> commentObjMap = new LinkedHashMap<>();
 
-        for (CommentThreadedView cv : cvs) {
+        for (Model cv : cvs) {
 
             Long id = cv.getLong("id");
 
@@ -59,10 +62,12 @@ public class Transformations {
             Long id = e.getKey();
             CommentObj co = e.getValue();
 
+//            log.info(co.json());
+
             Long parentId = commentObjMap.get(id).getParentId();
 
             // If its top level, add it
-            if (parentId == null) {
+            if (parentId == null || id == co.getTopParentId()) {
                 cos.add(co);
             }
             else {
@@ -79,7 +84,7 @@ public class Transformations {
         return cos;
     }
 
-    public static List<CommentObj> convertCommentsToEmbeddedObjects(List<CommentThreadedView> cvs) {
+    public static List<CommentObj> convertCommentsToEmbeddedObjects(List<? extends Model> cvs) {
 
         Map<Long, CommentObj> commentObjMap = convertCommentThreadedViewToMap(cvs);
 
@@ -87,5 +92,7 @@ public class Transformations {
 
         return cos;
     }
+
+
 
 }

@@ -13,6 +13,8 @@ import java.util.List;
 
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.IntStream;
+
 import com.chat.tools.Tools;
 import org.postgresql.jdbc.PgArray;
 import org.slf4j.LoggerFactory;
@@ -86,7 +88,7 @@ public class AppTest {
 
         log.info(ctv.toJson(false));
 
-        CommentThreadedView testFound = (CommentThreadedView) COMMENT_THREADED_VIEW.where("discussion_id = ?", 1).get(4);
+        CommentThreadedView testFound = COMMENT_THREADED_VIEW.findFirst("id = ?", 4L);
 
         log.info(testFound.toJson(false));
 
@@ -98,7 +100,10 @@ public class AppTest {
 //
 //
 //
-//        CommentThreadedView ctv2 = (CommentThreadedView) ctv.collect("id", "id", 4L).get(0);
+        Integer index = Tools.findIndexByIdInLazyList(ctv, 4L);
+        log.info(index.toString());
+        log.info(ctv.get(index).toString());
+
 //
 //        log.info(ctv2.toString());
 
