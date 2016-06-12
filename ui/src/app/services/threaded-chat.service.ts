@@ -11,6 +11,9 @@ export class ThreadedChatService {
 
   public config: WebSocketConfig;
 
+  private discussionId: number;
+  private topParentId: number;
+
   constructor() {
 		this.config = {
 			initialTimeout: 30000,
@@ -18,12 +21,19 @@ export class ThreadedChatService {
 			reconnectIfNotNormalClose: true
 		}
 
-    this.ws = new $WebSocket(this.messagesUrl, null, this.config);
+  }
+
+  connect(discussionId: number, topParentId: number) {
+    this.discussionId = discussionId;
+    this.topParentId = topParentId;
+
+    let url = this.messagesUrl + "?discussionId=" + discussionId + "&topParentId=" + topParentId;
+    this.ws = new $WebSocket(url, null, this.config);
     this.ws.connect();
   }
 
   reconnect() {
-    return this.constructor();
+    return this.connect(this.discussionId, this.topParentId);
   }
 
 

@@ -1,10 +1,12 @@
 package com.chat.types;
 
+import ch.qos.logback.classic.Logger;
 import com.chat.tools.Tools;
+import com.chat.webservice.ThreadedChatWebSocket;
 import org.eclipse.jetty.websocket.api.Session;
+import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -13,7 +15,11 @@ import java.util.stream.Collectors;
  * top comment parent(maybe null) that they are currently viewing
  * Created by tyler on 6/11/16.
  */
-public class SessionScope implements JSONWriter {
+public class SessionScope {
+
+    public static Logger log = (Logger) LoggerFactory.getLogger(SessionScope.class);
+
+
     private final Session session;
     private final UserObj userObj;
     private Long discussionId;
@@ -30,10 +36,21 @@ public class SessionScope implements JSONWriter {
             Set<SessionScope> scopes,
             Long discussionId,
             Long topParentId) {
-        return scopes.stream()
-                .filter(s -> s.getDiscussionId().equals(discussionId)
-                        && s.getTopParentId().equals(topParentId))
-                .collect(Collectors.toSet());
+
+        Set<SessionScope> filteredScopes;
+
+        if (topParentId != null) {
+            filteredScopes = scopes.stream()
+                    .filter(s -> s.getDiscussionId().equals(discussionId)
+                            && s.getTopParentId().equals(topParentId))
+                    .collect(Collectors.toSet());
+        } else {
+            filteredScopes = scopes.stream()
+                    .filter(s -> s.getDiscussionId().equals(discussionId))
+                    .collect(Collectors.toSet());
+        }
+
+        return filteredScopes;
 
     }
 
@@ -54,8 +71,6 @@ public class SessionScope implements JSONWriter {
             Set<SessionScope> scopes, Session session) {
 
 
-
-
         // Send the updated users to everyone in the discussion and parent tree(session scope)
         Set<SessionScope> filteredScopes = SessionScope.getFilteredSessionScopes(
                 scopes, getDiscussionIdFromSession(session),
@@ -67,12 +82,18 @@ public class SessionScope implements JSONWriter {
 
     public static Long getTopParentIdFromSession(Session session) {
         Long topParentId = null;
+
+        String maybeUndefined = session.getUpgradeRequest().getParameterMap().get("topParentId").iterator().next();
+
+        if (!maybeUndefined.equals("null")) {
+            topParentId = Long.valueOf(maybeUndefined);
+        }
+
         return topParentId;
     }
 
     public static Long getDiscussionIdFromSession(Session session) {
-        Long discussionId = 1L;
-        return discussionId;
+        return Long.valueOf(session.getUpgradeRequest().getParameterMap().get("discussionId").iterator().next());
     }
 
     public static String getAuthFromSession(Session session) {
@@ -126,5 +147,15 @@ public class SessionScope implements JSONWriter {
         result = 31 * result + discussionId.hashCode();
         result = 31 * result + (topParentId != null ? topParentId.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "SessionScope{" +
+                "session=" + session +
+                ", userObj=" + userObj +
+                ", discussionId=" + discussionId +
+                ", topParentId=" + topParentId +
+                '}';
     }
 }

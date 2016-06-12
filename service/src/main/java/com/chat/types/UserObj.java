@@ -20,4 +20,8 @@ public class UserObj implements JSONWriter {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return this.json();
+    }
 }
