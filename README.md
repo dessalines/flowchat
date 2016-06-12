@@ -2,12 +2,14 @@
 http://stackoverflow.com/questions/8252323/mysql-closure-table-hierarchical-database-how-to-pull-information-out-in-the-c
 http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way-to-parse-a-flat-table-into-a-tree/
 
+
 # TODO
 
 
 - A working user / user login system
-	- Create an open system, new users are just labeled as anonymous_aId
-	- Comment editing(on your own comments).
+	- ~~Create an open system, new users are just labeled as anonymous_aId~~
+	- ~~Comment editing(on your own comments).~~
+  - When user logs in, refresh the session. [BehaviorSubject](http://stackoverflow.com/questions/34376854/delegation-eventemitter-or-observable-in-angular2/35568924#35568924)
 - Comment subset loading
   - What happens when you get too many comments?
   	- Use comment_breadcrumbs_view where parent_id = [parent_id]

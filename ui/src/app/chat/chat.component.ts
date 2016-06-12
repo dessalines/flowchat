@@ -3,6 +3,9 @@ import { HTTP_PROVIDERS }    from '@angular/http';
 import {ThreadedChatService} from '../services/threaded-chat.service';
 import {Comment, User} from '../shared';
 import {CommentComponent} from '../comment';
+import {UserService} from '../services/user.service';
+import {Subscription} from 'rxjs/Subscription';
+
 
 @Component({
   moduleId: module.id,
@@ -22,17 +25,43 @@ export class ChatComponent implements OnInit {
 
   private isReplying: boolean = false;
 
-  constructor(private threadedChatService: ThreadedChatService) {
+  private userServiceWatcher: Subscription;
+  private threadedChatSubscription: Subscription;
 
-    this.threadedChatService.ws.getDataStream().subscribe(res => {
-      this.updateThreadedChat(res.data);
-    });
+  constructor(private threadedChatService: ThreadedChatService,
+    private userService: UserService) {
 
   }
 
-  // TODO do an event emitter from userService to reconnect to the ws when you logged in
+  ngOnInit() { 
+    this.subscribeToChat();
+    this.subscribeToUserServiceWatcher();
+  }
 
-  ngOnInit() { }
+  ngOnDestroy() {
+    this.userServiceWatcher.unsubscribe();
+    this.threadedChatSubscription.unsubscribe();
+    this.threadedChatService.ws.close(true);
+  }
+
+  subscribeToUserServiceWatcher() {
+    this.userServiceWatcher = this.userService.userObservable.subscribe(res => {
+      console.log('user updated to ');
+      console.log(res);
+      if (res != null) {
+        this.threadedChatSubscription.unsubscribe();
+        this.threadedChatService.reconnect();
+        this.subscribeToChat();
+      }
+    });
+  }
+
+  subscribeToChat() {
+    this.threadedChatSubscription = this.threadedChatService.ws.getDataStream().
+      subscribe(res => {
+        this.updateThreadedChat(res.data);
+      });
+  }
 
 
   // TODO only send specifically added comment object
@@ -69,8 +98,6 @@ export class ChatComponent implements OnInit {
   }
 
   private editComment(editedComment: Comment) {
-    // filter to find correct top level
-    // let topLevel: Comment = this.comments.filter(item => item.id == editedComment.topParentId)[0];
 
     // Do a recursive loop to find and push the new comment
     this.recursiveComment(editedComment, this.comments, false);
@@ -89,9 +116,6 @@ export class ChatComponent implements OnInit {
       this.comments.push(newComment);
       return;
     }
-
-    // filter to find correct top level
-    // let topLevel: Comment = this.comments.filter(item => item.id == newComment.topParentId)[0];
 
     // Do a recursive loop to find and push the new comment
     this.recursiveComment(newComment, this.comments, true);

@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
 import {User, Tools} from '../shared';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class UserService {
 
   private user: User;
+
+  private userSource = new BehaviorSubject<User>(this.user);
+
+  public userObservable = this.userSource.asObservable();
 
   constructor() {
 		this.setUserFromCookie();
@@ -33,6 +38,10 @@ export class UserService {
   logout() {
 		this.user = null;
 		this.clearCookies();
+  }
+
+  sendLoginEvent(user: User) {
+    this.userSource.next(user);
   }
 
 
