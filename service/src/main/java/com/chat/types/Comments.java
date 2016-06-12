@@ -3,6 +3,7 @@ package com.chat.types;
 import com.chat.db.Tables;
 import com.chat.db.Transformations;
 import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public class Comments implements JSONWriter {
     private List<CommentObj> comments;
 
-    public Comments(LazyList<Tables.CommentThreadedView> comments) {
+    public Comments(LazyList<? extends Model> comments) {
         this.comments = Transformations.convertCommentsToEmbeddedObjects(comments);
     }
 

@@ -28,8 +28,14 @@ export class ChatComponent implements OnInit {
   private userServiceWatcher: Subscription;
   private threadedChatSubscription: Subscription;
 
+  private discussionId: number = 1;
+  private topParentId: number = null;
+
   constructor(private threadedChatService: ThreadedChatService,
     private userService: UserService) {
+
+    this.topParentId = null;
+    this.threadedChatService.connect(this.discussionId, this.topParentId);
 
   }
 
@@ -46,8 +52,6 @@ export class ChatComponent implements OnInit {
 
   subscribeToUserServiceWatcher() {
     this.userServiceWatcher = this.userService.userObservable.subscribe(res => {
-      console.log('user updated to ');
-      console.log(res);
       if (res != null) {
         this.threadedChatSubscription.unsubscribe();
         this.threadedChatService.reconnect();

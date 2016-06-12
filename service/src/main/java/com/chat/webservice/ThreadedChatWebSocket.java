@@ -1,5 +1,6 @@
 package com.chat.webservice;
 
+import ch.qos.logback.classic.Logger;
 import com.chat.db.Actions;
 import com.chat.db.Transformations;
 import com.chat.tools.Tools;
@@ -11,13 +12,14 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.Array;
 import java.util.*;
 
 import static com.chat.db.Tables.*;
-import static com.chat.db.Transformations.*;
 
 /**
  * Created by tyler on 6/5/16.
@@ -26,20 +28,17 @@ import static com.chat.db.Transformations.*;
 @WebSocket
 public class ThreadedChatWebSocket {
 
+    public static Logger log = (Logger) LoggerFactory.getLogger(ThreadedChatWebSocket.class);
+
+
     private String sender, msg;
 
     static Set<SessionScope> sessionScopes = new HashSet<>();
 
     // The comment rows
-    static LazyList<CommentThreadedView> comments;
+//    static LazyList<CommentThreadedView> comments;
 
-    public ThreadedChatWebSocket() {
-        Tools.dbInit();
-
-        comments = fetchComments();
-
-        Tools.dbClose();
-    }
+    public ThreadedChatWebSocket() {}
 
 
     @OnWebSocketConnect
@@ -57,14 +56,17 @@ public class ThreadedChatWebSocket {
         // Send all the comments to just them
         // TODO need to send only the comments based on their router IE /discussion/1/tree/4
 
+        LazyList<Model> comments = fetchComments(ss);
 
         session.getRemote().sendString(new Comments(comments).json());
 
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredScopesFromSessionRequest(sessionScopes, session);
 
+        log.info(filteredScopes.toString());
+
         broadcastMessage(filteredScopes, new Users(SessionScope.getUserObjects(filteredScopes)).json());
 
-        log.info("session scope " + ss.json() + " joined");
+        log.info("session scope " + ss + " joined");
 
         Tools.dbClose();
 
@@ -77,7 +79,7 @@ public class ThreadedChatWebSocket {
         SessionScope ss = SessionScope.findBySession(sessionScopes, session);
         sessionScopes.remove(ss);
 
-        log.info("session scope " + ss.json()+ " left, " + statusCode + " " + reason);
+        log.info("session scope " + ss + " left, " + statusCode + " " + reason);
 
         // Send the updated users to everyone in the right scope
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredScopesFromSessionRequest(sessionScopes, session);
@@ -140,18 +142,19 @@ public class ThreadedChatWebSocket {
 
     public void messageReply(Session session, String replyDataStr) {
 
+        SessionScope ss = SessionScope.findBySession(sessionScopes, session);
+
         // Get the object
         ReplyData replyData = ReplyData.fromJson(replyDataStr);
 
         // Collect only works on refetch
-        comments = fetchComments();
+        LazyList<Model> comments = fetchComments(ss);
 
         // Necessary for comment tree
         Array arr = (Array) comments.collect("breadcrumbs", "id", replyData.getParentId()).get(0);
 
         List<Long> parentBreadCrumbs = Tools.convertArrayToList(arr);
 
-        SessionScope ss = SessionScope.findBySession(sessionScopes, session);
 
         Comment newComment = Actions.createComment(ss.getUserObj().getId(),
                 1L,
@@ -162,7 +165,8 @@ public class ThreadedChatWebSocket {
         CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", newComment.getLongId());
 
         // Add it to the current lazy list
-        comments.add(ctv);
+        // TODO probably isn't necessary now
+//        comments.add(ctv);
 
 
         // Convert to a proper commentObj
@@ -197,12 +201,12 @@ public class ThreadedChatWebSocket {
         CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", c.getLongId());
 
         // Set the comment to its new value
-        Integer index = Tools.findIndexByIdInLazyList(comments, c.getLongId());
-        comments.set(index, ctv);
+        // TODO probably isn't necessary now
+//        Integer index = Tools.findIndexByIdInLazyList(comments, c.getLongId());
+//        comments.set(index, ctv);
 
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredScopesFromSessionRequest(sessionScopes, session);
 
-        // TODO not sure if this is going to work correctly
         broadcastMessage(filteredScopes, co.json("edit"));
 
     }
@@ -245,8 +249,15 @@ public class ThreadedChatWebSocket {
 
     }
 
-    private static LazyList<CommentThreadedView> fetchComments() {
-        return COMMENT_THREADED_VIEW.where("discussion_id = ?", 1);
+    private static LazyList<Model> fetchComments(SessionScope scope) {
+        if (scope.getTopParentId() != null) {
+            return COMMENT_BREADCRUMBS_VIEW.where("discussion_id = ? and parent_id = ?",
+                    scope.getDiscussionId(), scope.getTopParentId());
+        } else {
+            return COMMENT_THREADED_VIEW.where("discussion_id = ?", scope.getDiscussionId());
+        }
+
+
     }
 
 
