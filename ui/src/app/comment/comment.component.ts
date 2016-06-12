@@ -6,6 +6,8 @@ import { MomentPipe } from '../pipes/moment.pipe';
 import {MarkdownEditComponent} from '../markdown-edit';
 import * as moment from 'moment';
 import {MarkdownPipe} from '../pipes/markdown.pipe';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
+
 
 @Component({
   moduleId: module.id,
@@ -13,7 +15,7 @@ import {MarkdownPipe} from '../pipes/markdown.pipe';
   templateUrl: 'comment.component.html',
   styleUrls: ['comment.component.css'],
   styles: [':host >>> p { margin-bottom: .2rem; }'],
-  directives: [CommentComponent, MarkdownEditComponent],
+  directives: [CommentComponent, MarkdownEditComponent, ROUTER_DIRECTIVES],
   pipes: [MomentPipe, MarkdownPipe]
 })
 
