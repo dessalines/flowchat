@@ -4,6 +4,7 @@ import com.chat.db.Actions;
 import com.chat.db.Transformations;
 import com.chat.tools.Tools;
 import com.chat.types.*;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -11,6 +12,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.javalite.activejdbc.LazyList;
 
+import java.io.IOException;
 import java.sql.Array;
 import java.util.*;
 
@@ -77,27 +79,72 @@ public class ThreadedChatWebSocket {
     }
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String replyDataStr) {
+    public void onMessage(Session session, String dataStr) {
 
-
-        // Get the object
-        Reply reply = Reply.fromJson(replyDataStr);
 
         // Save the data
         Tools.dbInit();
+
+        switch(getMessageType(dataStr)) {
+            case Reply:
+                messageReply(session, dataStr);
+                break;
+            case Edit:
+                messageEdit(session, dataStr);
+                break;
+        }
+
+
+
+        Tools.dbClose();
+
+
+    }
+
+    public MessageType getMessageType(String someData) {
+
+        try {
+        JsonNode rootNode = Tools.JACKSON.readTree(someData);
+
+            Iterator<String> it = rootNode.fieldNames();
+
+            while (it.hasNext()) {
+                String nodeName = it.next();
+                switch(nodeName) {
+                    case "reply" :
+                        return MessageType.Reply;
+                    case "edit":
+                        return MessageType.Edit;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    enum MessageType {
+        Edit, Reply;
+    }
+
+    public void messageReply(Session session, String replyDataStr) {
+
+        // Get the object
+        ReplyData replyData = ReplyData.fromJson(replyDataStr);
 
         // Collect only works on refetch
         comments = fetchComments();
 
         // Necessary for comment tree
-        Array arr = (Array) comments.collect("breadcrumbs", "id", reply.getParentId()).get(0);
+        Array arr = (Array) comments.collect("breadcrumbs", "id", replyData.getParentId()).get(0);
 
         List<Long> parentBreadCrumbs = Tools.convertArrayToList(arr);
 
         Comment newComment = Actions.createComment(sessionToUserMap.get(session).getId(),
                 1L,
                 parentBreadCrumbs,
-                reply.getReply());
+                replyData.getReply());
 
         // Fetch the comment threaded view
         CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", newComment.getLongId());
@@ -115,8 +162,24 @@ public class ThreadedChatWebSocket {
 
         broadcastMessage(sessionToUserMap.get(session), co.json());
 
-        Tools.dbClose();
+    }
 
+    public void messageEdit(Session session, String editDataStr) {
+
+        EditData editData = EditData.fromJson(editDataStr);
+
+        Comment c = Actions.editComment(editData.getId(), editData.getEdit());
+
+        CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", c.getLongId());
+
+        // Convert to a proper commentObj
+        CommentObj co = Transformations.convertCommentThreadedView(ctv);
+
+        // Refetch the comments
+//        comments = fetchComments();
+
+        // TODO not sure if this is going to work correctly
+        broadcastMessage(sessionToUserMap.get(session), co.json());
 
     }
 
@@ -133,7 +196,7 @@ public class ThreadedChatWebSocket {
 
 
     private UserObj setupUser(Session session, String auth) {
-        
+
         UserObj userObj;
 
         if (auth != null) {

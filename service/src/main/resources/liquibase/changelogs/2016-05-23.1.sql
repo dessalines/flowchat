@@ -42,6 +42,7 @@ create table comment (
     discussion_id bigserial not null,
     text_ text not null,
     created timestamp default current_timestamp,
+    modified timestamp,
     constraint fk1_user foreign key (user_id)
         references user_ (id)
         on update cascade on delete cascade

@@ -17,6 +17,7 @@ http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way
 - Reconnect websocket if [disconnected](http://stackoverflow.com/questions/3479734/javascript-jquery-test-if-window-has-focus)
 - Front page is for creating discussions
 - Make comments editable
+- Toastr / whatever messages for errors, successes.
 - Serving multiple discussions
 	- Discussions on left
 	- Set up like Stash
@@ -25,6 +26,8 @@ http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way
 - Possibly add range voting?
 	- Use default html sliders [1](http://stackoverflow.com/questions/15935837/how-to-display-a-range-input-slider-vertically) [styling](http://danielstern.ca/range.css/#/) [fiddle](http://jsfiddle.net/Mmgxg/)
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
+- Links, or left bar with discussions? Are you making a reddit alternative, or a slack alternative? Team-based discussions, or thread based?
+- Fix issue with relogin reconnecting to websocket under your different username.
 - ~~Refresh only specific changed content~~
   - ~~For now, use newCommentId.~~
   - ~~Automatically Scroll to new comment - location.href = "#myDiv";~~

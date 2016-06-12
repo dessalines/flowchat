@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {Comment} from '../shared/comment.interface';
 import {ThreadedChatService} from '../services/threaded-chat.service';
+import {UserService} from '../services/user.service';
 import { MomentPipe } from '../pipes/moment.pipe';
 import {MarkdownEditComponent} from '../markdown-edit';
 import * as moment from 'moment';
@@ -24,9 +25,13 @@ export class CommentComponent implements OnInit {
   // want to focus on new comments when not replying
   @Output() replyingEvent = new EventEmitter();
 
-  private reply: string;
+  private replyText: string;
 
   private showReply: boolean = false;
+
+  private editText: string;
+
+  private showEdit: boolean = false;
 
   private collapsed: boolean = false;
 
@@ -36,11 +41,16 @@ export class CommentComponent implements OnInit {
 
 
 
-  constructor(private threadedChatService: ThreadedChatService) { }
+  constructor(private threadedChatService: ThreadedChatService,
+    private userService: UserService) { }
 
   toggleShowReply() {
     this.showReply = !this.showReply;
     this.replyingEvent.emit(this.showReply);
+  }
+
+  toggleShowEdit() {
+    this.showEdit = !this.showEdit;
   }
 
   hideReply() {
@@ -55,7 +65,7 @@ export class CommentComponent implements OnInit {
 
   ngOnInit() {
     this.highlight = this.isCommentNew();
-    // this.focusToNewComment();
+    this.setEditable();
   }
 
   sendMessage() {
@@ -66,12 +76,32 @@ export class CommentComponent implements OnInit {
     }
     this.showReply = false;
     this.replyingEvent.emit(this.showReply);
-    this.reply = "";
+    this.replyText = "";
 
   }
 
-  private replyData(): string {
-    return JSON.stringify({ parentId: this.comment.id, reply: this.reply });
+  editMessage() {
+    this.threadedChatService.ws.send(this.editData());
+    this.showEdit = false;
+    this.replyingEvent.emit(this.showEdit);
+  }
+
+  private replyData(): ReplyData {
+    let replyData = {
+      parentId: this.comment.id,
+      reply: this.replyText
+    }
+
+    return replyData;
+    // return JSON.stringify({ parentId: this.comment.id, reply: this.reply });
+  }
+
+  private editData(): EditData {
+    let editData = {
+      id: this.comment.id,
+      edit: this.editText
+    }
+    return editData;
   }
 
   private collapseText(): string {
@@ -86,8 +116,27 @@ export class CommentComponent implements OnInit {
   }
 
   setReply($event) {
-    this.reply = $event;
+    this.replyText = $event;
   }
 
+  setEdit($event) {
+    this.editText = $event;
+  }
 
+  setEditable() {
+    if (this.comment.userId == this.userService.getUser().id) {
+      this.editable = true;
+    }
+  }
 }
+
+interface ReplyData {
+  parentId: number;
+  reply: string;
+}
+
+interface EditData {
+  id: number;
+  edit: string;
+}
+

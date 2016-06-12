@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 import * as markdown_it from 'markdown-it';
 
 declare var autosize: any;
@@ -12,6 +12,8 @@ declare var autosize: any;
 export class MarkdownEditComponent implements OnInit {
 
   @Output() textEvent = new EventEmitter();
+
+  @Input() inputText: string;
 
   @ViewChild('textArea') textArea;
 
@@ -27,6 +29,9 @@ export class MarkdownEditComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.inputText != null) {
+      this.textBox = this.inputText;
+    }
   }
 
   ngAfterViewInit() {

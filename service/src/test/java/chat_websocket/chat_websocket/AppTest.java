@@ -80,5 +80,29 @@ public class AppTest {
 
     }
 
+    @Test
+    public void testFindComment() throws SQLException {
+        LazyList<CommentThreadedView> ctv = COMMENT_THREADED_VIEW.where("discussion_id = ?", 1);
+
+        log.info(ctv.toJson(false));
+
+        CommentThreadedView testFound = (CommentThreadedView) COMMENT_THREADED_VIEW.where("discussion_id = ?", 1).get(4);
+
+        log.info(testFound.toJson(false));
+
+//        ctv.collect("", "id", 4L).get(0);
+
+//        Integer index = ctv.indexOf(testFound);
+//
+//        log.info(index.toString());
+//
+//
+//
+//        CommentThreadedView ctv2 = (CommentThreadedView) ctv.collect("id", "id", 4L).get(0);
+//
+//        log.info(ctv2.toString());
+
+    }
+
 
 }
