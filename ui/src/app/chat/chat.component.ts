@@ -6,6 +6,7 @@ import {CommentComponent} from '../comment';
 import {UserService} from '../services/user.service';
 import {Subscription} from 'rxjs/Subscription';
 import { RouteConfig, ROUTER_DIRECTIVES, Router, RouteParams} from '@angular/router-deprecated';
+import {RouteParamService} from '../services/route-param.service';
 
 @Component({
   moduleId: module.id,
@@ -34,13 +35,15 @@ export class ChatComponent implements OnInit {
   constructor(private threadedChatService: ThreadedChatService,
     private userService: UserService,
     private router: Router,
-    private routeParams: RouteParams) {
+    private routeParams: RouteParams,
+    private routeParamService: RouteParamService) {
 
   }
 
   ngOnInit() {
     console.log(this.routeParams);
-    this.discussionId = Number(this.routeParams.get("discussionId"));
+    console.log(this.routeParamService.params());
+    this.discussionId = Number(this.routeParamService.params().get("discussionId"));
     // this.topParentId = Number(this.routeParams.get("commentId"));
     // this.topParentId = null;
     this.threadedChatService.connect(this.discussionId, this.topParentId);
