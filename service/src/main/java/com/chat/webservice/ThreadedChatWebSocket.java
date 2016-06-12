@@ -45,24 +45,26 @@ public class ThreadedChatWebSocket {
     @OnWebSocketConnect
     public void onConnect(Session session) throws Exception {
 
-        Map<String, String> cookieMap = Tools.cookieListToMap(session.getUpgradeRequest().getCookies());
 
         Tools.dbInit();
 
-        // Get or create the user
-        UserObj userObj = setupUser(session, cookieMap.get("auth"));
+        // Get or create the session scope
+        SessionScope ss = setupSessionScope(session);
 
         // Send them their user info
-        session.getRemote().sendString(userObj.json());
+        session.getRemote().sendString(ss.getUserObj().json());
 
         // Send all the comments to just them
+        // TODO need to send only the comments based on their router IE /discussion/1/tree/4
+
+
         session.getRemote().sendString(new Comments(comments).json());
 
-        // Send the updated users to everyone
-        broadcastMessage(sessionToUserMap.get(session), new Users(sessionToUserMap).json());
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredScopesFromSessionRequest(sessionScopes, session);
 
-        log.info("user " + userObj.getName() + " joined");
+        broadcastMessage(filteredScopes, new Users(SessionScope.getUserObjects(filteredScopes)).json());
 
+        log.info("session scope " + ss.json() + " joined");
 
         Tools.dbClose();
 
@@ -72,13 +74,16 @@ public class ThreadedChatWebSocket {
     @OnWebSocketClose
     public void onClose(Session session, int statusCode, String reason) {
 
-        UserObj userObj = sessionToUserMap.get(session);
-        sessionToUserMap.remove(session);
+        SessionScope ss = SessionScope.findBySession(sessionScopes, session);
+        sessionScopes.remove(ss);
 
-        log.info("user " + userObj.getId() + " left, " + statusCode + " " + reason);
+        log.info("session scope " + ss.json()+ " left, " + statusCode + " " + reason);
 
-        // Send the updated users to everyone
-        broadcastMessage(sessionToUserMap.get(session), new Users(sessionToUserMap).json());
+        // Send the updated users to everyone in the right scope
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredScopesFromSessionRequest(sessionScopes, session);
+
+        broadcastMessage(filteredScopes, new Users(SessionScope.getUserObjects(filteredScopes)).json());
+
     }
 
     @OnWebSocketMessage
@@ -103,6 +108,8 @@ public class ThreadedChatWebSocket {
 
 
     }
+
+
 
     public MessageType getMessageType(String someData) {
 
@@ -144,7 +151,9 @@ public class ThreadedChatWebSocket {
 
         List<Long> parentBreadCrumbs = Tools.convertArrayToList(arr);
 
-        Comment newComment = Actions.createComment(sessionToUserMap.get(session).getId(),
+        SessionScope ss = SessionScope.findBySession(sessionScopes, session);
+
+        Comment newComment = Actions.createComment(ss.getUserObj().getId(),
                 1L,
                 parentBreadCrumbs,
                 replyData.getReply());
@@ -162,8 +171,9 @@ public class ThreadedChatWebSocket {
 
 //        comments = fetchComments();
 
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredScopesFromSessionRequest(sessionScopes, session);
 
-        broadcastMessage(sessionToUserMap.get(session), co.json("reply"));
+        broadcastMessage(filteredScopes, co.json("reply"));
 
     }
 
@@ -190,8 +200,10 @@ public class ThreadedChatWebSocket {
         Integer index = Tools.findIndexByIdInLazyList(comments, c.getLongId());
         comments.set(index, ctv);
 
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredScopesFromSessionRequest(sessionScopes, session);
+
         // TODO not sure if this is going to work correctly
-        broadcastMessage(sessionToUserMap.get(session), co.json("edit"));
+        broadcastMessage(filteredScopes, co.json("edit"));
 
     }
 
@@ -199,8 +211,8 @@ public class ThreadedChatWebSocket {
     // TODO need to get subsets of sessions based on discussion_id, and parent_id
     // Maybe Map<discussion_id, List<sessions>
 
-    public static void broadcastMessage(UserObj user, String json) {
-        sessionToUserMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
+    public static void broadcastMessage(Set<SessionScope> filteredScopes, String json) {
+        SessionScope.getSessions(filteredScopes).stream().filter(Session::isOpen).forEach(session -> {
             try {
                 session.getRemote().sendString(json);
             } catch (Exception e) {
@@ -209,7 +221,11 @@ public class ThreadedChatWebSocket {
         });
     }
 
-    private UserObj setupUser(Session session, String auth) {
+    private SessionScope setupSessionScope(Session session) {
+
+        String auth = SessionScope.getAuthFromSession(session);
+        Long discussionId = SessionScope.getDiscussionIdFromSession(session);
+        Long topParentId = SessionScope.getTopParentIdFromSession(session);
 
         UserObj userObj;
 
@@ -221,11 +237,11 @@ public class ThreadedChatWebSocket {
             User dbUser = Actions.createUser();
             userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));
         }
-        
-        sessionToUserMap.put(session, userObj);
 
+        SessionScope ss = new SessionScope(session, userObj, discussionId, topParentId);
+        sessionScopes.add(ss);
 
-        return userObj;
+        return ss;
 
     }
 
