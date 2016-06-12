@@ -28,7 +28,7 @@ public class ThreadedChatWebSocket {
 
     private String sender, msg;
 
-    static Map<Session, UserObj> sessionToUserMap = new HashMap<>();
+    static Set<SessionScope> sessionScopes = new HashSet<>();
 
     // The comment rows
     static LazyList<CommentThreadedView> comments;
@@ -196,6 +196,9 @@ public class ThreadedChatWebSocket {
     }
 
     //Sends a message from one user to all users
+    // TODO need to get subsets of sessions based on discussion_id, and parent_id
+    // Maybe Map<discussion_id, List<sessions>
+
     public static void broadcastMessage(UserObj user, String json) {
         sessionToUserMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
             try {
@@ -205,7 +208,6 @@ public class ThreadedChatWebSocket {
             }
         });
     }
-
 
     private UserObj setupUser(Session session, String auth) {
 
@@ -219,8 +221,9 @@ public class ThreadedChatWebSocket {
             User dbUser = Actions.createUser();
             userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));
         }
-
+        
         sessionToUserMap.put(session, userObj);
+
 
         return userObj;
 
