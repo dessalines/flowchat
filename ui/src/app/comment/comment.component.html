@@ -30,8 +30,11 @@
 			<li role="button" *ngIf="editable" (click)="toggleShowEdit()" class="list-inline-item">
 				<i class="fa fa-fw fa-edit"></i>
 			</li>
-			<li role="button" class="list-inline-item">
-				<i [routerLink]="['/Discussion', {discussionId: comment.discussionId}, 'ChatSub', {commentId: comment.id}]" class="fa fa-fw fa-comments"></i>
+			<li *ngIf="comment.parentId" role="button" class="list-inline-item">
+				<i [routerLink]="['/Discussion', {discussionId: comment.discussionId}, 'ChatSub', {commentId: comment.parentId}]" class="fa fa-fw fa-level-up"></i>
+			</li>
+			<li *ngIf="comment.id != comment.topParentId || comment.parentId == null" role="button" class="list-inline-item">
+				<i [routerLink]="['/Discussion', {discussionId: comment.discussionId}, 'ChatSub', {commentId: comment.id}]" class="fa fa-fw fa-level-down"></i>
 			</li>
 		</ul>
 	</small>
