@@ -6,10 +6,7 @@ http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way
 # TODO
 
 
-- A working user / user login system
-	- ~~Create an open system, new users are just labeled as anonymous_aId~~
-	- ~~Comment editing(on your own comments).~~
-  - When user logs in, refresh the session. [BehaviorSubject](http://stackoverflow.com/questions/34376854/delegation-eventemitter-or-observable-in-angular2/35568924#35568924)
+
 - Comment subset loading
   - What happens when you get too many comments?
   	- Use comment_breadcrumbs_view where parent_id = [parent_id]
@@ -18,7 +15,6 @@ http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way
   - Implement a max depth based on how it looks, and a goto discussion button
 - Reconnect websocket if [disconnected](http://stackoverflow.com/questions/3479734/javascript-jquery-test-if-window-has-focus)
 - Front page is for creating discussions
-- Make comments editable
 - Toastr / whatever messages for errors, successes.
 - Serving multiple discussions
 	- Discussions on left
@@ -29,7 +25,6 @@ http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way
 	- Use default html sliders [1](http://stackoverflow.com/questions/15935837/how-to-display-a-range-input-slider-vertically) [styling](http://danielstern.ca/range.css/#/) [fiddle](http://jsfiddle.net/Mmgxg/)
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - Links, or left bar with discussions? Are you making a reddit alternative, or a slack alternative? Team-based discussions, or thread based?
-- Fix issue with relogin reconnecting to websocket under your different username.
 - ~~Refresh only specific changed content~~
   - ~~For now, use newCommentId.~~
   - ~~Automatically Scroll to new comment - location.href = "#myDiv";~~
@@ -38,4 +33,8 @@ http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way
   - Recursion: [1](http://stackoverflow.com/a/2549333/1655478) [2](http://stackoverflow.com/questions/16228467/how-do-i-break-out-of-loops-in-recursive-functions) [3](http://stackoverflow.com/questions/34522306/angular-2-focus-on-newly-added-input-element)
 - ~~Comment collapsing~~
 - ~~Start adding [bootstrap-markdown.](http://www.codingdrama.com/bootstrap-markdown/)~~
+- ~~A working user / user login system~~
+  - ~~Create an open system, new users are just labeled as anonymous_aId~~
+  - ~~Comment editing(on your own comments).~~
+  - ~~When user logs in, refresh the session. [BehaviorSubject](http://stackoverflow.com/questions/34376854/delegation-eventemitter-or-observable-in-angular2/35568924#35568924)~~
   
