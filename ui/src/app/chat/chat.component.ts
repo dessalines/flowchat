@@ -5,7 +5,7 @@ import {Comment, User} from '../shared';
 import {CommentComponent} from '../comment';
 import {UserService} from '../services/user.service';
 import {Subscription} from 'rxjs/Subscription';
-
+import { RouteConfig, ROUTER_DIRECTIVES, Router, RouteParams} from '@angular/router-deprecated';
 
 @Component({
   moduleId: module.id,
@@ -32,22 +32,30 @@ export class ChatComponent implements OnInit {
   private topParentId: number = null;
 
   constructor(private threadedChatService: ThreadedChatService,
-    private userService: UserService) {
-
-    this.topParentId = null;
-    this.threadedChatService.connect(this.discussionId, this.topParentId);
+    private userService: UserService,
+    private router: Router,
+    private routeParams: RouteParams) {
 
   }
 
-  ngOnInit() { 
+  ngOnInit() {
+    console.log(this.routeParams);
+    this.discussionId = Number(this.routeParams.get("discussionId"));
+    // this.topParentId = Number(this.routeParams.get("commentId"));
+    // this.topParentId = null;
+    this.threadedChatService.connect(this.discussionId, this.topParentId);
     this.subscribeToChat();
     this.subscribeToUserServiceWatcher();
   }
 
   ngOnDestroy() {
-    this.userServiceWatcher.unsubscribe();
-    this.threadedChatSubscription.unsubscribe();
-    this.threadedChatService.ws.close(true);
+    if (this.userServiceWatcher != null) {
+      console.log('Destroying chat component');
+      this.userServiceWatcher.unsubscribe();
+      this.threadedChatSubscription.unsubscribe();
+      this.threadedChatService.ws.close(true);
+      this.threadedChatService = null;
+    }
   }
 
   subscribeToUserServiceWatcher() {
@@ -109,7 +117,7 @@ export class ChatComponent implements OnInit {
 
     // Focus on the new comment if not replying
     if (!this.isReplying) {
-      setTimeout(() => { location.href = "#comment_" + editedComment.id; }, 50);
+      setTimeout(() => { location.hash = "#comment_" + editedComment.id; }, 50);
     }
   }
 
@@ -127,7 +135,7 @@ export class ChatComponent implements OnInit {
 
     // Focus on the new comment if not replying
     if (!this.isReplying) {
-      setTimeout(() => { location.href = "#comment_" + newComment.id; }, 50);
+      setTimeout(() => { location.hash = "#comment_" + newComment.id; }, 50);
     }
   }
 

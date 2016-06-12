@@ -4,6 +4,9 @@ import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS, DROPDOWN_DIRECTIVES} from 'ng2-boots
 import {LoginService} from '../services/login.service';
 import {UserService} from '../services/user.service'
 import {User, Tools} from '../shared';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
+import {ChatComponent} from '../chat';
+
 
 
 @Component({
@@ -11,7 +14,7 @@ import {User, Tools} from '../shared';
   selector: 'app-navbar',
   templateUrl: 'navbar.component.html',
   styleUrls: ['navbar.component.css'],
-  directives: [MODAL_DIRECTVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES],
+  directives: [MODAL_DIRECTVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES, ROUTER_DIRECTIVES],
   providers: [LoginService],
   viewProviders: [BS_VIEW_PROVIDERS]
 })
@@ -21,7 +24,8 @@ export class NavbarComponent implements OnInit {
   private login: Login = {};
 
   constructor(private userService: UserService,
-    private loginService: LoginService) {
+    private loginService: LoginService,
+    private router: Router) {
 
   }
 
@@ -52,6 +56,15 @@ export class NavbarComponent implements OnInit {
         document.getElementById('closeModalButton').click();
       },
       error => console.log(error));
+  }
+
+  gotoSample() {
+    this.router.navigate(['Discussion']);
+  }
+
+  logout() {
+    this.userService.logout();
+    this.router.navigate(['Home']);
   }
 
 
