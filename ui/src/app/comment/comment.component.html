@@ -18,20 +18,20 @@
 		<br>
 		<div class="btn-group" role="group">
    		<button class="btn btn-primary" (click)="editMessage()">Edit</button>
-    	<button class="btn btn-danger" (click)="hideReply()">Cancel</button>
+    	<button class="btn btn-danger" (click)="hideEdit()">Cancel</button>
    	</div>
 	</div>
 	
-	<small *ngIf="!showReply">
+	<small *ngIf="!showReply && !showEdit">
 		<ul class="list-inline">
 			<li role="button" class="list-inline-item" (click)="toggleShowReply()">
 				<i class="fa fa-fw fa-reply"></i>
 			</li>
-			<li *ngIf="editable" (click)="toggleShowEdit()" class="list-inline-item">
+			<li role="button" *ngIf="editable" (click)="toggleShowEdit()" class="list-inline-item">
 				<i class="fa fa-fw fa-edit"></i>
 			</li>
-			<li class="list-inline-item">
-				<i class="fa fa-fw fa-comments"></i>
+			<li role="button" class="list-inline-item">
+				<i [routerLink]="['/Discussion', {discussionId: comment.discussionId}, 'ChatSub', {commentId: comment.id}]" class="fa fa-fw fa-comments"></i>
 			</li>
 		</ul>
 	</small>

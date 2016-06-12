@@ -13,6 +13,7 @@ http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way
   - Do you not load new ones, if they aren't under your branch?
   - Get comment_threaded_view working for 
   - Implement a max depth based on how it looks, and a goto discussion button
+  - [Route params](http://plnkr.co/edit/IcnEzZ0WtiaY5Bpqrq2Y?p=preview)
 - Reconnect websocket if [disconnected](http://stackoverflow.com/questions/3479734/javascript-jquery-test-if-window-has-focus)
 - Front page is for creating discussions
 - Toastr / whatever messages for errors, successes.

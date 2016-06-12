@@ -44,7 +44,9 @@ export class ChatComponent implements OnInit {
     console.log(this.routeParams);
     console.log(this.routeParamService.params());
     this.discussionId = Number(this.routeParamService.params().get("discussionId"));
-    // this.topParentId = Number(this.routeParams.get("commentId"));
+    if (this.routeParams.get("commentId") != null) {
+      this.topParentId = Number(this.routeParams.get("commentId"));
+    }
     // this.topParentId = null;
     this.threadedChatService.connect(this.discussionId, this.topParentId);
     this.subscribeToChat();
