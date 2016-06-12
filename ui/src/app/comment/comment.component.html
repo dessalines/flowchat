@@ -9,8 +9,11 @@
 </div>
 <div *ngIf="!collapsed" class="card-block">
 
-	<div class="card-text" 
+	<div *ngIf="!showEdit" class="card-text" 
 		[class.mark]="highlight" [innerHTML]="comment.text | markdown">
+	</div>
+	<div *ngIf="showEdit" class="card-text">
+		<app-markdown-edit [inputText]="comment.text" (textEvent)="setEdit($event)"></app-markdown-edit>
 	</div>
 	
 	<small *ngIf="!showReply">
@@ -18,7 +21,7 @@
 			<li role="button" class="list-inline-item" (click)="toggleShowReply()">
 				<i class="fa fa-fw fa-reply"></i>
 			</li>
-			<li *ngIf="editable" class="list-inline-item">
+			<li *ngIf="editable" (click)="toggleShowEdit()" class="list-inline-item">
 				<i class="fa fa-fw fa-edit"></i>
 			</li>
 			<li class="list-inline-item">

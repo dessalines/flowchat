@@ -1,6 +1,7 @@
 package com.chat.db;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.*;
 
 import ch.qos.logback.classic.Logger;
@@ -52,6 +53,20 @@ public class Actions {
                     "child_id", childId,
                     "path_length", i);
         }
+
+        return c;
+
+    }
+
+    public static Comment editComment(Long commentId, String text) {
+
+        // Find the comment
+        Comment c = COMMENT.findFirst("id = ?", commentId);
+
+        Timestamp cTime = new Timestamp(new Date().getTime());
+
+        // Create with add modified date
+        c.set("text_", text, "modified", cTime).saveIt();
 
         return c;
 
