@@ -61,6 +61,9 @@ public class ThreadedChatWebSocket {
         // Send the updated users to everyone
         broadcastMessage(sessionToUserMap.get(session), new Users(sessionToUserMap).json());
 
+        log.info("user " + userObj.getName() + " joined");
+
+
         Tools.dbClose();
 
 

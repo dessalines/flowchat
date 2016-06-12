@@ -22,5 +22,9 @@ export class ThreadedChatService {
     this.ws.connect();
   }
 
+  reconnect() {
+    return this.constructor();
+  }
+
 
 }

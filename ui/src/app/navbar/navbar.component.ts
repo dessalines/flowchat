@@ -34,6 +34,7 @@ export class NavbarComponent implements OnInit {
       this.signup.email).subscribe(
       user => {
         this.userService.setUser(user);
+        this.userService.sendLoginEvent(user);
         console.log(this.userService.getUser());
         document.getElementById('closeModalButton').click();
       },
@@ -46,6 +47,7 @@ export class NavbarComponent implements OnInit {
       this.login.password).subscribe(
       user => {
         this.userService.setUser(user);
+        this.userService.sendLoginEvent(user);
         console.log(this.userService.getUser());
         document.getElementById('closeModalButton').click();
       },
