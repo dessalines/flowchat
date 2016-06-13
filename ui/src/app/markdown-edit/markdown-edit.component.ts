@@ -26,6 +26,7 @@ export class MarkdownEditComponent implements OnInit {
 
   private markdownIt: any;
 
+
   constructor() {
     this.markdownIt = new markdown_it();
   }

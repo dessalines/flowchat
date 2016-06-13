@@ -35,6 +35,7 @@ export class ChatComponent implements OnInit {
   private topParentId: number = null;
 
   private topReply: string;
+  private clearTopReply: boolean = false;
 
   constructor(private threadedChatService: ThreadedChatService,
     private userService: UserService,
@@ -137,8 +138,14 @@ export class ChatComponent implements OnInit {
       topReply: this.topReply
     }
     this.threadedChatService.ws.send(reply);
-    
+
     this.topReply = "";
+
+    // necessary to reload the top replier
+    this.clearTopReply = true;
+    setTimeout(() => { this.clearTopReply = false }, 0);
+
+
   }
 
   private editComment(editedComment: Comment) {
