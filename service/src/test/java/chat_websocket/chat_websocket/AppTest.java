@@ -52,7 +52,7 @@ public class AppTest {
         LazyList<CommentThreadedView> ctv = COMMENT_THREADED_VIEW.where("discussion_id = ?", 1);
 
 
-        List<CommentObj> cos = Transformations.convertCommentsToEmbeddedObjects(ctv);
+        List<CommentObj> cos = Transformations.convertCommentsToEmbeddedObjects(ctv, null);
 
         for (CommentObj co : cos) {
             System.out.println(co);

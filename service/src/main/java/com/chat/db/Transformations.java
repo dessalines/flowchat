@@ -18,7 +18,7 @@ public class Transformations {
     public static Logger log = (Logger) LoggerFactory.getLogger(Transformations.class);
 
 
-    public static CommentObj convertCommentThreadedView(Model cv) {
+    public static CommentObj convertCommentThreadedView(Model cv, Integer vote) {
         return new CommentObj(cv.getLong("id"),
                 cv.getLong("user_id"),
                 cv.getString("user_name"),
@@ -30,13 +30,15 @@ public class Transformations {
                 cv.getLong("num_of_parents"),
                 cv.getLong("num_of_children"),
                 cv.getInteger("avg_rank"),
+                vote,
                 cv.getTimestamp("created"),
                 cv.getTimestamp("modified"));
     }
 
 
 
-    public static Map<Long, CommentObj> convertCommentThreadedViewToMap(List<? extends Model> cvs) {
+    public static Map<Long, CommentObj> convertCommentThreadedViewToMap(List<? extends Model> cvs,
+                                                                        Map<Long, Integer> votes) {
 
         // Create a top level map of ids to comments
         Map<Long, CommentObj> commentObjMap = new LinkedHashMap<>();
@@ -45,8 +47,11 @@ public class Transformations {
 
             Long id = cv.getLong("id");
 
+            // Check to make sure it has a vote
+            Integer vote = (votes != null && votes.containsKey(id)) ? votes.get(id) : null;
+
             // Create the comment object
-            CommentObj co = convertCommentThreadedView(cv);
+            CommentObj co = convertCommentThreadedView(cv, vote);
 
             commentObjMap.put(id, co);
         }
@@ -85,9 +90,10 @@ public class Transformations {
         return cos;
     }
 
-    public static List<CommentObj> convertCommentsToEmbeddedObjects(List<? extends Model> cvs) {
+    public static List<CommentObj> convertCommentsToEmbeddedObjects(List<? extends Model> cvs,
+                                                                    Map<Long, Integer> votes) {
 
-        Map<Long, CommentObj> commentObjMap = convertCommentThreadedViewToMap(cvs);
+        Map<Long, CommentObj> commentObjMap = convertCommentThreadedViewToMap(cvs, votes);
 
         List<CommentObj> cos = convertCommentsMapToEmbeddedObjects(commentObjMap);
 
