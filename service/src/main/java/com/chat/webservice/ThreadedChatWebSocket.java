@@ -102,8 +102,7 @@ public class ThreadedChatWebSocket {
                 messageTopReply(session, dataStr);
         }
 
-
-
+        
         Tools.dbClose();
 
 

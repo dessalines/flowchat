@@ -13,7 +13,7 @@
         </ul>
     </div>
 </div>
-<nav class="navbar navbar-fixed-bottom navbar-light bg-faded">
-    <app-markdown-edit (textEvent)="setTopReply($event)" [rows]="1"></app-markdown-edit>
+<nav *ngIf="!topParentId" class="navbar navbar-fixed-bottom navbar-light bg-faded">
+    <app-markdown-edit [input]="topReply" (textEvent)="setTopReply($event)" [rows]="1"></app-markdown-edit>
     <button (click)="sendTopReply()" class="btn btn-primary-outline pull-xs-right special-nav-button" type="submit">Send</button>
 </nav>
