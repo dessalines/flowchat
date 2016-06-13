@@ -60,9 +60,7 @@ public class ThreadedChatWebSocket {
 
         session.getRemote().sendString(new Comments(comments).json());
 
-        Set<SessionScope> filteredScopes = SessionScope.constructFilteredScopesFromSessionRequest(sessionScopes, session);
-
-        log.info(filteredScopes.toString());
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes, session);
 
         broadcastMessage(filteredScopes, new Users(SessionScope.getUserObjects(filteredScopes)).json());
 
@@ -82,7 +80,7 @@ public class ThreadedChatWebSocket {
         log.info("session scope " + ss + " left, " + statusCode + " " + reason);
 
         // Send the updated users to everyone in the right scope
-        Set<SessionScope> filteredScopes = SessionScope.constructFilteredScopesFromSessionRequest(sessionScopes, session);
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes, session);
 
         broadcastMessage(filteredScopes, new Users(SessionScope.getUserObjects(filteredScopes)).json());
 
@@ -175,7 +173,8 @@ public class ThreadedChatWebSocket {
 
 //        comments = fetchComments();
 
-        Set<SessionScope> filteredScopes = SessionScope.constructFilteredScopesFromSessionRequest(sessionScopes, session);
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
+                sessionScopes, session, co.getBreadcrumbs());
 
         broadcastMessage(filteredScopes, co.json("reply"));
 
@@ -192,7 +191,6 @@ public class ThreadedChatWebSocket {
 
         // Convert to a proper commentObj
         CommentObj co = Transformations.convertCommentsToEmbeddedObjects(cbvs).get(0);
-        log.info(co.json());
 
         // Refetch the comments
 //        comments = fetchComments();
@@ -205,7 +203,8 @@ public class ThreadedChatWebSocket {
 //        Integer index = Tools.findIndexByIdInLazyList(comments, c.getLongId());
 //        comments.set(index, ctv);
 
-        Set<SessionScope> filteredScopes = SessionScope.constructFilteredScopesFromSessionRequest(sessionScopes, session);
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
+                sessionScopes, session, co.getBreadcrumbs());
 
         broadcastMessage(filteredScopes, co.json("edit"));
 
