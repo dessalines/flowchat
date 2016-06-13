@@ -54,11 +54,12 @@ export class ChatComponent implements OnInit {
   }
 
   ngOnDestroy() {
+
     if (this.userServiceWatcher != null) {
+      this.threadedChatService.ws.close(true);
       console.log('Destroying chat component');
       this.userServiceWatcher.unsubscribe();
       this.threadedChatSubscription.unsubscribe();
-      this.threadedChatService.ws.close(true);
       this.threadedChatService = null;
     }
   }
@@ -66,6 +67,7 @@ export class ChatComponent implements OnInit {
   subscribeToUserServiceWatcher() {
     this.userServiceWatcher = this.userService.userObservable.subscribe(res => {
       if (res != null) {
+        this.threadedChatService.ws.close(true);
         this.threadedChatSubscription.unsubscribe();
         this.threadedChatService.reconnect();
         this.subscribeToChat();

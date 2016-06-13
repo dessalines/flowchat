@@ -32,27 +32,7 @@ public class SessionScope {
         this.topParentId = topParentId;
     }
 
-    public static Set<SessionScope> getFilteredSessionScopes(
-            Set<SessionScope> scopes,
-            Long discussionId,
-            Long topParentId) {
 
-        Set<SessionScope> filteredScopes;
-
-        if (topParentId != null) {
-            filteredScopes = scopes.stream()
-                    .filter(s -> s.getDiscussionId().equals(discussionId)
-                            && s.getTopParentId().equals(topParentId))
-                    .collect(Collectors.toSet());
-        } else {
-            filteredScopes = scopes.stream()
-                    .filter(s -> s.getDiscussionId().equals(discussionId))
-                    .collect(Collectors.toSet());
-        }
-
-        return filteredScopes;
-
-    }
 
     public static Set<UserObj> getUserObjects(Set<SessionScope> scopes) {
         return scopes.stream().map(SessionScope::getUserObj).collect(Collectors.toSet());
@@ -67,16 +47,39 @@ public class SessionScope {
                 .collect(Collectors.toSet()).iterator().next();
     }
 
-    public static Set<SessionScope> constructFilteredScopesFromSessionRequest(
-            Set<SessionScope> scopes, Session session) {
+    public static Set<SessionScope> constructFilteredMessageScopesFromSessionRequest(
+            Set<SessionScope> scopes, Session session, List<Long> breadcrumbs) {
 
 
-        // Send the updated users to everyone in the discussion and parent tree(session scope)
-        Set<SessionScope> filteredScopes = SessionScope.getFilteredSessionScopes(
-                scopes, getDiscussionIdFromSession(session),
-                getTopParentIdFromSession(session));
+        Set<SessionScope> filteredScopes;
+        Long discussionId = getDiscussionIdFromSession(session);
+
+        log.info(Arrays.toString(breadcrumbs.toArray()));
+        log.info(scopes.toString());
+
+        filteredScopes = scopes.stream()
+                .filter(s -> s.getDiscussionId().equals(discussionId) &&
+                        // Send it to all top levels(null top), or those who have the parent in their crumbs
+                        (s.getTopParentId() == null || breadcrumbs.contains(s.getTopParentId())))
+                .collect(Collectors.toSet());
+
 
         return filteredScopes;
+
+    }
+
+    public static Set<SessionScope> constructFilteredUserScopesFromSessionRequest(
+            Set<SessionScope> scopes, Session session) {
+
+            Set<SessionScope> filteredScopes;
+            Long discussionId = getDiscussionIdFromSession(session);
+
+            filteredScopes = scopes.stream()
+                    .filter(s -> s.getDiscussionId().equals(discussionId))
+                    .collect(Collectors.toSet());
+
+            return filteredScopes;
+
 
     }
 
@@ -152,7 +155,6 @@ public class SessionScope {
     @Override
     public String toString() {
         return "SessionScope{" +
-                "session=" + session +
                 ", userObj=" + userObj +
                 ", discussionId=" + discussionId +
                 ", topParentId=" + topParentId +
