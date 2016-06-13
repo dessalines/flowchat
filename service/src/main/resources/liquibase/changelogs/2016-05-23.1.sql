@@ -62,6 +62,20 @@ create table comment_tree (
         on update cascade on delete cascade
 );
 
+create table comment_rank (
+    id bigserial primary key,
+    comment_id bigserial not null,
+    user_id bigserial not null,
+    rank smallint,
+    created timestamp default current_timestamp,
+    constraint fk1_comment_id foreign key (comment_id)
+        references comment (id)
+        on update cascade on delete cascade,
+    constraint fk2_user_id foreign key (user_id)
+        references user_ (id)
+        on update cascade on delete cascade
+);
+
 insert into user_ (name)
     values ('user_1'),('user_2'),('user_3');
 
@@ -72,6 +86,9 @@ insert into comment (text_, user_id, discussion_id)
 	values ('Node 1',1,1),('Node 1.1',2,1),('Node 2',3,1),('Node 1.1.1',2,1),('Node 2.1',1,1),
 	('Node 1.2',2,1);
 
+insert into comment_rank (comment_id, user_id, rank)
+    values (1, 2, 40), (1, 3, 75), (2, 1, 100);
+
 insert into comment_tree (parent_id, child_id, path_length)
 	values 	  (1,1,0), (1,2,1), (1,4,2), (1,6,1),
               (2,2,0), (2,4,1),
@@ -80,6 +97,8 @@ insert into comment_tree (parent_id, child_id, path_length)
               (5,5,0),
               (6,6,0);
 
- --rollback drop table login cascade; drop table full_user cascade; drop table comment cascade ; drop table user_ cascade; drop table comment_tree cascade; drop table discussion cascade;
+
+
+ --rollback drop table login cascade; drop table full_user cascade; drop table comment cascade ; drop table user_ cascade; drop table comment_tree cascade; drop table discussion cascade; drop table comment_rank cascade;
 
 

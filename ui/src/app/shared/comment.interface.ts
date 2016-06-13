@@ -13,4 +13,5 @@ export interface Comment {
 	modified?: number;
 	embedded: Array<Comment>;
 	breadcrumbs: Array<number>;
+	avgRank?: number;
 }
