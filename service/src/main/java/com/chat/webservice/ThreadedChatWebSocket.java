@@ -98,6 +98,8 @@ public class ThreadedChatWebSocket {
             case Edit:
                 messageEdit(session, dataStr);
                 break;
+            case TopReply:
+                messageTopReply(session, dataStr);
         }
 
 
@@ -123,6 +125,8 @@ public class ThreadedChatWebSocket {
                         return MessageType.Reply;
                     case "edit":
                         return MessageType.Edit;
+                    case "topReply":
+                        return MessageType.TopReply;
                 }
             }
         } catch (IOException e) {
@@ -133,7 +137,7 @@ public class ThreadedChatWebSocket {
     }
 
     enum MessageType {
-        Edit, Reply;
+        Edit, Reply, TopReply;
     }
 
     public void messageReply(Session session, String replyDataStr) {
@@ -205,6 +209,33 @@ public class ThreadedChatWebSocket {
                 sessionScopes, session, co.getBreadcrumbs());
 
         broadcastMessage(filteredScopes, co.json("edit"));
+
+    }
+
+    public void messageTopReply(Session session, String topReplyDataStr) {
+
+        SessionScope ss = SessionScope.findBySession(sessionScopes, session);
+
+        // Get the object
+        TopReplyData topReplyData = TopReplyData.fromJson(topReplyDataStr);
+
+
+        Comment newComment = Actions.createComment(ss.getUserObj().getId(),
+                1L,
+                null,
+                topReplyData.getTopReply());
+
+        // Fetch the comment threaded view
+        CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", newComment.getLongId());
+
+        // Convert to a proper commentObj
+        CommentObj co = Transformations.convertCommentThreadedView(ctv);
+
+
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
+                sessionScopes, session, co.getBreadcrumbs());
+
+        broadcastMessage(filteredScopes, co.json("reply"));
 
     }
 
