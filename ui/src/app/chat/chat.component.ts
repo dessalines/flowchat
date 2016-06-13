@@ -45,8 +45,8 @@ export class ChatComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.routeParams);
-    console.log(this.routeParamService.params());
+    // console.log(this.routeParams);
+    // console.log(this.routeParamService.params());
     this.discussionId = Number(this.routeParamService.params().get("discussionId"));
     if (this.routeParams.get("commentId") != null) {
       this.topParentId = Number(this.routeParams.get("commentId"));
@@ -137,6 +137,7 @@ export class ChatComponent implements OnInit {
       topReply: this.topReply
     }
     this.threadedChatService.ws.send(reply);
+    
     this.topReply = "";
   }
 

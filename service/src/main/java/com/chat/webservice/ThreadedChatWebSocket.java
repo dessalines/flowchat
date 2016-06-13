@@ -50,10 +50,15 @@ public class ThreadedChatWebSocket {
 
         LazyList<Model> comments = fetchComments(ss);
 
+        // send the comments
         session.getRemote().sendString(new Comments(comments).json());
 
-        Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes, session);
+        // send the user's comments votes to them only
+        LazyList<CommentRank> votes = COMMENT_RANK.where("user_id = ?", ss.getUserObj().getId());
+        session.getRemote().sendString(new CommentVotes(votes).json());
 
+        // send the updated users to everyone in the right scope(just discussion
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes, session);
         broadcastMessage(filteredScopes, new Users(SessionScope.getUserObjects(filteredScopes)).json());
 
         log.info("session scope " + ss + " joined");
@@ -94,6 +99,8 @@ public class ThreadedChatWebSocket {
                 break;
             case TopReply:
                 messageTopReply(session, dataStr);
+            case Vote:
+                saveCommentVote(session, dataStr);
         }
 
 
@@ -120,6 +127,8 @@ public class ThreadedChatWebSocket {
                         return MessageType.Edit;
                     case "topReply":
                         return MessageType.TopReply;
+                    case "rank":
+                        return MessageType.Vote;
                 }
             }
         } catch (IOException e) {
@@ -130,7 +139,7 @@ public class ThreadedChatWebSocket {
     }
 
     enum MessageType {
-        Edit, Reply, TopReply;
+        Edit, Reply, TopReply, Vote;
     }
 
     public void messageReply(Session session, String replyDataStr) {
@@ -174,6 +183,9 @@ public class ThreadedChatWebSocket {
         broadcastMessage(filteredScopes, co.json("reply"));
 
     }
+
+
+
 
     public void messageEdit(Session session, String editDataStr) {
 
@@ -229,6 +241,20 @@ public class ThreadedChatWebSocket {
                 sessionScopes, session, co.getBreadcrumbs());
 
         broadcastMessage(filteredScopes, co.json("reply"));
+
+    }
+
+    public void saveCommentVote(Session session, String voteStr) {
+
+        // Get the object
+        CommentRankData commentRankData = CommentRankData.fromJson(voteStr);
+
+        Long userId = SessionScope.getUserIdFromSession(session);
+        Long commentId = commentRankData.getCommentId();
+        Integer rank = commentRankData.getRank();
+
+        String message = Actions.saveCommentVote(userId, commentId, rank);
+        log.info(message);
 
     }
 
