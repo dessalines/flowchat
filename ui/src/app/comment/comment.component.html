@@ -46,7 +46,7 @@
 		</ul>
 	</small>
 	<div *ngIf="showVoteSlider">
-		<input [value]="rank" (mouseup)="setRank($event.target.value)" type="range" min="0" max="100" step="1" (value)="rank"/>
+		<input [value]="rank" (mouseup)="saveRank($event.target.value)" type="range" min="0" max="100" step="1" (value)="rank"/>
 	</div>
 	<fieldset *ngIf="showReply" class="form-group">
     	<app-markdown-edit (textEvent)="setReply($event)"></app-markdown-edit>

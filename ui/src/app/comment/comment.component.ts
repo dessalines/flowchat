@@ -79,6 +79,7 @@ export class CommentComponent implements OnInit {
   ngOnInit() {
     this.highlight = this.isCommentNew();
     this.setEditable();
+    this.setRank();
   }
 
   sendMessage() {
@@ -99,7 +100,13 @@ export class CommentComponent implements OnInit {
     this.replyingEvent.emit(this.showEdit);
   }
 
-  setRank($event) {
+  setRank() {
+    if (this.comment.userRank) {
+      this.rank = this.comment.userRank;
+    }
+  }
+
+  saveRank($event) {
     this.rank = $event;
     this.showVoteSlider = false;
     this.threadedChatService.ws.send(this.commentRankData());

@@ -50,12 +50,13 @@ public class ThreadedChatWebSocket {
 
         LazyList<Model> comments = fetchComments(ss);
 
+
+
         // send the comments
-        session.getRemote().sendString(new Comments(comments).json());
+        session.getRemote().sendString(new Comments(comments, fetchVotesMap(ss.getUserObj().getId())).json());
 
         // send the user's comments votes to them only
         LazyList<CommentRank> votes = COMMENT_RANK.where("user_id = ?", ss.getUserObj().getId());
-        session.getRemote().sendString(new CommentVotes(votes).json());
 
         // send the updated users to everyone in the right scope(just discussion
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes, session);
@@ -166,13 +167,9 @@ public class ThreadedChatWebSocket {
         // Fetch the comment threaded view
         CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", newComment.getLongId());
 
-        // Add it to the current lazy list
-        // TODO probably isn't necessary now
-//        comments.add(ctv);
-
 
         // Convert to a proper commentObj
-        CommentObj co = Transformations.convertCommentThreadedView(ctv);
+        CommentObj co = Transformations.convertCommentThreadedView(ctv, null);
 
 
 //        comments = fetchComments();
@@ -197,7 +194,8 @@ public class ThreadedChatWebSocket {
         List<CommentBreadcrumbsView> cbvs = COMMENT_BREADCRUMBS_VIEW.where("parent_id = ?", c.getLongId());
 
         // Convert to a proper commentObj
-        CommentObj co = Transformations.convertCommentsToEmbeddedObjects(cbvs).get(0);
+        CommentObj co = Transformations.convertCommentsToEmbeddedObjects(cbvs,
+                fetchVotesMap(c.getLong("user_id"))).get(0);
 
         // Refetch the comments
 //        comments = fetchComments();
@@ -234,7 +232,7 @@ public class ThreadedChatWebSocket {
         CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", newComment.getLongId());
 
         // Convert to a proper commentObj
-        CommentObj co = Transformations.convertCommentThreadedView(ctv);
+        CommentObj co = Transformations.convertCommentThreadedView(ctv, null);
 
 
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
@@ -313,6 +311,31 @@ public class ThreadedChatWebSocket {
         }
 
 
+    }
+
+    // These create maps from a user's comment id, to their rank/vote
+    private static Map<Long, Integer> fetchVotesMap(Long userId) {
+        List<CommentRank> ranks = COMMENT_RANK.where("user_id = ?",
+                userId);
+
+        return convertCommentRanksToVoteMap(ranks);
+    }
+
+    private static Map<Long, Integer> fetchVotesMap(Long userId, Long commentId) {
+        List<CommentRank> ranks = COMMENT_RANK.where("comment_id = ? and user_id = ?",
+                commentId, userId);
+
+        return convertCommentRanksToVoteMap(ranks);
+
+    }
+
+    private static Map<Long, Integer> convertCommentRanksToVoteMap(List<CommentRank> ranks) {
+        Map<Long, Integer> map = new HashMap<>();
+
+        for (CommentRank rank : ranks) {
+            map.put(rank.getLong("comment_id"), rank.getInteger("rank"));
+        }
+        return map;
     }
 
 

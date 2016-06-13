@@ -14,4 +14,5 @@ export interface Comment {
 	embedded: Array<Comment>;
 	breadcrumbs: Array<number>;
 	avgRank?: number;
+	userRank?: number;
 }
