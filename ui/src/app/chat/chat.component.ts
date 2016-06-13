@@ -7,6 +7,8 @@ import {UserService} from '../services/user.service';
 import {Subscription} from 'rxjs/Subscription';
 import { RouteConfig, ROUTER_DIRECTIVES, Router, RouteParams} from '@angular/router-deprecated';
 import {RouteParamService} from '../services/route-param.service';
+import {MarkdownEditComponent} from '../markdown-edit';
+
 
 @Component({
   moduleId: module.id,
@@ -14,7 +16,7 @@ import {RouteParamService} from '../services/route-param.service';
   templateUrl: 'chat.component.html',
   styleUrls: ['chat.component.css'],
   providers: [HTTP_PROVIDERS, ThreadedChatService],
-  directives: [CommentComponent]
+  directives: [CommentComponent, MarkdownEditComponent]
 })
 export class ChatComponent implements OnInit {
 
@@ -31,6 +33,8 @@ export class ChatComponent implements OnInit {
 
   private discussionId: number = 1;
   private topParentId: number = null;
+
+  private topReply: string;
 
   constructor(private threadedChatService: ThreadedChatService,
     private userService: UserService,
@@ -118,9 +122,22 @@ export class ChatComponent implements OnInit {
       // If the user isn't logged in, set the cookies to this anonymous user
       if (this.userService.getUser() == null) {
         this.userService.setUser(data.user);
+
       }
     }
 
+  }
+
+  setTopReply($event) {
+    this.topReply = $event;
+  }
+
+  sendTopReply() {
+    let reply: TopReplyData = {
+      topReply: this.topReply
+    }
+    this.threadedChatService.ws.send(reply);
+    this.topReply = "";
   }
 
   private editComment(editedComment: Comment) {
@@ -140,6 +157,7 @@ export class ChatComponent implements OnInit {
     // If its the top level, stop and return 
     if (newComment.parentId == null) {
       this.comments.push(newComment);
+      setTimeout(() => { location.hash = "#comment_" + newComment.id; }, 50);
       return;
     }
 
@@ -184,4 +202,8 @@ export class ChatComponent implements OnInit {
     this.isReplying = $event;
   }
 
+}
+
+interface TopReplyData {
+  topReply: string;
 }

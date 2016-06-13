@@ -15,6 +15,8 @@ export class MarkdownEditComponent implements OnInit {
 
   @Input() inputText: string;
 
+  @Input() rows: number = 3;
+
   @ViewChild('textArea') textArea;
 
   private textBox: string;

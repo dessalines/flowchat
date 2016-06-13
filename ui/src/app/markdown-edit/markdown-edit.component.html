@@ -39,6 +39,6 @@
             </button>
         </div>
     </div>
-    <textarea #textArea *ngIf="!previewMode" class="form-control" ngDefaultControl [(ngModel)]="textBox" (keyup)="setText()" rows="3"></textarea>
+    <textarea #textArea *ngIf="!previewMode" class="form-control" ngDefaultControl [(ngModel)]="textBox" (keyup)="setText()" rows="{{rows}}"></textarea>
     <div *ngIf="previewMode" [innerHTML]="html"></div>
 </fieldset>

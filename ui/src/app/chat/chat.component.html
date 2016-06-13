@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row bottom-margin">
     <div class="col-md-10">
         <h1>Threaded messages</h1>
         <div *ngFor="let comment of comments"
@@ -13,3 +13,7 @@
         </ul>
     </div>
 </div>
+<nav class="navbar navbar-fixed-bottom navbar-light bg-faded">
+    <app-markdown-edit (textEvent)="setTopReply($event)" [rows]="1"></app-markdown-edit>
+    <button (click)="sendTopReply()" class="btn btn-primary-outline pull-xs-right special-nav-button" type="submit">Send</button>
+</nav>
