@@ -51,10 +51,8 @@ public class ThreadedChatWebSocket {
         SessionScope ss = setupSessionScope(session);
 
         // Send them their user info
-        session.getRemote().sendString(ss.getUserObj().json());
+        session.getRemote().sendString(ss.getUserObj().json("user"));
 
-        // Send all the comments to just them
-        // TODO need to send only the comments based on their router IE /discussion/1/tree/4
 
         LazyList<Model> comments = fetchComments(ss);
 
@@ -227,14 +225,22 @@ public class ThreadedChatWebSocket {
     private SessionScope setupSessionScope(Session session) {
 
         String auth = SessionScope.getAuthFromSession(session);
+        Long uid = SessionScope.getUserIdFromSession(session);
         Long discussionId = SessionScope.getDiscussionIdFromSession(session);
         Long topParentId = SessionScope.getTopParentIdFromSession(session);
 
         UserObj userObj;
 
+
         if (auth != null) {
-            UserLoginView uv = USER_LOGIN_VIEW.findFirst("auth = ?", auth);
-            userObj = new UserObj(uv.getLongId(), uv.getString("name"));
+
+            if (auth.equals("undefined")) {
+                User dbUser = USER.findFirst("id = ?", uid);
+                userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));
+            } else {
+                UserLoginView uv = USER_LOGIN_VIEW.findFirst("auth = ?", auth);
+                userObj = new UserObj(uv.getLongId(), uv.getString("name"));
+            }
 
         } else {
             User dbUser = Actions.createUser();

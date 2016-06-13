@@ -105,6 +105,17 @@ public class SessionScope {
         return cookieMap.get("auth");
     }
 
+    public static Long getUserIdFromSession(Session session) {
+        Map<String, String> cookieMap = Tools.cookieListToMap(session.getUpgradeRequest().getCookies());
+        String uid = cookieMap.get("uid");
+        if (uid != null) {
+            return Long.valueOf(uid);
+        } else {
+            return null;
+        }
+
+    }
+
     public Long getDiscussionId() {
         return discussionId;
     }

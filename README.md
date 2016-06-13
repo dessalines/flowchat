@@ -6,7 +6,7 @@ http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way
 # TODO
 
 
-
+- Automatic setting of cookies for anonymous users
 - Reconnect websocket if [disconnected](http://stackoverflow.com/questions/3479734/javascript-jquery-test-if-window-has-focus)
 - Front page is for creating discussions
 - Toastr / whatever messages for errors, successes.
