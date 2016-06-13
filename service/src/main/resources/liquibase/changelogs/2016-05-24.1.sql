@@ -33,7 +33,7 @@ group by p.parent_id
 order by p.parent_id asc;
 
 
-create view comment_breadcrumbs_view as
+create view comment_intermediate_view as
 select d.id,
 --       concat(repeat('-', p.path_length), d.text_) as hier,
        d.user_id,
@@ -44,7 +44,7 @@ select d.id,
        array_agg(crumbs.parent_id order by crumbs.parent_id) as breadcrumbs,
        count(crumbs.parent_id)-1 as num_of_parents,
        cv.num_of_children,
-       avg(cr.rank) as avg_rank,
+--       avg(cr.rank) as avg_rank,
        d.created,
        d.modified
 from comment as d
@@ -52,26 +52,41 @@ join comment_tree as p on d.id = p.child_id
 join comment_tree as crumbs on crumbs.child_id = p.child_id
 join children_view as cv on d.id = cv.parent_id
 join user_ as u on d.user_id = u.id
-left join comment_rank as cr on d.id = cr.comment_id
 --where p.parent_id = 1
 group by d.id, p.path_length, p.parent_id, p.child_id, cv.num_of_children, u.name
 order by breadcrumbs;
 
-select * from comment_breadcrumbs_view where parent_id = 1;
+
+-- Necessary to join to the rank, couldn't get it working with the complicated intermediary above
+create view comment_breadcrumbs_view as
+select d.*,
+avg(cr.rank) as avg_rank
+from comment_intermediate_view as d
+left join comment_rank as cr on d.id = cr.comment_id
+group by d.id, d.user_id, d.user_name, d.discussion_id, d.text_,
+                d.path_length, d.parent_id, d.child_id,
+                d.breadcrumbs,
+                d.num_of_parents,
+                d.num_of_children,
+                d.created,
+                d.modified
+order by d.breadcrumbs;
+
+--select * from comment_breadcrumbs_view where parent_id = 1;
 
 
 -- Select all top level parents
-drop view comment_threaded_view;
 create view comment_threaded_view as
-select b.* from comment_breadcrumbs_view as a
+select b.*
+from comment_breadcrumbs_view as a
 join comment_breadcrumbs_view as b
 on a.id = b.parent_id
 and a.num_of_parents = 0
-order by b.id, b.breadcrumbs;
+order by a.id, b.breadcrumbs;
 
-select * from comment_threaded_view where discussion_id = 1;
-
-
+--select * from comment_threaded_view where discussion_id = 1;
 
 
---rollback drop view comment_threaded_view cascade; drop view comment_breadcrumbs_view cascade; drop view children_view cascade;
+
+
+--rollback drop view user_view cascade; drop view user_login_view cascade; drop view comment_threaded_view cascade; drop view comment_breadcrumbs_view cascade; drop view children_view cascade;drop view comment_intermediate_view cascade;
