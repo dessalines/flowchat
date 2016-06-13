@@ -30,13 +30,7 @@ public class ThreadedChatWebSocket {
 
     public static Logger log = (Logger) LoggerFactory.getLogger(ThreadedChatWebSocket.class);
 
-
-    private String sender, msg;
-
     static Set<SessionScope> sessionScopes = new HashSet<>();
-
-    // The comment rows
-//    static LazyList<CommentThreadedView> comments;
 
     public ThreadedChatWebSocket() {}
 
@@ -102,7 +96,7 @@ public class ThreadedChatWebSocket {
                 messageTopReply(session, dataStr);
         }
 
-        
+
         Tools.dbClose();
 
 

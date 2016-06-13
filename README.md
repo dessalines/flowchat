@@ -10,14 +10,14 @@
 	- Discussions on left
 	- Set up like Stash
 - Search bar, search for discussions
-- Top level replying
-	- Make it feel like chat, with a bottom expandable bar
 - Possibly add range voting?
 	- Use default html sliders [1](http://stackoverflow.com/questions/15935837/how-to-display-a-range-input-slider-vertically) [styling](http://danielstern.ca/range.css/#/) [fiddle](http://jsfiddle.net/Mmgxg/)
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - Links, or left bar with discussions? Are you making a reddit alternative, or a slack alternative? Team-based discussions, or thread based?
 
 # Finished
+- Top level replying
+	- Make it feel like chat, with a bottom expandable bar
 - Automatic setting of cookies for anonymous users
 - Refresh only specific changed content
   - For now, use newCommentId.
@@ -39,4 +39,5 @@
   - Implement a max depth based on how it looks, and a goto discussion button
   - [Route params](http://plnkr.co/edit/IcnEzZ0WtiaY5Bpqrq2Y?p=preview) [2](https://github.com/angular/angular/issues/6204)
   - Hierarchical data in SQL [1](http://stackoverflow.com/questions/8252323/mysql-closure-table-hierarchical-database-how-to-pull-information-out-in-the-c) [2](http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way-to-parse-a-flat-table-into-a-tree/)
+
   

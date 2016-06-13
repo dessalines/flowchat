@@ -29,6 +29,7 @@ public class Transformations {
                 cv.getString("breadcrumbs"),
                 cv.getLong("num_of_parents"),
                 cv.getLong("num_of_children"),
+                cv.getInteger("avg_rank"),
                 cv.getTimestamp("created"),
                 cv.getTimestamp("modified"));
     }
