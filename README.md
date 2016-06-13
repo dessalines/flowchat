@@ -7,13 +7,6 @@ http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way
 
 
 
-- Comment subset loading
-  - What happens when you get too many comments?
-  	- Use comment_breadcrumbs_view where parent_id = [parent_id]
-  - Do you not load new ones, if they aren't under your branch?
-  - Get comment_threaded_view working for 
-  - Implement a max depth based on how it looks, and a goto discussion button
-  - [Route params](http://plnkr.co/edit/IcnEzZ0WtiaY5Bpqrq2Y?p=preview)
 - Reconnect websocket if [disconnected](http://stackoverflow.com/questions/3479734/javascript-jquery-test-if-window-has-focus)
 - Front page is for creating discussions
 - Toastr / whatever messages for errors, successes.
@@ -38,4 +31,11 @@ http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way
   - ~~Create an open system, new users are just labeled as anonymous_aId~~
   - ~~Comment editing(on your own comments).~~
   - ~~When user logs in, refresh the session. [BehaviorSubject](http://stackoverflow.com/questions/34376854/delegation-eventemitter-or-observable-in-angular2/35568924#35568924)~~
+- ~~Comment subset loading~~
+  - ~~What happens when you get too many comments?~~
+    - ~~Use comment_breadcrumbs_view where parent_id = [parent_id]~~
+  - ~~Do you not load new ones, if they aren't under your branch?~~
+  - ~~Get comment_threaded_view working for ~~
+  - ~~Implement a max depth based on how it looks, and a goto discussion button~~
+  - ~~[Route params](http://plnkr.co/edit/IcnEzZ0WtiaY5Bpqrq2Y?p=preview) [2](https://github.com/angular/angular/issues/6204)~~
   
