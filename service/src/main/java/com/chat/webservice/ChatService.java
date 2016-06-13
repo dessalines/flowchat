@@ -109,12 +109,6 @@ public class ChatService {
 
         });
 
-//        get("/temp", (req, res) -> {
-//            LazyList<Tables.CommentThreadedView> ctv = COMMENT_THREADED_VIEW.where("discussion_id = ?", 1);
-//            List<Transformations.CommentObj> cos = Transformations.convertCommentsToEmbeddedObjects(ctv);
-//            return Tools.JACKSON.writeValueAsString(cos);
-//        });
-
 
 
 		init();

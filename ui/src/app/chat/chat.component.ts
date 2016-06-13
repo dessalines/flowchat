@@ -114,6 +114,13 @@ export class ChatComponent implements OnInit {
       this.editComment(editedComment);
     }
 
+    if (data.user) {
+      // If the user isn't logged in, set the cookies to this anonymous user
+      if (this.userService.getUser() == null) {
+        this.userService.setUser(data.user);
+      }
+    }
+
   }
 
   private editComment(editedComment: Comment) {
