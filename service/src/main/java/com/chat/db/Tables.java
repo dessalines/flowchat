@@ -44,5 +44,9 @@ public class Tables {
     public static class CommentThreadedView extends Model {}
     public static final CommentThreadedView COMMENT_THREADED_VIEW = new CommentThreadedView();
 
+    @Table("comment_rank")
+    public static class CommentRank extends Model {}
+    public static final CommentRank COMMENT_RANK = new CommentRank();
+
 
 }

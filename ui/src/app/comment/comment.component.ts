@@ -41,6 +41,10 @@ export class CommentComponent implements OnInit {
 
   private editable: boolean = false;
 
+  private showVoteSlider: boolean = false;
+
+  private rank: number;
+
   constructor(private threadedChatService: ThreadedChatService,
     private userService: UserService) { }
 
@@ -51,6 +55,10 @@ export class CommentComponent implements OnInit {
 
   toggleShowEdit() {
     this.showEdit = !this.showEdit;
+  }
+
+  toggleShowVoteSlider() {
+    this.showVoteSlider = !this.showVoteSlider;
   }
 
   hideReply() {
@@ -91,22 +99,32 @@ export class CommentComponent implements OnInit {
     this.replyingEvent.emit(this.showEdit);
   }
 
+  setRank($event) {
+    this.rank = $event;
+    this.showVoteSlider = false;
+    this.threadedChatService.ws.send(this.commentRankData());
+  }
+
   private replyData(): ReplyData {
-    let replyData = {
+    return {
       parentId: this.comment.id,
       reply: this.replyText
     }
-
-    return replyData;
-    // return JSON.stringify({ parentId: this.comment.id, reply: this.reply });
   }
 
   private editData(): EditData {
-    let editData = {
+    return {
       id: this.comment.id,
-      edit: this.editText
+      edit: this.editText,
     }
-    return editData;
+  }
+
+  private commentRankData(): CommentRankData {
+    return {
+      rank: this.rank,
+      commentId: this.comment.id
+    }
+
   }
 
   private collapseText(): string {
@@ -144,5 +162,10 @@ interface ReplyData {
 interface EditData {
   id: number;
   edit: string;
+}
+
+interface CommentRankData {
+  rank: number;
+  commentId: number;
 }
 
