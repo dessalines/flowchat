@@ -100,8 +100,10 @@ public class ThreadedChatWebSocket {
                 break;
             case TopReply:
                 messageTopReply(session, dataStr);
+                break;
             case Vote:
                 saveCommentVote(session, dataStr);
+                break;
         }
 
 
