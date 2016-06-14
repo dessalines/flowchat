@@ -5,6 +5,7 @@
 			(click)="collapsed = !collapsed">{{collapseText()}}</li>
 		<li class="text-primary list-inline-item">{{comment.userName}}</li>
 		<li *ngIf="comment.avgRank" class="label label-pill label-info">{{comment.avgRank}}</li>
+		<li *ngIf="rank" class="label label-pill label-primary">{{rank}}</li>
 		<li *ngIf="!comment.modified" class="text-muted list-inline-item"><small>{{comment.created | moment}}</small></li>
 		<li *ngIf="comment.modified" class="text-muted list-inline-item"><small><i>modified {{comment.modified | moment}}</i></small></li>
 	</ul>
@@ -12,7 +13,7 @@
 <div *ngIf="!collapsed" class="card-block">
 
 	<div *ngIf="!showEdit" class="card-text" 
-		[class.mark]="highlight" [innerHTML]="comment.text | markdown">
+		[class.mark]="isCommentNew()" [innerHTML]="comment.text | markdown">
 	</div>
 	<div *ngIf="showEdit" class="card-text">
 		<app-markdown-edit [inputText]="comment.text" (textEvent)="setEdit($event)"></app-markdown-edit>
@@ -46,7 +47,7 @@
 		</ul>
 	</small>
 	<div *ngIf="showVoteSlider">
-		<input [value]="rank" (mouseup)="saveRank($event.target.value)" type="range" min="0" max="100" step="1" (value)="rank"/>
+		<input [value]="rank" (mouseup)="saveRank($event.target.value)" (input)="updateRank($event.target.value)" type="range" min="0" max="100" step="1" (value)="rank"/>
 	</div>
 	<fieldset *ngIf="showReply" class="form-group">
     	<app-markdown-edit (textEvent)="setReply($event)"></app-markdown-edit>

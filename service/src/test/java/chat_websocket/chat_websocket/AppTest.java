@@ -54,7 +54,8 @@ public class AppTest {
         List<CommentObj> cos = Transformations.convertCommentsToEmbeddedObjects(ctv, null);
 
         log.info(cos.get(0).getEmbedded().get(0).getId().toString());
-        assertTrue(cos.get(0).getEmbedded().get(0).getId().equals(2L));
+        assertTrue(cos.get(0).getEmbedded().get(0).getId().equals(2L)
+        || cos.get(1).getEmbedded().get(0).getId().equals(2L));
     }
 
     @Test

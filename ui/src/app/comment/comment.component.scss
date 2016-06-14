@@ -1,3 +1,5 @@
+@import "slider.scss";
+
 // top right bottom left
 $card-padding-left: 1rem;
 $card-padding-top: .2rem;
@@ -17,3 +19,7 @@ p,
     border-radius: $card-radius 0 0 $card-radius;
     margin-bottom: $card-padding-top;
 }
+
+// input[type=range]:focus::-webkit-slider-runnable-track {
+//   background: #367ebd;
+// }

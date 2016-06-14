@@ -37,8 +37,6 @@ export class CommentComponent implements OnInit {
 
   private collapsed: boolean = false;
 
-  private highlight: boolean = false;
-
   private editable: boolean = false;
 
   private showVoteSlider: boolean = false;
@@ -77,7 +75,6 @@ export class CommentComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.highlight = this.isCommentNew();
     this.setEditable();
     this.setRank();
   }
@@ -102,6 +99,10 @@ export class CommentComponent implements OnInit {
     if (this.comment.userRank) {
       this.rank = this.comment.userRank;
     }
+  }
+
+  updateRank($event) {
+    this.rank = $event;
   }
 
   saveRank($event) {

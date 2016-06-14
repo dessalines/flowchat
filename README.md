@@ -1,6 +1,7 @@
 # chat-websocket
 
 # TODO
+- Set up red to green gradient for input bar: linear-gradient(90deg, red, yellow) [1](https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/)
 - Reconnect websocket if [disconnected](http://stackoverflow.com/questions/3479734/javascript-jquery-test-if-window-has-focus)
 - Front page is for creating discussions
 - Toastr / whatever messages for errors, successes.

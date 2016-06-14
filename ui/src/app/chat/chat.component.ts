@@ -159,7 +159,7 @@ export class ChatComponent implements OnInit {
       this.comments[index].modified = editedComment.modified;
       this.comments[index].avgRank = editedComment.avgRank;
 
-      setTimeout(() => { location.hash = "#comment_" + editedComment.id; }, 50);
+      // setTimeout(() => { location.hash = "#comment_" + editedComment.id; }, 50);
       return;
     }
 
@@ -170,7 +170,7 @@ export class ChatComponent implements OnInit {
 
     // Focus on the new comment if not replying
     if (!this.isReplying) {
-      setTimeout(() => { location.hash = "#comment_" + editedComment.id; }, 50);
+      // setTimeout(() => { location.hash = "#comment_" + editedComment.id; }, 50);
     }
   }
 
