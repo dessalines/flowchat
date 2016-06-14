@@ -25,7 +25,7 @@
 	
 	<small *ngIf="!showReply && !showEdit">
 		<ul class="list-inline">
-			<li role="button" class="list-inline-item" (click)="toggleShowVoteSlider()">
+			<li *ngIf="userService.getUser().id != comment.userId" role="button" class="list-inline-item" (click)="toggleShowVoteSlider()">
 				<i class="fa fa-fw fa-thumbs-up"></i>
 			</li>
 			<li role="button" class="list-inline-item" (click)="toggleShowReply()">

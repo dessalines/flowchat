@@ -83,11 +83,9 @@ export class CommentComponent implements OnInit {
   }
 
   sendMessage() {
-    try {
-      this.threadedChatService.ws.send(this.replyData());
-    } catch (e) {
-      console.log(e);
-    }
+    
+    this.threadedChatService.send(this.replyData());
+  
     this.showReply = false;
     this.replyingEvent.emit(this.showReply);
     this.replyText = "";
@@ -95,7 +93,7 @@ export class CommentComponent implements OnInit {
   }
 
   editMessage() {
-    this.threadedChatService.ws.send(this.editData());
+    this.threadedChatService.send(this.editData());
     this.showEdit = false;
     this.replyingEvent.emit(this.showEdit);
   }
@@ -109,7 +107,7 @@ export class CommentComponent implements OnInit {
   saveRank($event) {
     this.rank = $event;
     this.showVoteSlider = false;
-    this.threadedChatService.ws.send(this.commentRankData());
+    this.threadedChatService.send(this.commentRankData());
   }
 
   private replyData(): ReplyData {

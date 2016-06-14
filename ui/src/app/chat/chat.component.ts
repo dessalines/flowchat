@@ -137,7 +137,7 @@ export class ChatComponent implements OnInit {
     let reply: TopReplyData = {
       topReply: this.topReply
     }
-    this.threadedChatService.ws.send(reply);
+    this.threadedChatService.send(reply);
 
     this.topReply = "";
 
