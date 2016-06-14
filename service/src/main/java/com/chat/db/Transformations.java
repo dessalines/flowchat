@@ -83,9 +83,13 @@ public class Transformations {
                 // Add it to the embedded object
                 parent.getEmbedded().add(co);
 
+                Collections.sort(parent.getEmbedded(), new CommentObj.CommentObjComparator());
+
             }
 
         }
+
+        Collections.sort(cos, new CommentObj.CommentObjComparator());
 
         return cos;
     }

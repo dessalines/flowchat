@@ -51,13 +51,9 @@ public class AppTest {
     public void testCommentObjJson() {
         LazyList<CommentThreadedView> ctv = COMMENT_THREADED_VIEW.where("discussion_id = ?", 1);
 
-
         List<CommentObj> cos = Transformations.convertCommentsToEmbeddedObjects(ctv, null);
 
-        for (CommentObj co : cos) {
-            System.out.println(co);
-        }
-
+        log.info(cos.get(0).getEmbedded().get(0).getId().toString());
         assertTrue(cos.get(0).getEmbedded().get(0).getId().equals(2L));
     }
 
