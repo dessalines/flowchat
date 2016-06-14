@@ -31,6 +31,7 @@ public class Transformations {
                 cv.getLong("num_of_children"),
                 cv.getInteger("avg_rank"),
                 vote,
+                cv.getInteger("number_of_votes"),
                 cv.getTimestamp("created"),
                 cv.getTimestamp("modified"));
     }
