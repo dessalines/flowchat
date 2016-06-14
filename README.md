@@ -1,10 +1,6 @@
 # chat-websocket
 
 # TODO
-- Comment sort broadcasting for peoples votes? Seems excessive, but could be very useful for sorting. 
-	- Also avoids having to reload the page.
-	- Would require resorting(and repulling) all the parents of that comment, just like editing.
-	- Top level ones would require a full resort... seems excessive.
 - Reconnect websocket if [disconnected](http://stackoverflow.com/questions/3479734/javascript-jquery-test-if-window-has-focus)
 - Front page is for creating discussions
 - Toastr / whatever messages for errors, successes.
@@ -14,6 +10,11 @@
 - Search bar, search for discussions
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - Links, or left bar with discussions? Are you making a reddit alternative, or a slack alternative? Team-based discussions, or thread based?
+- Comment sort broadcasting for peoples votes? Seems excessive, but could be very useful for sorting. 
+  - This is done, except for the resorting on the front end based on avgRank. 
+  - Also avoids having to reload the page.
+  - Would require resorting(and repulling) all the parents of that comment, just like editing.
+  - Top level ones would require a full resort... seems excessive.
 
 # Finished
 - Top level replying
