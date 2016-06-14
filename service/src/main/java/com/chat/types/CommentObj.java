@@ -3,6 +3,7 @@ package com.chat.types;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -80,6 +81,18 @@ public class CommentObj implements JSONWriter{
         }
 
         return co;
+
+    }
+
+    public static class CommentObjComparator implements Comparator<CommentObj> {
+
+        @Override
+        public int compare(CommentObj o1, CommentObj o2) {
+            Integer o1R = (o1.getAvgRank() != null) ? o1.getAvgRank() : 50;
+            Integer o2R = (o2.getAvgRank() != null) ? o2.getAvgRank() : 50;
+
+            return o2R.compareTo(o1R);
+        }
 
     }
 
