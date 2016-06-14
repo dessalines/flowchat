@@ -31,6 +31,7 @@ export class ThreadedChatService {
     // this.ws = new $WebSocket(url, null, this.config);
     this.ws = new $WebSocket(url);
     this.ws.connect();
+
   }
 
   send(data) {
