@@ -157,6 +157,7 @@ export class ChatComponent implements OnInit {
 
       this.comments[index].text = editedComment.text;
       this.comments[index].modified = editedComment.modified;
+      this.comments[index].avgRank = editedComment.avgRank;
 
       setTimeout(() => { location.hash = "#comment_" + editedComment.id; }, 50);
       return;
@@ -210,6 +211,7 @@ export class ChatComponent implements OnInit {
 
             parent.embedded[index].text = newComment.text;
             parent.embedded[index].modified = newComment.modified;
+            parent.embedded[index].avgRank = newComment.avgRank;
             this.recursiveCommentStopper = true;
           }
         } 
