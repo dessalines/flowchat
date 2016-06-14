@@ -150,6 +150,19 @@ export class ChatComponent implements OnInit {
 
   private editComment(editedComment: Comment) {
 
+    // If its the top level, stop and return 
+    if (editedComment.parentId == null) {
+      let child = this.comments.filter(item => item.id == editedComment.id)[0];
+      let index = this.comments.indexOf(child);
+
+      this.comments[index].text = editedComment.text;
+      this.comments[index].modified = editedComment.modified;
+
+      setTimeout(() => { location.hash = "#comment_" + editedComment.id; }, 50);
+      return;
+    }
+
+
     // Do a recursive loop to find and push the new comment
     this.recursiveComment(editedComment, this.comments, false);
     this.recursiveCommentStopper = false;
@@ -195,10 +208,13 @@ export class ChatComponent implements OnInit {
             let child = parent.embedded.filter(item => item.id == newComment.id)[0];
             let index = parent.embedded.indexOf(child);
 
-            parent.embedded[index] = newComment;
+            parent.embedded[index].text = newComment.text;
+            parent.embedded[index].modified = newComment.modified;
             this.recursiveCommentStopper = true;
           }
-        } else {
+        } 
+        // Top level comments
+        else {
           this.recursiveComment(newComment, parent.embedded, isNew);
         }
       }

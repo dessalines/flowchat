@@ -192,23 +192,10 @@ public class ThreadedChatWebSocket {
 
         Comment c = Actions.editComment(editData.getId(), editData.getEdit());
 
-        // You need to get the breadcrumbs, since there could be many sub comments to this one
-        List<CommentBreadcrumbsView> cbvs = COMMENT_BREADCRUMBS_VIEW.where("parent_id = ?", c.getLongId());
-
-        // Convert to a proper commentObj
-        CommentObj co = Transformations.convertCommentsToEmbeddedObjects(cbvs,
-                fetchVotesMap(c.getLong("user_id"))).get(0);
-
-        // Refetch the comments
-//        comments = fetchComments();
-
-        // TODO A temp workaround until i find out a more generic way to do this
         CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", c.getLongId());
 
-        // Set the comment to its new value
-        // TODO probably isn't necessary now
-//        Integer index = Tools.findIndexByIdInLazyList(comments, c.getLongId());
-//        comments.set(index, ctv);
+        // Convert to a proper commentObj, but with nothing embedded
+        CommentObj co = Transformations.convertCommentThreadedView(ctv, null);
 
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
                 sessionScopes, session, co.getBreadcrumbs());
