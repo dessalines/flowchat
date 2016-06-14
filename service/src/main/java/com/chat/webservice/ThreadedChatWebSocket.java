@@ -241,7 +241,20 @@ public class ThreadedChatWebSocket {
         Integer rank = commentRankData.getRank();
 
         String message = Actions.saveCommentVote(userId, commentId, rank);
-        log.info(message);
+
+        // Getting the comment for the breadcrumbs for the scope
+        CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", commentId);
+
+        // Convert to a proper commentObj, but with nothing embedded
+        CommentObj co = Transformations.convertCommentThreadedView(ctv, null);
+
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
+                sessionScopes, session, co.getBreadcrumbs());
+
+        // This sends an edit, which contains the average rank
+        broadcastMessage(filteredScopes, co.json("edit"));
+
+
 
     }
 
