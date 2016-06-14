@@ -37,6 +37,9 @@ export class ChatComponent implements OnInit {
   private topReply: string;
   private clearTopReply: boolean = false;
 
+  // This is set to true on ngOnDestroy, to not do an alert for reconnect
+  private websocketSoftClose: boolean = false;
+
   constructor(private threadedChatService: ThreadedChatService,
     private userService: UserService,
     private router: Router,
@@ -52,14 +55,14 @@ export class ChatComponent implements OnInit {
     if (this.routeParams.get("commentId") != null) {
       this.topParentId = Number(this.routeParams.get("commentId"));
     }
-    // this.topParentId = null;
     this.threadedChatService.connect(this.discussionId, this.topParentId);
     this.subscribeToChat();
     this.subscribeToUserServiceWatcher();
+    this.websocketCloseWatcher();
   }
 
   ngOnDestroy() {
-
+    this.websocketSoftClose = true;
     if (this.userServiceWatcher != null) {
       this.threadedChatService.ws.close(true);
       console.log('Destroying chat component');
@@ -85,6 +88,20 @@ export class ChatComponent implements OnInit {
       subscribe(res => {
         this.updateThreadedChat(res.data);
       });
+  }
+
+  websocketCloseWatcher() {
+    this.threadedChatService.ws.onClose(cb => {
+
+      if (!this.websocketSoftClose) {
+        console.log('ws connection closed');
+
+        alert('Push okay to Reconnect...');
+
+        this.threadedChatService.connect(this.discussionId, this.topParentId);
+        this.subscribeToChat();
+      }
+    });
   }
 
 

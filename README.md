@@ -1,7 +1,8 @@
 # chat-websocket
 
 # TODO
-- Set up red to green gradient for input bar: linear-gradient(90deg, red, yellow) [1](https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/)
+- Add # of vote count in addition to average ranking, put on the right side of the pill?
+- Clean up codebase
 - Reconnect websocket if [disconnected](http://stackoverflow.com/questions/3479734/javascript-jquery-test-if-window-has-focus)
 - Front page is for creating discussions
 - Toastr / whatever messages for errors, successes.
@@ -18,6 +19,7 @@
   - Top level ones would require a full resort... seems excessive.
 
 # Finished
+- Set up red to green gradient for input bar: linear-gradient(90deg, red, yellow) [1](https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/)
 - Top level replying
 	- Make it feel like chat, with a bottom expandable bar
 - Automatic setting of cookies for anonymous users
