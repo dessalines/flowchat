@@ -15,11 +15,11 @@ export class ThreadedChatService {
   private topParentId: number;
 
   constructor() {
-		// this.config = {
-		// 	initialTimeout: 30000,
-		// 	maxTimeout: 120000,
-		// 	reconnectIfNotNormalClose: true
-		// }
+    // this.config = {
+    // 	initialTimeout: 30000,
+    // 	maxTimeout: 120000,
+    // 	reconnectIfNotNormalClose: true
+    // }
 
   }
 
@@ -31,6 +31,14 @@ export class ThreadedChatService {
     // this.ws = new $WebSocket(url, null, this.config);
     this.ws = new $WebSocket(url);
     this.ws.connect();
+  }
+
+  send(data) {
+    try {
+      this.ws.send(data);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   reconnect() {
