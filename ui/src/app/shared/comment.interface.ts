@@ -15,4 +15,5 @@ export interface Comment {
 	breadcrumbs: Array<number>;
 	avgRank?: number;
 	userRank?: number;
+	numberOfVotes?: number;
 }

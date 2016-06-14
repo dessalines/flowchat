@@ -60,7 +60,8 @@ order by breadcrumbs;
 -- Necessary to join to the rank, couldn't get it working with the complicated intermediary above
 create view comment_breadcrumbs_view as
 select d.*,
-avg(cr.rank) as avg_rank
+avg(cr.rank) as avg_rank,
+count(cr.rank) as number_of_votes
 from comment_intermediate_view as d
 left join comment_rank as cr on d.id = cr.comment_id
 group by d.id, d.user_id, d.user_name, d.discussion_id, d.text_,

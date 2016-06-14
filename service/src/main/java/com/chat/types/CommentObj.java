@@ -15,7 +15,7 @@ public class CommentObj implements JSONWriter{
     private Timestamp created, modified;
     private List<CommentObj> embedded;
     private List<Long> breadcrumbs;
-    private Integer avgRank, userRank;
+    private Integer avgRank, userRank, numberOfVotes;
 
     public CommentObj(Long id,
                       Long userId,
@@ -29,6 +29,7 @@ public class CommentObj implements JSONWriter{
                       Long numOfChildren,
                       Integer avgRank,
                       Integer userRank,
+                      Integer numberOfVotes,
                       Timestamp created,
                       Timestamp modified
     ) {
@@ -45,6 +46,7 @@ public class CommentObj implements JSONWriter{
         this.pathLength = pathLength;
         this.created = created;
         this.modified = modified;
+        this.numberOfVotes = numberOfVotes;
 
         this.embedded = new ArrayList<>();
 
@@ -104,6 +106,9 @@ public class CommentObj implements JSONWriter{
         return userRank;
     }
 
+    public Integer getNumberOfVotes() {
+        return numberOfVotes;
+    }
 
     public Long getNumOfChildren() {
         return numOfChildren;
@@ -144,7 +149,6 @@ public class CommentObj implements JSONWriter{
     public Timestamp getModified() {
         return modified;
     }
-
 
     public List<CommentObj> getEmbedded() {
         return embedded;
