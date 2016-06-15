@@ -98,10 +98,14 @@ export class ChatComponent implements OnInit {
 
         alert('Push okay to Reconnect...');
 
-        this.threadedChatService.connect(this.discussionId, this.topParentId);
-        this.subscribeToChat();
+        this.websocketReconnect();
       }
     });
+  }
+
+  websocketReconnect() {
+    this.threadedChatService.connect(this.discussionId, this.topParentId);
+    this.subscribeToChat();
   }
 
 
@@ -190,6 +194,11 @@ export class ChatComponent implements OnInit {
     if (!this.isReplying) {
       // setTimeout(() => { location.hash = "#comment_" + editedComment.id; }, 50);
     }
+
+    // TODO do a sort at that level:
+    // homes.sort(function(a, b) {
+    //   return parseFloat(a.price) - parseFloat(b.price);
+    // });
   }
 
   private addNewComment(newComment: Comment) {
@@ -209,6 +218,7 @@ export class ChatComponent implements OnInit {
     if (!this.isReplying) {
       setTimeout(() => { location.hash = "#comment_" + newComment.id; }, 50);
     }
+
   }
 
   private recursiveComment(newComment: Comment, comments: Array<Comment>, isNew: boolean) {

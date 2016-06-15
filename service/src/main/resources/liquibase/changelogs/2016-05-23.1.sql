@@ -10,7 +10,7 @@ create table user_ (
 
 CREATE TABLE full_user (
     id bigserial primary key,
-    user_id bigserial not null,
+    user_id bigint not null,
     email varchar(255) unique,
     password_encrypted varchar(512),
     created timestamp default current_timestamp,
@@ -21,7 +21,7 @@ CREATE TABLE full_user (
 
 CREATE TABLE login (
     id bigserial primary key,
-    user_id bigserial not null,
+    user_id bigint not null,
     auth VARCHAR(255) not null,
     expire_time timestamp default current_timestamp,
     created timestamp default current_timestamp,
@@ -38,20 +38,23 @@ create table discussion (
 
 create table comment (
     id bigserial primary key,
-    user_id bigserial not null,
-    discussion_id bigserial not null,
+    user_id bigint not null,
+    discussion_id bigint not null,
     text_ text not null,
     created timestamp default current_timestamp,
     modified timestamp,
     constraint fk1_user foreign key (user_id)
         references user_ (id)
+        on update cascade on delete cascade,
+    constraint fk1_discussion foreign key (discussion_id)
+        references discussion (id)
         on update cascade on delete cascade
 );
 
 create table comment_tree (
     id bigserial primary key,
-    parent_id bigserial not null,
-    child_id bigserial not null,
+    parent_id bigint not null,
+    child_id bigint not null,
     path_length integer not null,
     created timestamp default current_timestamp,
     constraint fk1_parent_id foreign key (parent_id)
@@ -64,8 +67,8 @@ create table comment_tree (
 
 create table comment_rank (
     id bigserial primary key,
-    comment_id bigserial not null,
-    user_id bigserial not null,
+    comment_id bigint not null,
+    user_id bigint not null,
     rank smallint,
     created timestamp default current_timestamp,
     constraint fk1_comment_id foreign key (comment_id)

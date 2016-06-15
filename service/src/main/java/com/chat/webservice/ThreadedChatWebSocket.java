@@ -231,12 +231,15 @@ public class ThreadedChatWebSocket {
 
     }
 
-    public void saveCommentVote(Session session, String voteStr) {
+    public static void saveCommentVote(Session session, String voteStr) {
+
+        SessionScope ss = SessionScope.findBySession(sessionScopes, session);
 
         // Get the object
         CommentRankData commentRankData = CommentRankData.fromJson(voteStr);
 
-        Long userId = SessionScope.getUserIdFromSession(session);
+        Long userId = ss.getUserObj().getId();
+        log.info(userId.toString());
         Long commentId = commentRankData.getCommentId();
         Integer rank = commentRankData.getRank();
 

@@ -106,6 +106,7 @@ public class SessionScope {
     }
 
     public static Long getUserIdFromSession(Session session) {
+
         Map<String, String> cookieMap = Tools.cookieListToMap(session.getUpgradeRequest().getCookies());
         String uid = cookieMap.get("uid");
         if (uid != null) {
