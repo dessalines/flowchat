@@ -30,7 +30,7 @@ public class Actions {
 
 
         // find the candidate
-        Comment c = COMMENT.createIt("discussion_id", discussionId,
+        Comment c = Comment.createIt("discussion_id", discussionId,
                 "text_", text,
                 "user_id", userId);
 
@@ -49,7 +49,7 @@ public class Actions {
             Long parentId = pbs.get(i);
 
             // i is the path length
-            COMMENT_TREE.createIt("parent_id", parentId,
+            CommentTree.createIt("parent_id", parentId,
                     "child_id", childId,
                     "path_length", i);
         }
@@ -61,7 +61,7 @@ public class Actions {
     public static Comment editComment(Long commentId, String text) {
 
         // Find the comment
-        Comment c = COMMENT.findFirst("id = ?", commentId);
+        Comment c = Comment.findFirst("id = ?", commentId);
 
         Timestamp cTime = new Timestamp(new Date().getTime());
 
@@ -83,7 +83,7 @@ public class Actions {
 
             // if there's an auth, you're good
             if (auth != null) {
-                uv = USER_LOGIN_VIEW.findFirst("auth = ?" , auth);
+                uv = UserLoginView.findFirst("auth = ?" , auth);
                 break;
             }
 
@@ -92,14 +92,14 @@ public class Actions {
 
             // Generate the login
             auth = Tools.generateSecureRandom();
-            Login login = LOGIN.createIt("user_id", user.getId(),
+            Login login = Login.createIt("user_id", user.getId(),
                     "auth", auth,
                     "expire_time", Tools.newExpireTimestamp());
 
             // set the cookies
             Actions.setCookiesForLogin(user, auth, res);
 
-            uv = USER_LOGIN_VIEW.findFirst("auth = ?" , auth);
+            uv = UserLoginView.findFirst("auth = ?" , auth);
         }
 
 
@@ -107,7 +107,7 @@ public class Actions {
     }
 
     public static User createUser() {
-        User user = USER.createIt(
+        User user = User.createIt(
                 "name", Tools.generateSecureRandom());
         user.set("name", "user_" + user.getLongId()).saveIt();
 
@@ -118,13 +118,13 @@ public class Actions {
 
         // Find the user, then create a login for them
 
-        UserView uv = USER_VIEW.findFirst("name = ? or email = ?", userOrEmail, userOrEmail);
+        UserView uv = UserView.findFirst("name = ? or email = ?", userOrEmail, userOrEmail);
 
         Login login;
         if (uv == null) {
             throw new NoSuchElementException("Incorrect user/email");
         } else {
-            FullUser fu = FULL_USER.findFirst("user_id = ?", uv.getLongId());
+            FullUser fu = FullUser.findFirst("user_id = ?", uv.getLongId());
 
             String encryptedPassword = fu.getString("password_encrypted");
 
@@ -133,7 +133,7 @@ public class Actions {
             if (correctPass) {
 
                 String auth = Tools.generateSecureRandom();
-                login = LOGIN.createIt("user_id", fu.getInteger("user_id"),
+                login = Login.createIt("user_id", fu.getInteger("user_id"),
                         "auth", auth,
                         "expire_time", Tools.newExpireTimestamp());
 
@@ -144,7 +144,7 @@ public class Actions {
             }
         }
 
-        UserLoginView ulv = USER_LOGIN_VIEW.findFirst("login_id = ?", login.getLongId());
+        UserLoginView ulv = UserLoginView.findFirst("login_id = ?", login.getLongId());
 
         return ulv;
 
@@ -155,26 +155,26 @@ public class Actions {
 
         // Find the user, then create a login for them
 
-        UserView uv = USER_VIEW.findFirst("name = ? or email = ?", userName, email);
+        UserView uv = UserView.findFirst("name = ? or email = ?", userName, email);
 
         Login login;
 
         if (uv == null) {
 
             // Create the user and full user
-            User user = USER.createIt(
+            User user = User.createIt(
                     "name", userName);
 
             log.info("encrypting the user password");
             String encryptedPassword = Tools.PASS_ENCRYPT.encryptPassword(password);
 
-            FullUser fu = FULL_USER.createIt("user_id", user.getId(),
+            FullUser fu = FullUser.createIt("user_id", user.getId(),
                     "email", email,
                     "password_encrypted", encryptedPassword);
 
             // now login that user
             String auth = Tools.generateSecureRandom();
-            login = LOGIN.createIt("user_id", user.getId(),
+            login = Login.createIt("user_id", user.getId(),
                     "auth", auth,
                     "expire_time", Tools.newExpireTimestamp());
 
@@ -184,7 +184,7 @@ public class Actions {
             throw new NoSuchElementException("Username/email already exists");
         }
 
-        UserLoginView ulv = USER_LOGIN_VIEW.findFirst("login_id = ?", login.getLongId());
+        UserLoginView ulv = UserLoginView.findFirst("login_id = ?", login.getLongId());
 
         return ulv;
 
@@ -194,13 +194,13 @@ public class Actions {
 
         String message = null;
         // fetch the vote if it exists
-        CommentRank c = COMMENT_RANK.findFirst("user_id = ? and comment_id = ?",
+        CommentRank c = CommentRank.findFirst("user_id = ? and comment_id = ?",
                 userId, commentId);
 
 
         if (c == null) {
             if (rank != null) {
-                COMMENT_RANK.createIt(
+                CommentRank.createIt(
                         "comment_id", commentId,
                         "user_id", userId,
                         "rank", rank);

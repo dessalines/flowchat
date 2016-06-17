@@ -42,14 +42,14 @@ public class AppTest {
 
     @Test
     public void testJDBC() {
-        LazyList<CommentTree> ct = COMMENT_TREE.where("parent_id = ?", 1);
+        LazyList<CommentTree> ct = CommentTree.where("parent_id = ?", 1);
         assertTrue(ct.get(0).getInteger("id").equals(1));
 
     }
 
     @Test
     public void testCommentObjJson() {
-//        LazyList<CommentThreadedView> ctv = COMMENT_THREADED_VIEW.where("discussion_id = ?", 1);
+//        LazyList<CommentThreadedView> ctv = CommentThreadedView.where("discussion_id = ?", 1);
 //
 //        List<CommentObj> cos = Transformations.convertCommentsToEmbeddedObjects(ctv, null);
 //
@@ -60,7 +60,7 @@ public class AppTest {
 
     @Test
     public void testCollect() throws SQLException {
-        LazyList<CommentThreadedView> ctv = COMMENT_THREADED_VIEW.where("discussion_id = ?", 1);
+        LazyList<CommentThreadedView> ctv = CommentThreadedView.where("discussion_id = ?", 1);
 
         log.info(ctv.toJson(true));
 
@@ -81,11 +81,11 @@ public class AppTest {
 
     @Test
     public void testFindComment() throws SQLException {
-        LazyList<CommentThreadedView> ctv = COMMENT_THREADED_VIEW.where("discussion_id = ?", 1);
+        LazyList<CommentThreadedView> ctv = CommentThreadedView.where("discussion_id = ?", 1);
 
         log.info(ctv.toJson(false));
 
-        CommentThreadedView testFound = COMMENT_THREADED_VIEW.findFirst("id = ?", 4L);
+        CommentThreadedView testFound = CommentThreadedView.findFirst("id = ?", 4L);
 
         log.info(testFound.toJson(false));
 

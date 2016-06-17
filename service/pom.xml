@@ -6,7 +6,9 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
 		<main.class>com.chat.webservice.ChatService</main.class>
+		<activejdbc.version>1.4.11</activejdbc.version>
 	</properties>
+
 
 	<build>
 		<plugins>
@@ -18,6 +20,20 @@
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.javalite</groupId>
+				<artifactId>activejdbc-instrumentation</artifactId>
+				<version>${activejdbc.version}</version>
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>instrument</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>
@@ -148,9 +164,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.github.tchoulihan</groupId>
+			<groupId>org.javalite</groupId>
 			<artifactId>activejdbc</artifactId>
-			<version>1.4.20</version>
+			<version>${activejdbc.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>opensymphony</groupId>

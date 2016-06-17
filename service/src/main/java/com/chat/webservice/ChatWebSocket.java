@@ -20,7 +20,7 @@ public class ChatWebSocket {
     public ChatWebSocket() {
         // Fetch the last user(assume all new users for right now)
         Tools.dbInit();
-        nextUserNumber = USER.findAll().orderBy("id desc").limit(1).get(0).getInteger("id") + 1;
+        nextUserNumber = User.findAll().orderBy("id desc").limit(1).get(0).getInteger("id") + 1;
         Tools.dbClose();
     }
 
