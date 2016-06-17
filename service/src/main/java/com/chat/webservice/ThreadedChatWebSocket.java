@@ -56,7 +56,7 @@ public class ThreadedChatWebSocket {
         session.getRemote().sendString(new Comments(comments, fetchVotesMap(ss.getUserObj().getId())).json());
 
         // send the user's comments votes to them only
-        LazyList<CommentRank> votes = COMMENT_RANK.where("user_id = ?", ss.getUserObj().getId());
+        LazyList<CommentRank> votes = CommentRank.where("user_id = ?", ss.getUserObj().getId());
 
         // send the updated users to everyone in the right scope(just discussion
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes, session);
@@ -167,7 +167,7 @@ public class ThreadedChatWebSocket {
                 replyData.getReply());
 
         // Fetch the comment threaded view
-        CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", newComment.getLongId());
+        CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", newComment.getLongId());
 
 
         // Convert to a proper commentObj
@@ -192,7 +192,7 @@ public class ThreadedChatWebSocket {
 
         Comment c = Actions.editComment(editData.getId(), editData.getEdit());
 
-        CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", c.getLongId());
+        CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", c.getLongId());
 
         // Convert to a proper commentObj, but with nothing embedded
         CommentObj co = Transformations.convertCommentThreadedView(ctv, null);
@@ -218,7 +218,7 @@ public class ThreadedChatWebSocket {
                 topReplyData.getTopReply());
 
         // Fetch the comment threaded view
-        CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", newComment.getLongId());
+        CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", newComment.getLongId());
 
         // Convert to a proper commentObj
         CommentObj co = Transformations.convertCommentThreadedView(ctv, null);
@@ -246,7 +246,7 @@ public class ThreadedChatWebSocket {
         String message = Actions.saveCommentVote(userId, commentId, rank);
 
         // Getting the comment for the breadcrumbs for the scope
-        CommentThreadedView ctv = COMMENT_THREADED_VIEW.findFirst("id = ?", commentId);
+        CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", commentId);
 
         // Convert to a proper commentObj, but with nothing embedded
         CommentObj co = Transformations.convertCommentThreadedView(ctv, null);
@@ -288,10 +288,10 @@ public class ThreadedChatWebSocket {
         if (auth != null) {
 
             if (auth.equals("undefined")) {
-                User dbUser = USER.findFirst("id = ?", uid);
+                User dbUser = User.findFirst("id = ?", uid);
                 userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));
             } else {
-                UserLoginView uv = USER_LOGIN_VIEW.findFirst("auth = ?", auth);
+                UserLoginView uv = UserLoginView.findFirst("auth = ?", auth);
                 userObj = new UserObj(uv.getLongId(), uv.getString("name"));
             }
 
@@ -309,10 +309,10 @@ public class ThreadedChatWebSocket {
 
     private static LazyList<Model> fetchComments(SessionScope scope) {
         if (scope.getTopParentId() != null) {
-            return COMMENT_BREADCRUMBS_VIEW.where("discussion_id = ? and parent_id = ?",
+            return CommentBreadcrumbsView.where("discussion_id = ? and parent_id = ?",
                     scope.getDiscussionId(), scope.getTopParentId());
         } else {
-            return COMMENT_THREADED_VIEW.where("discussion_id = ?", scope.getDiscussionId());
+            return CommentThreadedView.where("discussion_id = ?", scope.getDiscussionId());
         }
 
 
@@ -320,14 +320,14 @@ public class ThreadedChatWebSocket {
 
     // These create maps from a user's comment id, to their rank/vote
     private static Map<Long, Integer> fetchVotesMap(Long userId) {
-        List<CommentRank> ranks = COMMENT_RANK.where("user_id = ?",
+        List<CommentRank> ranks = CommentRank.where("user_id = ?",
                 userId);
 
         return convertCommentRanksToVoteMap(ranks);
     }
 
     private static Map<Long, Integer> fetchVotesMap(Long userId, Long commentId) {
-        List<CommentRank> ranks = COMMENT_RANK.where("comment_id = ? and user_id = ?",
+        List<CommentRank> ranks = CommentRank.where("comment_id = ? and user_id = ?",
                 commentId, userId);
 
         return convertCommentRanksToVoteMap(ranks);
