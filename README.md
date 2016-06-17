@@ -1,17 +1,32 @@
 # chat-websocket
 
 # TODO
+- Build startup documentation, setting up postgres, git clone. 
+- Add schema for discussion title, discussion link, discussion tags
+- Figure out how to get thumbnails from links.... might be tough for non-imgur-like things. 
 - Clean up codebase
-- Reconnect websocket if [disconnected](http://stackoverflow.com/questions/3479734/javascript-jquery-test-if-window-has-focus)
-- Front page is for creating discussions
-- Toastr / whatever messages for errors, successes.
+- Front page is the list of discussions. 
+- Toastr / whatever messages for errors, successes, logins.
 - Serving multiple discussions
+  - Decided on forum software, make it self-hostable, but have your own instance of it running as a pseudo global instance.
+  - All discussions have a single moderator, whoever created the channel.
+  - Discussions can be private(invite by moderator only), or public(anyone can join)\
+    - For private, any emails that aren't in the system should get emailed a link to the discussion.
+  - Discussions Have a title, and **optionally a link**, and optionally text. 
+  - Tags/Hashtags(with smart linking)(maximum of 3 - 5)
 	- Discussions on left
 	- Set up like Stash, [nodebb](https://github.com/NodeBB/NodeBB), reddit
   - Left bar will be all your discussions that aren't archived(x'd out)
   - When you comment in a discussion, it gets added to your left bar.
   - Don't want mods to be able to squat on tag names, want community moderation.
-- Search bar, search for discussions
+- HashTag pages
+- Favorite/'watched discussions', anything you comment in is automatically added to favorites/saved. 
+  - Need a way to remove favorite discussions
+  - Need a way to view your favorite discussions
+- Top nav with bell alerts for if someone replied directly to your comment, clicking goes to that discussion comment parent. 
+- Notifications, toastr [1](https://github.com/PointInside/ng2-toastr), or toasty: [2](http://akserg.github.io/ng2-webpack-demo/) [3](https://github.com/Stabzs/Angular2-Toaster)
+- Beautiful dynamic-card front page, like reddit-sync flowed view(with bootstrap cards), with popular tags. 
+- Search bar, search for (public) discussions, or tags
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - Links, or left bar with discussions? Are you making a reddit alternative, or a slack alternative? Team-based discussions, or thread based?
 - Comment sort broadcasting for peoples votes? Seems excessive, but could be very useful for sorting. 
@@ -21,6 +36,8 @@
   - Top level ones would require a full resort... seems excessive.
 
 # Finished
+- Fixed userbar on the right, that looks pretty
+- Reconnect websocket if [disconnected](http://stackoverflow.com/questions/3479734/javascript-jquery-test-if-window-has-focus)
 - Add # of vote count in addition to average ranking, put on the right side of the pill?
 - Set up red to green gradient for input bar: linear-gradient(90deg, red, yellow) [1](https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/)
 - Top level replying
@@ -48,4 +65,4 @@
   - Hierarchical data in SQL [1](http://stackoverflow.com/questions/8252323/mysql-closure-table-hierarchical-database-how-to-pull-information-out-in-the-c) [2](http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way-to-parse-a-flat-table-into-a-tree/)
 - Possibly add range voting?
 	- Use default html sliders [1](http://stackoverflow.com/questions/15935837/how-to-display-a-range-input-slider-vertically) [styling](http://danielstern.ca/range.css/#/) [fiddle](http://jsfiddle.net/Mmgxg/)
-  
+  - 
