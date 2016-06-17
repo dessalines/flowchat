@@ -1,14 +1,19 @@
 # chat-websocket
 
 # TODO
-- Add # of vote count in addition to average ranking, put on the right side of the pill?
 - Clean up codebase
 - Reconnect websocket if [disconnected](http://stackoverflow.com/questions/3479734/javascript-jquery-test-if-window-has-focus)
 - Front page is for creating discussions
 - Toastr / whatever messages for errors, successes.
 - Serving multiple discussions
 	- Discussions on left
-	- Set up like Stash
+	- Set up like Stash, [nodebb](https://github.com/NodeBB/NodeBB), reddit
+  -
+  - Left bar will be all your discussions that aren't archived(x'd out)
+  - When you comment in a discussion, it gets added to your left bar.
+
+  - Don't want mods to be able to squat on tag names, want community moderation.
+
 - Search bar, search for discussions
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - Links, or left bar with discussions? Are you making a reddit alternative, or a slack alternative? Team-based discussions, or thread based?
@@ -19,6 +24,7 @@
   - Top level ones would require a full resort... seems excessive.
 
 # Finished
+- Add # of vote count in addition to average ranking, put on the right side of the pill?
 - Set up red to green gradient for input bar: linear-gradient(90deg, red, yellow) [1](https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/)
 - Top level replying
 	- Make it feel like chat, with a bottom expandable bar
