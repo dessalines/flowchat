@@ -173,13 +173,7 @@ export class ChatComponent implements OnInit {
 
     // If its the top level, stop and return 
     if (editedComment.parentId == null) {
-      let child = this.comments.filter(item => item.id == editedComment.id)[0];
-      let index = this.comments.indexOf(child);
-
-      this.comments[index].text = editedComment.text;
-      this.comments[index].modified = editedComment.modified;
-      this.comments[index].avgRank = editedComment.avgRank;
-      this.comments[index].numberOfVotes = editedComment.numberOfVotes;
+      this.replaceEditedComment(this.comments, editedComment);
 
       // setTimeout(() => { location.hash = "#comment_" + editedComment.id; }, 50);
       return;
@@ -195,10 +189,6 @@ export class ChatComponent implements OnInit {
       // setTimeout(() => { location.hash = "#comment_" + editedComment.id; }, 50);
     }
 
-    // TODO do a sort at that level:
-    // homes.sort(function(a, b) {
-    //   return parseFloat(a.price) - parseFloat(b.price);
-    // });
   }
 
   private addNewComment(newComment: Comment) {
@@ -234,14 +224,7 @@ export class ChatComponent implements OnInit {
             parent.embedded.push(newComment);
             this.recursiveCommentStopper = true;
           } else {
-            let child = parent.embedded.filter(item => item.id == newComment.id)[0];
-            let index = parent.embedded.indexOf(child);
-
-            parent.embedded[index].text = newComment.text;
-            parent.embedded[index].modified = newComment.modified;
-            parent.embedded[index].avgRank = newComment.avgRank;
-            parent.embedded[index].numberOfVotes = newComment.numberOfVotes;
-            this.recursiveCommentStopper = true;
+            this.replaceEditedComment(parent.embedded, newComment);
           }
         } 
         // Top level comments
@@ -250,6 +233,24 @@ export class ChatComponent implements OnInit {
         }
       }
     }
+  }
+
+  private replaceEditedComment(comments: Array<Comment>, editedComment: Comment) {
+    let child = comments.filter(item => item.id == editedComment.id)[0];
+    let index = comments.indexOf(child);
+
+    comments[index].text = editedComment.text;
+    comments[index].modified = editedComment.modified;
+    comments[index].avgRank = editedComment.avgRank;
+    comments[index].numberOfVotes = editedComment.numberOfVotes;
+
+    // do a sort at that level:
+    comments.sort((a, b) => {
+      return b.avgRank - a.avgRank;
+    });
+
+
+    this.recursiveCommentStopper = true;
   }
 
 
