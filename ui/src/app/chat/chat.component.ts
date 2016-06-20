@@ -9,6 +9,9 @@ import {Subscription} from 'rxjs/Subscription';
 import { RouteConfig, ROUTER_DIRECTIVES, Router, RouteParams} from '@angular/router-deprecated';
 import {RouteParamService} from '../services/route-param.service';
 import {MarkdownEditComponent} from '../markdown-edit';
+import { MomentPipe } from '../pipes/moment.pipe';
+import {MarkdownPipe} from '../pipes/markdown.pipe';
+
 
 
 @Component({
@@ -17,7 +20,8 @@ import {MarkdownEditComponent} from '../markdown-edit';
   templateUrl: 'chat.component.html',
   styleUrls: ['chat.component.css'],
   providers: [HTTP_PROVIDERS, ThreadedChatService],
-  directives: [CommentComponent, MarkdownEditComponent]
+  directives: [CommentComponent, MarkdownEditComponent],
+  pipes: [MomentPipe, MarkdownPipe]
 })
 export class ChatComponent implements OnInit {
 
@@ -31,8 +35,9 @@ export class ChatComponent implements OnInit {
 
   private userServiceWatcher: Subscription;
   private threadedChatSubscription: Subscription;
+  private discussionSubscription: Subscription;
 
-  private discussionId: number = 1;
+  private discussionId: number = null;
   private topParentId: number = null;
 
   private discussion: Discussion;
@@ -50,6 +55,7 @@ export class ChatComponent implements OnInit {
     private routeParamService: RouteParamService,
     private discussionService: DiscussionService) {
 
+
   }
 
   ngOnInit() {
@@ -60,12 +66,12 @@ export class ChatComponent implements OnInit {
       this.topParentId = Number(this.routeParams.get("commentId"));
     }
     this.threadedChatService.connect(this.discussionId, this.topParentId);
+    
     this.subscribeToChat();
     this.subscribeToUserServiceWatcher();
     this.websocketCloseWatcher();
 
-
-
+    this.subscribeToDiscussion();
 
   }
 
@@ -77,6 +83,7 @@ export class ChatComponent implements OnInit {
       this.userServiceWatcher.unsubscribe();
       this.threadedChatSubscription.unsubscribe();
       this.threadedChatService = null;
+      this.discussionSubscription.unsubscribe();
     }
   }
 
@@ -100,8 +107,11 @@ export class ChatComponent implements OnInit {
 
   // TODO this may need to have a subscribtion object as well
   subscribeToDiscussion() {
-    this.discussionService.getDiscussion(this.discussionId).
-      subscribe(res => this.discussion = res.data);
+    this.discussionSubscription = this.discussionService.getDiscussion(this.discussionId).
+      subscribe(d => {
+        this.discussion = d;
+      },
+      error => console.log(error));
   }
 
   websocketCloseWatcher() {

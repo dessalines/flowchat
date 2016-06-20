@@ -1,6 +1,6 @@
 package com.chat.db;
 
-import java.math.BigInteger;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -8,12 +8,10 @@ import ch.qos.logback.classic.Logger;
 import com.chat.DataSources;
 import com.chat.db.Tables.*;
 import com.chat.tools.Tools;
-import org.javalite.activejdbc.Model;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 
-import static com.chat.db.Tables.*;
 /**
  * Created by tyler on 6/5/16.
  */
@@ -72,38 +70,80 @@ public class Actions {
 
     }
 
+    //  TODO make this more generic, don't require creating login rows for the anonymous users
     public static UserLoginView getOrCreateUserFromCookie(Request req, Response res) {
 
-        String auth = req.cookie("auth");
+        UserFromHeader ufh = UserFromHeader.fromJson(req.headers("user"));
 
         UserLoginView uv = null;
 
 
-        while (uv == null) {
-
             // if there's an auth, you're good
-            if (auth != null) {
-                uv = UserLoginView.findFirst("auth = ?" , auth);
-                break;
+            if (ufh.getId() == null && ufh.getAuth().equals("undefined")) {
+                log.info("id and auth are null");
+                // Create the user
+                User user = createUser();
+
+                // Generate the login
+                String auth = Tools.generateSecureRandom();
+                Login login = Login.createIt("user_id", user.getId(),
+                        "auth", auth,
+                        "expire_time", Tools.newExpireTimestamp());
+
+                // set the cookies
+                Actions.setCookiesForLogin(user, auth, res);
+
+                uv = UserLoginView.findFirst("auth = ?", auth);
+
+
+            } else if (ufh.getId() != null && ufh.getAuth().equals("undefined")) {
+                log.info("auth is undefined");
+                String auth = Tools.generateSecureRandom();
+
+                Login login = Login.createIt("user_id", ufh.getId(),
+                        "auth", auth,
+                        "expire_time", Tools.newExpireTimestamp());
+
+                uv = UserLoginView.findFirst("auth = ?", auth);
+
+                log.info(uv.toJson(true));
+                log.info(uv.getLongId().toString());
+
+            } else {
+                uv = UserLoginView.findFirst("auth = ?" , ufh.getAuth());
+
             }
-
-            // Create the user
-            User user = createUser();
-
-            // Generate the login
-            auth = Tools.generateSecureRandom();
-            Login login = Login.createIt("user_id", user.getId(),
-                    "auth", auth,
-                    "expire_time", Tools.newExpireTimestamp());
-
-            // set the cookies
-            Actions.setCookiesForLogin(user, auth, res);
-
-            uv = UserLoginView.findFirst("auth = ?" , auth);
-        }
 
 
         return uv;
+    }
+
+    private static class UserFromHeader {
+        private Long id;
+        private String auth, name;
+
+        public UserFromHeader(){}
+
+        public static UserFromHeader fromJson(String dataStr) {
+            try {
+                return Tools.JACKSON.readValue(dataStr, UserFromHeader.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        public String getAuth() {
+            return auth;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
     public static User createUser() {
@@ -229,7 +269,7 @@ public class Actions {
         Boolean secure = DataSources.SSL;
 
         res.cookie("auth", auth, DataSources.EXPIRE_SECONDS, secure);
-        res.cookie("uid", user.getId().toString(), DataSources.EXPIRE_SECONDS, secure);
+        res.cookie("id", user.getId().toString(), DataSources.EXPIRE_SECONDS, secure);
         res.cookie("name", user.getString("name"), DataSources.EXPIRE_SECONDS, secure);
 
         return "Logged in";
@@ -239,7 +279,7 @@ public class Actions {
         Boolean secure = DataSources.SSL;
 
         res.cookie("auth", auth, DataSources.EXPIRE_SECONDS, secure);
-        res.cookie("uid", fu.getString("user_id"), DataSources.EXPIRE_SECONDS, secure);
+        res.cookie("id", fu.getString("user_id"), DataSources.EXPIRE_SECONDS, secure);
         res.cookie("username", fu.getString("name"), DataSources.EXPIRE_SECONDS, secure);
 
         return "Logged in";
