@@ -1,9 +1,10 @@
 import {Component, Input, provide, OnInit} from '@angular/core';
 import { HTTP_PROVIDERS }    from '@angular/http';
 import {ThreadedChatService} from '../services/threaded-chat.service';
-import {Comment, User} from '../shared';
+import {Comment, User, Discussion, Tag} from '../shared';
 import {CommentComponent} from '../comment';
 import {UserService} from '../services/user.service';
+import {DiscussionService} from '../services/discussion.service';
 import {Subscription} from 'rxjs/Subscription';
 import { RouteConfig, ROUTER_DIRECTIVES, Router, RouteParams} from '@angular/router-deprecated';
 import {RouteParamService} from '../services/route-param.service';
@@ -34,6 +35,8 @@ export class ChatComponent implements OnInit {
   private discussionId: number = 1;
   private topParentId: number = null;
 
+  private discussion: Discussion;
+
   private topReply: string;
   private clearTopReply: boolean = false;
 
@@ -44,7 +47,8 @@ export class ChatComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private routeParams: RouteParams,
-    private routeParamService: RouteParamService) {
+    private routeParamService: RouteParamService,
+    private discussionService: DiscussionService) {
 
   }
 
@@ -59,6 +63,10 @@ export class ChatComponent implements OnInit {
     this.subscribeToChat();
     this.subscribeToUserServiceWatcher();
     this.websocketCloseWatcher();
+
+
+
+
   }
 
   ngOnDestroy() {
@@ -88,6 +96,12 @@ export class ChatComponent implements OnInit {
       subscribe(res => {
         this.updateThreadedChat(res.data);
       });
+  }
+
+  // TODO this may need to have a subscribtion object as well
+  subscribeToDiscussion() {
+    this.discussionService.getDiscussion(this.discussionId).
+      subscribe(res => this.discussion = res.data);
   }
 
   websocketCloseWatcher() {

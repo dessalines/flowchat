@@ -32,6 +32,7 @@ CREATE TABLE login (
 
 create table discussion (
     id bigserial primary key,
+    user_id bigint not null,
     title varchar(140) not null,
     link varchar(255),
     text_ text,
@@ -141,10 +142,10 @@ insert into full_user (user_id, email, password_encrypted)
     values (4, null, '9c71bkpBllep7HRvVhFO9IZkirBCmDQS');
 
 
-insert into discussion (title, link, text_, private)
-    values ('Cats', 'http://google.com', null, false),
-    ('Dogs',null,'**ima** dog', false),
-    ('Only kittens', null, 'kittens only here plz.', true);
+insert into discussion (title, user_id, link, text_, private)
+    values ('Cats', 1, 'http://google.com', null, false),
+    ('Dogs', 2, null,'**ima** dog', false),
+    ('Only kittens',3,  null, 'kittens only here plz.', true);
 
 insert into private_discussion_user(discussion_id, user_id)
     values (3,4);

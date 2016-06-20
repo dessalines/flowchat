@@ -7,6 +7,7 @@ import com.chat.db.Actions;
 import com.chat.db.Tables;
 import com.chat.db.Transformations;
 import com.chat.tools.Tools;
+import com.chat.types.DiscussionObj;
 import org.eclipse.jetty.websocket.api.Session;
 import org.javalite.activejdbc.LazyList;
 import org.slf4j.LoggerFactory;
@@ -97,6 +98,33 @@ public class ChatService {
             }
 
         });
+
+        // Get the user id
+        get("get_discussion/:id", (req, res) -> {
+
+            try {
+                String id = req.params(":id");
+
+                UserLoginView uv = Actions.getOrCreateUserFromCookie(req, res);
+
+                DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", id);
+
+                // Get your vote for the discussion:
+                DiscussionRank dr = DiscussionRank.findFirst(
+                        "discussion_id = ? and user_id = ?", id, uv.getLongId());
+
+                DiscussionObj df = Transformations.convertDiscussion(dfv, dr.getInteger("vote"));
+
+                return df.json();
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return e.getMessage();
+            }
+
+        });
+
 
         before((req, res) -> {
             Tools.dbInit();
