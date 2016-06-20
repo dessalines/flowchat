@@ -23,6 +23,45 @@ from user_ as u
 join full_user as fu on fu.user_id = u.id
 join login as l on l.user_id = u.id;
 
+create view discussion_full_view as
+select d.id,
+    d.title,
+    d.link,
+    d.text_,
+    d.private,
+    avg(dr.rank) as avg_rank,
+    count(distinct dr.id) as number_of_votes,
+    array_agg(distinct t.id) as tag_ids,
+    array_agg(distinct t.name) as tag_names,
+    d.created,
+    d.modified
+from discussion as d
+left join discussion_rank as dr on dr.discussion_id = d.id
+left join discussion_tag as dt on dt.discussion_id = d.id
+left join tag as t on dt.tag_id = t.id
+group by d.id, d.title, d.link, d.text_, d.private, dt.discussion_id, dr.discussion_id
+order by d.id;
+--
+
+create view discussion_notext_view as
+select id,
+    title,
+    link,
+    private,
+    avg_rank,
+    number_of_votes,
+    tag_ids,
+    tag_names,
+    created,
+    modified
+from discussion_full_view;
+
+
+
+
+-- TODO
+-- create table discussion_notext_view as
+
 
 -- create children_view, basically id, and # of children
 create view children_view as

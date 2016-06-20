@@ -38,5 +38,8 @@ public class Tables {
     @Table("comment_rank")
     public static class CommentRank extends Model {}
 
+    @Table("discussion_full_view")
+    public static class DiscussionFullView extends Model {}
+
 
 }
