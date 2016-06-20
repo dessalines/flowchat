@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class DiscussionObj implements JSONWriter {
     private Long id, userId;
-    private String title, link, text;
+    private String userName, title, link, text;
     private Boolean private_;
     private Integer avgRank, userRank, numberOfVotes;
     private List<TagObj> tags;
@@ -19,6 +19,7 @@ public class DiscussionObj implements JSONWriter {
 
     public DiscussionObj(Long id,
                          Long userId,
+                         String userName,
                          String title,
                          String link,
                          String text,
@@ -32,6 +33,7 @@ public class DiscussionObj implements JSONWriter {
                          Timestamp modified) {
         this.id = id;
         this.userId = userId;
+        this.userName = userName;
         this.title = title;
         this.link = link;
         this.text = text;
@@ -39,7 +41,7 @@ public class DiscussionObj implements JSONWriter {
         this.avgRank = avgRank;
         this.userRank = userRank;
         this.numberOfVotes = numberOfVotes;
-        this.tags = setTags(tagIds, tagNames);
+        this.tags = (!tagIds.equals("{NULL}")) ? setTags(tagIds, tagNames) : null;
         this.created = created;
         this.modified = modified;
     }
@@ -67,6 +69,8 @@ public class DiscussionObj implements JSONWriter {
     public Long getUserId() {
         return userId;
     }
+
+    public String getUserName() {return userName;}
 
     public String getTitle() {
         return title;

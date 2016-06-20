@@ -39,7 +39,7 @@ public class ChatService {
 		});
 
         // Get the user id
-        get("get_user", (req, res) -> {
+        get("/get_user", (req, res) -> {
 
             try {
 
@@ -100,10 +100,11 @@ public class ChatService {
         });
 
         // Get the user id
-        get("get_discussion/:id", (req, res) -> {
+        get("/get_discussion/:id", (req, res) -> {
 
             try {
-                String id = req.params(":id");
+                Long id = Long.valueOf(req.params(":id"));
+                log.info("got to discussion " + id);
 
                 UserLoginView uv = Actions.getOrCreateUserFromCookie(req, res);
 
@@ -113,7 +114,9 @@ public class ChatService {
                 DiscussionRank dr = DiscussionRank.findFirst(
                         "discussion_id = ? and user_id = ?", id, uv.getLongId());
 
-                DiscussionObj df = Transformations.convertDiscussion(dfv, dr.getInteger("vote"));
+                Integer vote = (dr != null) ? dr.getInteger("vote") : null;
+
+                DiscussionObj df = Transformations.convertDiscussion(dfv, vote);
 
                 return df.json();
 
@@ -134,6 +137,7 @@ public class ChatService {
             res.header("Access-Control-Allow-Origin", "*");
             res.header("Content-Encoding", "gzip");
             res.header("Access-Control-Allow-Credentials", "true");
+//            res.header("Access-Control-Allow-Headers", "User");
 
         });
 

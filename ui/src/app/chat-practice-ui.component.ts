@@ -5,6 +5,7 @@ import { ChatListComponent } from './chat-list';
 import { NavbarComponent } from './navbar';
 import {HomeComponent} from './home';
 import {UserService} from './services/user.service';
+import {DiscussionService} from './services/discussion.service';
 
 @Component({
   moduleId: module.id,
@@ -12,7 +13,7 @@ import {UserService} from './services/user.service';
   templateUrl: 'chat-practice-ui.component.html',
   styleUrls: ['chat-practice-ui.component.css'],
   directives: [NavbarComponent, ROUTER_DIRECTIVES],
-  providers: [UserService]
+  providers: [UserService, DiscussionService]
 })
 @RouteConfig([
     // { path: '/**', redirectTo: ['Home'] },

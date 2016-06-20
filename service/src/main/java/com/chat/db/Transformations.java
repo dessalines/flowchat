@@ -110,6 +110,7 @@ public class Transformations {
     public static DiscussionObj convertDiscussion(DiscussionFullView d, Integer vote) {
         return new DiscussionObj(d.getLongId(),
                 d.getLong("user_id"),
+                d.getString("user_name"),
                 d.getString("title"),
                 d.getString("link"),
                 d.getString("text_"),

@@ -20,12 +20,13 @@ select u.id,
     l.expire_time,
     u.created
 from user_ as u
-join full_user as fu on fu.user_id = u.id
+left join full_user as fu on fu.user_id = u.id
 join login as l on l.user_id = u.id;
 
 create view discussion_full_view as
 select d.id,
     d.user_id,
+    u.name as user_name,
     d.title,
     d.link,
     d.text_,
@@ -40,13 +41,15 @@ from discussion as d
 left join discussion_rank as dr on dr.discussion_id = d.id
 left join discussion_tag as dt on dt.discussion_id = d.id
 left join tag as t on dt.tag_id = t.id
-group by d.id, d.user_id, d.title, d.link, d.text_, d.private, dt.discussion_id, dr.discussion_id
+left join user_ as u on d.user_id = u.id
+group by d.id, d.user_id, u.name, d.title, d.link, d.text_, d.private, dt.discussion_id, dr.discussion_id
 order by d.id;
 --
 
 create view discussion_notext_view as
 select id,
     user_id,
+    user_name,
     title,
     link,
     private,
