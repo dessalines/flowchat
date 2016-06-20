@@ -114,9 +114,11 @@ public class ChatService {
                 DiscussionRank dr = DiscussionRank.findFirst(
                         "discussion_id = ? and user_id = ?", id, uv.getLongId());
 
-                Integer vote = (dr != null) ? dr.getInteger("vote") : null;
+                Integer vote = (dr != null) ? dr.getInteger("rank") : null;
 
                 DiscussionObj df = Transformations.convertDiscussion(dfv, vote);
+
+                log.info(df.json());
 
                 return df.json();
 
@@ -127,6 +129,27 @@ public class ChatService {
             }
 
         });
+
+        post("/save_discussion_rank/:id/:rank", (req, res) -> {
+            try {
+                UserLoginView uv = Actions.getOrCreateUserFromCookie(req, res);
+
+                Long discussionId = Long.valueOf(req.params(":id"));
+                Integer rank = Integer.valueOf(req.params(":rank"));
+
+                String message = Actions.saveDiscussionVote(uv.getLongId(),discussionId,rank);
+                log.info(message);
+
+                return message;
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return e.getMessage();
+            }
+
+        });
+
 
 
         before((req, res) -> {

@@ -264,6 +264,40 @@ public class Actions {
 
     }
 
+    public static String saveDiscussionVote(Long userId, Long discussionId, Integer rank) {
+
+        String message = null;
+        // fetch the vote if it exists
+        DiscussionRank d = DiscussionRank.findFirst("user_id = ? and discussion_id = ?",
+                userId, discussionId);
+
+
+        if (d == null) {
+            if (rank != null) {
+                DiscussionRank.createIt(
+                        "discussion_id", discussionId,
+                        "user_id", userId,
+                        "rank", rank);
+                message = "Discussion Vote Created";
+            } else {
+                message = "Discussion Vote not created";
+            }
+        } else {
+            if (rank != null) {
+                d.set("rank", rank).saveIt();
+                message = "Discussion Vote updated";
+            }
+            // If the rank is null, then delete the ballot
+            else {
+                d.delete();
+                message = "Discussion Vote deleted";
+            }
+        }
+
+        return message;
+
+    }
+
 
     public static String setCookiesForLogin(User user, String auth, Response res) {
         Boolean secure = DataSources.SSL;
