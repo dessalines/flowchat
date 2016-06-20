@@ -10,7 +10,8 @@ import {UserService} from './user.service';
 @Injectable()
 export class DiscussionService {
 
-  private discussionUrl: string = 'http://localhost:4567/get_discussion/';
+  private getDiscussionUrl: string = 'http://localhost:4567/get_discussion/';
+  private saveRankUrl: string = 'http://localhost:4567/save_discussion_rank/';
 
   headers: Headers;
   options: RequestOptions;
@@ -25,7 +26,13 @@ export class DiscussionService {
   }
 
   getDiscussion(id: number) {
-    return this.http.get(this.discussionUrl + id, this.options)
+    return this.http.get(this.getDiscussionUrl + id, this.options)
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  saveRank(id: number, rank: number) {
+    return this.http.post(this.saveRankUrl + id + '/' + rank, null, this.options)
       .map(this.extractData)
       .catch(this.handleError);
   }

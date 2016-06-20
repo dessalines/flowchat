@@ -48,6 +48,8 @@ export class ChatComponent implements OnInit {
   // This is set to true on ngOnDestroy, to not do an alert for reconnect
   private websocketSoftClose: boolean = false;
 
+  private showVoteSlider: boolean = false;
+
   constructor(private threadedChatService: ThreadedChatService,
     private userService: UserService,
     private router: Router,
@@ -281,6 +283,21 @@ export class ChatComponent implements OnInit {
   setIsReplying($event) {
     this.isReplying = $event;
   }
+
+  toggleShowVoteSlider() {
+    this.showVoteSlider = !this.showVoteSlider;
+  }
+
+  updateDiscussionRank($event) {
+    this.discussion.userRank = $event;
+  }
+
+  saveDiscussionRank($event) {
+    this.discussion.userRank = $event;
+    this.showVoteSlider = false;
+    this.discussionService.saveRank(this.discussionId, this.discussion.userRank).subscribe();
+  }
+
 
 }
 
