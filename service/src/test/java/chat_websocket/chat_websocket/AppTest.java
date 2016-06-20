@@ -3,6 +3,7 @@ package chat_websocket.chat_websocket;
 import ch.qos.logback.classic.Logger;
 import com.chat.db.Transformations;
 import com.chat.types.CommentObj;
+import com.chat.types.DiscussionObj;
 import org.javalite.activejdbc.LazyList;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -104,6 +105,13 @@ public class AppTest {
 //
 //        log.info(ctv2.toString());
 
+    }
+
+    @Test
+    public void testDiscussionConvert() throws SQLException {
+        DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", 1);
+        DiscussionObj df = Transformations.convertDiscussion(dfv, null);
+        log.info(df.json());
     }
 
 

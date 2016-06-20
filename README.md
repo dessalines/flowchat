@@ -1,6 +1,7 @@
 # chat-websocket
 
 # TODO
+- [update to postgres 9.4/5](http://askubuntu.com/questions/633919/how-install-postgresql-9-4) to use json translators
 - Build startup documentation, setting up postgres, git clone. 
 - Add schema for discussion title, discussion link, discussion tags
 - Figure out how to get thumbnails from links.... might be tough for non-imgur-like things. 

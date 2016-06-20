@@ -2,6 +2,7 @@ package com.chat.db;
 
 import ch.qos.logback.classic.Logger;
 import com.chat.types.CommentObj;
+import com.chat.types.DiscussionObj;
 import org.javalite.activejdbc.Model;
 import org.slf4j.LoggerFactory;
 
@@ -103,6 +104,23 @@ public class Transformations {
         List<CommentObj> cos = convertCommentsMapToEmbeddedObjects(commentObjMap);
 
         return cos;
+    }
+
+
+    public static DiscussionObj convertDiscussion(DiscussionFullView d, Integer vote) {
+        return new DiscussionObj(d.getLongId(),
+                d.getLong("user_id"),
+                d.getString("title"),
+                d.getString("link"),
+                d.getString("text_"),
+                d.getBoolean("private"),
+                d.getInteger("avg_rank"),
+                vote,
+                d.getInteger("number_of_votes"),
+                d.getString("tag_ids"),
+                d.getString("tag_names"),
+                d.getTimestamp("created"),
+                d.getTimestamp("modified"));
     }
 
 

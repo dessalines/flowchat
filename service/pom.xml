@@ -84,7 +84,7 @@
 					<driver>org.postgresql.Driver</driver>
 					<url>jdbc:postgresql://127.0.0.1/test</url>
 					<username>tyler</username>
-					<password></password>
+					<password>test</password>
 				</configuration>
 				<executions>
 					<execution>

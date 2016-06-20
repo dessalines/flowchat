@@ -57,7 +57,7 @@ public class Tools {
             new DB("default").open("org.postgresql.Driver",
                     "jdbc:postgresql://127.0.0.1/test",
                     "tyler",
-                    "");
+                    "test");
         } catch (DBException e) {
             e.printStackTrace();
             dbClose();
@@ -151,5 +151,9 @@ public class Tools {
     public static Integer findIndexByIdInLazyList(LazyList<? extends Model> ctv, Long searchId) {
         Integer index = IntStream.range(0, ctv.size()).filter(c -> ctv.get(c).getLongId() == searchId).toArray()[0];
         return index;
+    }
+
+    public static String[] pgArrayAggToArray(String text) {
+        return text.replaceAll("\\{|\\}", "").split(",");
     }
 }

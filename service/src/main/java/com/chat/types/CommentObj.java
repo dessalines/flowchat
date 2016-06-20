@@ -1,6 +1,8 @@
 package com.chat.types;
 
 
+import com.chat.tools.Tools;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -9,7 +11,7 @@ import java.util.List;
 /**
  * Created by tyler on 6/7/16.
  */
-public class CommentObj implements JSONWriter{
+public class CommentObj implements JSONWriter {
     private Long id, userId, discussionId, parentId, topParentId, pathLength, numOfParents, numOfChildren;
     private String userName, text;
     private Timestamp created, modified;
@@ -57,7 +59,7 @@ public class CommentObj implements JSONWriter{
 
     public static List<Long> setBreadCrumbsArr(String breadCrumbs) {
         List<Long> breadcrumbs = new ArrayList<>();
-        for (String br : breadCrumbs.replaceAll("\\{|\\}", "").split(",")) {
+        for (String br : Tools.pgArrayAggToArray(breadCrumbs)) {
             breadcrumbs.add(Long.valueOf(br));
         }
         return breadcrumbs;
