@@ -1,0 +1,115 @@
+<nav class="navbar navbar-full navbar-light" style="background-color: #e3f2fd;">
+  <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
+    &#9776;
+  </button>
+  <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
+    <a class="navbar-brand" [routerLink]="['Home']">Flow</a>
+    <ul class="nav navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['Discussion', {discussionId: 1}]">Heh <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <form class="form-inline">
+          <input class="form-control" type="text" placeholder="Search">
+          <button class="btn btn-primary-outline" type="submit">Search</button>
+        </form>
+      </li>
+    </ul>
+    <button *ngIf="!userService.getUser()" class="btn btn-primary-outline pull-xs-right" (click)="loginModal.show()">Login/Signup</button>
+    <div *ngIf="userService.getUser()" class="btn-group pull-xs-right" dropdown keyboardNav="true">
+      <button id="simple-btn-keyboard-nav" type="button" class="btn btn-primary-outline" dropdownToggle>
+        {{userService.getUser().name}}<span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="simple-btn-keyboard-nav">
+        <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
+        <li class="divider dropdown-divider"></li>
+        <li role="menuitem"><a (click)="logout()" class="dropdown-item" href="#">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Modals -->
+<div bsModal #loginModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button id="closeModalButton" type="button" class="close" (click)="loginModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="row">
+          <div class="col-md-6 vertical-line-right">
+            <h4 class="text-xs-center"> Signup </h4>
+            <br>
+            <form #signupForm="ngForm" (ngSubmit)="signupSubmit()" class="form-horizontal" role="form">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input [(ngModel)]="signup.username" #signupName="ngForm" ngControl="signupName" class="form-control" placeholder="choose a username" required minlength="5" maxlength="140" />
+                  <div *ngIf="signupName.dirty" class="row col-sm-12 help-block text-danger">
+                    <small *ngIf="signupName.errors?.required">A username is required</small>
+                    <small *ngIf="signupName.errors?.minlength">Username must be more than 5 characters</small>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input [(ngModel)]="signup.password" #signupPassword="ngForm" ngControl="signupPassword" type="password" class="form-control" placeholder="password" required />
+                  <div *ngIf="signupPassword.dirty" class="row col-sm-12 help-block text-danger">
+                    <small *ngIf="signupPassword.errors?.required">a password is required</small>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input [(ngModel)]="signup.verifyPassword" #signupVerifyPassword="ngForm" ngControl="signupVerifyPassword" type="password" class="form-control" placeholder="verify password" required />
+                  <div *ngIf="signupVerifyPassword.dirty" class="row col-sm-12 help-block text-danger">
+                    <small *ngIf="signupVerifyPassword.errors?.required">a password is required</small>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input [(ngModel)]="signup.email" ngControl="signupEmail" class="form-control" placeholder="email (optional)" />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <button [disabled]="!signupForm.form.valid" type="submit" class="btn btn-primary btn-lg btn-block">Sign up</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <!-- The sign up tab -->
+          <div class="col-md-6">
+            <h4 class="text-xs-center"> Log in </h4>
+            <br>
+            <form #loginForm="ngForm" (ngSubmit)="loginSubmit()" class="form-horizontal">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input [(ngModel)]="login.usernameOrEmail" #loginName="ngForm" ngControl="loginName" class="form-control" placeholder="username or email" minlength="5" maxlength="140" required />
+                  <div *ngIf="loginName.dirty" class="row col-sm-12 help-block text-danger">
+                    <small *ngIf="loginName.errors?.required">A username is required</small>
+                    <small *ngIf="loginName.errors?.minlength">Username must be more than 5 characters</small>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input [(ngModel)]="login.password" #loginPassword="ngForm" ngControl="loginPassword" type="password" type="password" class="form-control" placeholder="password" required />
+                  <div *ngIf="loginPassword.dirty" class="row col-sm-12 help-block text-danger">
+                    <small *ngIf="loginPassword.errors?.required">a password is required</small>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <button [disabled]="!loginForm.form.valid" type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
