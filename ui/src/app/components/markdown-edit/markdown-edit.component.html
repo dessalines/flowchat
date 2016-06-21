@@ -1,0 +1,44 @@
+<fieldset class="">
+    <div class="btn-toolbar" role="toolbar">
+        <div class="btn-group" role="group">
+            <button class="btn btn-sm btn-secondary" data-toggle="button" aria-pressed="false" (click)="bold()">
+            	<i class="fa fa-fw fa-bold"></i>
+            </button>
+            <button class="btn btn-sm btn-secondary" data-toggle="button" aria-pressed="false" (click)="italics()">
+            	<i class="fa fa-fw fa-italic"></i>
+            </button>
+            <button class="btn btn-sm btn-secondary" data-toggle="button" aria-pressed="false" (click)="header()">
+            	<i class="fa fa-fw fa-header"></i>
+            </button>
+        </div>
+        <div class="btn-group" role="group">
+            <button class="btn btn-sm btn-secondary" data-toggle="button" aria-pressed="false" (click)="link()">
+            	<i class="fa fa-fw fa-link"></i>
+            </button>
+           	<button class="btn btn-sm btn-secondary" data-toggle="button" aria-pressed="false" (click)="picture()">
+            	<i class="fa fa-fw fa-picture-o"></i>
+            </button>
+        </div>
+       	<div class="btn-group" role="group">
+            <button class="btn btn-sm btn-secondary" data-toggle="button" aria-pressed="false" (click)="unorderedList()">
+            	<i class="fa fa-fw fa-list-ul"></i>
+            </button>
+           	<button class="btn btn-sm btn-secondary" data-toggle="button" aria-pressed="false" (click)="orderedList()">
+            	<i class="fa fa-fw fa-list-ol"></i>
+            </button>
+            <button class="btn btn-sm btn-secondary" data-toggle="button" aria-pressed="false" (click)="code()">
+            	<i class="fa fa-fw fa-code"></i>
+            </button>
+            <button class="btn btn-sm btn-secondary" data-toggle="button" aria-pressed="false" (click)="quote()">
+            	<i class="fa fa-fw fa-quote-right"></i>
+            </button>
+        </div>
+
+        <div class="btn-group" role="group" aria-label="first group">
+            <button class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" (click)="preview()">Preview
+            </button>
+        </div>
+    </div>
+    <textarea #textArea *ngIf="!previewMode" class="form-control" ngDefaultControl [(ngModel)]="textBox" (keyup)="setText()" rows="{{rows}}"></textarea>
+    <div *ngIf="previewMode" [innerHTML]="html"></div>
+</fieldset>
