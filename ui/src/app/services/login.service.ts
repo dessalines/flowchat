@@ -6,6 +6,7 @@ import 'rxjs/add/observable/throw';
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
 import {User} from '../shared';
+import {UserService} from './user.service';
 
 
 @Injectable()
@@ -15,11 +16,21 @@ export class LoginService {
   private loginUrl: string = 'http://localhost:4567/login';
   private signupUrl: string = 'http://localhost:4567/signup';
 
+  headers: Headers;
+  options: RequestOptions;
 
-  constructor(private http: Http) { }
+  constructor(private http: Http,
+    private userService: UserService) { 
+    this.headers = new Headers(
+      {
+        'Content-Type': 'application/json',
+        'user': JSON.stringify(this.userService.getUser())
+      });
+    this.options = new RequestOptions({ headers: this.headers });
+  }
 
   getOrCreateUser(): Observable<User> {
-    return this.http.get(this.getOrCreateUrl)
+    return this.http.get(this.getOrCreateUrl, this.options)
       .map(this.extractData)
       .catch(this.handleError);
   }

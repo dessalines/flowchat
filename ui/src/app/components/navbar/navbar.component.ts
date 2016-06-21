@@ -30,6 +30,15 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getOrCreateUser();
+  }
+
+  getOrCreateUser() {
+    this.loginService.getOrCreateUser().subscribe(
+      user => {
+        this.setupUser(user);
+      },
+      error => console.log(error));
   }
 
   signupSubmit() {
@@ -37,10 +46,7 @@ export class NavbarComponent implements OnInit {
       this.signup.password, 
       this.signup.email).subscribe(
       user => {
-        this.userService.setUser(user);
-        this.userService.sendLoginEvent(user);
-        console.log(this.userService.getUser());
-        document.getElementById('closeModalButton').click();
+        this.setupUser(user);
       },
       error => console.log(error));
 
@@ -50,12 +56,16 @@ export class NavbarComponent implements OnInit {
     this.loginService.login(this.login.usernameOrEmail,
       this.login.password).subscribe(
       user => {
-        this.userService.setUser(user);
-        this.userService.sendLoginEvent(user);
-        console.log(this.userService.getUser());
-        document.getElementById('closeModalButton').click();
+        this.setupUser(user);
       },
       error => console.log(error));
+  }
+
+  setupUser(user: any) {
+    this.userService.setUser(user);
+    this.userService.sendLoginEvent(user);
+    console.log(this.userService.getUser());
+    document.getElementById('closeModalButton').click();
   }
 
   gotoSample() {
