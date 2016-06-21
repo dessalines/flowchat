@@ -9,7 +9,8 @@ const map: any = {
     'moment': 'vendor/moment/moment.js',
     'markdown-it': 'vendor/markdown-it/dist/markdown-it.min.js',
     'autosize': 'vendor/autosize/dist/autosize.min.js',
-    'ng2-bootstrap': 'vendor/ng2-bootstrap'
+    'ng2-bootstrap': 'vendor/ng2-bootstrap',
+    'angular2-toaster': 'vendor/angular2-toaster'
 };
 
 /** User packages configuration. */
@@ -36,6 +37,7 @@ const barrels: string[] = [
   // Thirdparty barrels.
   'rxjs',
   'vendor/ng2-bootstrap',
+  'vendor/angular2-toaster',
 
   // App specific barrels.
   'app',

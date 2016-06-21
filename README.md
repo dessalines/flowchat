@@ -1,9 +1,8 @@
 # chat-websocket
 
 # TODO
-- [update to postgres 9.4/5](http://askubuntu.com/questions/633919/how-install-postgresql-9-4) to use json translators
+- Fix login system, automatically set cookies, temp button for clear cookies, if auth is undefined, then don't show the top right user button.
 - Build startup documentation, setting up postgres, git clone. 
-- Add schema for discussion title, discussion link, discussion tags
 - Figure out how to get thumbnails from links.... might be tough for non-imgur-like things. 
 - Clean up codebase
 - Front page is the list of discussions. 
@@ -37,6 +36,8 @@
   - Top level ones would require a full resort... seems excessive.
 
 # Finished
+- Voting on discussions
+- Add schema for discussion title, discussion link, discussion tags
 - Fixed userbar on the right, that looks pretty
 - Reconnect websocket if [disconnected](http://stackoverflow.com/questions/3479734/javascript-jquery-test-if-window-has-focus)
 - Add # of vote count in addition to average ranking, put on the right side of the pill?
