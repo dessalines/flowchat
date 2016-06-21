@@ -73,8 +73,10 @@ public class Actions {
 
     public static UserObj getOrCreateUserObj(Long id, String auth) {
 
+        log.info("getOrCreateUser id = " + id + " auth = " + auth);
+
         UserObj userObj;
-        if (auth != null) {
+        if (id != null) {
 
             if (auth.equals("undefined")) {
                 User dbUser = User.findFirst("id = ?", id);
@@ -91,11 +93,19 @@ public class Actions {
 
         return userObj;
     }
+    
     //  TODO make this more generic, don't require creating login rows for the anonymous users
     public static UserObj getOrCreateUserObj(Request req, Response res) {
 
         log.info(req.headers("user"));
-        UserFromHeader ufh = UserFromHeader.fromJson(req.headers("user"));
+
+        UserFromHeader ufh;
+
+        if (req.headers("user") != null) {
+            ufh = UserFromHeader.fromJson(req.headers("user"));
+        } else {
+            ufh = new UserFromHeader(null, null);
+        }
 
         return getOrCreateUserObj(ufh.getId(), ufh.getAuth());
 
@@ -106,6 +116,11 @@ public class Actions {
         private String auth, name;
 
         public UserFromHeader(){}
+
+        public UserFromHeader(Long id, String auth) {
+            this.id = id;
+            this.auth = auth;
+        }
 
         public static UserFromHeader fromJson(String dataStr) {
             try {
