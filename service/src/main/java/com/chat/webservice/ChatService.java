@@ -8,6 +8,7 @@ import com.chat.db.Tables;
 import com.chat.db.Transformations;
 import com.chat.tools.Tools;
 import com.chat.types.DiscussionObj;
+import com.chat.types.UserObj;
 import org.eclipse.jetty.websocket.api.Session;
 import org.javalite.activejdbc.LazyList;
 import org.slf4j.LoggerFactory;
@@ -43,9 +44,9 @@ public class ChatService {
 
             try {
 
-                UserLoginView uv = Actions.getOrCreateUserFromCookie(req, res);
+                UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
-                return uv.toJson(false);
+                return userObj.json();
 
             } catch (Exception e) {
                 res.status(666);
@@ -106,13 +107,13 @@ public class ChatService {
                 Long id = Long.valueOf(req.params(":id"));
                 log.info("got to discussion " + id);
 
-                UserLoginView uv = Actions.getOrCreateUserFromCookie(req, res);
+                UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
                 DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", id);
 
                 // Get your vote for the discussion:
                 DiscussionRank dr = DiscussionRank.findFirst(
-                        "discussion_id = ? and user_id = ?", id, uv.getLongId());
+                        "discussion_id = ? and user_id = ?", id, userObj.getId());
 
                 Integer vote = (dr != null) ? dr.getInteger("rank") : null;
 
@@ -132,12 +133,13 @@ public class ChatService {
 
         post("/save_discussion_rank/:id/:rank", (req, res) -> {
             try {
-                UserLoginView uv = Actions.getOrCreateUserFromCookie(req, res);
+                UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
 
                 Long discussionId = Long.valueOf(req.params(":id"));
                 Integer rank = Integer.valueOf(req.params(":rank"));
 
-                String message = Actions.saveDiscussionVote(uv.getLongId(),discussionId,rank);
+                String message = Actions.saveDiscussionVote(userObj.getId(),discussionId,rank);
                 log.info(message);
 
                 return message;
@@ -160,7 +162,7 @@ public class ChatService {
             res.header("Access-Control-Allow-Origin", "*");
             res.header("Content-Encoding", "gzip");
             res.header("Access-Control-Allow-Credentials", "true");
-//            res.header("Access-Control-Allow-Headers", "User");
+            res.header("Access-Control-Allow-Headers", "content-type,user");
 
         });
 

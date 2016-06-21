@@ -282,23 +282,7 @@ public class ThreadedChatWebSocket {
         Long discussionId = SessionScope.getDiscussionIdFromSession(session);
         Long topParentId = SessionScope.getTopParentIdFromSession(session);
 
-        UserObj userObj;
-
-
-        if (auth != null) {
-
-            if (auth.equals("undefined")) {
-                User dbUser = User.findFirst("id = ?", uid);
-                userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));
-            } else {
-                UserLoginView uv = UserLoginView.findFirst("auth = ?", auth);
-                userObj = new UserObj(uv.getLongId(), uv.getString("name"));
-            }
-
-        } else {
-            User dbUser = Actions.createUser();
-            userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));
-        }
+        UserObj userObj = Actions.getOrCreateUserObj(uid, auth);
 
         SessionScope ss = new SessionScope(session, userObj, discussionId, topParentId);
         sessionScopes.add(ss);

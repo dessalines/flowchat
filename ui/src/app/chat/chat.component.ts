@@ -19,7 +19,7 @@ import {MarkdownPipe} from '../pipes/markdown.pipe';
   selector: 'app-chat',
   templateUrl: 'chat.component.html',
   styleUrls: ['chat.component.css'],
-  providers: [HTTP_PROVIDERS, ThreadedChatService],
+  providers: [HTTP_PROVIDERS, ThreadedChatService, DiscussionService],
   directives: [CommentComponent, MarkdownEditComponent],
   pipes: [MomentPipe, MarkdownPipe]
 })
@@ -170,7 +170,6 @@ export class ChatComponent implements OnInit {
       // If the user isn't logged in, set the cookies to this anonymous user
       if (this.userService.getUser() == null) {
         this.userService.setUser(data.user);
-
       }
     }
 
