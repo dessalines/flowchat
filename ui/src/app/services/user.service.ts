@@ -19,7 +19,7 @@ export class UserService {
     return this.user;
   }
 
-  setUser(user: User) {
+  public setUser(user: User) {
 		this.user = user;
 		this.setCookies(this.user);
   }

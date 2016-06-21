@@ -8,6 +8,7 @@ import ch.qos.logback.classic.Logger;
 import com.chat.DataSources;
 import com.chat.db.Tables.*;
 import com.chat.tools.Tools;
+import com.chat.types.UserObj;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
@@ -70,52 +71,34 @@ public class Actions {
 
     }
 
-    //  TODO make this more generic, don't require creating login rows for the anonymous users
-    public static UserLoginView getOrCreateUserFromCookie(Request req, Response res) {
+    public static UserObj getOrCreateUserObj(Long id, String auth) {
 
-        UserFromHeader ufh = UserFromHeader.fromJson(req.headers("user"));
+        UserObj userObj;
+        if (auth != null) {
 
-        UserLoginView uv = null;
-
-
-            // if there's an auth, you're good
-            if (ufh.getId() == null && ufh.getAuth().equals("undefined")) {
-                log.info("id and auth are null");
-                // Create the user
-                User user = createUser();
-
-                // Generate the login
-                String auth = Tools.generateSecureRandom();
-                Login login = Login.createIt("user_id", user.getId(),
-                        "auth", auth,
-                        "expire_time", Tools.newExpireTimestamp());
-
-                // set the cookies
-                Actions.setCookiesForLogin(user, auth, res);
-
-                uv = UserLoginView.findFirst("auth = ?", auth);
-
-
-            } else if (ufh.getId() != null && ufh.getAuth().equals("undefined")) {
-                log.info("auth is undefined");
-                String auth = Tools.generateSecureRandom();
-
-                Login login = Login.createIt("user_id", ufh.getId(),
-                        "auth", auth,
-                        "expire_time", Tools.newExpireTimestamp());
-
-                uv = UserLoginView.findFirst("auth = ?", auth);
-
-                log.info(uv.toJson(true));
-                log.info(uv.getLongId().toString());
-
+            if (auth.equals("undefined")) {
+                User dbUser = User.findFirst("id = ?", id);
+                userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));
             } else {
-                uv = UserLoginView.findFirst("auth = ?" , ufh.getAuth());
-
+                UserLoginView uv = UserLoginView.findFirst("auth = ?", auth);
+                userObj = new UserObj(uv.getLongId(), uv.getString("name"));
             }
 
+        } else {
+            User dbUser = Actions.createUser();
+            userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));
+        }
 
-        return uv;
+        return userObj;
+    }
+    //  TODO make this more generic, don't require creating login rows for the anonymous users
+    public static UserObj getOrCreateUserObj(Request req, Response res) {
+
+        log.info(req.headers("user"));
+        UserFromHeader ufh = UserFromHeader.fromJson(req.headers("user"));
+
+        return getOrCreateUserObj(ufh.getId(), ufh.getAuth());
+
     }
 
     private static class UserFromHeader {
@@ -126,6 +109,7 @@ public class Actions {
 
         public static UserFromHeader fromJson(String dataStr) {
             try {
+                log.info(dataStr);
                 return Tools.JACKSON.readValue(dataStr, UserFromHeader.class);
             } catch (IOException e) {
                 e.printStackTrace();

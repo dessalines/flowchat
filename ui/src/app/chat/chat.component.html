@@ -16,7 +16,7 @@
       
         <ul class="list-inline">
           <li *ngIf="discussion?.private" class="label label-danger list-inline-item">Private</li>
-          <li *ngIf="userService.getUser().id != discussion?.userId" role="button" class="list-inline-item" (click)="toggleShowVoteSlider()"><i class="fa fa-fw fa-star-half-o"></i></li>
+          <li *ngIf="userService.getUser()?.id != discussion?.userId" role="button" class="list-inline-item" (click)="toggleShowVoteSlider()"><i class="fa fa-fw fa-star-half-o"></i></li>
           <li *ngIf="discussion?.avgRank" class="label label-pill label-default list-inline-item">{{discussion?.avgRank}}</li>
           <li *ngIf="discussion?.userRank" class="label label-pill label-info list-inline-item">{{discussion?.userRank}}</li>
           <li *ngIf="discussion?.numberOfVotes" class="text-muted list-inline-item"><small>{{discussion?.numberOfVotes}} votes</small></li>
