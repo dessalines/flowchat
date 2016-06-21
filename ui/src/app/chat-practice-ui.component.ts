@@ -1,9 +1,9 @@
 import { Component, ViewContainerRef} from '@angular/core';
 import { RouteConfig, ROUTER_DIRECTIVES, Router } from '@angular/router-deprecated';
-import { ChatComponent } from './chat';
-import { ChatListComponent } from './chat-list';
-import { NavbarComponent } from './navbar';
-import {HomeComponent} from './home';
+import { ChatComponent } from './components/chat/index';
+import { ChatListComponent } from './components/chat-list/index';
+import { NavbarComponent } from './components/navbar/index';
+import {HomeComponent} from './components/home/index';
 import {UserService} from './services/user.service';
 
 @Component({
