@@ -2,17 +2,25 @@
   <div class="col-md-10">
     <div class="card">
       <div class="card-block">
-        <h2 class="card-title">{{discussion?.title}}
-          <a *ngIf="discussion?.link" href="{{discussion?.link}}" target="_blank"><small><i class="fa fa-fw fa-external-link" aria-hidden="true"></i></small></a>
-        </h2>
-        <p *ngIf="discussion?.text" class="card-text"[innerHTML]="discussion.text | markdown"></p>
-        <p class="text-muted">created by {{discussion?.userName}}</p>
-        <ul *ngIf="discussion?.tags" class="list-inline">tags:
-          <li class="label label-default list-inline-item" *ngFor="let tag of discussion?.tags">
-            <a class="link-unstyled" href="{{tag.id}}">{{tag.name}}</a>
-          </li>
-        </ul>
-      
+
+        <h2 *ngIf="!discussion?.link" class="card-title">{{discussion?.title}}</h2>
+        <a *ngIf="discussion?.link" href="{{discussion?.link}}" target="_blank" class="link-unstyled">
+          <h2 class="card-title">{{discussion?.title}}</h2>
+        </a>
+
+        <p *ngIf="discussion?.text" class="card-text" [innerHTML]="discussion.text | markdown"></p>
+        <small>
+          <ul *ngIf="discussion?.tags" class="list-inline">tags:
+            <li class="label label-default list-inline-item" *ngFor="let tag of discussion?.tags">
+              <a class="link-unstyled" href="{{tag.id}}">{{tag.name}}</a>
+            </li>
+          </ul>
+        </small>
+        <small class="text-muted">created
+          <span *ngIf="!discussion?.modified">{{discussion?.created | moment}}</span>
+          <span *ngIf="discussion?.modified"><i>modified {{discussion?.modified | moment}}</i></span>
+         by {{discussion?.userName}}
+        </small>
       
         <ul class="list-inline">
           <li *ngIf="discussion?.private" class="label label-danger list-inline-item">Private</li>
@@ -21,8 +29,7 @@
           <li *ngIf="discussion?.userRank" class="label label-pill label-info list-inline-item">{{discussion?.userRank}}</li>
           <li *ngIf="discussion?.numberOfVotes" class="text-muted list-inline-item"><small>{{discussion?.numberOfVotes}} votes</small></li>
           <li *ngIf="discussion?.link" class="list-inline-item"><a href="{{discussion?.link}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a></li>
-          <li *ngIf="!discussion?.modified" class="text-muted list-inline-item"><small>created {{discussion?.created | moment}}</small></li>
-          <li *ngIf="discussion?.modified" class="text-muted list-inline-item"><small><i>modified {{discussion?.modified | moment}}</i></small></li>
+          
 
         </ul>
         <div *ngIf="showVoteSlider">
