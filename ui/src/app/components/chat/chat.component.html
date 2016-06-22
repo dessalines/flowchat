@@ -1,45 +1,6 @@
 <div class="row bottom-margin">
   <div class="col-md-10">
-    <div class="card">
-      <div class="card-block">
-
-        <h2 *ngIf="!discussion?.link" class="card-title">{{discussion?.title}}</h2>
-        <a *ngIf="discussion?.link" href="{{discussion?.link}}" target="_blank" class="link-unstyled">
-          <h2 class="card-title">{{discussion?.title}}</h2>
-        </a>
-
-        <p *ngIf="discussion?.text" class="card-text" [innerHTML]="discussion.text | markdown"></p>
-        <small>
-          <ul *ngIf="discussion?.tags" class="list-inline">tags:
-            <li class="label label-default list-inline-item" *ngFor="let tag of discussion?.tags">
-              <a class="link-unstyled" href="{{tag.id}}">{{tag.name}}</a>
-            </li>
-          </ul>
-        </small>
-        <small class="text-muted">created
-          <span *ngIf="!discussion?.modified">{{discussion?.created | moment}}</span>
-          <span *ngIf="discussion?.modified"><i>modified {{discussion?.modified | moment}}</i></span>
-         by {{discussion?.userName}}
-        </small>
-      
-        <ul class="list-inline">
-          <li *ngIf="discussion?.private" class="label label-danger list-inline-item">Private</li>
-          <li *ngIf="userService.getUser()?.id != discussion?.userId" role="button" class="list-inline-item" (click)="toggleShowVoteSlider()"><i class="fa fa-fw fa-star-half-o"></i></li>
-          <li *ngIf="discussion?.avgRank" class="label label-pill label-default list-inline-item">{{discussion?.avgRank}}</li>
-          <li *ngIf="discussion?.userRank" class="label label-pill label-info list-inline-item">{{discussion?.userRank}}</li>
-          <li *ngIf="discussion?.numberOfVotes" class="text-muted list-inline-item"><small>{{discussion?.numberOfVotes}} votes</small></li>
-          <li *ngIf="discussion?.link" class="list-inline-item"><a href="{{discussion?.link}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a></li>
-          
-
-        </ul>
-        <div *ngIf="showVoteSlider">
-          <input [value]="discussion?.userRank" (mouseup)="saveDiscussionRank($event.target.value)" (input)="updateDiscussionRank($event.target.value)" type="range" min="0" max="100" step="1" (value)="discussion?.userRank"/>
-        </div>
-
-        </div>
-  
-
-    </div>
+    <app-discussion-card [discussion]="discussion"></app-discussion-card>
     <div *ngFor="let comment of comments" class="card">
       <app-comment [comment]="comment" (replyingEvent)="setIsReplying($event)"></app-comment>
     </div>

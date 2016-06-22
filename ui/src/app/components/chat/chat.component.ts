@@ -3,6 +3,7 @@ import { HTTP_PROVIDERS }    from '@angular/http';
 import {ThreadedChatService} from '../../services/threaded-chat.service';
 import {Comment, User, Discussion, Tag} from '../../shared';
 import {CommentComponent} from '../comment/index';
+import {DiscussionCardComponent} from '../discussion-card/index';
 import {UserService} from '../../services/user.service';
 import {DiscussionService} from '../../services/discussion.service';
 import {Subscription} from 'rxjs/Subscription';
@@ -17,8 +18,8 @@ import {MarkdownPipe} from '../../pipes/markdown.pipe';
   selector: 'app-chat',
   templateUrl: 'chat.component.html',
   styleUrls: ['chat.component.css'],
-  providers: [HTTP_PROVIDERS, ThreadedChatService, DiscussionService],
-  directives: [CommentComponent, MarkdownEditComponent],
+  providers: [HTTP_PROVIDERS, ThreadedChatService],
+  directives: [CommentComponent, MarkdownEditComponent, DiscussionCardComponent],
   pipes: [MomentPipe, MarkdownPipe]
 })
 export class ChatComponent implements OnInit {

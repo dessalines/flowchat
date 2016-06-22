@@ -1,0 +1,21 @@
+.fa {
+  vertical-align: middle
+}
+
+.link-unstyled {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.list-inline {
+  margin-bottom: 0px;
+}
+
+.card-columns {
+  -webkit-column-count: 3;
+     -moz-column-count: 3;
+          column-count: 3;
+  -webkit-column-gap: 1.25rem;
+     -moz-column-gap: 1.25rem;
+          column-gap: 1.25rem;
+}

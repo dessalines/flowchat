@@ -5,6 +5,7 @@ import { ChatListComponent } from './components/chat-list/index';
 import { NavbarComponent } from './components/navbar/index';
 import {HomeComponent} from './components/home/index';
 import {UserService} from './services/user.service';
+import {DiscussionService} from './services/discussion.service';
 import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2-toaster/angular2-toaster';
 
 @Component({
@@ -13,7 +14,7 @@ import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2
   templateUrl: 'chat-practice-ui.component.html',
   styleUrls: ['chat-practice-ui.component.css'],
   directives: [NavbarComponent, ROUTER_DIRECTIVES, ToasterContainerComponent],
-  providers: [UserService, ToasterService]
+  providers: [UserService, ToasterService, DiscussionService]
 })
 @RouteConfig([
     // { path: '/**', redirectTo: ['Home'] },
