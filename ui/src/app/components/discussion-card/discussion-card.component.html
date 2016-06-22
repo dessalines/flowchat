@@ -8,15 +8,15 @@
     <small>
           <ul *ngIf="discussion?.tags" class="list-inline">tags:
             <li class="label label-default list-inline-item" *ngFor="let tag of discussion?.tags">
-              <a class="link-unstyled" href="{{tag.id}}">{{tag.name}}</a>
+              <a class="link-unstyled" [routerLink]="['Tag', {tagId: tag.id}]">{{tag.name}}</a>
             </li>
           </ul>
-        </small>
+    </small>
     <small class="text-muted">created
           <span *ngIf="!discussion?.modified">{{discussion?.created | moment}}</span>
           <span *ngIf="discussion?.modified"><i>modified {{discussion?.modified | moment}}</i></span>
          by {{discussion?.userName}}
-        </small>
+    </small>
     <ul class="list-inline">
       <li *ngIf="discussion?.private" class="label label-danger list-inline-item">Private</li>
       <li *ngIf="userService.getUser()?.id != discussion?.userId" role="button" class="list-inline-item" (click)="toggleShowVoteSlider()"><i class="fa fa-fw fa-star-half-o"></i></li>

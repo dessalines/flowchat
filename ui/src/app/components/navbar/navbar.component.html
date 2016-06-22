@@ -20,18 +20,18 @@
     </ul>
     <ul class="nav navbar-nav pull-xs-right">
       <li class="nav-item">
-        <a *ngIf="!userService.isFullUser()" role="button" class="nav-link" (click)="loginModal.show()">Login/Signup</a>
+        <a *ngIf="!userService.isFullUser()" role="button" class="btn btn-link link-unstyled" (click)="loginModal.show()">Login/Signup</a>
       </li>
       <li class="nav-item">
-        <a *ngIf="userService.isAnonymousUser()" (click)="logout()" role="button" class="nav-link">Logout</a>
+        <a *ngIf="userService.isAnonymousUser()" (click)="logout()" role="button" class="btn btn-link link-unstyled">Logout</a>
       </li>
     </ul>
     <ul *ngIf="userService.isFullUser()" class="nav navbar-nav pull-xs-right">
       <li class="nav-item">
-        <a class="nav-link"><i class="fa fa-fw fa-bell"></i></a>
+        <a class="btn btn-link link-unstyled"><i class="fa fa-fw fa-bell"></i></a>
       </li>
       <li dropdown class="nav-item" keyboardNav="true">
-        <a id="simple-btn-keyboard-nav" class="nav-link" role="button" type="button" dropdownToggle>
+        <a id="simple-btn-keyboard-nav" class="btn btn-link link-unstyled" role="button" type="button" dropdownToggle>
           {{userService.getUser().name}}<span class="caret"></span>
         </a>
         <ul class="dropdown-menu" role="menu" aria-labelledby="simple-btn-keyboard-nav">
