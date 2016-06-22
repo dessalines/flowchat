@@ -12,7 +12,7 @@ export class DiscussionService {
 
   private getDiscussionUrl: string = 'http://localhost:4567/get_discussion/';
   private saveRankUrl: string = 'http://localhost:4567/save_discussion_rank/';
-  private createDiscussionUrl: string = "http://localhost:4567/create_discussion/";
+  private createDiscussionUrl: string = "http://localhost:4567/create_discussion";
 
   private getDiscussionsUrl(limit: number, page: number, tagId: string,
     orderBy: string): string {

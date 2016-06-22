@@ -82,6 +82,7 @@ export class NavbarComponent implements OnInit {
 
   createDiscussion() {
     this.discussionService.createDiscussion().subscribe(d => {
+      console.log(d);
       this.router.navigate(['Discussion', { discussionId: d.id }]);
     },
     error => console.log(error));

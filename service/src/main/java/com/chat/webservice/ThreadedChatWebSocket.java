@@ -171,7 +171,7 @@ public class ThreadedChatWebSocket {
 
 
         // Convert to a proper commentObj
-        CommentObj co = Transformations.convertCommentThreadedView(ctv, null);
+        CommentObj co = CommentObj.create(ctv, null);
 
 
 //        comments = fetchComments();
@@ -195,7 +195,7 @@ public class ThreadedChatWebSocket {
         CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", c.getLongId());
 
         // Convert to a proper commentObj, but with nothing embedded
-        CommentObj co = Transformations.convertCommentThreadedView(ctv, null);
+        CommentObj co = CommentObj.create(ctv, null);
 
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
                 sessionScopes, session, co.getBreadcrumbs());
@@ -221,7 +221,7 @@ public class ThreadedChatWebSocket {
         CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", newComment.getLongId());
 
         // Convert to a proper commentObj
-        CommentObj co = Transformations.convertCommentThreadedView(ctv, null);
+        CommentObj co = CommentObj.create(ctv, null);
 
 
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
@@ -249,7 +249,7 @@ public class ThreadedChatWebSocket {
         CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", commentId);
 
         // Convert to a proper commentObj, but with nothing embedded
-        CommentObj co = Transformations.convertCommentThreadedView(ctv, null);
+        CommentObj co = CommentObj.create(ctv, null);
 
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
                 sessionScopes, session, co.getBreadcrumbs());
