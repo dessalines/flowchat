@@ -1,10 +1,6 @@
 # chat-websocket
 
 # TODO
-- Fix login system, automatically set cookies, temp button for clear cookies, if auth is undefined, then don't show the top right user button.
-- Build startup documentation, setting up postgres, git clone. 
-- Figure out how to get thumbnails from links.... might be tough for non-imgur-like things. 
-- Clean up codebase
 - Front page is the list of discussions. 
 - Toastr / whatever messages for errors, successes, logins.
 - Serving multiple discussions
@@ -23,19 +19,26 @@
 - Favorite/'watched discussions', anything you comment in is automatically added to favorites/saved. 
   - Need a way to remove favorite discussions
   - Need a way to view your favorite discussions
+  - Add these to left bar
 - Top nav with bell alerts for if someone replied directly to your comment, clicking goes to that discussion comment parent. 
 - Notifications, toastr [1](https://github.com/PointInside/ng2-toastr), or toasty: [2](http://akserg.github.io/ng2-webpack-demo/) [3](https://github.com/Stabzs/Angular2-Toaster)
 - Beautiful dynamic-card front page, like reddit-sync flowed view(with bootstrap cards), with popular tags. 
 - Search bar, search for (public) discussions, or tags
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
+- Figure out how to get thumbnails from links.... might be tough for non-imgur-like things. 
+- Clean up codebase
+- Build startup documentation, setting up postgres, git clone. 
+
+
+
+# Finished
+- Fix login system, automatically set cookies, temp button for clear cookies, if auth is undefined, then don't show the top right user button.
 - Links, or left bar with discussions? Are you making a reddit alternative, or a slack alternative? Team-based discussions, or thread based?
 - Comment sort broadcasting for peoples votes? Seems excessive, but could be very useful for sorting. 
   - This is done, except for the resorting on the front end based on avgRank. 
   - Also avoids having to reload the page.
   - Would require resorting(and repulling) all the parents of that comment, just like editing.
   - Top level ones would require a full resort... seems excessive.
-
-# Finished
 - Voting on discussions
 - Add schema for discussion title, discussion link, discussion tags
 - Fixed userbar on the right, that looks pretty
