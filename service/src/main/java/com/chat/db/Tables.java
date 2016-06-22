@@ -41,8 +41,10 @@ public class Tables {
     @Table("discussion_full_view")
     public static class DiscussionFullView extends Model {}
 
+    @Table("discussion_notext_view")
+    public static class DiscussionNoTextView extends Model {}
+
     @Table("discussion_rank")
     public static class DiscussionRank extends Model {}
-
 
 }
