@@ -2,27 +2,27 @@
 
 # TODO
 - Front page is the list of discussions. 
-- Toastr / whatever messages for errors, successes, logins.
+  - Needs to have smart scrolling
+  - Voting needs to work on these
+  - Beautiful dynamic-card front page, like reddit-sync flowed view(with bootstrap cards), with popular tags. 
+- Create discussion page
+- Toastr / whatever messages for errors, message notifications
+- Poll every so often for new messages.
 - Serving multiple discussions
   - Decided on forum software, make it self-hostable, but have your own instance of it running as a pseudo global instance.
   - All discussions have a single moderator, whoever created the channel.
   - Discussions can be private(invite by moderator only), or public(anyone can join)\
     - For private, any emails that aren't in the system should get emailed a link to the discussion.
-  - Discussions Have a title, and **optionally a link**, and optionally text. 
   - Tags/Hashtags(with smart linking)(maximum of 3 - 5)
 	- Discussions on left
 	- Set up like Stash, [nodebb](https://github.com/NodeBB/NodeBB), reddit
   - Left bar will be all your discussions that aren't archived(x'd out)
   - When you comment in a discussion, it gets added to your left bar.
   - Don't want mods to be able to squat on tag names, want community moderation.
-- HashTag pages
-- Favorite/'watched discussions', anything you comment in is automatically added to favorites/saved. 
-  - Need a way to remove favorite discussions
-  - Need a way to view your favorite discussions
-  - Add these to left bar
+- HashTag pages, looks like front page but only with those tags
+- Favorite/'watched discussions', anything you comment in is automatically added to favorites/saved.
 - Top nav with bell alerts for if someone replied directly to your comment, clicking goes to that discussion comment parent. 
-- Notifications, toastr [1](https://github.com/PointInside/ng2-toastr), or toasty: [2](http://akserg.github.io/ng2-webpack-demo/) [3](https://github.com/Stabzs/Angular2-Toaster)
-- Beautiful dynamic-card front page, like reddit-sync flowed view(with bootstrap cards), with popular tags. 
+- Add discussion editing for owners
 - Search bar, search for (public) discussions, or tags
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - Figure out how to get thumbnails from links.... might be tough for non-imgur-like things. 
@@ -32,6 +32,7 @@
 
 
 # Finished
+- Notifications, toastr [1](https://github.com/PointInside/ng2-toastr), or toasty: [2](http://akserg.github.io/ng2-webpack-demo/) [3](https://github.com/Stabzs/Angular2-Toaster)
 - Fix login system, automatically set cookies, temp button for clear cookies, if auth is undefined, then don't show the top right user button.
 - Links, or left bar with discussions? Are you making a reddit alternative, or a slack alternative? Team-based discussions, or thread based?
 - Comment sort broadcasting for peoples votes? Seems excessive, but could be very useful for sorting. 
