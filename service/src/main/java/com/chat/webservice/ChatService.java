@@ -9,6 +9,7 @@ import com.chat.db.Transformations;
 import com.chat.tools.Tools;
 import com.chat.types.DiscussionObj;
 import com.chat.types.Discussions;
+import com.chat.types.TagObj;
 import com.chat.types.UserObj;
 import org.eclipse.jetty.websocket.api.Session;
 import org.javalite.activejdbc.LazyList;
@@ -50,6 +51,25 @@ public class ChatService {
                 UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
                 return userObj.json();
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return e.getMessage();
+            }
+
+        });
+
+        get("/get_tag/:id", (req, res) -> {
+
+            Long id = Long.valueOf(req.params(":id"));
+
+            try {
+                Tag t = Tag.findFirst("id = ?", id);
+
+                TagObj to = new TagObj(t.getLongId(),t.getString("name"));
+
+                return to.json();
 
             } catch (Exception e) {
                 res.status(666);
