@@ -4,5 +4,8 @@
 <button class="btn btn-primary" (click)="popToast()">pop toast</button>
 
 <hr>
-<discussion-card></discussion-card>
+<div class="card-columns">
+	<app-discussion-card *ngFor="let discussion of discussions" [discussion]="discussion"></app-discussion-card>
+</div>
+
 
