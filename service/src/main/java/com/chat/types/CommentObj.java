@@ -2,6 +2,7 @@ package com.chat.types;
 
 
 import com.chat.tools.Tools;
+import org.javalite.activejdbc.Model;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -56,6 +57,25 @@ public class CommentObj implements JSONWriter {
         setParentId();
 
     }
+
+    public static CommentObj create(Model cv, Integer vote) {
+        return new CommentObj(cv.getLong("id"),
+                cv.getLong("user_id"),
+                cv.getString("user_name"),
+                cv.getLong("discussion_id"),
+                cv.getString("text_"),
+                cv.getLong("path_length"),
+                cv.getLong("parent_id"),
+                cv.getString("breadcrumbs"),
+                cv.getLong("num_of_parents"),
+                cv.getLong("num_of_children"),
+                cv.getInteger("avg_rank"),
+                vote,
+                cv.getInteger("number_of_votes"),
+                cv.getTimestamp("created"),
+                cv.getTimestamp("modified"));
+    }
+
 
     public static List<Long> setBreadCrumbsArr(String breadCrumbs) {
         List<Long> breadcrumbs = new ArrayList<>();

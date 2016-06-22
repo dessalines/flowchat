@@ -1,8 +1,12 @@
 <div class="card">
   <div class="card-block">
-    <h2 *ngIf="!discussion?.link" class="card-title">{{discussion?.title}}</h2>
+    <h2 *ngIf="!discussion?.link" class="card-title">{{discussion?.title}}
+        <small *ngIf="isCreator()"><i class="fa fa-fw fa-edit"></i></small>
+    </h2>
     <a *ngIf="discussion?.link" href="{{discussion?.link}}" target="_blank" class="link-unstyled">
-      <h2 class="card-title">{{discussion?.title}}</h2>
+      <h2 class="card-title">{{discussion?.title}}
+        <small *ngIf="isCreator()"><i class="fa fa-fw fa-edit"></i></small>
+      </h2>
     </a>
     <p *ngIf="discussion?.text" class="card-text" [innerHTML]="discussion.text | markdown"></p>
     <small>
@@ -19,7 +23,7 @@
     </small>
     <ul class="list-inline">
       <li *ngIf="discussion?.private" class="label label-danger list-inline-item">Private</li>
-      <li *ngIf="userService.getUser()?.id != discussion?.userId" role="button" class="list-inline-item" (click)="toggleShowVoteSlider()"><i class="fa fa-fw fa-star-half-o"></i></li>
+      <li *ngIf="!isCreator()" role="button" class="list-inline-item" (click)="toggleShowVoteSlider()"><i class="fa fa-fw fa-star-half-o"></i></li>
       <li *ngIf="discussion?.avgRank" class="label label-pill label-default list-inline-item">{{discussion?.avgRank}}</li>
       <li *ngIf="discussion?.userRank" class="label label-pill label-info list-inline-item">{{discussion?.userRank}}</li>
       <li *ngIf="discussion?.numberOfVotes" class="text-muted list-inline-item"><small>{{discussion?.numberOfVotes}} votes</small></li>

@@ -8,6 +8,7 @@ import ch.qos.logback.classic.Logger;
 import com.chat.DataSources;
 import com.chat.db.Tables.*;
 import com.chat.tools.Tools;
+import com.chat.types.DiscussionObj;
 import com.chat.types.UserObj;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -22,16 +23,16 @@ public class Actions {
 
 
     public static Comment createComment(Long userId, Long discussionId,
-                                       List<Long> parentBreadCrumbs, String text) {
+                                        List<Long> parentBreadCrumbs, String text) {
 
         List<Long> pbs = (parentBreadCrumbs != null) ? new ArrayList<Long>(parentBreadCrumbs) :
                 new ArrayList<Long>();
 
 
         // find the candidate
-        Comment c = Comment.createIt("discussion_id", discussionId,
-                "text_", text,
-                "user_id", userId);
+        Comment c = Comment.createIt("discussion_id" , discussionId,
+                "text_" , text,
+                "user_id" , userId);
 
 
         Long childId = c.getLong("id");
@@ -48,9 +49,9 @@ public class Actions {
             Long parentId = pbs.get(i);
 
             // i is the path length
-            CommentTree.createIt("parent_id", parentId,
-                    "child_id", childId,
-                    "path_length", i);
+            CommentTree.createIt("parent_id" , parentId,
+                    "child_id" , childId,
+                    "path_length" , i);
         }
 
         return c;
@@ -60,12 +61,12 @@ public class Actions {
     public static Comment editComment(Long commentId, String text) {
 
         // Find the comment
-        Comment c = Comment.findFirst("id = ?", commentId);
+        Comment c = Comment.findFirst("id = ?" , commentId);
 
         Timestamp cTime = new Timestamp(new Date().getTime());
 
         // Create with add modified date
-        c.set("text_", text, "modified", cTime).saveIt();
+        c.set("text_" , text, "modified" , cTime).saveIt();
 
         return c;
 
@@ -79,10 +80,10 @@ public class Actions {
         if (id != null) {
 
             if (auth == null || auth.equals("undefined")) {
-                User dbUser = User.findFirst("id = ?", id);
+                User dbUser = User.findFirst("id = ?" , id);
                 userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));
             } else {
-                UserLoginView uv = UserLoginView.findFirst("auth = ?", auth);
+                UserLoginView uv = UserLoginView.findFirst("auth = ?" , auth);
                 userObj = new UserObj(uv.getLongId(), uv.getString("name"));
             }
 
@@ -93,7 +94,7 @@ public class Actions {
 
         return userObj;
     }
-    
+
     //  TODO make this more generic, don't require creating login rows for the anonymous users
     public static UserObj getOrCreateUserObj(Request req, Response res) {
 
@@ -111,13 +112,53 @@ public class Actions {
 
     }
 
+    public static DiscussionObj createDiscussion(Long userId) {
+
+        String uuid = UUID.randomUUID().toString();
+
+        Discussion d = Discussion.createIt("user_id", userId,
+                "title", uuid);
+
+
+        DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", d.getLongId());
+
+        return DiscussionObj.create(dfv, null);
+    }
+
+    public static DiscussionObj saveDiscussion(
+            Long discussionId,
+            String title,
+            String link,
+            String text,
+            Boolean private_) {
+
+        Timestamp cTime = new Timestamp(new Date().getTime());
+
+        Discussion d = Discussion.findFirst("id = ?" , discussionId);
+
+        d.set("title" , title,
+                "link" , link,
+                "text_" , text,
+                "private" , private_,
+                "modified" , cTime).
+                saveIt();
+
+        // Fetch the full view
+        DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", discussionId);
+
+        DiscussionObj do_ = DiscussionObj.create(dfv,null);
+
+        return do_;
+    }
+
     private static class UserFromHeader {
         private Long id, full_user_id, login_id;
         private String auth, name, email;
         private Timestamp created, expire_time;
 
 
-        public UserFromHeader(){}
+        public UserFromHeader() {
+        }
 
         public UserFromHeader(Long id, String auth) {
             this.id = id;
@@ -169,8 +210,8 @@ public class Actions {
 
     public static User createUser() {
         User user = User.createIt(
-                "name", Tools.generateSecureRandom());
-        user.set("name", "user_" + user.getLongId()).saveIt();
+                "name" , Tools.generateSecureRandom());
+        user.set("name" , "user_" + user.getLongId()).saveIt();
 
         return user;
     }
@@ -179,13 +220,13 @@ public class Actions {
 
         // Find the user, then create a login for them
 
-        UserView uv = UserView.findFirst("name = ? or email = ?", userOrEmail, userOrEmail);
+        UserView uv = UserView.findFirst("name = ? or email = ?" , userOrEmail, userOrEmail);
 
         Login login;
         if (uv == null) {
             throw new NoSuchElementException("Incorrect user/email");
         } else {
-            FullUser fu = FullUser.findFirst("user_id = ?", uv.getLongId());
+            FullUser fu = FullUser.findFirst("user_id = ?" , uv.getLongId());
 
             String encryptedPassword = fu.getString("password_encrypted");
 
@@ -194,9 +235,9 @@ public class Actions {
             if (correctPass) {
 
                 String auth = Tools.generateSecureRandom();
-                login = Login.createIt("user_id", fu.getInteger("user_id"),
-                        "auth", auth,
-                        "expire_time", Tools.newExpireTimestamp());
+                login = Login.createIt("user_id" , fu.getInteger("user_id"),
+                        "auth" , auth,
+                        "expire_time" , Tools.newExpireTimestamp());
 
                 Actions.setCookiesForLogin(fu, auth, res);
 
@@ -205,7 +246,7 @@ public class Actions {
             }
         }
 
-        UserLoginView ulv = UserLoginView.findFirst("login_id = ?", login.getLongId());
+        UserLoginView ulv = UserLoginView.findFirst("login_id = ?" , login.getLongId());
 
         return ulv;
 
@@ -216,7 +257,7 @@ public class Actions {
 
         // Find the user, then create a login for them
 
-        UserView uv = UserView.findFirst("name = ? or email = ?", userName, email);
+        UserView uv = UserView.findFirst("name = ? or email = ?" , userName, email);
 
         Login login;
 
@@ -224,20 +265,20 @@ public class Actions {
 
             // Create the user and full user
             User user = User.createIt(
-                    "name", userName);
+                    "name" , userName);
 
             log.info("encrypting the user password");
             String encryptedPassword = Tools.PASS_ENCRYPT.encryptPassword(password);
 
-            FullUser fu = FullUser.createIt("user_id", user.getId(),
-                    "email", email,
-                    "password_encrypted", encryptedPassword);
+            FullUser fu = FullUser.createIt("user_id" , user.getId(),
+                    "email" , email,
+                    "password_encrypted" , encryptedPassword);
 
             // now login that user
             String auth = Tools.generateSecureRandom();
-            login = Login.createIt("user_id", user.getId(),
-                    "auth", auth,
-                    "expire_time", Tools.newExpireTimestamp());
+            login = Login.createIt("user_id" , user.getId(),
+                    "auth" , auth,
+                    "expire_time" , Tools.newExpireTimestamp());
 
             Actions.setCookiesForLogin(fu, auth, res);
 
@@ -245,7 +286,7 @@ public class Actions {
             throw new NoSuchElementException("Username/email already exists");
         }
 
-        UserLoginView ulv = UserLoginView.findFirst("login_id = ?", login.getLongId());
+        UserLoginView ulv = UserLoginView.findFirst("login_id = ?" , login.getLongId());
 
         return ulv;
 
@@ -255,23 +296,23 @@ public class Actions {
 
         String message = null;
         // fetch the vote if it exists
-        CommentRank c = CommentRank.findFirst("user_id = ? and comment_id = ?",
+        CommentRank c = CommentRank.findFirst("user_id = ? and comment_id = ?" ,
                 userId, commentId);
 
 
         if (c == null) {
             if (rank != null) {
                 CommentRank.createIt(
-                        "comment_id", commentId,
-                        "user_id", userId,
-                        "rank", rank);
+                        "comment_id" , commentId,
+                        "user_id" , userId,
+                        "rank" , rank);
                 message = "Comment Vote Created";
             } else {
                 message = "Comment Vote not created";
             }
         } else {
             if (rank != null) {
-                c.set("rank", rank).saveIt();
+                c.set("rank" , rank).saveIt();
                 message = "Comment Vote updated";
             }
             // If the rank is null, then delete the ballot
@@ -289,23 +330,23 @@ public class Actions {
 
         String message = null;
         // fetch the vote if it exists
-        DiscussionRank d = DiscussionRank.findFirst("user_id = ? and discussion_id = ?",
+        DiscussionRank d = DiscussionRank.findFirst("user_id = ? and discussion_id = ?" ,
                 userId, discussionId);
 
 
         if (d == null) {
             if (rank != null) {
                 DiscussionRank.createIt(
-                        "discussion_id", discussionId,
-                        "user_id", userId,
-                        "rank", rank);
+                        "discussion_id" , discussionId,
+                        "user_id" , userId,
+                        "rank" , rank);
                 message = "Discussion Vote Created";
             } else {
                 message = "Discussion Vote not created";
             }
         } else {
             if (rank != null) {
-                d.set("rank", rank).saveIt();
+                d.set("rank" , rank).saveIt();
                 message = "Discussion Vote updated";
             }
             // If the rank is null, then delete the ballot
@@ -323,9 +364,9 @@ public class Actions {
     public static String setCookiesForLogin(User user, String auth, Response res) {
         Boolean secure = DataSources.SSL;
 
-        res.cookie("auth", auth, DataSources.EXPIRE_SECONDS, secure);
-        res.cookie("id", user.getId().toString(), DataSources.EXPIRE_SECONDS, secure);
-        res.cookie("name", user.getString("name"), DataSources.EXPIRE_SECONDS, secure);
+        res.cookie("auth" , auth, DataSources.EXPIRE_SECONDS, secure);
+        res.cookie("id" , user.getId().toString(), DataSources.EXPIRE_SECONDS, secure);
+        res.cookie("name" , user.getString("name"), DataSources.EXPIRE_SECONDS, secure);
 
         return "Logged in";
     }
@@ -333,9 +374,9 @@ public class Actions {
     public static String setCookiesForLogin(FullUser fu, String auth, Response res) {
         Boolean secure = DataSources.SSL;
 
-        res.cookie("auth", auth, DataSources.EXPIRE_SECONDS, secure);
-        res.cookie("id", fu.getString("user_id"), DataSources.EXPIRE_SECONDS, secure);
-        res.cookie("username", fu.getString("name"), DataSources.EXPIRE_SECONDS, secure);
+        res.cookie("auth" , auth, DataSources.EXPIRE_SECONDS, secure);
+        res.cookie("id" , fu.getString("user_id"), DataSources.EXPIRE_SECONDS, secure);
+        res.cookie("username" , fu.getString("name"), DataSources.EXPIRE_SECONDS, secure);
 
         return "Logged in";
     }

@@ -1,6 +1,7 @@
 package com.chat.types;
 
 import com.chat.tools.Tools;
+import org.javalite.activejdbc.Model;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -44,6 +45,23 @@ public class DiscussionObj implements JSONWriter {
         this.tags = (!tagIds.equals("{NULL}")) ? setTags(tagIds, tagNames) : null;
         this.created = created;
         this.modified = modified;
+    }
+
+    public static DiscussionObj create(Model d, Integer vote) {
+        return new DiscussionObj(d.getLongId(),
+                d.getLong("user_id"),
+                d.getString("user_name"),
+                d.getString("title"),
+                d.getString("link"),
+                d.getString("text_"),
+                d.getBoolean("private"),
+                d.getInteger("avg_rank"),
+                vote,
+                d.getInteger("number_of_votes"),
+                d.getString("tag_ids"),
+                d.getString("tag_names"),
+                d.getTimestamp("created"),
+                d.getTimestamp("modified"));
     }
 
     public static List<TagObj> setTags(String tagIds, String tagNames) {

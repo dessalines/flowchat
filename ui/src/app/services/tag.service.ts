@@ -16,7 +16,6 @@ export class TagService {
       limit + '/' + page + '/' + orderBy;
   }
 
-
   constructor(private http: Http) {}
 
   getTag(id: string) {

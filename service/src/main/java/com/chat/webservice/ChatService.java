@@ -4,21 +4,17 @@ package com.chat.webservice;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import com.chat.db.Actions;
-import com.chat.db.Tables;
 import com.chat.db.Transformations;
 import com.chat.tools.Tools;
 import com.chat.types.DiscussionObj;
 import com.chat.types.Discussions;
 import com.chat.types.TagObj;
 import com.chat.types.UserObj;
-import org.eclipse.jetty.websocket.api.Session;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Paginator;
 import org.slf4j.LoggerFactory;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.chat.db.Tables.*;
 import static spark.Spark.*;
@@ -139,7 +135,7 @@ public class ChatService {
 
                 Integer vote = (dr != null) ? dr.getInteger("rank") : null;
 
-                DiscussionObj df = Transformations.convertDiscussion(dfv, vote);
+                DiscussionObj df = DiscussionObj.create(dfv, vote);
 
                 log.info(df.json());
 
@@ -182,6 +178,7 @@ public class ChatService {
                 // Get your votes for those discussions:
                 Map<Long, Integer> discussionRankMap = Transformations.convertDiscussionRankToMap(ids, userObj);
 
+                // Build discussion objects
                 Discussions discussions = new Discussions(dntvs, discussionRankMap);
 
                 return discussions.json();
@@ -206,6 +203,22 @@ public class ChatService {
                 log.info(message);
 
                 return message;
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return e.getMessage();
+            }
+
+        });
+
+        post("/create_discussion", (req, res) -> {
+            try {
+                UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
+                DiscussionObj do_ = Actions.createDiscussion(userObj.getId());
+
+                return do_.json();
 
             } catch (Exception e) {
                 res.status(666);
