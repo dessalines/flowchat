@@ -30,7 +30,9 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getOrCreateUser();
+    if (!this.userService.getUser()) {
+      this.getOrCreateUser();
+    }
   }
 
   getOrCreateUser() {
@@ -64,7 +66,6 @@ export class NavbarComponent implements OnInit {
   setupUser(user: any) {
     this.userService.setUser(user);
     this.userService.sendLoginEvent(user);
-    console.log(this.userService.getUser());
     document.getElementById('closeModalButton').click();
   }
 

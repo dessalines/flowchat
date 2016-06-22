@@ -15,17 +15,29 @@
         </form>
       </li>
     </ul>
-    <button *ngIf="!userService.getUser()" class="btn btn-primary-outline pull-xs-right" (click)="loginModal.show()">Login/Signup</button>
-    <div *ngIf="userService.getUser()" class="btn-group pull-xs-right" dropdown keyboardNav="true">
-      <button id="simple-btn-keyboard-nav" type="button" class="btn btn-primary-outline" dropdownToggle>
-        {{userService.getUser().name}}<span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" role="menu" aria-labelledby="simple-btn-keyboard-nav">
-        <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
-        <li class="divider dropdown-divider"></li>
-        <li role="menuitem"><a (click)="logout()" class="dropdown-item" href="#">Logout</a></li>
-      </ul>
-    </div>
+    <ul class="nav navbar-nav pull-xs-right">
+      <li class="nav-item">
+        <a *ngIf="!userService.isFullUser()" role="button" class="nav-link" (click)="loginModal.show()">Login/Signup</a>
+      </li>
+      <li class="nav-item">
+        <a *ngIf="userService.isAnonymousUser()" (click)="logout()" role="button" class="nav-link">Logout</a>
+      </li>
+    </ul>
+    <ul *ngIf="userService.isFullUser()" class="nav navbar-nav pull-xs-right">
+      <li class="nav-item">
+        <a class="nav-link"><i class="fa fa-fw fa-bell"></i></a>
+      </li>
+      <li dropdown class="nav-item" keyboardNav="true">
+        <a id="simple-btn-keyboard-nav" class="nav-link" role="button" type="button" dropdownToggle>
+          {{userService.getUser().name}}<span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="simple-btn-keyboard-nav">
+          <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
+          <li class="divider dropdown-divider"></li>
+          <li role="menuitem"><a (click)="logout()" class="dropdown-item" href="#">Logout</a></li>
+        </ul>
+      </li>
+    </ul>
   </div>
 </nav>
 

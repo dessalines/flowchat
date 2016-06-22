@@ -78,7 +78,7 @@ public class Actions {
         UserObj userObj;
         if (id != null) {
 
-            if (auth.equals("undefined")) {
+            if (auth == null || auth.equals("undefined")) {
                 User dbUser = User.findFirst("id = ?", id);
                 userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));
             } else {
@@ -112,8 +112,10 @@ public class Actions {
     }
 
     private static class UserFromHeader {
-        private Long id;
-        private String auth, name;
+        private Long id, full_user_id, login_id;
+        private String auth, name, email;
+        private Timestamp created, expire_time;
+
 
         public UserFromHeader(){}
 
@@ -142,6 +144,26 @@ public class Actions {
 
         public String getName() {
             return name;
+        }
+
+        public Long getFull_user_id() {
+            return full_user_id;
+        }
+
+        public Long getLogin_id() {
+            return login_id;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public Timestamp getCreated() {
+            return created;
+        }
+
+        public Timestamp getExpire_time() {
+            return expire_time;
         }
     }
 

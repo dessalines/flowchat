@@ -19,6 +19,16 @@ export class UserService {
     return this.user;
   }
 
+  public isAnonymousUser(): boolean {
+    return this.user != null && 
+    (this.user.auth === undefined || this.user.auth == 'undefined');
+  }
+
+  public isFullUser() {
+    return this.user != null && 
+    !(this.user.auth === undefined || this.user.auth == 'undefined');
+  }
+
   public setUser(user: User) {
 		this.user = user;
 		this.setCookies(this.user);
