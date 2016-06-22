@@ -20,11 +20,19 @@ export class DiscussionCardComponent implements OnInit {
 
   private showVoteSlider: boolean = false;
 
+  private editMode: boolean = false;
+
   constructor(private userService: UserService,
     private discussionService:DiscussionService,
     private router: Router) {}
 
   ngOnInit() {
+
+  }
+
+
+  isCreator(): boolean {
+    return this.userService.getUser().id == this.discussion.userId;
   }
 
 

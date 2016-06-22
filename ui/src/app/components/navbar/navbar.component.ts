@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {CORE_DIRECTIVES} from '@angular/common';
 import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS, DROPDOWN_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 import {LoginService} from '../../services/login.service';
-import {UserService} from '../../services/user.service'
+import {UserService} from '../../services/user.service';
+import {DiscussionService} from '../../services/discussion.service'
 import {User, Tools} from '../../shared';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
 import {ChatComponent} from '../chat';
@@ -25,7 +26,8 @@ export class NavbarComponent implements OnInit {
 
   constructor(private userService: UserService,
     private loginService: LoginService,
-    private router: Router) {
+    private router: Router,
+    private discussionService: DiscussionService) {
 
   }
 
@@ -76,6 +78,13 @@ export class NavbarComponent implements OnInit {
   logout() {
     this.userService.logout();
     this.router.navigate(['Home']);
+  }
+
+  createDiscussion() {
+    this.discussionService.createDiscussion().subscribe(d => {
+      this.router.navigate(['Discussion', { discussionId: d.id }]);
+    },
+    error => console.log(error));
   }
 
 

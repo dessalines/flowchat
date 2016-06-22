@@ -10,7 +10,6 @@ import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 import static com.chat.db.Tables.*;
@@ -21,27 +20,6 @@ import static com.chat.db.Tables.*;
 public class Transformations {
 
     public static Logger log = (Logger) LoggerFactory.getLogger(Transformations.class);
-
-
-    public static CommentObj convertCommentThreadedView(Model cv, Integer vote) {
-        return new CommentObj(cv.getLong("id"),
-                cv.getLong("user_id"),
-                cv.getString("user_name"),
-                cv.getLong("discussion_id"),
-                cv.getString("text_"),
-                cv.getLong("path_length"),
-                cv.getLong("parent_id"),
-                cv.getString("breadcrumbs"),
-                cv.getLong("num_of_parents"),
-                cv.getLong("num_of_children"),
-                cv.getInteger("avg_rank"),
-                vote,
-                cv.getInteger("number_of_votes"),
-                cv.getTimestamp("created"),
-                cv.getTimestamp("modified"));
-    }
-
-
 
     public static Map<Long, CommentObj> convertCommentThreadedViewToMap(List<? extends Model> cvs,
                                                                         Map<Long, Integer> votes) {
@@ -57,7 +35,7 @@ public class Transformations {
             Integer vote = (votes != null && votes.containsKey(id)) ? votes.get(id) : null;
 
             // Create the comment object
-            CommentObj co = convertCommentThreadedView(cv, vote);
+            CommentObj co = CommentObj.create(cv, vote);
 
             commentObjMap.put(id, co);
         }
@@ -110,25 +88,6 @@ public class Transformations {
         return cos;
     }
 
-
-    public static DiscussionObj convertDiscussion(Model d, Integer vote) {
-        return new DiscussionObj(d.getLongId(),
-                d.getLong("user_id"),
-                d.getString("user_name"),
-                d.getString("title"),
-                d.getString("link"),
-                d.getString("text_"),
-                d.getBoolean("private"),
-                d.getInteger("avg_rank"),
-                vote,
-                d.getInteger("number_of_votes"),
-                d.getString("tag_ids"),
-                d.getString("tag_names"),
-                d.getTimestamp("created"),
-                d.getTimestamp("modified"));
-    }
-
-
     public static List<DiscussionObj> convertDiscussionsToObjects(LazyList<? extends Model> discussions,
                                                                           Map<Long, Integer> votes) {
         // Convert to a list of discussion objects
@@ -137,7 +96,7 @@ public class Transformations {
         for (Model view : discussions) {
             Long id = view.getLongId();
             Integer vote = (votes.get(id) != null) ? votes.get(id) : null;
-            DiscussionObj df = Transformations.convertDiscussion(view, vote);
+            DiscussionObj df = DiscussionObj.create(view, vote);
             dos.add(df);
         }
 

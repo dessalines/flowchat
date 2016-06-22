@@ -1,10 +1,6 @@
 # chat-websocket
 
 # TODO
-- Front page is the list of discussions. 
-  - Needs to have smart scrolling
-  - Voting needs to work on these
-  - Beautiful dynamic-card front page, like reddit-sync flowed view(with bootstrap cards), with popular tags. 
 - Create discussion page
 - Toastr / whatever messages for errors, message notifications
 - Poll every so often for new messages.
@@ -28,7 +24,11 @@
 - Figure out how to get thumbnails from links.... might be tough for non-imgur-like things. 
 - Clean up codebase
 - Build startup documentation, setting up postgres, git clone. 
-
+- Add trending algorithms 
+- Front page is the list of discussions. 
+  - Needs to have smart scrolling
+  - Add popular tags
+- Add tooltips for everything, move to icons not text
 
 
 # Finished
