@@ -156,4 +156,8 @@ public class Tools {
     public static String[] pgArrayAggToArray(String text) {
         return text.replaceAll("\\{|\\}", "").split(",");
     }
+
+    public static String convertListToInQuery(Collection<?> col){
+        return Arrays.toString(col.toArray()).replaceAll("\\[","(").replaceAll("\\]", ")");
+    }
 }

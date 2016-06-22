@@ -1,8 +1,11 @@
 package com.chat.db;
 
 import ch.qos.logback.classic.Logger;
+import com.chat.tools.Tools;
 import com.chat.types.CommentObj;
 import com.chat.types.DiscussionObj;
+import com.chat.types.UserObj;
+import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 import org.slf4j.LoggerFactory;
 
@@ -107,7 +110,7 @@ public class Transformations {
     }
 
 
-    public static DiscussionObj convertDiscussion(DiscussionFullView d, Integer vote) {
+    public static DiscussionObj convertDiscussion(Model d, Integer vote) {
         return new DiscussionObj(d.getLongId(),
                 d.getLong("user_id"),
                 d.getString("user_name"),
@@ -124,6 +127,36 @@ public class Transformations {
                 d.getTimestamp("modified"));
     }
 
+
+    public static List<DiscussionObj> convertDiscussionsToObjects(LazyList<? extends Model> discussions,
+                                                                          Map<Long, Integer> votes) {
+        // Convert to a list of discussion objects
+        List<DiscussionObj> dos = new ArrayList<>();
+
+        for (Model view : discussions) {
+            Long id = view.getLongId();
+            Integer vote = (votes.get(id) != null) ? votes.get(id) : null;
+            DiscussionObj df = Transformations.convertDiscussion(view, vote);
+            dos.add(df);
+        }
+
+        return dos;
+    }
+
+    public static Map<Long, Integer> convertDiscussionRankToMap(Set<Long> discussionIds, UserObj userObj) {
+        LazyList<DiscussionRank> drs = DiscussionRank.where(
+                "discussion_id in ? and user_id = ?",
+                Tools.convertListToInQuery(discussionIds),
+                userObj.getId());
+
+        // Convert those votes to a map from id to rank
+        Map<Long, Integer> discussionRankMap = new HashMap<>();
+        for (DiscussionRank dr : drs) {
+            discussionRankMap.put(dr.getLongId(), dr.getInteger("rank"));
+        }
+
+        return discussionRankMap;
+    }
 
 
 }

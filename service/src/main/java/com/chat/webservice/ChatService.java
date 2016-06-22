@@ -8,13 +8,16 @@ import com.chat.db.Tables;
 import com.chat.db.Transformations;
 import com.chat.tools.Tools;
 import com.chat.types.DiscussionObj;
+import com.chat.types.Discussions;
 import com.chat.types.UserObj;
 import org.eclipse.jetty.websocket.api.Session;
 import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Paginator;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.chat.db.Tables.*;
 import static spark.Spark.*;
@@ -24,20 +27,20 @@ public class ChatService {
     static Logger log = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
         log.setLevel(Level.toLevel("verbose"));
-		log.getLoggerContext().getLogger("org.eclipse.jetty").setLevel(Level.OFF);
-		log.getLoggerContext().getLogger("spark.webserver").setLevel(Level.OFF);
+        log.getLoggerContext().getLogger("org.eclipse.jetty").setLevel(Level.OFF);
+        log.getLoggerContext().getLogger("spark.webserver").setLevel(Level.OFF);
 
         staticFiles.externalLocation("../ui/dist");
 //        staticFiles.expireTime(600);
 
         webSocket("/threaded_chat", ThreadedChatWebSocket.class);
-		
-		get("/test", (req, res) -> {
-			return "{\"data\": [{\"message\":\"derp\"}]}";
-		});
+
+        get("/test", (req, res) -> {
+            return "{\"data\": [{\"message\":\"derp\"}]}";
+        });
 
         // Get the user id
         get("/get_user", (req, res) -> {
@@ -100,7 +103,6 @@ public class ChatService {
 
         });
 
-        // Get the user id
         get("/get_discussion/:id", (req, res) -> {
 
             try {
@@ -131,6 +133,47 @@ public class ChatService {
 
         });
 
+        // Get the user id
+        get("/get_discussions/:tagId/:limit/:page/:orderBy", (req, res) -> {
+
+            try {
+                Long tagId = (!req.params(":tagId").equals("all")) ? Long.valueOf(req.params(":tagId")) : null;
+                Integer limit = (req.params(":limit") != null) ? Integer.valueOf(req.params(":limit")) : 10;
+                Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
+                String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "created desc";
+
+                UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
+                Paginator p;
+
+                if (tagId != null) {
+                    p = new Paginator(DiscussionNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[]", tagId).
+                            orderBy(orderBy);
+                } else {
+                    p = new Paginator(DiscussionNoTextView.class, limit, "1=1").
+                            orderBy(orderBy);
+                }
+
+                LazyList<DiscussionNoTextView> dntvs = p.getPage(page);
+
+                // Get the list of discussions
+                Set<Long> ids = dntvs.collectDistinct("id");
+
+                // Get your votes for those discussions:
+                Map<Long, Integer> discussionRankMap = Transformations.convertDiscussionRankToMap(ids, userObj);
+
+                Discussions discussions = new Discussions(dntvs, discussionRankMap);
+
+                return discussions.json();
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return e.getMessage();
+            }
+
+        });
+
         post("/save_discussion_rank/:id/:rank", (req, res) -> {
             try {
                 UserObj userObj = Actions.getOrCreateUserObj(req, res);
@@ -139,7 +182,7 @@ public class ChatService {
                 Long discussionId = Long.valueOf(req.params(":id"));
                 Integer rank = Integer.valueOf(req.params(":rank"));
 
-                String message = Actions.saveDiscussionVote(userObj.getId(),discussionId,rank);
+                String message = Actions.saveDiscussionVote(userObj.getId(), discussionId, rank);
                 log.info(message);
 
                 return message;
@@ -151,7 +194,6 @@ public class ChatService {
             }
 
         });
-
 
 
         before((req, res) -> {
@@ -167,11 +209,8 @@ public class ChatService {
         });
 
 
-
-		init();
-	}
-
-
+        init();
+    }
 
 
 }

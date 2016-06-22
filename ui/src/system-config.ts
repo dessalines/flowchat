@@ -50,6 +50,7 @@ const barrels: string[] = [
   'app/navbar',
   'app/home',
   'app/chat-list',
+  'app/discussion-card',
   /** @cli-barrel */
 ];
 

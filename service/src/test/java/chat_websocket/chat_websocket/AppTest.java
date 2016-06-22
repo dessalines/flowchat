@@ -114,5 +114,12 @@ public class AppTest {
         log.info(df.json());
     }
 
+    @Test
+    public void testDiscussionCollect() throws SQLException {
+        LazyList<DiscussionNoTextView> dntvs = DiscussionNoTextView.findAll();
+        Set<Long> ids = dntvs.collectDistinct("id");
+        log.info(Tools.convertListToInQuery(ids));
+    }
+
 
 }
