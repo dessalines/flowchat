@@ -1,8 +1,5 @@
-<button class="btn btn-primary" (click)="popToast()">pop toast</button>
-
+<h2 *ngIf="tag">#{{tag.name}}</h2>
 <hr>
 <div class="card-columns">
 	<app-discussion-card *ngFor="let discussion of discussions" [discussion]="discussion"></app-discussion-card>
 </div>
-
-

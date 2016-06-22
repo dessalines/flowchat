@@ -4,6 +4,7 @@ import { ChatComponent } from './components/chat/index';
 import { ChatListComponent } from './components/chat-list/index';
 import { NavbarComponent } from './components/navbar/index';
 import {HomeComponent} from './components/home/index';
+import {TagComponent} from './components/tag/index';
 import {UserService} from './services/user.service';
 import {DiscussionService} from './services/discussion.service';
 import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2-toaster/angular2-toaster';
@@ -19,6 +20,7 @@ import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2
 @RouteConfig([
     // { path: '/**', redirectTo: ['Home'] },
     { path: '/', name: 'Home', component: HomeComponent, useAsDefault: true },
+    { path: '/tag/:tagId', name: 'Tag', component: TagComponent},
     { path: '/discussion/:discussionId/...', name: 'Discussion', component: ChatListComponent }
 ])
 export class ChatPracticeUiAppComponent {

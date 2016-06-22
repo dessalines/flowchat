@@ -51,6 +51,7 @@ const barrels: string[] = [
   'app/home',
   'app/chat-list',
   'app/discussion-card',
+  'app/tag',
   /** @cli-barrel */
 ];
 

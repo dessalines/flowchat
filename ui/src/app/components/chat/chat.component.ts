@@ -10,8 +10,6 @@ import {Subscription} from 'rxjs/Subscription';
 import { RouteConfig, ROUTER_DIRECTIVES, Router, RouteParams} from '@angular/router-deprecated';
 import {RouteParamService} from '../../services/route-param.service';
 import {MarkdownEditComponent} from '../markdown-edit/index';
-import { MomentPipe } from '../../pipes/moment.pipe';
-import {MarkdownPipe} from '../../pipes/markdown.pipe';
 
 @Component({
   moduleId: module.id,
@@ -19,8 +17,7 @@ import {MarkdownPipe} from '../../pipes/markdown.pipe';
   templateUrl: 'chat.component.html',
   styleUrls: ['chat.component.css'],
   providers: [HTTP_PROVIDERS, ThreadedChatService],
-  directives: [CommentComponent, MarkdownEditComponent, DiscussionCardComponent],
-  pipes: [MomentPipe, MarkdownPipe]
+  directives: [CommentComponent, MarkdownEditComponent, DiscussionCardComponent]
 })
 export class ChatComponent implements OnInit {
 
@@ -46,8 +43,6 @@ export class ChatComponent implements OnInit {
 
   // This is set to true on ngOnDestroy, to not do an alert for reconnect
   private websocketSoftClose: boolean = false;
-
-  private showVoteSlider: boolean = false;
 
   constructor(private threadedChatService: ThreadedChatService,
     private userService: UserService,
@@ -280,20 +275,6 @@ export class ChatComponent implements OnInit {
 
   setIsReplying($event) {
     this.isReplying = $event;
-  }
-
-  toggleShowVoteSlider() {
-    this.showVoteSlider = !this.showVoteSlider;
-  }
-
-  updateDiscussionRank($event) {
-    this.discussion.userRank = $event;
-  }
-
-  saveDiscussionRank($event) {
-    this.discussion.userRank = $event;
-    this.showVoteSlider = false;
-    this.discussionService.saveRank(this.discussionId, this.discussion.userRank).subscribe();
   }
 
 
