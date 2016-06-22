@@ -110,7 +110,7 @@ public class AppTest {
     @Test
     public void testDiscussionConvert() throws SQLException {
         DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", 1);
-        DiscussionObj df = Transformations.convertDiscussion(dfv, null);
+        DiscussionObj df = DiscussionObj.create(dfv, null);
         log.info(df.json());
     }
 

@@ -27,7 +27,9 @@ export class DiscussionCardComponent implements OnInit {
     private router: Router) {}
 
   ngOnInit() {
+  }
 
+  ngAfterViewInit() {
   }
 
 
