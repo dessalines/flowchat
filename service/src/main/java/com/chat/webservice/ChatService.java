@@ -268,6 +268,23 @@ public class ChatService {
 
         });
 
+        post("/create_tag", (req, res) -> {
+            try {
+
+                String name = Tools.createMapFromReqBody(req.body()).get("name");
+
+                TagObj to = Actions.createTag(name);
+
+                return to.json();
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return e.getMessage();
+            }
+
+        });
+
 
         before((req, res) -> {
             Tools.dbInit();

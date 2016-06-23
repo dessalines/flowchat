@@ -10,6 +10,7 @@ export class TagService {
 
   private getTagUrl: string = 'http://localhost:4567/get_tag/';
   private queryTagsUrl: string = 'http://localhost:4567/tag_search/';
+  private createTagUrl: string = 'http://localhost:4567/create_tag';
 
   private getDiscussionsUrl(limit: number, page: number, tagId: string,
     orderBy: string): string {
@@ -29,6 +30,15 @@ export class TagService {
     return this.http.get(this.queryTagsUrl + query)
       .map(this.extractData)
       .catch(this.handleError);
+  }
+
+  createTag(name: string) {
+    let tagInfo = JSON.stringify({ name: name });
+
+    return this.http.post(this.createTagUrl, tagInfo)
+      .map(this.extractData)
+      .catch(this.handleError);
+
   }
 
   

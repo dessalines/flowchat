@@ -157,6 +157,13 @@ public class Actions {
         return doOut;
     }
 
+    public static TagObj createTag(String name) {
+
+        Tag t = Tag.createIt("name", name);
+
+        return TagObj.create(t);
+    }
+
     private static class UserFromHeader {
         private Long id, full_user_id, login_id;
         private String auth, name, email;
