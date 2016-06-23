@@ -136,12 +136,12 @@ public class Actions {
 
         Discussion d = Discussion.findFirst("id = ?" , discussionId);
 
-        d.set("title" , title,
-                "link" , link,
-                "text_" , text,
-                "private" , private_,
-                "modified" , cTime).
-                saveIt();
+        if (title != null) d.set("title" , title);
+        if (link != null) d.set("link" , link);
+        if (text != null) d.set("text_" , text);
+        if (private_ != null) d.set("private" , private_);
+        d.set("modified" , cTime);
+        d.saveIt();
 
         // Fetch the full view
         DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", discussionId);
