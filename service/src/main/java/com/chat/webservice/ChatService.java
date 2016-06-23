@@ -228,6 +228,35 @@ public class ChatService {
 
         });
 
+        post("/save_discussion", (req, res) -> {
+            try {
+                UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
+                Map<String, String> m = Tools.createMapFromReqBody(req.body());
+
+                Long id = Long.valueOf(m.get("id"));
+                String title = (m.get("title") != null) ? m.get("title") : null;
+                String link = (m.get("link") != null) ? m.get("link") : null;
+                String text = (m.get("text") != null) ? m.get("text") : null;
+                Boolean private_ = (m.get("private") != null) ? Boolean.valueOf("private") : null;
+
+                DiscussionObj do_ = Actions.saveDiscussion(
+                        id,
+                        title,
+                        link,
+                        text,
+                        private_);
+
+                return do_.json();
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return e.getMessage();
+            }
+
+        });
+
 
         before((req, res) -> {
             Tools.dbInit();

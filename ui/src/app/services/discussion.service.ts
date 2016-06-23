@@ -6,6 +6,7 @@ import 'rxjs/add/observable/throw';
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
 import {UserService} from './user.service';
+import {Discussion} from '../shared/discussion.interface';
 
 @Injectable()
 export class DiscussionService {
@@ -13,6 +14,8 @@ export class DiscussionService {
   private getDiscussionUrl: string = 'http://localhost:4567/get_discussion/';
   private saveRankUrl: string = 'http://localhost:4567/save_discussion_rank/';
   private createDiscussionUrl: string = "http://localhost:4567/create_discussion";
+  private saveDiscussionUrl: string = "http://localhost:4567/save_discussion";
+
 
   private getDiscussionsUrl(limit: number, page: number, tagId: string,
     orderBy: string): string {
@@ -54,6 +57,12 @@ export class DiscussionService {
 
   createDiscussion() {
     return this.http.post(this.createDiscussionUrl, null, this.options)
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  saveDiscussion(discussion: Discussion) {
+    return this.http.post(this.saveDiscussionUrl, discussion, this.options)
       .map(this.extractData)
       .catch(this.handleError);
   }
