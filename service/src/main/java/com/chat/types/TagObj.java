@@ -14,6 +14,8 @@ public class TagObj implements JSONWriter {
         this.name = name;
     }
 
+    public TagObj() {}
+
     public static TagObj create(Tag tag) {
         return new TagObj(tag.getLongId(),
                 tag.getString("name"));

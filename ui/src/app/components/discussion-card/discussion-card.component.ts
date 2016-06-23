@@ -9,6 +9,7 @@ import {TagService} from '../../services/tag.service';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
 import {MarkdownEditComponent} from '../markdown-edit/index';
 import {TYPEAHEAD_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+import {ToasterService} from 'angular2-toaster/angular2-toaster';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 
@@ -38,10 +39,13 @@ export class DiscussionCardComponent implements OnInit {
   private tagSearchResults: Array<Tag>;
   private tagSearchTerm: string = '';
   private tooManyTagsError: boolean = false;
+  private tagTypeaheadLoading: boolean = false;
+  private tagTypeaheadNoResults: boolean = false;
 
   constructor(private userService: UserService,
     private discussionService: DiscussionService,
     private tagService: TagService,
+    private toasterService: ToasterService,
     private router: Router) { }
 
   ngOnInit() {
@@ -94,7 +98,7 @@ export class DiscussionCardComponent implements OnInit {
       .switchMap((term: string) => this.tagService.searchTags(term));
 
     this.tagResultsObservable.subscribe(t => this.tagSearchResults = t.tags);
-    // this.tagSearch('a');
+    this.tagSearch('a');
   }
 
   tagSearch(term: string) {
@@ -111,7 +115,7 @@ export class DiscussionCardComponent implements OnInit {
     }
 
     // add it to the list
-    if (this.discussion.tags.length < 2) {
+    if (this.discussion.tags.length < 3) {
       this.discussion.tags.push(tag);
       this.tagSearchTerm = '';
     } else {
@@ -120,10 +124,28 @@ export class DiscussionCardComponent implements OnInit {
     
   }
 
+  changeTypeaheadLoading(e: boolean): void {
+    this.tagTypeaheadLoading = e;
+  }
+
+  changeTypeaheadNoResults(e: boolean): void {
+    this.tagTypeaheadNoResults = e;
+  }
+
   removeTag(tag: Tag) {
     let index = this.discussion.tags.indexOf(tag);
     this.discussion.tags.splice(index, 1);
     this.tooManyTagsError = false;
+  }
+
+  // TODO add a toast that this got created succesfully
+  createTag() {
+    this.tagService.createTag(this.tagSearchTerm).subscribe(d => {
+      console.log(d);
+      this.tagSearchTerm = '';
+      this.toasterService.pop('success', 'New Tag Created', d.name);
+    });
+    
   }
 
 }

@@ -65,15 +65,32 @@
       <app-markdown-edit [inputText]="discussion.text"
         (textEvent)="setEditText($event)"></app-markdown-edit>
       <br>
-      <input #term (keyup)="tagSearch(term.value)"
-        [(ngModel)]="tagSearchTerm" [typeahead]="tagSearchResults"
-        (typeaheadOnSelect)="typeaheadOnSelect($event.item)"
-        [typeaheadOptionField]="'name'" class="form-control">
+      <div class="row">
+        <div class="col-md-4 input-group">
+          <input #term (keyup)="tagSearch(term.value)"
+            [(ngModel)]="tagSearchTerm" [typeahead]="tagSearchResults"
+            (typeaheadOnSelect)="typeaheadOnSelect($event.item)"
+            [typeaheadOptionField]="'name'"
+            (typeaheadLoading)="changeTypeaheadLoading($event)"
+            (typeaheadNoResults)="changeTypeaheadNoResults($event)"
+            class="form-control">
+          <button (click)="createTag()" class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
+        </div>
+      </div>
+      <div *ngIf="tagTypeaheadLoading===true">
+        <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+      </div>
+      <div *ngIf="tagTypeaheadNoResults===true"
+        class="">
+        <i class="fa fa-fw fa-remove"></i>No
+        Results Found
+      </div>
       <div *ngIf="tooManyTagsError" class="row col-sm-12 help-block text-danger">
         <small>Can't Add more than 3 tags</small>
       </div>
       <ul *ngIf="discussion?.tags" class="list-inline">tags:
-        <li role="button" (click)="removeTag(tag)" class="label label-default list-inline-item"
+        <li role="button" (click)="removeTag(tag)"
+          class="label label-default list-inline-item"
           *ngFor="let tag of discussion?.tags">
           <span>{{tag.name}}<i class="fa fa-fw fa-remove"></i></span>
         </li>
