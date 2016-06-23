@@ -9,6 +9,7 @@ import { Http, Response } from '@angular/http';
 export class TagService {
 
   private getTagUrl: string = 'http://localhost:4567/get_tag/';
+  private queryTagsUrl: string = 'http://localhost:4567/tag_search/';
 
   private getDiscussionsUrl(limit: number, page: number, tagId: string,
     orderBy: string): string {
@@ -20,6 +21,12 @@ export class TagService {
 
   getTag(id: string) {
     return this.http.get(this.getTagUrl + id)
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  searchTags(query: string) {
+    return this.http.get(this.queryTagsUrl + query)
       .map(this.extractData)
       .catch(this.handleError);
   }

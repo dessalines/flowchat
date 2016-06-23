@@ -25,7 +25,7 @@
 - Clean up codebase
 - Build startup documentation, setting up postgres, git clone. 
 - Add trending algorithms 
-- Front page is the list of discussions. 
+- Front page is the list of discussions.
   - Needs to have smart scrolling
   - Add popular tags
 - Add tooltips for everything, move to icons not text

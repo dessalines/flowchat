@@ -3,6 +3,7 @@ package com.chat.types;
 import com.chat.tools.Tools;
 import org.javalite.activejdbc.Model;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,8 @@ public class DiscussionObj implements JSONWriter {
     private Integer avgRank, userRank, numberOfVotes;
     private List<TagObj> tags;
     private Timestamp created, modified;
+
+    public DiscussionObj() {}
 
     public DiscussionObj(Long id,
                          Long userId,
@@ -62,6 +65,17 @@ public class DiscussionObj implements JSONWriter {
                 d.getString("tag_names"),
                 d.getTimestamp("created"),
                 d.getTimestamp("modified"));
+    }
+
+    public static DiscussionObj fromJson(String dataStr) {
+
+        try {
+            return Tools.JACKSON.readValue(dataStr, DiscussionObj.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static List<TagObj> setTags(String tagIds, String tagNames) {

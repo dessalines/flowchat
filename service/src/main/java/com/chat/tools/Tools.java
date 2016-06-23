@@ -160,4 +160,33 @@ public class Tools {
     public static String convertListToInQuery(Collection<?> col){
         return Arrays.toString(col.toArray()).replaceAll("\\[","(").replaceAll("\\]", ")");
     }
+
+    public static String constructQueryString(String query, String columnName) {
+
+        try {
+            query = java.net.URLDecoder.decode(query, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String[] splitWords = query.split(" ");
+        StringBuilder queryStr = new StringBuilder();
+
+        for(int i = 0;;) {
+            String word = splitWords[i++].replaceAll("'", "_");
+
+            String likeQuery = columnName + " like '%" + word + "%'";
+
+            queryStr.append(likeQuery);
+
+            if (i < splitWords.length) {
+                queryStr.append(" and ");
+            } else {
+                break;
+            }
+        }
+
+        return queryStr.toString();
+
+    }
+
 }

@@ -9,6 +9,7 @@ import com.chat.DataSources;
 import com.chat.db.Tables.*;
 import com.chat.tools.Tools;
 import com.chat.types.DiscussionObj;
+import com.chat.types.TagObj;
 import com.chat.types.UserObj;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -125,30 +126,35 @@ public class Actions {
         return DiscussionObj.create(dfv, null);
     }
 
-    public static DiscussionObj saveDiscussion(
-            Long discussionId,
-            String title,
-            String link,
-            String text,
-            Boolean private_) {
+    public static DiscussionObj saveDiscussion(DiscussionObj do_) {
 
         Timestamp cTime = new Timestamp(new Date().getTime());
 
-        Discussion d = Discussion.findFirst("id = ?" , discussionId);
+        Discussion d = Discussion.findFirst("id = ?" , do_.getId());
 
-        if (title != null) d.set("title" , title);
-        if (link != null) d.set("link" , link);
-        if (text != null) d.set("text_" , text);
-        if (private_ != null) d.set("private" , private_);
+        if (do_.getTitle() != null) d.set("title" , do_.getTitle());
+        if (do_.getLink() != null) d.set("link" , do_.getLink());
+        if (do_.getText() != null) d.set("text_" , do_.getText());
+        if (do_.getPrivate_() != null) d.set("private" , do_.getPrivate_());
         d.set("modified" , cTime);
         d.saveIt();
 
+        // Add the discussion tags
+        if (do_.getTags() != null) {
+            DiscussionTag.delete("discussion_id = ?", do_.getId());
+
+            for (TagObj tag : do_.getTags()) {
+                DiscussionTag.createIt("discussion_id", do_.getId(),
+                        "tag_id", tag.getId());
+            }
+        }
+
         // Fetch the full view
-        DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", discussionId);
+        DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", do_.getId());
 
-        DiscussionObj do_ = DiscussionObj.create(dfv,null);
+        DiscussionObj doOut = DiscussionObj.create(dfv,null);
 
-        return do_;
+        return doOut;
     }
 
     private static class UserFromHeader {

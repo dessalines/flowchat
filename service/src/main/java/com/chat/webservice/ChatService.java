@@ -6,10 +6,7 @@ import ch.qos.logback.classic.Logger;
 import com.chat.db.Actions;
 import com.chat.db.Transformations;
 import com.chat.tools.Tools;
-import com.chat.types.DiscussionObj;
-import com.chat.types.Discussions;
-import com.chat.types.TagObj;
-import com.chat.types.UserObj;
+import com.chat.types.*;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Paginator;
 import org.slf4j.LoggerFactory;
@@ -63,7 +60,7 @@ public class ChatService {
             try {
                 Tag t = Tag.findFirst("id = ?", id);
 
-                TagObj to = new TagObj(t.getLongId(),t.getString("name"));
+                TagObj to = TagObj.create(t);
 
                 return to.json();
 
@@ -232,20 +229,11 @@ public class ChatService {
             try {
                 UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
-                Map<String, String> m = Tools.createMapFromReqBody(req.body());
+//                Map<String, String> m = Tools.createMapFromReqBody(req.body());
 
-                Long id = Long.valueOf(m.get("id"));
-                String title = (m.get("title") != null) ? m.get("title") : null;
-                String link = (m.get("link") != null) ? m.get("link") : null;
-                String text = (m.get("text") != null) ? m.get("text") : null;
-                Boolean private_ = (m.get("private") != null) ? Boolean.valueOf("private") : null;
+                DiscussionObj doIn = DiscussionObj.fromJson(req.body());
 
-                DiscussionObj do_ = Actions.saveDiscussion(
-                        id,
-                        title,
-                        link,
-                        text,
-                        private_);
+                DiscussionObj do_ = Actions.saveDiscussion(doIn);
 
                 return do_.json();
 
@@ -254,6 +242,29 @@ public class ChatService {
                 e.printStackTrace();
                 return e.getMessage();
             }
+
+        });
+
+        get("/tag_search/:query", (req, res) -> {
+
+            try {
+
+                String query = req.params(":query");
+
+                String queryStr = Tools.constructQueryString(query, "name");
+
+                LazyList<Tag> tagRows = Tag.find(queryStr.toString()).limit(5);
+
+                Tags tags = new Tags(tagRows);
+
+                return tags.json();
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return e.getMessage();
+            }
+
 
         });
 
