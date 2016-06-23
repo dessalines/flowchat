@@ -28,4 +28,24 @@ public class TagObj implements JSONWriter {
     public String getName() {
         return name;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TagObj tagObj = (TagObj) o;
+
+        if (id != null ? !id.equals(tagObj.id) : tagObj.id != null) return false;
+        return name != null ? name.equals(tagObj.name) : tagObj.name == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
+    }
 }
