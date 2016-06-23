@@ -6,6 +6,7 @@ import org.javalite.activejdbc.Model;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -87,7 +88,9 @@ public class DiscussionObj implements JSONWriter {
             tags.add(new TagObj(Long.valueOf(ids[i]), names[i]));
         }
 
-        return tags;
+        List<TagObj> dedupeTagObjs = new ArrayList<>(new LinkedHashSet<>(tags));
+
+        return dedupeTagObjs;
     }
 
     public String getText() {

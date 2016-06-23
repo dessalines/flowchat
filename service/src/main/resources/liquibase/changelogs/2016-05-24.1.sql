@@ -33,8 +33,8 @@ select d.id,
     d.private,
     avg(dr.rank) as avg_rank,
     count(distinct dr.id) as number_of_votes,
-    array_agg(distinct t.id) as tag_ids,
-    array_agg(distinct t.name) as tag_names,
+    array_agg(t.id order by t.id asc) as tag_ids,
+    array_agg(t.name order by t.id asc) as tag_names,
     d.created,
     d.modified
 from discussion as d
