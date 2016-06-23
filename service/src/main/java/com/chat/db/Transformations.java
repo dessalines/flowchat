@@ -88,20 +88,7 @@ public class Transformations {
         return cos;
     }
 
-    public static List<DiscussionObj> convertDiscussionsToObjects(LazyList<? extends Model> discussions,
-                                                                          Map<Long, Integer> votes) {
-        // Convert to a list of discussion objects
-        List<DiscussionObj> dos = new ArrayList<>();
 
-        for (Model view : discussions) {
-            Long id = view.getLongId();
-            Integer vote = (votes.get(id) != null) ? votes.get(id) : null;
-            DiscussionObj df = DiscussionObj.create(view, vote);
-            dos.add(df);
-        }
-
-        return dos;
-    }
 
     public static Map<Long, Integer> convertDiscussionRankToMap(Set<Long> discussionIds, UserObj userObj) {
         LazyList<DiscussionRank> drs = DiscussionRank.where(

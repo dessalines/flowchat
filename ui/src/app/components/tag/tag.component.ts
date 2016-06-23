@@ -12,7 +12,7 @@ import {DiscussionCardComponent} from '../discussion-card/index';
   templateUrl: 'tag.component.html',
   styleUrls: ['tag.component.css'],
   directives: [DiscussionCardComponent],
-  providers: [TagService]
+  providers: []
 })
 export class TagComponent implements OnInit {
 
