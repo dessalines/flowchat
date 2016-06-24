@@ -1,10 +1,12 @@
 import { Component, OnInit, Input} from '@angular/core';
 import {Discussion} from '../../shared/discussion.interface';
 import {Tag} from '../../shared/tag.interface';
+import {User} from '../../shared/user.interface';
 import { MomentPipe } from '../../pipes/moment.pipe';
 import {MarkdownPipe} from '../../pipes/markdown.pipe';
 import {UserService} from '../../services/user.service';
 import {DiscussionService} from '../../services/discussion.service';
+import {UserSearchService} from '../../services/user-search.service';
 import {TagService} from '../../services/tag.service';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
 import {MarkdownEditComponent} from '../markdown-edit/index';
@@ -42,14 +44,23 @@ export class DiscussionCardComponent implements OnInit {
   private tagTypeaheadLoading: boolean = false;
   private tagTypeaheadNoResults: boolean = false;
 
+  private userSearchTermStream = new Subject<string>();
+  private userResultsObservable: Observable<any>;
+  private userSearchResults: Array<User>;
+  private userSearchTerm: string = '';
+  private userTypeaheadLoading: boolean = false;
+  private userTypeaheadNoResults: boolean = false;
+
   constructor(private userService: UserService,
     private discussionService: DiscussionService,
     private tagService: TagService,
+    private userSearchService: UserSearchService,
     private toasterService: ToasterService,
     private router: Router) { }
 
   ngOnInit() {
     this.setupTagSearch();
+    this.setupUserSearch();
   }
 
   ngAfterViewInit() {
@@ -90,6 +101,7 @@ export class DiscussionCardComponent implements OnInit {
     this.discussionService.saveRank(this.discussion.id, this.discussion.userRank).subscribe();
   }
 
+  // Tag search methods
   setupTagSearch() {
     this.tagResultsObservable = this.tagSearchTermStream
       .debounceTime(300)
@@ -106,7 +118,7 @@ export class DiscussionCardComponent implements OnInit {
     }
   }
 
-  typeaheadOnSelect(tag: Tag) {
+  tagTypeaheadOnSelect(tag: Tag) {
 
     // Create the array if necessary
     if (this.discussion.tags == null) {
@@ -123,11 +135,11 @@ export class DiscussionCardComponent implements OnInit {
     
   }
 
-  changeTypeaheadLoading(e: boolean): void {
+  tagChangeTypeaheadLoading(e: boolean): void {
     this.tagTypeaheadLoading = e;
   }
 
-  changeTypeaheadNoResults(e: boolean): void {
+  tagChangeTypeaheadNoResults(e: boolean): void {
     this.tagTypeaheadNoResults = e;
   }
 
@@ -137,7 +149,6 @@ export class DiscussionCardComponent implements OnInit {
     this.tooManyTagsError = false;
   }
 
-  // TODO add a toast that this got created succesfully
   createTag() {
     this.tagService.createTag(this.tagSearchTerm).subscribe(d => {
       console.log(d);
@@ -145,6 +156,53 @@ export class DiscussionCardComponent implements OnInit {
       this.toasterService.pop('success', 'New Tag Created', d.name);
     });
     
+  }
+
+  // User search methods
+  setupUserSearch() {
+    this.userResultsObservable = this.userSearchTermStream
+      .debounceTime(300)
+      .distinctUntilChanged()
+      .switchMap((term: string) => this.userSearchService.searchUsers(term));
+
+    this.userResultsObservable.subscribe(t => this.userSearchResults = t.users);
+    // this.tagSearch('a');
+  }
+
+  userSearch(term: string) {
+    if (term !== '') {
+      this.userSearchTermStream.next(term);
+    }
+  }
+
+  userTypeaheadOnSelect(user: User) {
+
+    // Create the array if necessary
+    if (this.discussion.privateUsers == null) {
+      this.discussion.privateUsers = [];
+    }
+
+    // add it to the list
+    this.discussion.privateUsers.push(user);
+    this.userSearchTerm = '';
+
+  }
+
+  userChangeTypeaheadLoading(e: boolean): void {
+    this.userTypeaheadLoading = e;
+  }
+
+  userChangeTypeaheadNoResults(e: boolean): void {
+    this.userTypeaheadNoResults = e;
+  }
+
+  removePrivateUser(user: User) {
+    let index = this.discussion.privateUsers.indexOf(user);
+    this.discussion.privateUsers.splice(index, 1);
+  }
+
+  privateUsersWithoutYou() {
+    return this.discussion.privateUsers.slice(1);
   }
 
 }

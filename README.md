@@ -3,13 +3,13 @@
 # TODO
 
 - private discussions
+  - schema for private_discussion_user
   - add a thing similar to tag adding, but for private discussion users
 - Serving multiple discussions
   - All discussions have a single moderator, whoever created the channel.
-  - Discussions can be private(invite by moderator only), or public(anyone can join)\
     - For private, any emails that aren't in the system should get emailed a link to the discussion.
   - Tags/Hashtags(with smart linking)(maximum of 3 - 5)
-	- Discussions on left
+	- Discussions on left [1](http://v4-alpha.getbootstrap.com/examples/dashboard/)
 	- Set up like Stash, [nodebb](https://github.com/NodeBB/NodeBB), reddit
   - Left bar will be all your discussions that aren't archived(x'd out)
   - When you comment in a discussion, it gets added to your left bar.

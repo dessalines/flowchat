@@ -10,6 +10,8 @@ import {Subscription} from 'rxjs/Subscription';
 import { RouteConfig, ROUTER_DIRECTIVES, Router, RouteParams} from '@angular/router-deprecated';
 import {RouteParamService} from '../../services/route-param.service';
 import {MarkdownEditComponent} from '../markdown-edit/index';
+import {ToasterService} from 'angular2-toaster/angular2-toaster';
+
 
 @Component({
   moduleId: module.id,
@@ -49,7 +51,8 @@ export class ChatComponent implements OnInit {
     private router: Router,
     private routeParams: RouteParams,
     private routeParamService: RouteParamService,
-    private discussionService: DiscussionService) {
+    private discussionService: DiscussionService,
+    private toasterService: ToasterService) {
 
 
   }
@@ -107,7 +110,7 @@ export class ChatComponent implements OnInit {
       subscribe(d => {
         this.discussion = d;
       },
-      error => console.log(error));
+      error => this.toasterService.pop("error", "Error", error))
   }
 
   websocketCloseWatcher() {

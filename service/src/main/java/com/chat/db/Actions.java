@@ -82,15 +82,15 @@ public class Actions {
 
             if (auth == null || auth.equals("undefined")) {
                 User dbUser = User.findFirst("id = ?" , id);
-                userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));
+                userObj = UserObj.create(dbUser.getLongId(), dbUser.getString("name"));
             } else {
                 UserLoginView uv = UserLoginView.findFirst("auth = ?" , auth);
-                userObj = new UserObj(uv.getLongId(), uv.getString("name"));
+                userObj = UserObj.create(uv.getLongId(), uv.getString("name"));
             }
 
         } else {
             User dbUser = Actions.createUser();
-            userObj = new UserObj(dbUser.getLongId(), dbUser.getString("name"));
+            userObj = UserObj.create(dbUser.getLongId(), dbUser.getString("name"));
         }
 
         return userObj;
@@ -146,6 +146,15 @@ public class Actions {
             for (TagObj tag : do_.getTags()) {
                 DiscussionTag.createIt("discussion_id", do_.getId(),
                         "tag_id", tag.getId());
+            }
+        }
+
+        if (do_.getPrivateUsers() != null) {
+            PrivateDiscussionUser.delete("discussion_id = ?", do_.getId());
+
+            for (UserObj userObj : do_.getPrivateUsers()) {
+                PrivateDiscussionUser.createIt("discussion_id", do_.getId(),
+                        "user_id", userObj.getId());
             }
         }
 
