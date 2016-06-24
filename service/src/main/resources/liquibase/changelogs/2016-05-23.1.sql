@@ -90,6 +90,21 @@ create table private_discussion_user (
     constraint fk3_private_discussion_unique_1 unique(discussion_id, user_id)
 );
 
+create table favorite_discussion_user (
+    id bigserial primary key,
+    discussion_id bigint not null,
+    user_id bigint not null,
+    created timestamp default current_timestamp,
+    constraint fk1_favorite_discussion_user_discussion foreign key (discussion_id)
+        references discussion (id)
+        on update cascade on delete cascade,
+    constraint fk2_favorite_discussion_user_user foreign key (user_id)
+        references user_ (id)
+        on update cascade on delete cascade,
+    constraint fk3_favorite_discussion_user_unique_1 unique(discussion_id, user_id)
+);
+
+
 create table comment (
     id bigserial primary key,
     user_id bigint not null,
@@ -149,6 +164,9 @@ insert into discussion (title, user_id, link, text_, private)
 
 insert into private_discussion_user(discussion_id, user_id)
     values (3,4);
+
+insert into favorite_discussion_user(discussion_id, user_id)
+    values (1,4),(3,4);
 
 insert into discussion_rank (discussion_id, user_id, rank)
     values (1,1,21),(1,3,81),(2,2,87);

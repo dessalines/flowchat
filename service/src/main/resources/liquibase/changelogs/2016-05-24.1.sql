@@ -68,8 +68,6 @@ select id,
 from discussion_full_view;
 
 
-
-
 -- TODO
 -- create table discussion_notext_view as
 

@@ -181,6 +181,9 @@ public class ThreadedChatWebSocket {
 
         broadcastMessage(filteredScopes, co.json("reply"));
 
+        // TODO find a way to do this without having to query every time?
+        Actions.saveFavoriteDiscussion(ss.getUserObj().getId(), ss.getDiscussionId());
+
     }
 
 
@@ -228,6 +231,9 @@ public class ThreadedChatWebSocket {
                 sessionScopes, session, co.getBreadcrumbs());
 
         broadcastMessage(filteredScopes, co.json("reply"));
+
+        // TODO find a way to do this without having to query every time?
+        Actions.saveFavoriteDiscussion(ss.getUserObj().getId(), ss.getDiscussionId());
 
     }
 

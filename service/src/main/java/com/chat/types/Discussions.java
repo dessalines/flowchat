@@ -13,23 +13,23 @@ import java.util.Map;
 public class Discussions implements JSONWriter {
     private List<DiscussionObj> discussions;
 
-    public Discussions(LazyList<? extends Model> discussions, Map<Long, Integer> votes) {
-        this.discussions = create(discussions, votes);
+    private Discussions(List<DiscussionObj> discussions) {
+        this.discussions = discussions;
     }
 
-    public static List<DiscussionObj> create(LazyList<? extends Model> discussions,
+    public static Discussions create(LazyList<? extends Model> discussions,
                                              Map<Long, Integer> votes) {
         // Convert to a list of discussion objects
         List<DiscussionObj> dos = new ArrayList<>();
 
         for (Model view : discussions) {
             Long id = view.getLongId();
-            Integer vote = (votes.get(id) != null) ? votes.get(id) : null;
+            Integer vote = (votes != null && votes.get(id) != null) ? votes.get(id) : null;
             DiscussionObj df = DiscussionObj.create(view, vote);
             dos.add(df);
         }
 
-        return dos;
+        return new Discussions(dos);
     }
 
 

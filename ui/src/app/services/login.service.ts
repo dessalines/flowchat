@@ -42,7 +42,7 @@ export class LoginService {
 
   private handleError(error: any) {
     // We'd also dig deeper into the error to get a better message
-    let errMsg = error;
+    let errMsg = error.json().message;
     return Observable.throw(errMsg);
   }
 
