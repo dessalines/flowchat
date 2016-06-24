@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {User, Tools} from '../shared';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import { Headers, RequestOptions } from '@angular/http';
 
 @Injectable()
 export class UserService {
@@ -65,6 +66,16 @@ export class UserService {
     Tools.eraseCookie("uid");
     Tools.eraseCookie("auth");
     Tools.eraseCookie("name");
+  }
+
+
+  getOptions(): RequestOptions {
+    let headers = new Headers(
+      {
+        'Content-Type': 'application/json',
+        'user': JSON.stringify(this.getUser())
+      });
+    return new RequestOptions({ headers: headers });
   }
 
 }

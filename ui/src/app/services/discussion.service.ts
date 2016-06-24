@@ -23,46 +23,38 @@ export class DiscussionService {
       limit + '/' + page + '/' + orderBy;
   }
 
-  headers: Headers;
-  options: RequestOptions;
-
   constructor(private http: Http,
     private userService: UserService) {
-    this.headers = new Headers(
-      {
-        'Content-Type': 'application/json',
-        'user': JSON.stringify(this.userService.getUser())
-      });
-    this.options = new RequestOptions({ headers: this.headers });
+
   }
 
   getDiscussion(id: number) {
-    return this.http.get(this.getDiscussionUrl + id, this.options)
+    return this.http.get(this.getDiscussionUrl + id, this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
 
   getDiscussions(limit: number = 10, page: number = 1, tagId: string = 'all',
     orderBy: string = 'created desc') {
-    return this.http.get(this.getDiscussionsUrl(limit, page, tagId, orderBy), this.options)
+    return this.http.get(this.getDiscussionsUrl(limit, page, tagId, orderBy), this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
 
   saveRank(id: number, rank: number) {
-    return this.http.post(this.saveRankUrl + id + '/' + rank, null, this.options)
+    return this.http.post(this.saveRankUrl + id + '/' + rank, null, this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
 
   createDiscussion() {
-    return this.http.post(this.createDiscussionUrl, null, this.options)
+    return this.http.post(this.createDiscussionUrl, null, this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
 
   saveDiscussion(discussion: Discussion) {
-    return this.http.post(this.saveDiscussionUrl, discussion, this.options)
+    return this.http.post(this.saveDiscussionUrl, discussion, this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }

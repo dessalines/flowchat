@@ -24,7 +24,7 @@
           by {{discussion?.userName}}
       </small>
       <ul class="list-inline">
-        <li *ngIf="discussion?.private" class="label label-danger list-inline-item">Private</li>
+        <li *ngIf="discussion?.private_" class="label label-danger list-inline-item">Private</li>
         <li *ngIf="discussion && !isCreator()" role="button"
           class="list-inline-item" (click)="toggleShowVoteSlider()"><i class="fa fa-fw fa-star-half-o"></i></li>
         <li *ngIf="discussion?.avgRank" class="label label-pill label-default list-inline-item">
@@ -49,24 +49,32 @@
     </div>
     <div *ngIf="editMode">
       <div class="form-group row">
-        <label class="col-sm-2 form-control-label">Title</label>
-        <div class="col-sm-10">
+        <label class="col-sm-1 form-control-label">Title</label>
+        <div class="col-sm-11">
           <input [(ngModel)]="discussion.title" class="form-control"
             maxlength="140" />
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-sm-2 form-control-label">Link</label>
-        <div class="col-sm-10">
-          <input [(ngModel)]="discussion.link" class="form-control"
-          />
+        <label class="col-sm-1 form-control-label">Link</label>
+        <div class="col-sm-11">
+          <input [(ngModel)]="discussion.link" placeholder="optional"
+            class="form-control" />
         </div>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input [(ngModel)]="discussion.private_"
+            type="checkbox"
+          /> Private
+        </label>
       </div>
       <app-markdown-edit [inputText]="discussion.text"
         (textEvent)="setEditText($event)"></app-markdown-edit>
       <br>
-      <div class="row">
-        <div class="col-md-4 input-group">
+      <div class="form-group row">
+        <label class="col-sm-1 form-control-label">Tags</label>
+        <div class="col-md-5 input-group">
           <input #term (keyup)="tagSearch(term.value)"
             [(ngModel)]="tagSearchTerm" [typeahead]="tagSearchResults"
             (typeaheadOnSelect)="typeaheadOnSelect($event.item)"
@@ -75,10 +83,17 @@
             (typeaheadNoResults)="changeTypeaheadNoResults($event)"
             class="form-control">
           <button (click)="createTag()" class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
+          <div *ngIf="tagTypeaheadLoading===true">
+            <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+          </div>
         </div>
-      </div>
-      <div *ngIf="tagTypeaheadLoading===true">
-        <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+        <ul *ngIf="discussion?.tags" class="col-md-6 list-inline form-control-label">
+          <li role="button" (click)="removeTag(tag)"
+            class="label label-default list-inline-item"
+            *ngFor="let tag of discussion?.tags">
+            <span>{{tag.name}}<i class="fa fa-fw fa-remove"></i></span>
+          </li>
+        </ul>
       </div>
       <div *ngIf="tagTypeaheadNoResults===true"
         class="">
@@ -88,13 +103,7 @@
       <div *ngIf="tooManyTagsError" class="row col-sm-12 help-block text-danger">
         <small>Can't Add more than 3 tags</small>
       </div>
-      <ul *ngIf="discussion?.tags" class="list-inline">tags:
-        <li role="button" (click)="removeTag(tag)"
-          class="label label-default list-inline-item"
-          *ngFor="let tag of discussion?.tags">
-          <span>{{tag.name}}<i class="fa fa-fw fa-remove"></i></span>
-        </li>
-      </ul>
+      <br>
       <div class="btn-group" role="group">
         <button (click)="saveDiscussion()" class="btn btn-primary">Save</button>
         <button (click)="toggleEditMode()" class="btn btn-danger">Cancel</button>
