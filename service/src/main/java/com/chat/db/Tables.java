@@ -50,6 +50,9 @@ public class Tables {
     @Table("discussion_rank")
     public static class DiscussionRank extends Model {}
 
+    @Table("favorite_discussion_user")
+    public static class FavoriteDiscussionUser extends Model {}
+
     @Table("discussion_tag")
     public static class DiscussionTag extends Model {}
 

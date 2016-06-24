@@ -173,6 +173,31 @@ public class Actions {
         return TagObj.create(t);
     }
 
+    public static void saveFavoriteDiscussion(Long userId, Long discussionId) {
+
+
+        FavoriteDiscussionUser fdu = FavoriteDiscussionUser.findFirst(
+                "user_id = ? and discussion_id = ?", userId, discussionId);
+
+        if (fdu == null) {
+            FavoriteDiscussionUser.createIt("user_id", userId,
+                    "discussion_id", discussionId);
+        }
+
+
+    }
+
+    public static String deleteFavoriteDiscussion(Long userId, Long discussionId) {
+
+        FavoriteDiscussionUser fdu = FavoriteDiscussionUser.findFirst(
+                "user_id = ? and discussion_id = ?", userId, discussionId);
+
+        fdu.delete();
+
+        return Tools.buildMessage("Success");
+
+    }
+
     private static class UserFromHeader {
         private Long id, full_user_id, login_id;
         private String auth, name, email;

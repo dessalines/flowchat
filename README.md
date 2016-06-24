@@ -2,9 +2,7 @@
 
 # TODO
 
-- private discussions
-  - schema for private_discussion_user
-  - add a thing similar to tag adding, but for private discussion users
+
 - Serving multiple discussions
   - All discussions have a single moderator, whoever created the channel.
     - For private, any emails that aren't in the system should get emailed a link to the discussion.
@@ -25,11 +23,16 @@
   - Needs to have smart scrolling
   - Add popular tags
 - Poll every so often for new messages.
+- Add moderator abilities, removing comments, etc.
+- Add ability to remove your own comment, without actually deleting the comment and its subtree
+- Able to delete your own discussions
 - Add tooltips for everything, move to icons not text
 - Toastr / whatever messages for errors, message notifications
 
 # Finished
-
+- private discussions
+  - schema for private_discussion_user
+  - add a thing similar to tag adding, but for private discussion users
 - Clean up codebase
 - Add discussion editing for owners
 - Create discussion page

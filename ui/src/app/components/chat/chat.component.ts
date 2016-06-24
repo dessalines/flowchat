@@ -188,6 +188,7 @@ export class ChatComponent implements OnInit {
     this.clearTopReply = true;
     setTimeout(() => { this.clearTopReply = false }, 0);
 
+    this.userService.updateFavoriteDiscussions(this.discussionId);
 
   }
 

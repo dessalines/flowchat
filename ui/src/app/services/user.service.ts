@@ -1,54 +1,68 @@
 import { Injectable } from '@angular/core';
-import {User, Tools} from '../shared';
+import {User, Discussion, Tools} from '../shared';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { Headers, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
+import { Http, Response } from '@angular/http';
 
 @Injectable()
 export class UserService {
 
   private user: User;
 
+  private favoriteDiscussions: Array<Discussion> = [];
+
   private userSource = new BehaviorSubject<User>(this.user);
 
   public userObservable = this.userSource.asObservable();
 
-  constructor() {
-		this.setUserFromCookie();
+  private queryUsersUrl: string = 'http://localhost:4567/user_search/';
+
+  private fetchFavoriteDiscussionsUrl: string = 'http://localhost:4567/get_favorite_discussions';
+  private removeFavoriteDiscussionUrl: string = 'http://localhost:4567/remove_favorite_discussion/';
+
+
+  constructor(private http: Http) {
+    this.setUserFromCookie();
+    this.fetchFavoriteDiscussions();
   }
 
-	public getUser(): User {
+  public getUser(): User {
     return this.user;
   }
 
   public isAnonymousUser(): boolean {
-    return this.user != null && 
-    (this.user.auth === undefined || this.user.auth == 'undefined');
+    return this.user != null &&
+      (this.user.auth === undefined || this.user.auth == 'undefined');
   }
 
   public isFullUser() {
-    return this.user != null && 
-    !(this.user.auth === undefined || this.user.auth == 'undefined');
+    return this.user != null &&
+      !(this.user.auth === undefined || this.user.auth == 'undefined');
   }
 
   public setUser(user: User) {
-		this.user = user;
-		this.setCookies(this.user);
+    this.user = user;
+    this.setCookies(this.user);
   }
 
   setUserFromCookie() {
-		if (Tools.readCookie("uid") != null) {
-			this.user = {
-				id: Number(Tools.readCookie("uid")),
-				name: Tools.readCookie("name"),
-				auth: Tools.readCookie("auth")
-			}
-		}
-		console.log(this.user);
+    if (Tools.readCookie("uid") != null) {
+      this.user = {
+        id: Number(Tools.readCookie("uid")),
+        name: Tools.readCookie("name"),
+        auth: Tools.readCookie("auth")
+      }
+    }
+    console.log(this.user);
   }
 
   logout() {
-		this.user = null;
-		this.clearCookies();
+    this.user = null;
+    this.clearCookies();
   }
 
   sendLoginEvent(user: User) {
@@ -56,7 +70,7 @@ export class UserService {
   }
 
 
-	setCookies(user: User) {
+  setCookies(user: User) {
     Tools.createCookie("uid", user.id, user.expire_time);
     Tools.createCookie("auth", user.auth, user.expire_time);
     Tools.createCookie("name", user.name, user.expire_time);
@@ -76,6 +90,63 @@ export class UserService {
         'user': JSON.stringify(this.getUser())
       });
     return new RequestOptions({ headers: headers });
+  }
+
+  searchUsers(query: string) {
+    return this.http.get(this.queryUsersUrl + query)
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  private fetchFavoriteDiscussionsObs() {
+    return this.http.get(this.fetchFavoriteDiscussionsUrl, this.getOptions())
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  fetchFavoriteDiscussions() {
+    this.fetchFavoriteDiscussionsObs().subscribe(d => {
+      this.favoriteDiscussions = d.discussions;
+      console.log(this.favoriteDiscussions);
+    },
+    error => console.log(error));
+  }
+
+  removeFavoriteDiscussion(discussionId: string) {
+    return this.http.post(this.removeFavoriteDiscussionUrl + '/' + discussionId, null, this.getOptions())
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  getFavoriteDiscussions(): Array<Discussion> {
+    return this.favoriteDiscussions;
+  }
+
+  // This is different, because it doesn't actually do an http fetch
+  updateFavoriteDiscussions(discussionId: number) {
+
+    // Find it
+    let discussion = this.favoriteDiscussions.filter(discussion => discussion.id == discussionId)[0];
+    
+    console.log("discussion is");
+    console.log(discussion);
+
+    if (discussion === undefined) {
+      // then you have to refetch(for the name anyway)
+      this.fetchFavoriteDiscussions();
+    }
+  }
+
+  private handleError(error: any) {
+    // We'd also dig deeper into the error to get a better message
+    let errMsg = error.json().message;
+    return Observable.throw(errMsg);
+  }
+
+  private extractData(res: Response) {
+    let body = res.json();
+    console.log(body);
+    return body || {};
   }
 
 }

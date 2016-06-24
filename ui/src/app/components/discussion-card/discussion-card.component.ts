@@ -6,7 +6,6 @@ import { MomentPipe } from '../../pipes/moment.pipe';
 import {MarkdownPipe} from '../../pipes/markdown.pipe';
 import {UserService} from '../../services/user.service';
 import {DiscussionService} from '../../services/discussion.service';
-import {UserSearchService} from '../../services/user-search.service';
 import {TagService} from '../../services/tag.service';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
 import {MarkdownEditComponent} from '../markdown-edit/index';
@@ -54,7 +53,6 @@ export class DiscussionCardComponent implements OnInit {
   constructor(private userService: UserService,
     private discussionService: DiscussionService,
     private tagService: TagService,
-    private userSearchService: UserSearchService,
     private toasterService: ToasterService,
     private router: Router) { }
 
@@ -163,7 +161,7 @@ export class DiscussionCardComponent implements OnInit {
     this.userResultsObservable = this.userSearchTermStream
       .debounceTime(300)
       .distinctUntilChanged()
-      .switchMap((term: string) => this.userSearchService.searchUsers(term));
+      .switchMap((term: string) => this.userService.searchUsers(term));
 
     this.userResultsObservable.subscribe(t => this.userSearchResults = t.users);
     // this.tagSearch('a');

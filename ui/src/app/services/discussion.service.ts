@@ -61,7 +61,7 @@ export class DiscussionService {
 
   private handleError(error: any) {
     // We'd also dig deeper into the error to get a better message
-    let errMsg = error.json().error;
+    let errMsg = error.json().message;
 
     return Observable.throw(errMsg);
   }

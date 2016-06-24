@@ -48,7 +48,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return Tools.buildErrorMessage(e.getMessage());
+                return Tools.buildMessage(e.getMessage());
             }
 
         });
@@ -67,7 +67,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return Tools.buildErrorMessage(e.getMessage());
+                return Tools.buildMessage(e.getMessage());
             }
 
         });
@@ -88,7 +88,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return Tools.buildErrorMessage(e.getMessage());
+                return Tools.buildMessage(e.getMessage());
             }
 
         });
@@ -111,7 +111,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return Tools.buildErrorMessage(e.getMessage());
+                return Tools.buildMessage(e.getMessage());
             }
 
         });
@@ -144,7 +144,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return Tools.buildErrorMessage(e.getMessage());
+                return Tools.buildMessage(e.getMessage());
             }
 
         });
@@ -182,14 +182,14 @@ public class ChatService {
                 Map<Long, Integer> discussionRankMap = Transformations.convertDiscussionRankToMap(ids, userObj);
 
                 // Build discussion objects
-                Discussions discussions = new Discussions(dntvs, discussionRankMap);
+                Discussions discussions = Discussions.create(dntvs, discussionRankMap);
 
                 return discussions.json();
 
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return Tools.buildErrorMessage(e.getMessage());
+                return Tools.buildMessage(e.getMessage());
             }
 
         });
@@ -210,7 +210,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return Tools.buildErrorMessage(e.getMessage());
+                return Tools.buildMessage(e.getMessage());
             }
 
         });
@@ -226,7 +226,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return Tools.buildErrorMessage(e.getMessage());
+                return Tools.buildMessage(e.getMessage());
             }
 
         });
@@ -246,7 +246,57 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return Tools.buildErrorMessage(e.getMessage());
+                return Tools.buildMessage(e.getMessage());
+            }
+
+        });
+
+        get("/get_favorite_discussions", (req, res) -> {
+            try {
+                UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
+                LazyList<FavoriteDiscussionUser> favs = FavoriteDiscussionUser.where("user_id = ?", userObj.getId());
+
+                Set<Long> favDiscussionIds = favs.collectDistinct("discussion_id");
+
+                String json = "";
+                if (favDiscussionIds.size() > 0) {
+                    LazyList<DiscussionNoTextView> dntv = DiscussionNoTextView.where(
+                            "id in " + Tools.convertListToInQuery(favDiscussionIds));
+
+                    Discussions d = Discussions.create(dntv, null);
+
+                    log.info(d.json());
+
+                    json = d.json();
+                } else {
+                    json = "[]";
+                }
+
+                return json;
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return Tools.buildMessage(e.getMessage());
+            }
+
+        });
+
+        post("/remove_favorite_discussion/:id", (req, res) -> {
+            try {
+                UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
+                Long discussionId = Long.valueOf(req.params(":id"));
+
+                String message = Actions.deleteFavoriteDiscussion(userObj.getId(), discussionId);
+
+                return message;
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return Tools.buildMessage(e.getMessage());
             }
 
         });
@@ -268,7 +318,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return Tools.buildErrorMessage(e.getMessage());
+                return Tools.buildMessage(e.getMessage());
             }
 
 
@@ -286,7 +336,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return Tools.buildErrorMessage(e.getMessage());
+                return Tools.buildMessage(e.getMessage());
             }
 
         });
@@ -308,7 +358,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return Tools.buildErrorMessage(e.getMessage());
+                return Tools.buildMessage(e.getMessage());
             }
 
 

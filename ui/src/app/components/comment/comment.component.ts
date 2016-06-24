@@ -87,6 +87,8 @@ export class CommentComponent implements OnInit {
     this.replyingEvent.emit(this.showReply);
     this.replyText = "";
 
+    this.userService.updateFavoriteDiscussions(this.comment.discussionId);
+
   }
 
   editMessage() {

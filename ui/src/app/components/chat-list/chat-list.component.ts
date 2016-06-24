@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { RouteConfig, ROUTER_DIRECTIVES, Router, RouteParams } from '@angular/router-deprecated';
 import {ChatComponent} from '../chat/index';
 import {RouteParamService} from '../../services/route-param.service';
+import {UserService} from '../../services/user.service';
+
 @Component({
   moduleId: module.id,
   selector: 'app-chat-list',
@@ -17,7 +19,8 @@ import {RouteParamService} from '../../services/route-param.service';
 export class ChatListComponent implements OnInit {
 
   constructor(private router: Router,
-    private routeParams: RouteParams) {}
+    private routeParams: RouteParams,
+    private userService: UserService) {}
 
   ngOnInit() {
   	console.log(this.routeParams);
