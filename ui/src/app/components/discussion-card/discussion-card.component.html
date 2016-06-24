@@ -65,8 +65,7 @@
       <div class="checkbox">
         <label>
           <input [(ngModel)]="discussion.private_"
-            type="checkbox"
-          /> Private
+            type="checkbox" /> Private
         </label>
       </div>
       <app-markdown-edit [inputText]="discussion.text"
@@ -75,12 +74,12 @@
       <div class="form-group row">
         <label class="col-sm-1 form-control-label">Tags</label>
         <div class="col-md-5 input-group">
-          <input #term (keyup)="tagSearch(term.value)"
+          <input #tagTerm (keyup)="tagSearch(tagTerm.value)"
             [(ngModel)]="tagSearchTerm" [typeahead]="tagSearchResults"
-            (typeaheadOnSelect)="typeaheadOnSelect($event.item)"
+            (typeaheadOnSelect)="tagTypeaheadOnSelect($event.item)"
             [typeaheadOptionField]="'name'"
-            (typeaheadLoading)="changeTypeaheadLoading($event)"
-            (typeaheadNoResults)="changeTypeaheadNoResults($event)"
+            (typeaheadLoading)="tagChangeTypeaheadLoading($event)"
+            (typeaheadNoResults)="tagChangeTypeaheadNoResults($event)"
             class="form-control">
           <button (click)="createTag()" class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
           <div *ngIf="tagTypeaheadLoading===true">
@@ -94,14 +93,41 @@
             <span>{{tag.name}}<i class="fa fa-fw fa-remove"></i></span>
           </li>
         </ul>
+        <div *ngIf="tagTypeaheadNoResults===true"
+          class="">
+          <i class="fa fa-fw fa-remove"></i>No
+          Results Found
+        </div>
+        <div *ngIf="tooManyTagsError" class="row col-sm-12 help-block text-danger">
+          <small>Can't Add more than 3 tags</small>
+        </div>
       </div>
-      <div *ngIf="tagTypeaheadNoResults===true"
-        class="">
-        <i class="fa fa-fw fa-remove"></i>No
-        Results Found
-      </div>
-      <div *ngIf="tooManyTagsError" class="row col-sm-12 help-block text-danger">
-        <small>Can't Add more than 3 tags</small>
+      <div *ngIf="discussion?.private_" class="form-group row">
+        <label class="col-sm-1 form-control-label">Invite Users</label>
+        <div class="col-md-5">
+          <input #userTerm (keyup)="userSearch(userTerm.value)"
+            [(ngModel)]="userSearchTerm" [typeahead]="userSearchResults"
+            (typeaheadOnSelect)="userTypeaheadOnSelect($event.item)"
+            [typeaheadOptionField]="'name'"
+            (typeaheadLoading)="userChangeTypeaheadLoading($event)"
+            (typeaheadNoResults)="userChangeTypeaheadNoResults($event)"
+            class="form-control">
+          <div *ngIf="userTypeaheadLoading===true">
+            <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+          </div>
+        </div>
+        <ul *ngIf="discussion?.privateUsers" class="col-md-6 list-inline form-control-label">
+          <li role="button" (click)="removePrivateUser(privateUser)"
+            class="label label-default list-inline-item"
+            *ngFor="let privateUser of privateUsersWithoutYou()">
+            <span>{{privateUser.name}}<i class="fa fa-fw fa-remove"></i></span>
+          </li>
+        </ul>
+        <div *ngIf="userTypeaheadNoResults===true"
+          class="">
+          <i class="fa fa-fw fa-remove"></i>No
+          Results Found
+        </div>
       </div>
       <br>
       <div class="btn-group" role="group">

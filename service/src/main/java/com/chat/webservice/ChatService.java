@@ -48,7 +48,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return e.getMessage();
+                return Tools.buildErrorMessage(e.getMessage());
             }
 
         });
@@ -67,7 +67,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return e.getMessage();
+                return Tools.buildErrorMessage(e.getMessage());
             }
 
         });
@@ -88,7 +88,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return e.getMessage();
+                return Tools.buildErrorMessage(e.getMessage());
             }
 
         });
@@ -111,7 +111,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return e.getMessage();
+                return Tools.buildErrorMessage(e.getMessage());
             }
 
         });
@@ -134,6 +134,9 @@ public class ChatService {
 
                 DiscussionObj df = DiscussionObj.create(dfv, vote);
 
+                // check to make sure user is entitled to view it
+                df.checkPrivate(userObj);
+
                 log.info(df.json());
 
                 return df.json();
@@ -141,7 +144,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return e.getMessage();
+                return Tools.buildErrorMessage(e.getMessage());
             }
 
         });
@@ -159,13 +162,16 @@ public class ChatService {
 
                 Paginator p;
 
+                // TODO for now don't show where private is false
                 if (tagId != null) {
-                    p = new Paginator(DiscussionNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[]", tagId).
+                    p = new Paginator(DiscussionNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] and private is false", tagId).
+
                             orderBy(orderBy);
                 } else {
-                    p = new Paginator(DiscussionNoTextView.class, limit, "1=1").
+                    p = new Paginator(DiscussionNoTextView.class, limit, "private is false").
                             orderBy(orderBy);
                 }
+
 
                 LazyList<DiscussionNoTextView> dntvs = p.getPage(page);
 
@@ -183,7 +189,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return e.getMessage();
+                return Tools.buildErrorMessage(e.getMessage());
             }
 
         });
@@ -204,7 +210,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return e.getMessage();
+                return Tools.buildErrorMessage(e.getMessage());
             }
 
         });
@@ -220,7 +226,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return e.getMessage();
+                return Tools.buildErrorMessage(e.getMessage());
             }
 
         });
@@ -240,7 +246,7 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return e.getMessage();
+                return Tools.buildErrorMessage(e.getMessage());
             }
 
         });
@@ -255,14 +261,14 @@ public class ChatService {
 
                 LazyList<Tag> tagRows = Tag.find(queryStr.toString()).limit(5);
 
-                Tags tags = new Tags(tagRows);
+                Tags tags = Tags.create(tagRows);
 
                 return tags.json();
 
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return e.getMessage();
+                return Tools.buildErrorMessage(e.getMessage());
             }
 
 
@@ -280,8 +286,31 @@ public class ChatService {
             } catch (Exception e) {
                 res.status(666);
                 e.printStackTrace();
-                return e.getMessage();
+                return Tools.buildErrorMessage(e.getMessage());
             }
+
+        });
+
+        get("/user_search/:query", (req, res) -> {
+
+            try {
+
+                String query = req.params(":query");
+
+                String queryStr = Tools.constructQueryString(query, "name");
+
+                LazyList<User> userRows = User.find(queryStr.toString()).limit(5);
+
+                Users users = Users.create(userRows);
+
+                return users.json();
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return Tools.buildErrorMessage(e.getMessage());
+            }
+
 
         });
 

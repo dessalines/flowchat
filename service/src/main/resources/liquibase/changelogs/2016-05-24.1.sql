@@ -35,6 +35,8 @@ select d.id,
     count(distinct dr.id) as number_of_votes,
     array_agg(t.id order by t.id asc) as tag_ids,
     array_agg(t.name order by t.id asc) as tag_names,
+    array_agg(u2.id order by u2.id asc) as private_user_ids,
+    array_agg(u2.name order by u2.id asc) as private_user_names,
     d.created,
     d.modified
 from discussion as d
@@ -42,6 +44,8 @@ left join discussion_rank as dr on dr.discussion_id = d.id
 left join discussion_tag as dt on dt.discussion_id = d.id
 left join tag as t on dt.tag_id = t.id
 left join user_ as u on d.user_id = u.id
+left join private_discussion_user as pdu on pdu.discussion_id = d.id
+left join user_ as u2 on pdu.user_id = u2.id
 group by d.id, d.user_id, u.name, d.title, d.link, d.text_, d.private, dt.discussion_id, dr.discussion_id
 order by d.id;
 --
@@ -57,6 +61,8 @@ select id,
     number_of_votes,
     tag_ids,
     tag_names,
+    private_user_ids,
+    private_user_names,
     created,
     modified
 from discussion_full_view;

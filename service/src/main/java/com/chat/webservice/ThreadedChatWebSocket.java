@@ -60,7 +60,7 @@ public class ThreadedChatWebSocket {
 
         // send the updated users to everyone in the right scope(just discussion
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes, session);
-        broadcastMessage(filteredScopes, new Users(SessionScope.getUserObjects(filteredScopes)).json());
+        broadcastMessage(filteredScopes, Users.create(SessionScope.getUserObjects(filteredScopes)).json());
 
         log.info("session scope " + ss + " joined");
 
@@ -80,7 +80,7 @@ public class ThreadedChatWebSocket {
         // Send the updated users to everyone in the right scope
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes, session);
 
-        broadcastMessage(filteredScopes, new Users(SessionScope.getUserObjects(filteredScopes)).json());
+        broadcastMessage(filteredScopes, Users.create(SessionScope.getUserObjects(filteredScopes)).json());
 
     }
 

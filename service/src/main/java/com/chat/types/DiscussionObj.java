@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Created by tyler on 6/19/16.
@@ -18,6 +19,7 @@ public class DiscussionObj implements JSONWriter {
     private Boolean private_;
     private Integer avgRank, userRank, numberOfVotes;
     private List<TagObj> tags;
+    private List<UserObj> privateUsers;
     private Timestamp created, modified;
 
     public DiscussionObj() {}
@@ -34,6 +36,8 @@ public class DiscussionObj implements JSONWriter {
                          Integer numberOfVotes,
                          String tagIds,
                          String tagNames,
+                         String privateUserIds,
+                         String privateUserNames,
                          Timestamp created,
                          Timestamp modified) {
         this.id = id;
@@ -46,9 +50,21 @@ public class DiscussionObj implements JSONWriter {
         this.avgRank = avgRank;
         this.userRank = userRank;
         this.numberOfVotes = numberOfVotes;
-        this.tags = (!tagIds.equals("{NULL}")) ? setTags(tagIds, tagNames) : null;
+        this.tags = (!tagIds.contains("{NULL")) ? setTags(tagIds, tagNames) : null;
+        this.privateUsers = setPrivateUsers(privateUserIds, privateUserNames);
         this.created = created;
         this.modified = modified;
+
+
+    }
+
+    public void checkPrivate(UserObj userObj) {
+        if (getPrivate_().equals(true)) {
+            if (!getPrivateUsers().contains(userObj)) {
+                throw new NoSuchElementException("Private discussion, not allowed to view");
+            }
+        }
+
     }
 
     public static DiscussionObj create(Model d, Integer vote) {
@@ -64,6 +80,8 @@ public class DiscussionObj implements JSONWriter {
                 d.getInteger("number_of_votes"),
                 d.getString("tag_ids"),
                 d.getString("tag_names"),
+                d.getString("private_user_ids"),
+                d.getString("private_user_names"),
                 d.getTimestamp("created"),
                 d.getTimestamp("modified"));
     }
@@ -85,12 +103,32 @@ public class DiscussionObj implements JSONWriter {
         String[] names = Tools.pgArrayAggToArray(tagNames);
 
         for (int i = 0; i < ids.length; i++) {
-            tags.add(new TagObj(Long.valueOf(ids[i]), names[i]));
+            tags.add(TagObj.create(Long.valueOf(ids[i]), names[i]));
         }
 
         List<TagObj> dedupeTagObjs = new ArrayList<>(new LinkedHashSet<>(tags));
 
         return dedupeTagObjs;
+    }
+
+    public List<UserObj> setPrivateUsers(String privateUserIds, String privateUserNames) {
+        List<UserObj> users = new ArrayList<>();
+
+        // Add the creating user
+        UserObj creator = UserObj.create(getUserId(), getUserName());
+        users.add(creator);
+
+        if (!privateUserIds.contains("{NULL")) {
+            String[] ids = Tools.pgArrayAggToArray(privateUserIds);
+            String[] names = Tools.pgArrayAggToArray(privateUserNames);
+            for (int i = 0; i < ids.length; i++) {
+                users.add(UserObj.create(Long.valueOf(ids[i]), names[i]));
+            }
+        }
+
+        List<UserObj> dedupeUserObjs = new ArrayList<>(new LinkedHashSet<>(users));
+
+        return dedupeUserObjs;
     }
 
     public String getText() {
@@ -133,6 +171,10 @@ public class DiscussionObj implements JSONWriter {
 
     public List<TagObj> getTags() {
         return tags;
+    }
+
+    public List<UserObj> getPrivateUsers() {
+        return privateUsers;
     }
 
     public Timestamp getCreated() {

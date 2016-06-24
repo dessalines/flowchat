@@ -9,7 +9,7 @@ public class TagObj implements JSONWriter {
     private Long id;
     private String name;
 
-    public TagObj(Long id, String name) {
+    private TagObj(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -19,6 +19,10 @@ public class TagObj implements JSONWriter {
     public static TagObj create(Tag tag) {
         return new TagObj(tag.getLongId(),
                 tag.getString("name"));
+    }
+
+    public static TagObj create(Long id, String name) {
+        return new TagObj(id, name);
     }
 
     public Long getId() {

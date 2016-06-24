@@ -12,12 +12,6 @@ export class TagService {
   private queryTagsUrl: string = 'http://localhost:4567/tag_search/';
   private createTagUrl: string = 'http://localhost:4567/create_tag';
 
-  private getDiscussionsUrl(limit: number, page: number, tagId: string,
-    orderBy: string): string {
-    return 'http://localhost:4567/get_discussions/' + tagId + '/' +
-      limit + '/' + page + '/' + orderBy;
-  }
-
   constructor(private http: Http) {}
 
   getTag(id: string) {

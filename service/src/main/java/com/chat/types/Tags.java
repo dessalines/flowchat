@@ -15,11 +15,11 @@ import java.util.Map;
 public class Tags implements JSONWriter {
     private List<TagObj> tags;
 
-    public Tags(LazyList<Tag> tags) {
-        this.tags = create(tags);
+    private Tags(List<TagObj> tags) {
+        this.tags = tags;
     }
 
-    public static List<TagObj> create(LazyList<Tag> tags) {
+    public static Tags create(LazyList<Tag> tags) {
         // Convert to a list of discussion objects
         List<TagObj> tos = new ArrayList<>();
 
@@ -28,7 +28,7 @@ public class Tags implements JSONWriter {
             tos.add(to);
         }
 
-        return tos;
+        return new Tags(tos);
     }
 
     public List<TagObj> getTags() {

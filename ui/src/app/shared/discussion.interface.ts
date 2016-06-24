@@ -1,4 +1,5 @@
 import {Tag} from './tag.interface.ts';
+import {User} from './user.interface.ts';
 
 export interface Discussion {
   id: number;
@@ -12,6 +13,7 @@ export interface Discussion {
   numberOfVotes?: number;
   tags?: Array<Tag>;
   private_?: boolean;
+  privateUsers?: Array<User>;
   created: number;
   modified?: number;
 }

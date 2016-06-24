@@ -189,4 +189,8 @@ public class Tools {
 
     }
 
+    public static String buildErrorMessage(String error) {
+        return "{\"error\": \"" + error + "\"}";
+    }
+
 }
