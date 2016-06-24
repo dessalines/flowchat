@@ -115,10 +115,10 @@ public class Actions {
 
     public static DiscussionObj createDiscussion(Long userId) {
 
-        String uuid = UUID.randomUUID().toString();
+        String title = "A new discussion";
 
         Discussion d = Discussion.createIt("user_id", userId,
-                "title", uuid);
+                "title", title);
 
 
         DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", d.getLongId());

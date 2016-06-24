@@ -50,7 +50,6 @@ export class DiscussionCardComponent implements OnInit {
 
   ngOnInit() {
     this.setupTagSearch();
-
   }
 
   ngAfterViewInit() {
@@ -98,7 +97,7 @@ export class DiscussionCardComponent implements OnInit {
       .switchMap((term: string) => this.tagService.searchTags(term));
 
     this.tagResultsObservable.subscribe(t => this.tagSearchResults = t.tags);
-    this.tagSearch('a');
+    // this.tagSearch('a');
   }
 
   tagSearch(term: string) {

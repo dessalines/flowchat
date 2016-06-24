@@ -16,21 +16,12 @@ export class LoginService {
   private loginUrl: string = 'http://localhost:4567/login';
   private signupUrl: string = 'http://localhost:4567/signup';
 
-  headers: Headers;
-  options: RequestOptions;
-
   constructor(private http: Http,
     private userService: UserService) { 
-    this.headers = new Headers(
-      {
-        'Content-Type': 'application/json',
-        'user': JSON.stringify(this.userService.getUser())
-      });
-    this.options = new RequestOptions({ headers: this.headers });
   }
 
   getOrCreateUser(): Observable<User> {
-    return this.http.get(this.getOrCreateUrl, this.options)
+    return this.http.get(this.getOrCreateUrl, this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }

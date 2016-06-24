@@ -10,7 +10,8 @@ export interface Discussion {
   avgRank?: number;
   userRank?: number;
   numberOfVotes?: number;
-  tags?: Array<Tag>
+  tags?: Array<Tag>;
+  private_?: boolean;
   created: number;
   modified?: number;
 }
