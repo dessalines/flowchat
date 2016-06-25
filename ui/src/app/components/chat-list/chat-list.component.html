@@ -1,9 +1,15 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-lg-2 col-xs-12">
-      <ul *ngIf="userService?.getFavoriteDiscussions()" class="list-group">
-        <li *ngFor="let discussion of userService.getFavoriteDiscussions()" class="list-group-item">
-          <a [routerLink]="['/Discussion', {discussionId: discussion.id}]">{{discussion.title}}</a><span class="fa fa-fw fa-remove pull-xs-right"></span>
+      <ul *ngIf="userService?.getFavoriteDiscussions()"
+        class="list-group">
+        <li *ngFor="let discussion of userService.getFavoriteDiscussions()"
+          class="list-group-item">
+          <a [routerLink]="['/Discussion', {discussionId: discussion.id}]"
+            class="link-unstyled">{{discussion.title}}</a>
+          <a
+            role="button" (click)="userService.removeFavoriteDiscussion(discussion.id)"
+            class="link-unstyled fa fa-fw fa-remove pull-xs-right"></a>
         </li>
       </ul>
     </div>

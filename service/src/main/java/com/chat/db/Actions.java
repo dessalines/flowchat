@@ -173,7 +173,7 @@ public class Actions {
         return TagObj.create(t);
     }
 
-    public static void saveFavoriteDiscussion(Long userId, Long discussionId) {
+    public static DiscussionObj saveFavoriteDiscussion(Long userId, Long discussionId) {
 
 
         FavoriteDiscussionUser fdu = FavoriteDiscussionUser.findFirst(
@@ -182,7 +182,14 @@ public class Actions {
         if (fdu == null) {
             FavoriteDiscussionUser.createIt("user_id", userId,
                     "discussion_id", discussionId);
+
+            DiscussionNoTextView dntv = DiscussionNoTextView.findFirst("id = ?", discussionId);
+
+            return DiscussionObj.create(dntv, null);
+        } else {
+            return null;
         }
+
 
 
     }

@@ -155,6 +155,8 @@ public class ThreadedChatWebSocket {
         // Collect only works on refetch
         LazyList<Model> comments = fetchComments(ss);
 
+        log.info(ss.toString());
+
         // Necessary for comment tree
         Array arr = (Array) comments.collect("breadcrumbs", "id", replyData.getParentId()).get(0);
 
@@ -162,7 +164,7 @@ public class ThreadedChatWebSocket {
 
 
         Comment newComment = Actions.createComment(ss.getUserObj().getId(),
-                1L,
+                ss.getDiscussionId(),
                 parentBreadCrumbs,
                 replyData.getReply());
 
@@ -182,8 +184,9 @@ public class ThreadedChatWebSocket {
         broadcastMessage(filteredScopes, co.json("reply"));
 
         // TODO find a way to do this without having to query every time?
-        Actions.saveFavoriteDiscussion(ss.getUserObj().getId(), ss.getDiscussionId());
-
+        DiscussionObj do_ = Actions.saveFavoriteDiscussion(ss.getUserObj().getId(), ss.getDiscussionId());
+        log.info(do_.json("discussion"));
+        if (do_ != null) sendMessage(session, do_.json("discussion"));
     }
 
 
@@ -216,7 +219,7 @@ public class ThreadedChatWebSocket {
 
 
         Comment newComment = Actions.createComment(ss.getUserObj().getId(),
-                1L,
+                ss.getDiscussionId(),
                 null,
                 topReplyData.getTopReply());
 
@@ -233,7 +236,8 @@ public class ThreadedChatWebSocket {
         broadcastMessage(filteredScopes, co.json("reply"));
 
         // TODO find a way to do this without having to query every time?
-        Actions.saveFavoriteDiscussion(ss.getUserObj().getId(), ss.getDiscussionId());
+        DiscussionObj do_ = Actions.saveFavoriteDiscussion(ss.getUserObj().getId(), ss.getDiscussionId());
+        if (do_ != null) sendMessage(session, do_.json("discussion"));
 
     }
 
@@ -279,6 +283,14 @@ public class ThreadedChatWebSocket {
                 e.printStackTrace();
             }
         });
+    }
+
+    public static void sendMessage(Session session, String json) {
+        try {
+            session.getRemote().sendString(json);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private SessionScope setupSessionScope(Session session) {

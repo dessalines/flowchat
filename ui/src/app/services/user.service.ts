@@ -109,10 +109,22 @@ export class UserService {
       this.favoriteDiscussions = d.discussions;
       console.log(this.favoriteDiscussions);
     },
-    error => console.log(error));
+      error => console.log(error));
   }
 
-  removeFavoriteDiscussion(discussionId: string) {
+  removeFavoriteDiscussion(discussionId: number) {
+    // Remove it from the list
+    let discussion = this.favoriteDiscussions.filter(discussion => discussion.id == discussionId)[0];
+    let index = this.favoriteDiscussions.indexOf(discussion);
+
+    this.favoriteDiscussions.splice(index, 1);
+
+    this.removeFavoriteDiscussionObjs(discussionId).subscribe(null,
+      error => console.log(error));
+
+  }
+
+  private removeFavoriteDiscussionObjs(discussionId: number) {
     return this.http.post(this.removeFavoriteDiscussionUrl + '/' + discussionId, null, this.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
@@ -123,23 +135,31 @@ export class UserService {
   }
 
   // This is different, because it doesn't actually do an http fetch
-  updateFavoriteDiscussions(discussionId: number) {
+  updateFavoriteDiscussions(discussion: Discussion) {
 
-    // Find it
-    let discussion = this.favoriteDiscussions.filter(discussion => discussion.id == discussionId)[0];
-    
-    console.log("discussion is");
-    console.log(discussion);
-
-    if (discussion === undefined) {
-      // then you have to refetch(for the name anyway)
-      this.fetchFavoriteDiscussions();
+    if (this.favoriteDiscussions === undefined) {
+      this.favoriteDiscussions = [];
     }
+
+    this.favoriteDiscussions.push(discussion);
+    console.log(this.favoriteDiscussions);
+    // // Find it
+    // discussion = this.favoriteDiscussions.filter(discussion => discussion.id == discussionId)[0];
+
+    // console.log("discussion is");
+    // console.log(discussion);
+
+
+    // if (discussion === undefined) {
+    //   // then you have to refetch(for the name anyway)
+    //   this.fetchFavoriteDiscussions();
+    // }
   }
 
   private handleError(error: any) {
     // We'd also dig deeper into the error to get a better message
-    let errMsg = error.json().message;
+    // let errMsg = error.json().message;
+    let errMsg = error;
     return Observable.throw(errMsg);
   }
 
