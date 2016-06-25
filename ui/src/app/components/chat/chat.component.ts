@@ -170,6 +170,10 @@ export class ChatComponent implements OnInit {
       }
     }
 
+    if (data.discussion) {
+      this.userService.updateFavoriteDiscussions(data.discussion);
+    }
+
   }
 
   setTopReply($event) {
@@ -187,8 +191,6 @@ export class ChatComponent implements OnInit {
     // necessary to reload the top replier
     this.clearTopReply = true;
     setTimeout(() => { this.clearTopReply = false }, 0);
-
-    this.userService.updateFavoriteDiscussions(this.discussionId);
 
   }
 

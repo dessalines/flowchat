@@ -1,13 +1,9 @@
 <div class="card">
   <div class="card-block">
     <div *ngIf="!editMode">
-      <h2 *ngIf="!discussion?.link" class="card-title">{{discussion?.title}}
+      <h2 class="card-title">
+        <a [routerLink]="['/Discussion', {discussionId: discussion?.id}]" class="link-unstyled">{{discussion?.title}} </a>
         <small *ngIf="discussion && isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()"></i></small>
-      </h2>
-      <h2 *ngIf="discussion?.link" class="card-title">
-        <a href="{{discussion?.link}}" target="_blank" class="link-unstyled">{{discussion?.title}} </a>
-        <small *ngIf="discussion && isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()"></i></small>
-       
       </h2>
       <p *ngIf="discussion?.text" class="card-text"
         [innerHTML]="discussion.text | markdown"></p>
@@ -34,7 +30,8 @@
         <li *ngIf="discussion?.numberOfVotes" class="text-muted list-inline-item">
           <small> {{discussion?.numberOfVotes}} votes</small></li>
         <li *ngIf="discussion?.link" class="list-inline-item">
-          <a href="{{discussion?.link}}" target="_blank"><i class="fa fa-external-link"
+          <a class="link-unstyled" href="{{discussion?.link}}"
+            target="_blank"><i class="fa fa-external-link"
               aria-hidden="true"></i></a>
         </li>
         <li class="list-inline-item" role="button"><i class="fa fa-fw fa-comments-o"

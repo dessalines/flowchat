@@ -270,8 +270,10 @@ public class ChatService {
 
                     json = d.json();
                 } else {
-                    json = "[]";
+                    json = "{\"Discussions\": []}";
                 }
+
+                log.info(json);
 
                 return json;
 
