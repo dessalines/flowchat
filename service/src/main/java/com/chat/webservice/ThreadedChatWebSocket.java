@@ -2,7 +2,6 @@ package com.chat.webservice;
 
 import ch.qos.logback.classic.Logger;
 import com.chat.db.Actions;
-import com.chat.db.Transformations;
 import com.chat.tools.Tools;
 import com.chat.types.*;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -101,6 +100,9 @@ public class ThreadedChatWebSocket {
             case TopReply:
                 messageTopReply(session, dataStr);
                 break;
+            case Delete:
+                messageDelete(session, dataStr);
+                break;
             case Vote:
                 saveCommentVote(session, dataStr);
                 break;
@@ -132,6 +134,8 @@ public class ThreadedChatWebSocket {
                         return MessageType.TopReply;
                     case "rank":
                         return MessageType.Vote;
+                    case "deleteId":
+                        return MessageType.Delete;
                 }
             }
         } catch (IOException e) {
@@ -142,7 +146,7 @@ public class ThreadedChatWebSocket {
     }
 
     enum MessageType {
-        Edit, Reply, TopReply, Vote;
+        Edit, Reply, TopReply, Vote, Delete
     }
 
     public void messageReply(Session session, String replyDataStr) {
@@ -185,7 +189,6 @@ public class ThreadedChatWebSocket {
 
         // TODO find a way to do this without having to query every time?
         DiscussionObj do_ = Actions.saveFavoriteDiscussion(ss.getUserObj().getId(), ss.getDiscussionId());
-        log.info(do_.json("discussion"));
         if (do_ != null) sendMessage(session, do_.json("discussion"));
     }
 
@@ -197,6 +200,24 @@ public class ThreadedChatWebSocket {
         EditData editData = EditData.fromJson(editDataStr);
 
         Comment c = Actions.editComment(editData.getId(), editData.getEdit());
+
+        CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", c.getLongId());
+
+        // Convert to a proper commentObj, but with nothing embedded
+        CommentObj co = CommentObj.create(ctv, null);
+
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
+                sessionScopes, session, co.getBreadcrumbs());
+
+        broadcastMessage(filteredScopes, co.json("edit"));
+
+    }
+
+    public void messageDelete(Session session, String deleteDataStr) {
+
+        DeleteData deleteData = DeleteData.fromJson(deleteDataStr);
+
+        Comment c = Actions.deleteComment(deleteData.getDeleteId());
 
         CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", c.getLongId());
 

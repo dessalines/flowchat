@@ -268,6 +268,7 @@ export class ChatComponent implements OnInit {
     comments[index].modified = editedComment.modified;
     comments[index].avgRank = editedComment.avgRank;
     comments[index].numberOfVotes = editedComment.numberOfVotes;
+    comments[index].deleted = editedComment.deleted;
 
     // do a sort at that level:
     comments.sort((a, b) => {

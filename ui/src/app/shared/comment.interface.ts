@@ -16,4 +16,5 @@ export interface Comment {
 	avgRank?: number;
 	userRank?: number;
 	numberOfVotes?: number;
+	deleted?: boolean;
 }

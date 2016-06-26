@@ -73,6 +73,18 @@ public class Actions {
 
     }
 
+    public static Comment deleteComment(Long commentId) {
+        // Find the comment
+        Comment c = Comment.findFirst("id = ?" , commentId);
+
+        Timestamp cTime = new Timestamp(new Date().getTime());
+
+        // Create with add modified date
+        c.set("deleted" , true, "modified" , cTime).saveIt();
+
+        return c;
+    }
+
     public static UserObj getOrCreateUserObj(Long id, String auth) {
 
         log.info("getOrCreateUser id = " + id + " auth = " + auth);
@@ -204,6 +216,8 @@ public class Actions {
         return Tools.buildMessage("Success");
 
     }
+
+
 
     private static class UserFromHeader {
         private Long id, full_user_id, login_id;

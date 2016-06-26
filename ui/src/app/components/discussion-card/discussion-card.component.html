@@ -10,7 +10,7 @@
       <small>
         <ul *ngIf="discussion?.tags" class="list-inline">tags:
           <li class="label label-default list-inline-item" *ngFor="let tag of discussion?.tags">
-            <a class="link-unstyled" [routerLink]="['/Tag', {tagId: tag.id}]">{{tag.name}}</a>
+            <a class="link-unstyled" [routerLink]="['/Tag', {tagId: tag.id}]">{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
       </small>
@@ -87,7 +87,7 @@
           <li role="button" (click)="removeTag(tag)"
             class="label label-default list-inline-item"
             *ngFor="let tag of discussion?.tags">
-            <span>{{tag.name}}<i class="fa fa-fw fa-remove"></i></span>
+            <span>{{removeQuotes(tag.name)}}<i class="fa fa-fw fa-remove"></i></span>
           </li>
         </ul>
         <div *ngIf="tagTypeaheadNoResults===true"
