@@ -14,7 +14,27 @@
     </div>
   </div>
 </div>
-<nav *ngIf="!topParentId && !clearTopReply" class="navbar navbar-fixed-bottom navbar-light bg-faded">
-  <app-markdown-edit (textEvent)="setTopReply($event)" [rows]="1"></app-markdown-edit>
-  <button (click)="sendTopReply()" class="btn btn-primary-outline pull-xs-right special-nav-button" type="submit">Send</button>
+<nav *ngIf="!topParentId && !clearTopReply"
+  class="navbar navbar-fixed-bottom navbar-light bg-faded">
+  <app-markdown-edit (textEvent)="setTopReply($event)"
+    [rows]="1"></app-markdown-edit>
+  <button (click)="sendTopReply()" class="btn btn-primary-outline pull-xs-right special-nav-button"
+    type="submit">Send</button>
 </nav>
+<div bsModal #reconnectModal="bs-modal" class="modal fade"
+  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body text-xs-center">
+        <button id="closeModalButton" type="button"
+          class="close" (click)="reconnectModal.hide()"
+          aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+          <p>Click to Reconnect...</p>
+          <button class="btn btn-primary" (click)="websocketReconnect()">Reconnect</button>
+      </div>
+    </div>
+  </div>
+</div>
