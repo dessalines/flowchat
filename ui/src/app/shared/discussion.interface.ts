@@ -14,6 +14,7 @@ export interface Discussion {
   tags?: Array<Tag>;
   private_?: boolean;
   privateUsers?: Array<User>;
+  deleted?: boolean;
   created: number;
   modified?: number;
 }

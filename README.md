@@ -13,14 +13,14 @@
   - Needs to have smart scrolling
   - Add popular tags
 - Poll every so often for new messages.
-- Add ability to delete your own comment(schema changes)
 - Add moderator abilities, removing comments, blocking users, etc.
-- Add ability to remove your own comment, without actually deleting the comment and its subtree
-- Able to delete your own discussions
 - Add tooltips for everything, move to icons not text
-- Toastr / whatever messages for errors, message notifications
 
 # Finished
+- Add ability to delete your own comment(schema changes)
+- Add ability to remove your own comment, without actually deleting the comment and its subtree
+- Toastr / whatever messages for errors, message notifications
+- Able to delete your own discussions
 - Favorite/'watched discussions', anything you comment in is automatically added to favorites/saved.
 - Serving multiple discussions
   - All discussions have a single moderator, whoever created the channel.

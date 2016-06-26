@@ -148,6 +148,8 @@ public class Actions {
         if (do_.getLink() != null) d.set("link" , do_.getLink());
         if (do_.getText() != null) d.set("text_" , do_.getText());
         if (do_.getPrivate_() != null) d.set("private" , do_.getPrivate_());
+        if (do_.getDeleted() != null) d.set("deleted", do_.getDeleted());
+
         d.set("modified" , cTime);
         d.saveIt();
 

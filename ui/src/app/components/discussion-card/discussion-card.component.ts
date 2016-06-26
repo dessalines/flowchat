@@ -85,6 +85,11 @@ export class DiscussionCardComponent implements OnInit {
       });
   }
 
+  deleteDiscussion() {
+    this.discussion.deleted = true;
+    this.saveDiscussion();
+  }
+
   toggleShowVoteSlider() {
     this.showVoteSlider = !this.showVoteSlider;
   }

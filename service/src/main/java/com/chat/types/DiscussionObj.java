@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 public class DiscussionObj implements JSONWriter {
     private Long id, userId;
     private String userName, title, link, text;
-    private Boolean private_;
+    private Boolean private_, deleted;
     private Integer avgRank, userRank, numberOfVotes;
     private List<TagObj> tags;
     private List<UserObj> privateUsers;
@@ -38,6 +38,7 @@ public class DiscussionObj implements JSONWriter {
                          String tagNames,
                          String privateUserIds,
                          String privateUserNames,
+                         Boolean deleted,
                          Timestamp created,
                          Timestamp modified) {
         this.id = id;
@@ -52,6 +53,7 @@ public class DiscussionObj implements JSONWriter {
         this.numberOfVotes = numberOfVotes;
         this.tags = (!tagIds.contains("{NULL")) ? setTags(tagIds, tagNames) : null;
         this.privateUsers = setPrivateUsers(privateUserIds, privateUserNames);
+        this.deleted = deleted;
         this.created = created;
         this.modified = modified;
 
@@ -82,6 +84,7 @@ public class DiscussionObj implements JSONWriter {
                 d.getString("tag_names"),
                 d.getString("private_user_ids"),
                 d.getString("private_user_names"),
+                d.getBoolean("deleted"),
                 d.getTimestamp("created"),
                 d.getTimestamp("modified"));
     }
@@ -184,4 +187,6 @@ public class DiscussionObj implements JSONWriter {
     public Timestamp getModified() {
         return modified;
     }
+
+    public Boolean getDeleted() { return deleted; }
 }
