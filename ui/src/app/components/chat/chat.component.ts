@@ -1,4 +1,4 @@
-import {Component, Input, provide, OnInit} from '@angular/core';
+import {Component, Input, provide, OnInit, ViewChild} from '@angular/core';
 import { HTTP_PROVIDERS }    from '@angular/http';
 import {ThreadedChatService} from '../../services/threaded-chat.service';
 import {Comment, User, Discussion, Tag} from '../../shared';
@@ -11,6 +11,7 @@ import { RouteConfig, ROUTER_DIRECTIVES, Router, RouteParams} from '@angular/rou
 import {RouteParamService} from '../../services/route-param.service';
 import {MarkdownEditComponent} from '../markdown-edit/index';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
+import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
 
 
 @Component({
@@ -19,7 +20,8 @@ import {ToasterService} from 'angular2-toaster/angular2-toaster';
   templateUrl: 'chat.component.html',
   styleUrls: ['chat.component.css'],
   providers: [HTTP_PROVIDERS, ThreadedChatService],
-  directives: [CommentComponent, MarkdownEditComponent, DiscussionCardComponent]
+  directives: [CommentComponent, MarkdownEditComponent, DiscussionCardComponent,MODAL_DIRECTVES],
+  viewProviders: [BS_VIEW_PROVIDERS]
 })
 export class ChatComponent implements OnInit {
 
@@ -45,6 +47,8 @@ export class ChatComponent implements OnInit {
 
   // This is set to true on ngOnDestroy, to not do an alert for reconnect
   private websocketSoftClose: boolean = false;
+
+  @ViewChild('reconnectModal') reconnectModal;
 
   constructor(private threadedChatService: ThreadedChatService,
     private userService: UserService,
@@ -119,16 +123,16 @@ export class ChatComponent implements OnInit {
       if (!this.websocketSoftClose) {
         console.log('ws connection closed');
 
-        alert('Push okay to Reconnect...');
-
-        this.websocketReconnect();
+        this.reconnectModal.show();
       }
     });
   }
 
+
   websocketReconnect() {
     this.threadedChatService.connect(this.discussionId, this.topParentId);
     this.subscribeToChat();
+    this.reconnectModal.hide();
   }
 
 
