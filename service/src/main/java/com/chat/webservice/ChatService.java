@@ -164,11 +164,12 @@ public class ChatService {
 
                 // TODO for now don't show where private is false
                 if (tagId != null) {
-                    p = new Paginator(DiscussionNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] and private is false", tagId).
+                    p = new Paginator(DiscussionNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
+                            "and private is false and deleted is false", tagId).
 
                             orderBy(orderBy);
                 } else {
-                    p = new Paginator(DiscussionNoTextView.class, limit, "private is false").
+                    p = new Paginator(DiscussionNoTextView.class, limit, "private is false and deleted is false").
                             orderBy(orderBy);
                 }
 
