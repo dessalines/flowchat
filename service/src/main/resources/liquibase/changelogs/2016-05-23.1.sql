@@ -37,6 +37,7 @@ create table discussion (
     link varchar(255),
     text_ text,
     private boolean not null default false,
+    deleted boolean not null default false,
     created timestamp default current_timestamp,
     modified timestamp
 );
@@ -194,5 +195,5 @@ insert into comment_tree (parent_id, child_id, path_length)
 
 
 
---rollback drop table login cascade; drop table full_user cascade; drop table comment cascade ; drop table user_ cascade; drop table comment_tree cascade; drop table discussion cascade; drop table comment_rank cascade; ;drop table discussion_tag cascade; drop table discussion_rank cascade; drop table private_discussion_user cascade;;drop table tag cascade;
+--rollback drop table login cascade; drop table full_user cascade; drop table comment cascade ; drop table user_ cascade; drop table comment_tree cascade; drop table discussion cascade; drop table comment_rank cascade; ;drop table discussion_tag cascade; drop table discussion_rank cascade; drop table private_discussion_user cascade;;drop table tag cascade; drop table favorite_discussion_user cascade;
 

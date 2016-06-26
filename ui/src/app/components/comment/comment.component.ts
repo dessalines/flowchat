@@ -88,6 +88,10 @@ export class CommentComponent implements OnInit {
     this.replyText = "";
   }
 
+  deleteComment() {
+    this.threadedChatService.send(this.deleteData());
+  }
+
   editMessage() {
     this.threadedChatService.send(this.editData());
     this.showEdit = false;
@@ -121,6 +125,12 @@ export class CommentComponent implements OnInit {
     return {
       id: this.comment.id,
       edit: this.editText,
+    }
+  }
+
+  private deleteData(): DeleteData {
+    return {
+      deleteId: this.comment.id
     }
   }
 
@@ -167,6 +177,10 @@ interface ReplyData {
 interface EditData {
   id: number;
   edit: string;
+}
+
+interface DeleteData {
+  deleteId: number;
 }
 
 interface CommentRankData {

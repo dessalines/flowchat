@@ -2,34 +2,35 @@
 
 # TODO
 
-
-- Serving multiple discussions
-  - All discussions have a single moderator, whoever created the channel.
-    - For private, any emails that aren't in the system should get emailed a link to the discussion.
-  - Tags/Hashtags(with smart linking)(maximum of 3 - 5)
-	- Discussions on left [1](http://v4-alpha.getbootstrap.com/examples/dashboard/)
-	- Set up like Stash, [nodebb](https://github.com/NodeBB/NodeBB), reddit
-  - Left bar will be all your discussions that aren't archived(x'd out)
-  - When you comment in a discussion, it gets added to your left bar.
-  - Don't want mods to be able to squat on tag names, want community moderation.
-- Favorite/'watched discussions', anything you comment in is automatically added to favorites/saved.
+- Replace alert with reconnect modal
 - Top nav with bell alerts for if someone replied directly to your comment, clicking goes to that discussion comment parent. 
 - Search bar, search for (public) discussions, or tags
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - Figure out how to get thumbnails from links.... might be tough for non-imgur-like things. 
 - Build startup documentation, setting up postgres, git clone. 
-- Add trending algorithms 
+- Add trending algorithms [1](http://sorentwo.com/2013/12/30/let-postgres-do-the-work.html)
 - Front page is the list of discussions.
   - Needs to have smart scrolling
   - Add popular tags
 - Poll every so often for new messages.
-- Add moderator abilities, removing comments, etc.
+- Add ability to delete your own comment(schema changes)
+- Add moderator abilities, removing comments, blocking users, etc.
 - Add ability to remove your own comment, without actually deleting the comment and its subtree
 - Able to delete your own discussions
 - Add tooltips for everything, move to icons not text
 - Toastr / whatever messages for errors, message notifications
 
 # Finished
+- Favorite/'watched discussions', anything you comment in is automatically added to favorites/saved.
+- Serving multiple discussions
+  - All discussions have a single moderator, whoever created the channel.
+    - For private, any emails that aren't in the system should get emailed a link to the discussion.
+  - Tags/Hashtags(with smart linking)(maximum of 3 - 5)
+  - Discussions on left [1](http://v4-alpha.getbootstrap.com/examples/dashboard/)
+  - Set up like Stash, [nodebb](https://github.com/NodeBB/NodeBB), reddit
+  - Left bar will be all your discussions that aren't archived(x'd out)
+  - When you comment in a discussion, it gets added to your left bar.
+  - Don't want mods to be able to squat on tag names, want community moderation.
 - private discussions
   - schema for private_discussion_user
   - add a thing similar to tag adding, but for private discussion users

@@ -203,4 +203,8 @@ export class DiscussionCardComponent implements OnInit {
     return this.discussion.privateUsers.slice(1);
   }
 
+  removeQuotes(text: string) {
+    return text.replace(/['"]+/g, '');
+  }
+
 }
