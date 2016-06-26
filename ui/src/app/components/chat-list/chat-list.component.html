@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-lg-2 col-xs-12">
+    <div class="col-lg-3 col-xs-12">
       <div class="card">
         <div class="card-header">
           Favorite Discussions
@@ -9,7 +9,7 @@
           class="list-group">
           <li *ngFor="let discussion of userService.getFavoriteDiscussions()"
             class="list-group-item">
-            <a [routerLink]="['/Discussion', {discussionId: discussion.id}]"
+            <a class="" [routerLink]="['/Discussion', {discussionId: discussion.id}]"
               class="link-unstyled">{{discussion.title}}</a>
             <a role="button" (click)="userService.removeFavoriteDiscussion(discussion.id)"
               class="link-unstyled fa fa-fw fa-remove pull-xs-right"></a>
@@ -17,7 +17,7 @@
         </ul>
       </div>
     </div>
-    <div class="col-lg-10 col-xs-12">
+    <div class="col-lg-9 col-xs-12">
       <router-outlet></router-outlet>
     </div>
   </div>
