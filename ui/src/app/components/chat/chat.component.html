@@ -7,10 +7,10 @@
   </div>
   <div class="col-xs-12 col-lg-2">
     <div class="card">
-      <div class="card-block">
-        <h4 class="card-title">Users</h4>
-        <dd *ngFor="let user of users">{{user.name}}</dd>
-      </div>
+      <div class="card-header">Users</div>
+      <ul class="list-group">
+        <li *ngFor="let user of users" class="list-group-item">{{user.name}}</li>
+      </ul>
     </div>
   </div>
 </div>
@@ -32,8 +32,8 @@
           aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-          <p>Click to Reconnect...</p>
-          <button class="btn btn-primary" (click)="websocketReconnect()">Reconnect</button>
+        <p>Click to Reconnect...</p>
+        <button class="btn btn-primary" (click)="websocketReconnect()">Reconnect</button>
       </div>
     </div>
   </div>

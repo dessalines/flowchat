@@ -4,7 +4,7 @@
       <div *ngIf="!editMode">
         <h2 class="card-title">
         <a [routerLink]="['/Discussion', {discussionId: discussion?.id}]" class="link-unstyled">{{discussion?.title}} </a>
-        <small *ngIf="discussion && isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()"></i></small>
+        <small *ngIf="discussion && isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
       </h2>
         <p *ngIf="discussion?.text" class="card-text"
           [innerHTML]="discussion.text | markdown"></p>
@@ -23,20 +23,20 @@
         <ul class="list-inline">
           <li *ngIf="discussion?.private_" class="label label-danger list-inline-item">Private</li>
           <li *ngIf="discussion && !isCreator()" role="button"
-            class="list-inline-item" (click)="toggleShowVoteSlider()"><i class="fa fa-fw fa-star-half-o"></i></li>
-          <li *ngIf="discussion?.avgRank" class="label label-pill label-default list-inline-item">
+            class="list-inline-item" (click)="toggleShowVoteSlider()" tooltipPlacement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
+          <li *ngIf="discussion?.avgRank" class="label label-pill label-default list-inline-item" tooltipPlacement="bottom" tooltip="Average Score">
             {{discussion?.avgRank}}</li>
-          <li *ngIf="discussion?.userRank" class="label label-pill label-info list-inline-item">
+          <li *ngIf="discussion?.userRank" class="label label-pill label-info list-inline-item" tooltipPlacement="bottom" tooltip="Your Vote">
             {{discussion?.userRank}}</li>
           <li *ngIf="discussion?.numberOfVotes" class="text-muted list-inline-item">
             <small> {{discussion?.numberOfVotes}} votes</small></li>
           <li *ngIf="discussion?.link" class="list-inline-item">
             <a class="link-unstyled" href="{{discussion?.link}}"
               target="_blank"><i class="fa fa-external-link"
-              aria-hidden="true"></i></a>
+              aria-hidden="true" tooltipPlacement="bottom" tooltip="Link"></i></a>
           </li>
           <li class="list-inline-item" role="button"><i class="fa fa-fw fa-comments-o"
-              [routerLink]="['/Discussion', {discussionId: discussion?.id}]"></i></li>
+              [routerLink]="['/Discussion', {discussionId: discussion?.id}]" tooltipPlacement="bottom" tooltip="Comments"></i></li>
         </ul>
         <div *ngIf="showVoteSlider">
           <input [value]="discussion?.userRank" (mouseup)="saveDiscussionRank($event.target.value)"

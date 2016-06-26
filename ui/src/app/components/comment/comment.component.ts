@@ -7,7 +7,7 @@ import {MarkdownEditComponent} from '../markdown-edit/index';
 import * as moment from 'moment';
 import {MarkdownPipe} from '../../pipes/markdown.pipe';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
-
+import {TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 
 @Component({
   moduleId: module.id,
@@ -15,7 +15,7 @@ import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
   templateUrl: 'comment.component.html',
   styleUrls: ['comment.component.css'],
   styles: [':host >>> p { margin-bottom: .2rem; }'],
-  directives: [CommentComponent, MarkdownEditComponent, ROUTER_DIRECTIVES],
+  directives: [CommentComponent, MarkdownEditComponent, ROUTER_DIRECTIVES, TOOLTIP_DIRECTIVES],
   pipes: [MomentPipe, MarkdownPipe]
 })
 

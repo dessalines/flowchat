@@ -9,7 +9,7 @@ import {DiscussionService} from '../../services/discussion.service';
 import {TagService} from '../../services/tag.service';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
 import {MarkdownEditComponent} from '../markdown-edit/index';
-import {TYPEAHEAD_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+import {TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
@@ -24,7 +24,7 @@ import 'rxjs/add/operator/switchMap';
   selector: 'app-discussion-card',
   templateUrl: 'discussion-card.component.html',
   styleUrls: ['discussion-card.component.css'],
-  directives: [MarkdownEditComponent, ROUTER_DIRECTIVES, TYPEAHEAD_DIRECTIVES],
+  directives: [MarkdownEditComponent, ROUTER_DIRECTIVES, TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES],
   pipes: [MomentPipe, MarkdownPipe]
 })
 export class DiscussionCardComponent implements OnInit {

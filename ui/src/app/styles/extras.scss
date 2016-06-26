@@ -23,3 +23,12 @@
 .label {
 	vertical-align: middle;
 }
+
+.list-group-item {
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
+.list-group-item:first-child {
+  border-top: none;
+}
