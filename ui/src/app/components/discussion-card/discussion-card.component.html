@@ -2,10 +2,10 @@
   <div class="card-block">
     <div *ngIf="!discussion?.deleted">
       <div *ngIf="!editMode">
-        <h2 class="card-title">
-        <a [routerLink]="['/Discussion', {discussionId: discussion?.id}]" class="link-unstyled">{{discussion?.title}} </a>
-        <small *ngIf="discussion && isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
-      </h2>
+        <h4 class="card-title">
+          <a [routerLink]="['/Discussion', {discussionId: discussion?.id}]" class="link-unstyled">{{discussion?.title}} </a>
+          <small *ngIf="discussion && isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
+        </h4>
         <p *ngIf="discussion?.text" class="card-text"
           [innerHTML]="discussion.text | markdown"></p>
         <small>
@@ -23,10 +23,13 @@
         <ul class="list-inline">
           <li *ngIf="discussion?.private_" class="label label-danger list-inline-item">Private</li>
           <li *ngIf="discussion && !isCreator()" role="button"
-            class="list-inline-item" (click)="toggleShowVoteSlider()" tooltipPlacement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
-          <li *ngIf="discussion?.avgRank" class="label label-pill label-default list-inline-item" tooltipPlacement="bottom" tooltip="Average Score">
+            class="list-inline-item" (click)="toggleShowVoteSlider()"
+            tooltipPlacement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
+          <li *ngIf="discussion?.avgRank" class="label label-pill label-default list-inline-item"
+            tooltipPlacement="bottom" tooltip="Average Score">
             {{discussion?.avgRank}}</li>
-          <li *ngIf="discussion?.userRank" class="label label-pill label-info list-inline-item" tooltipPlacement="bottom" tooltip="Your Vote">
+          <li *ngIf="discussion?.userRank" class="label label-pill label-info list-inline-item"
+            tooltipPlacement="bottom" tooltip="Your Vote">
             {{discussion?.userRank}}</li>
           <li *ngIf="discussion?.numberOfVotes" class="text-muted list-inline-item">
             <small> {{discussion?.numberOfVotes}} votes</small></li>
@@ -36,7 +39,8 @@
               aria-hidden="true" tooltipPlacement="bottom" tooltip="Link"></i></a>
           </li>
           <li class="list-inline-item" role="button"><i class="fa fa-fw fa-comments-o"
-              [routerLink]="['/Discussion', {discussionId: discussion?.id}]" tooltipPlacement="bottom" tooltip="Comments"></i></li>
+              [routerLink]="['/Discussion', {discussionId: discussion?.id}]"
+              tooltipPlacement="bottom" tooltip="Comments"></i></li>
         </ul>
         <div *ngIf="showVoteSlider">
           <input [value]="discussion?.userRank" (mouseup)="saveDiscussionRank($event.target.value)"
@@ -57,8 +61,13 @@
         <div class="form-group row">
           <label class="col-sm-1 form-control-label">Link</label>
           <div class="col-sm-11">
-            <input [(ngModel)]="discussion.link" placeholder="optional"
-              class="form-control" />
+            <input [(ngModel)]="discussion.link" #discussionLink="ngForm"
+              placeholder="optional" class="form-control"
+              pattern="[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?"
+            />
+            <div *ngIf="discussionLink.dirty" class="row col-sm-12 help-block text-danger">
+              <small *ngIf="discussionLink.errors?.pattern">Invalid URL</small>
+            </div>
           </div>
         </div>
         <div class="checkbox">
@@ -73,17 +82,16 @@
         <div class="form-group row">
           <label class="col-sm-1 form-control-label">Tags</label>
           <div class="col-md-5 input-group">
-            <input #tagTerm (keyup)="tagSearch(tagTerm.value)"
+            <input #tagTerm="ngForm" (keyup)="tagSearch(tagTerm.value)"
               [(ngModel)]="tagSearchTerm" [typeahead]="tagSearchResults"
               (typeaheadOnSelect)="tagTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'name'"
               (typeaheadLoading)="tagChangeTypeaheadLoading($event)"
               (typeaheadNoResults)="tagChangeTypeaheadNoResults($event)"
-              class="form-control">
-            <button (click)="createTag()" class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
-            <div *ngIf="tagTypeaheadLoading===true">
-              <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
-            </div>
+              class="form-control" minlength="5"
+              maxlength="20" pattern="[a-zA-Z0-9_-]+">
+            <button [disabled]="!tagTerm.valid" (click)="createTag()"
+              class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
           </div>
           <ul *ngIf="discussion?.tags" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeTag(tag)"
@@ -92,6 +100,12 @@
               <span>{{removeQuotes(tag.name)}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
           </ul>
+          <div *ngIf="tagTypeaheadLoading===true">
+            <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+          </div>
+          <div *ngIf="tagTerm.dirty" class="row col-sm-12 help-block text-danger">
+            <small *ngIf="tagTerm.errors?.pattern">Invalid Tag</small>
+          </div>
           <div *ngIf="tagTypeaheadNoResults===true"
             class="">
             <i class="fa fa-fw fa-remove"></i>No
@@ -138,7 +152,7 @@
       </div>
     </div>
     <div *ngIf="discussion?.deleted">
-      <i>deleted {{discussion?.modified | moment}}</i> by {{discussion?.userName}}
+      <i>deleted {{discussion?.modified | moment}}</i>      by {{discussion?.userName}}
     </div>
   </div>
 </div>

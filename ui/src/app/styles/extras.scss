@@ -32,3 +32,18 @@
 .list-group-item:first-child {
   border-top: none;
 }
+
+.truncate {
+  display: inline-block; /* or inline-block */
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow: hidden;
+  max-height: inherit;
+  line-height: inherit;
+}
+
+blockquote {
+  margin-left: 10px;
+  padding-left: 10px;
+  border-left: 3px solid #ccc;
+} 
