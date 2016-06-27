@@ -8,6 +8,18 @@
 - Figure out how to get thumbnails from links.... might be tough for non-imgur-like things. 
   - Get working for imgur first. 
 - Build startup documentation, setting up postgres, git clone. 
+- Add a forum mod startup page:
+  - Currently, only have the rank weighting on it. 
+- Front page is the list of discussions.
+  - Needs to have smart scrolling
+  - Add popular tags
+- Poll every so often for new messages.
+- Add moderator abilities: 
+  - removing comments
+  - blocking users
+- Add tooltips for everything, move to icons not text
+
+# Finished
 - Add trending algorithms [1](http://sorentwo.com/2013/12/30/let-postgres-do-the-work.html)
   - Possibly tunable for each thread creator?
   - comment and discussion ranking based on: 
@@ -16,14 +28,6 @@
     - avg_score 
     - and weighting factors for all three
   - Have these be set up by the discussion mods?
-- Front page is the list of discussions.
-  - Needs to have smart scrolling
-  - Add popular tags
-- Poll every so often for new messages.
-- Add moderator abilities, removing comments, blocking users, etc.
-- Add tooltips for everything, move to icons not text
-
-# Finished
 - Replace alert with reconnect modal
 - Add ability to delete your own comment(schema changes)
 - Add ability to remove your own comment, without actually deleting the comment and its subtree
