@@ -7,10 +7,11 @@ import {MarkdownPipe} from '../../pipes/markdown.pipe';
 import {UserService} from '../../services/user.service';
 import {DiscussionService} from '../../services/discussion.service';
 import {TagService} from '../../services/tag.service';
-import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
+import { Router, ROUTER_DIRECTIVES, RouteData, RouteParams } from '@angular/router-deprecated';
 import {MarkdownEditComponent} from '../markdown-edit/index';
 import {TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
+import {RouteParamService} from '../../services/route-param.service';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 
@@ -33,7 +34,7 @@ export class DiscussionCardComponent implements OnInit {
 
   private showVoteSlider: boolean = false;
 
-  private editMode: boolean = false;
+  @Input() editMode: boolean;
 
   private tagSearchTermStream = new Subject<string>();
   private tagResultsObservable: Observable<any>;
@@ -59,6 +60,11 @@ export class DiscussionCardComponent implements OnInit {
   ngOnInit() {
     this.setupTagSearch();
     this.setupUserSearch();
+
+    // console.log(this.routeParamService.params());
+    // console.log(this.routeParamService.data());
+    // console.log(this.routeParamService.data()["editMode"]);
+    // this.editMode = Boolean(this.routeParamService.data()["editMode"]);
   }
 
   ngAfterViewInit() {

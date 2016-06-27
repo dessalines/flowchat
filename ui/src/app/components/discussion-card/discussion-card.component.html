@@ -50,7 +50,7 @@
           />
         </div>
       </div>
-      <div *ngIf="editMode">
+      <div *ngIf="editMode && discussion?.title">
         <div class="form-group row">
           <label class="col-sm-1 form-control-label">Title</label>
           <div class="col-sm-11">
@@ -76,7 +76,7 @@
               type="checkbox" /> Private
           </label>
         </div>
-        <app-markdown-edit [inputText]="discussion.text"
+        <app-markdown-edit [focus]="false" [inputText]="discussion.text"
           (textEvent)="setEditText($event)"></app-markdown-edit>
         <br>
         <div class="form-group row">

@@ -1,6 +1,6 @@
 <div class="row bottom-margin">
   <div class="col-xs-12 col-lg-10">
-    <app-discussion-card [discussion]="discussion"></app-discussion-card>
+    <app-discussion-card [discussion]="discussion" [editMode]="editMode()"></app-discussion-card>
     <div *ngFor="let comment of comments" class="card">
       <app-comment [comment]="comment" (replyingEvent)="setIsReplying($event)"></app-comment>
     </div>

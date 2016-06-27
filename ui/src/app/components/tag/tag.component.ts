@@ -5,13 +5,14 @@ import {TagService} from '../../services/tag.service';
 import {Discussion} from '../../shared/discussion.interface';
 import {Tag} from '../../shared/tag.interface';
 import {DiscussionCardComponent} from '../discussion-card/index';
+import {FooterComponent} from '../footer/index';
 
 @Component({
   moduleId: module.id,
   selector: 'app-tag',
   templateUrl: 'tag.component.html',
   styleUrls: ['tag.component.css'],
-  directives: [DiscussionCardComponent],
+  directives: [DiscussionCardComponent, FooterComponent],
   providers: []
 })
 export class TagComponent implements OnInit {

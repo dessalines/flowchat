@@ -78,6 +78,10 @@ export class ChatComponent implements OnInit {
 
   }
 
+  editMode(): Boolean {
+    return Boolean(this.routeParamService.params().get("editMode"));
+  }
+
   ngOnDestroy() {
     this.websocketSoftClose = true;
     if (this.userServiceWatcher != null) {

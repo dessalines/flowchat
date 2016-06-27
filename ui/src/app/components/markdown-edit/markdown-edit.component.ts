@@ -17,6 +17,8 @@ export class MarkdownEditComponent implements OnInit {
 
   @Input() rows: number = 3;
 
+  @Input() focus: boolean = true;
+
   @ViewChild('textArea') textArea;
 
   private textBox: string;
@@ -39,7 +41,9 @@ export class MarkdownEditComponent implements OnInit {
 
   ngAfterViewInit() {
     autosize(this.textArea.nativeElement);
-    this.textArea.nativeElement.focus();
+    if (this.focus) {
+      this.textArea.nativeElement.focus()
+    };
   }
 
   setText() {
