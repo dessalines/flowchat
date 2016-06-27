@@ -20,6 +20,8 @@ public class ChatService {
 
     static Logger log = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
+    static RankingConstantsObj rankingConstants;
+
 
     public static void main(String[] args) {
 
@@ -29,6 +31,9 @@ public class ChatService {
 
         staticFiles.externalLocation("../ui/dist");
 //        staticFiles.expireTime(600);
+
+        // fetches some ranking constants for sorting and such
+        rankingConstants = RankingConstantsObj.fetchRankingConstants();
 
         webSocket("/threaded_chat", ThreadedChatWebSocket.class);
 
@@ -156,8 +161,15 @@ public class ChatService {
                 Long tagId = (!req.params(":tagId").equals("all")) ? Long.valueOf(req.params(":tagId")) : null;
                 Integer limit = (req.params(":limit") != null) ? Integer.valueOf(req.params(":limit")) : 10;
                 Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
-                String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "created desc";
+                String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "custom";
 
+                // For the custom sorting based on ranking
+                if (orderBy.equals("custom")) {
+                    orderBy = "ranking(created, " + rankingConstants.getCreatedWeight() +
+                            ",number_of_votes, " + rankingConstants.getNumberOfVotesWeight() +
+                            ",avg_rank, " + rankingConstants.getAvgRankWeight() +
+                            ") desc";
+                }
                 UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
                 Paginator p;
@@ -166,12 +178,13 @@ public class ChatService {
                 if (tagId != null) {
                     p = new Paginator(DiscussionNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
                             "and private is false and deleted is false", tagId).
-
                             orderBy(orderBy);
                 } else {
                     p = new Paginator(DiscussionNoTextView.class, limit, "private is false and deleted is false").
                             orderBy(orderBy);
                 }
+
+
 
 
                 LazyList<DiscussionNoTextView> dntvs = p.getPage(page);

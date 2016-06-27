@@ -35,7 +35,7 @@ export class DiscussionService {
   }
 
   getDiscussions(limit: number = 10, page: number = 1, tagId: string = 'all',
-    orderBy: string = 'created desc') {
+    orderBy: string = 'custom') {
     return this.http.get(this.getDiscussionsUrl(limit, page, tagId, orderBy), this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);

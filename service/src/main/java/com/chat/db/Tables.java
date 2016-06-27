@@ -62,4 +62,7 @@ public class Tables {
     @Table("tag")
     public static class Tag extends Model {}
 
+    @Table("ranking_constants")
+    public static class RankingConstants extends Model {}
+
 }
