@@ -3,13 +3,15 @@ import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2
 import {DiscussionService} from '../../services/discussion.service';
 import {Discussion} from '../../shared/discussion.interface';
 import {DiscussionCardComponent} from '../discussion-card/index';
+import {FooterComponent} from '../footer/index';
 
 @Component({
   moduleId: module.id,
   selector: 'app-home',
   templateUrl: 'home.component.html',
   styleUrls: ['home.component.css'],
-  directives: [DiscussionCardComponent]
+  directives: [DiscussionCardComponent, FooterComponent],
+  providers: []
 })
 export class HomeComponent implements OnInit {
 
