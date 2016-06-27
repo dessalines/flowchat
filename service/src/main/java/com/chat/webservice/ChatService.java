@@ -20,7 +20,8 @@ public class ChatService {
 
     static Logger log = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
-    static RankingConstantsObj rankingConstants;
+
+    public static RankingConstantsObj rankingConstants;
 
 
     public static void main(String[] args) {
@@ -396,6 +397,8 @@ public class ChatService {
 
         init();
     }
+
+
 
 
 }

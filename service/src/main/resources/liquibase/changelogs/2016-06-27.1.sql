@@ -19,6 +19,8 @@ $$ LANGUAGE SQL IMMUTABLE;
 --    number_of_votes, .001,
 --    avg_rank, .01) desc;
 
+--select extract(epoch from (now() - created)) from discussion;
+
 
 -- some good defaults for weightings: 1000000, .001, .01 (trying to make them 0-1 based
 

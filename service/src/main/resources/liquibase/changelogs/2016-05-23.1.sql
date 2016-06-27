@@ -153,9 +153,9 @@ create table comment_rank (
 
 create table ranking_constants (
     id bigserial primary key,
-    created_weight numeric(10,2),
-    number_of_votes_weight numeric(10,2),
-    avg_rank_weight numeric(10,2)
+    created_weight numeric(12,4),
+    number_of_votes_weight numeric(12,4),
+    avg_rank_weight numeric(12,4)
 );
 
 insert into user_ (name)

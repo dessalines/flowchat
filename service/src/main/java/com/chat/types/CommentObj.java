@@ -1,12 +1,15 @@
 package com.chat.types;
 
 
+import com.chat.db.Tables;
 import com.chat.tools.Tools;
+import com.chat.webservice.ChatService;
 import org.javalite.activejdbc.Model;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -116,6 +119,35 @@ public class CommentObj implements JSONWriter {
 
         @Override
         public int compare(CommentObj o1, CommentObj o2) {
+
+            Double o1R = getRank(o1);
+            Double o2R = getRank(o2);
+
+            return o2R.compareTo(o1R);
+        }
+
+
+        private static Double getRank(CommentObj co) {
+            RankingConstantsObj rco = ChatService.rankingConstants;
+
+            Double timeDifference= (new Date().getTime()-co.getCreated().getTime())*0.001;
+            Double timeRank = rco.getCreatedWeight()/timeDifference;
+            Double numberOfVotesRank = (co.getNumberOfVotes() != null) ?
+                    co.getNumberOfVotes() * rco.getNumberOfVotesWeight() : 0;
+            Double avgScoreRank = (co.getAvgRank() != null) ?
+                    co.getAvgRank() * rco.getAvgRankWeight() : 0;
+            Double rank = timeRank + numberOfVotesRank + avgScoreRank;
+
+            return rank;
+
+        }
+
+    }
+
+    public static class CommentObjComparatorOld implements Comparator<CommentObj> {
+
+        @Override
+        public int compare(CommentObj o1, CommentObj o2) {
             Integer o1R = (o1.getAvgRank() != null) ? o1.getAvgRank() : 50;
             Integer o2R = (o2.getAvgRank() != null) ? o2.getAvgRank() : 50;
 
@@ -189,4 +221,5 @@ public class CommentObj implements JSONWriter {
     public String getUserName() { return userName;}
 
     public Boolean getDeleted() {return deleted;}
+
 }
