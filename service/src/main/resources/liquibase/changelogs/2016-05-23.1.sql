@@ -151,6 +151,13 @@ create table comment_rank (
     constraint fk3_comment_rank_unique_1 unique (comment_id, user_id)
 );
 
+create table ranking_constants (
+    id bigserial primary key,
+    created_weight numeric(10,2),
+    number_of_votes_weight numeric(10,2),
+    avg_rank_weight numeric(10,2)
+);
+
 insert into user_ (name)
     values ('user_1'),('user_2'),('user_3'), ('cardinal');
 
@@ -193,7 +200,8 @@ insert into comment_tree (parent_id, child_id, path_length)
               (5,5,0),
               (6,6,0);
 
+insert into ranking_constants (created_weight,number_of_votes_weight,avg_rank_weight)
+    values (1000000, .001, .01);
 
-
---rollback drop table login cascade; drop table full_user cascade; drop table comment cascade ; drop table user_ cascade; drop table comment_tree cascade; drop table discussion cascade; drop table comment_rank cascade; ;drop table discussion_tag cascade; drop table discussion_rank cascade; drop table private_discussion_user cascade;;drop table tag cascade; drop table favorite_discussion_user cascade;
+--rollback drop table ranking_constants cascade; drop table login cascade; drop table full_user cascade; drop table comment cascade ; drop table user_ cascade; drop table comment_tree cascade; drop table discussion cascade; drop table comment_rank cascade; ;drop table discussion_tag cascade; drop table discussion_rank cascade; drop table private_discussion_user cascade;;drop table tag cascade; drop table favorite_discussion_user cascade;
 
