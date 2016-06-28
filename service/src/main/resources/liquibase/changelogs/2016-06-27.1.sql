@@ -1,3 +1,5 @@
+--liquibase formatted sql
+--changeset tyler:3
 
 create function ranking(created timestamp default now(), created_weight numeric(10,2) default 0,
 number_of_votes bigint default 0, number_of_votes_weight numeric(10,2) default 0,
