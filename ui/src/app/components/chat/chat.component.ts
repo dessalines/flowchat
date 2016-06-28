@@ -228,7 +228,7 @@ export class ChatComponent implements OnInit {
 
     // If its the top level, stop and return 
     if (newComment.parentId == null) {
-      this.comments.push(newComment);
+      this.comments.unshift(newComment);
       setTimeout(() => { location.hash = "#comment_" + newComment.id; }, 50);
       return;
     }
