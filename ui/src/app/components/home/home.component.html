@@ -5,5 +5,13 @@
     <app-discussion-card *ngFor="let discussion of discussions"
       [discussion]="discussion"></app-discussion-card>
   </div>
+  <ul *ngIf="popularTags" class="list-inline">tags:
+    <li class="label label-default list-inline-item"
+      *ngFor="let tag of popularTags">
+      <a class="link-unstyled" [routerLink]="['/Tag', {tagId: tag.id}]">{{removeQuotes(tag.name)}}</a>
+    </li>
+  </ul>
+
+  {{popularTags | json}}
 </div>
 <app-footer></app-footer>

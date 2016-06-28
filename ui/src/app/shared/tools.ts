@@ -20,4 +20,8 @@ export class Tools {
   static eraseCookie(name) {
     this.createCookie(name, "", -1);
   }
+
+  static removeQuotes(text: string) {
+    return text.replace(/['"]+/g, '');
+  }
 }

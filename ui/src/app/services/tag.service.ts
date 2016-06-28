@@ -12,6 +12,11 @@ export class TagService {
   private queryTagsUrl: string = 'http://localhost:4567/tag_search/';
   private createTagUrl: string = 'http://localhost:4567/create_tag';
 
+  private getPopularTagsUrl(limit: number, page: number, orderBy: string): string {
+    return 'http://localhost:4567/get_popular_tags/' + 
+      limit + '/' + page + '/' + orderBy;
+  }
+
   constructor(private http: Http) {}
 
   getTag(id: string) {
@@ -33,6 +38,13 @@ export class TagService {
       .map(this.extractData)
       .catch(this.handleError);
 
+  }
+
+  getPopularTags(limit: number = 10, page: number = 1,
+    orderBy: string = 'custom') {
+    return this.http.get(this.getPopularTagsUrl(limit, page, orderBy))
+      .map(this.extractData)
+      .catch(this.handleError);
   }
 
   
