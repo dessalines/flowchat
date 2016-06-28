@@ -164,13 +164,7 @@ public class ChatService {
                 Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
                 String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "custom";
 
-                // For the custom sorting based on ranking
-                if (orderBy.equals("custom")) {
-                    orderBy = "ranking(created, " + rankingConstants.getCreatedWeight() +
-                            ",number_of_votes, " + rankingConstants.getNumberOfVotesWeight() +
-                            ",avg_rank, " + rankingConstants.getAvgRankWeight() +
-                            ") desc";
-                }
+                orderBy = constructOrderByCustom(orderBy);
                 UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
                 Paginator p;
@@ -381,6 +375,32 @@ public class ChatService {
 
         });
 
+        get("/get_popular_tags/:limit/:page/:orderBy", (req, res) -> {
+
+            try {
+
+                Integer limit = (req.params(":limit") != null) ? Integer.valueOf(req.params(":limit")) : 10;
+                Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
+                String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "custom";
+
+                orderBy = constructOrderByPopularTagsCustom(orderBy);
+
+                Paginator p = new Paginator(PopularTagsView.class, limit, "1=1").
+                        orderBy(orderBy);
+
+                LazyList<PopularTagsView> popularTags = p.getPage(page);
+
+                return popularTags.toJson(false);
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return Tools.buildMessage(e.getMessage());
+            }
+
+
+        });
+
 
         before((req, res) -> {
             Tools.dbInit();
@@ -398,6 +418,29 @@ public class ChatService {
         init();
     }
 
+
+    public static String constructOrderByCustom(String orderBy) {
+        // For the custom sorting based on ranking
+        if (orderBy.equals("custom")) {
+            orderBy = "ranking(created, " + rankingConstants.getCreatedWeight() +
+                    ",number_of_votes, " + rankingConstants.getNumberOfVotesWeight() +
+                    ",avg_rank, " + rankingConstants.getAvgRankWeight() +
+                    ") desc";
+        }
+
+        return orderBy;
+    }
+
+    public static String constructOrderByPopularTagsCustom(String orderBy) {
+        // For the custom sorting based on ranking
+        if (orderBy.equals("custom")) {
+            orderBy = "ranking(created, " + rankingConstants.getCreatedWeight() +
+                    ",count, " + rankingConstants.getNumberOfVotesWeight() +
+                    ") desc";
+        }
+
+        return orderBy;
+    }
 
 
 
