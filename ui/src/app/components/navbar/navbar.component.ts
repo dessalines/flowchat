@@ -3,11 +3,13 @@ import {CORE_DIRECTIVES} from '@angular/common';
 import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS, DROPDOWN_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 import {LoginService} from '../../services/login.service';
 import {UserService} from '../../services/user.service';
-import {DiscussionService} from '../../services/discussion.service'
-import {User, Tools} from '../../shared';
+import {DiscussionService} from '../../services/discussion.service';
+import {User, Discussion, Tools} from '../../shared';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
 import {ChatComponent} from '../chat';
-
+import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
+import {TYPEAHEAD_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 
 
 @Component({
@@ -15,7 +17,8 @@ import {ChatComponent} from '../chat';
   selector: 'app-navbar',
   templateUrl: 'navbar.component.html',
   styleUrls: ['navbar.component.css'],
-  directives: [MODAL_DIRECTVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES, ROUTER_DIRECTIVES],
+  directives: [MODAL_DIRECTVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES, ROUTER_DIRECTIVES,
+    TYPEAHEAD_DIRECTIVES],
   providers: [LoginService],
   viewProviders: [BS_VIEW_PROVIDERS]
 })
@@ -23,6 +26,14 @@ export class NavbarComponent implements OnInit {
 
   private signup: Signup = {};
   private login: Login = {};
+
+  // The search bar
+  private discussionSearchTermStream = new Subject<string>();
+  private discussionResultsObservable: Observable<any>;
+  private discussionSearchResults: Array<Discussion>;
+  private discussionSearchTerm: string = '';
+  private discussionTypeaheadLoading: boolean = false;
+  private discussionTypeaheadNoResults: boolean = false;
 
   constructor(private userService: UserService,
     private loginService: LoginService,
@@ -35,6 +46,8 @@ export class NavbarComponent implements OnInit {
     if (!this.userService.getUser()) {
       this.getOrCreateUser();
     }
+
+    this.setupDiscussionSearch();
   }
 
   getOrCreateUser() {
@@ -46,8 +59,8 @@ export class NavbarComponent implements OnInit {
   }
 
   signupSubmit() {
-    this.loginService.signup(this.signup.username, 
-      this.signup.password, 
+    this.loginService.signup(this.signup.username,
+      this.signup.password,
       this.signup.email).subscribe(
       user => {
         this.setupUser(user);
@@ -83,13 +96,45 @@ export class NavbarComponent implements OnInit {
   createDiscussion() {
     this.discussionService.createDiscussion().subscribe(d => {
       console.log(d);
-      this.router.navigate(['Discussion', { discussionId: d.id, editMode: true}]);
+      this.router.navigate(['Discussion', { discussionId: d.id, editMode: true }]);
     },
-    error => console.log(error));
+      error => console.log(error));
+  }
+
+  // Discussion searching methods
+  // Tag search methods
+  setupDiscussionSearch() {
+    this.discussionResultsObservable = this.discussionSearchTermStream
+      .debounceTime(300)
+      .distinctUntilChanged()
+      .switchMap((term: string) => this.discussionService.searchDiscussions(term));
+
+    this.discussionResultsObservable.subscribe(t => {
+      this.discussionSearchResults = t.discussions;
+    });
+    // this.tagSearch('a');
+  }
+
+  discussionSearch(term: string) {
+    if (term !== '') {
+      this.discussionSearchTermStream.next(term);
+    }
+  }
+
+  discussionTypeaheadOnSelect(discussion: Discussion) {
+    this.router.navigate(['Discussion', { discussionId: discussion.id}]);
+  }
+
+  discussionChangeTypeaheadLoading(e: boolean): void {
+    this.discussionTypeaheadLoading = e;
+  }
+
+  discussionChangeTypeaheadNoResults(e: boolean): void {
+    this.discussionTypeaheadNoResults = e;
   }
 
 
-  
+
 }
 
 interface Signup {

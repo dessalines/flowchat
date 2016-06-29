@@ -174,7 +174,7 @@ public class Tools {
         for(int i = 0;;) {
             String word = splitWords[i++].replaceAll("'", "_");
 
-            String likeQuery = columnName + " like '%" + word + "%'";
+            String likeQuery = columnName + " ilike '%" + word + "%'";
 
             queryStr.append(likeQuery);
 
