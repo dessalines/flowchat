@@ -12,6 +12,7 @@ import {Discussion} from '../shared/discussion.interface';
 export class DiscussionService {
 
   private getDiscussionUrl: string = 'http://localhost:4567/get_discussion/';
+  private queryDiscussionsUrl: string = 'http://localhost:4567/discussion_search/';
   private saveRankUrl: string = 'http://localhost:4567/save_discussion_rank/';
   private createDiscussionUrl: string = "http://localhost:4567/create_discussion";
   private saveDiscussionUrl: string = "http://localhost:4567/save_discussion";
@@ -25,7 +26,6 @@ export class DiscussionService {
 
   constructor(private http: Http,
     private userService: UserService) {
-
   }
 
   getDiscussion(id: number) {
@@ -37,6 +37,12 @@ export class DiscussionService {
   getDiscussions(limit: number = 10, page: number = 1, tagId: string = 'all',
     orderBy: string = 'custom') {
     return this.http.get(this.getDiscussionsUrl(limit, page, tagId, orderBy), this.userService.getOptions())
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  searchDiscussions(query: string) {
+    return this.http.get(this.queryDiscussionsUrl + query)
       .map(this.extractData)
       .catch(this.handleError);
   }

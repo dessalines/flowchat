@@ -15,7 +15,14 @@
         </li>
         <li class="nav-item">
           <form class="form-inline">
-            <input class="form-control" type="text" placeholder="Search">
+            <input #discussionTerm="ngForm" (keyup)="discussionSearch(discussionTerm.value)"
+              [(ngModel)]="discussionSearchTerm" [typeahead]="discussionSearchResults"
+              (typeaheadOnSelect)="discussionTypeaheadOnSelect($event.item)"
+              [typeaheadOptionField]="'title'"
+              (typeaheadLoading)="discussionChangeTypeaheadLoading($event)"
+              (typeaheadNoResults)="discussionChangeTypeaheadNoResults($event)"
+              class="form-control" type="text"
+              placeholder="Search">
             <button class="btn-link" type="submit"><i class="fa fa-fw fa-search"></i></button>
           </form>
         </li>

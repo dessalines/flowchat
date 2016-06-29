@@ -203,6 +203,30 @@ public class ChatService {
 
         });
 
+        get("/discussion_search/:query", (req, res) -> {
+
+            try {
+
+                String query = req.params(":query");
+
+                String queryStr = Tools.constructQueryString(query, "title");
+
+                LazyList<DiscussionNoTextView> discussionsRows =
+                        DiscussionNoTextView.find(queryStr.toString()).limit(5);
+
+                Discussions discussions = Discussions.create(discussionsRows, null);
+
+                return discussions.json();
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return Tools.buildMessage(e.getMessage());
+            }
+
+
+        });
+
         post("/save_discussion_rank/:id/:rank", (req, res) -> {
             try {
                 UserObj userObj = Actions.getOrCreateUserObj(req, res);
