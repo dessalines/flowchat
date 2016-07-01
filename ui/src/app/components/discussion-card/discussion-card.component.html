@@ -97,7 +97,7 @@
             <li role="button" (click)="removeTag(tag)"
               class="label label-default list-inline-item"
               *ngFor="let tag of discussion?.tags">
-              <span>{{Tools.removeQuotes(tag.name)}}<i class="fa fa-fw fa-remove"></i></span>
+              <span>{{removeQuotes(tag.name)}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
           </ul>
           <div *ngIf="tagTypeaheadLoading===true">

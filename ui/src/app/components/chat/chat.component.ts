@@ -118,7 +118,10 @@ export class ChatComponent implements OnInit {
       subscribe(d => {
         this.discussion = d;
       },
-      error => this.toasterService.pop("error", "Error", error))
+      error => {
+        this.toasterService.pop("error", "Error", error);
+        this.router.navigate(['/Home']);
+      })
   }
 
   websocketCloseWatcher() {

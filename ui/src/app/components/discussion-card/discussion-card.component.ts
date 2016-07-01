@@ -34,7 +34,7 @@ export class DiscussionCardComponent implements OnInit {
 
   private showVoteSlider: boolean = false;
 
-  @Input() editMode: boolean;
+  @Input() editMode: boolean = false;
 
   private tagSearchTermStream = new Subject<string>();
   private tagResultsObservable: Observable<any>;
@@ -128,8 +128,13 @@ export class DiscussionCardComponent implements OnInit {
   }
 
   tagTypeaheadOnSelect(tag: Tag) {
+    this.addTag(tag);
 
-    // Create the array if necessary
+    
+  }
+
+  addTag(tag: Tag) {
+        // Create the array if necessary
     if (this.discussion.tags == null) {
       this.discussion.tags = [];
     }
@@ -141,7 +146,6 @@ export class DiscussionCardComponent implements OnInit {
     } else {
       this.tooManyTagsError = true;
     }
-    
   }
 
   tagChangeTypeaheadLoading(e: boolean): void {
@@ -163,6 +167,7 @@ export class DiscussionCardComponent implements OnInit {
       console.log(d);
       this.tagSearchTerm = '';
       this.toasterService.pop('success', 'New Tag Created', d.name);
+      this.addTag(d);
     });
     
   }
