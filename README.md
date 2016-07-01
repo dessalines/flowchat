@@ -7,6 +7,11 @@
 - Figure out how to get thumbnails from links.... might be tough for non-imgur-like things. 
   - Get working for imgur first. 
 - Build startup documentation, setting up postgres, git clone. 
+- Set up new repo on github called flow
+  - Set up Digital Ocean Server
+  - Get domain name, flow-chat or flow.ml 
+  - Set up Travis-CI builds
+  - Set up deployment with [travis-ci](https://neemzy.org/articles/deploy-to-your-own-server-through-ssh-with-travis-ci)
 - Add a forum mod startup page:
   - Currently, only have the rank weighting on it. 
 - Front page is the list of discussions.
