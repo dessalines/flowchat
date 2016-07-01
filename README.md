@@ -3,7 +3,6 @@
 # TODO
 
 - Top nav with bell alerts for if someone replied directly to your comment, clicking goes to that discussion comment parent. 
-- Search bar, search for (public) discussions, or tags
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - Figure out how to get thumbnails from links.... might be tough for non-imgur-like things. 
   - Get working for imgur first. 
@@ -20,6 +19,8 @@
 - Add tooltips for everything, move to icons not text
 
 # Finished
+- Search bar, search for (public) discussions, or tags
+  - Only got it for discussions
 - Add trending algorithms [1](http://sorentwo.com/2013/12/30/let-postgres-do-the-work.html)
   - Possibly tunable for each thread creator?
   - comment and discussion ranking based on: 
