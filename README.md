@@ -3,13 +3,14 @@
 # TODO
 
 - Top nav with bell alerts for if someone replied directly to your comment, clicking goes to that discussion comment parent. 
+  - Add 'read' boolean to comments. 
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - Figure out how to get thumbnails from links.... might be tough for non-imgur-like things. 
   - Get working for imgur first. 
 - Build startup documentation, setting up postgres, git clone. 
 - Set up new repo on github called flow
   - Set up Digital Ocean Server
-  - Get domain name, flow-chat or flow.ml 
+  - Get domain name, flowchat or flow.ml
   - Set up Travis-CI builds
   - Set up deployment with [travis-ci](https://neemzy.org/articles/deploy-to-your-own-server-through-ssh-with-travis-ci)
 - Add a forum mod startup page:

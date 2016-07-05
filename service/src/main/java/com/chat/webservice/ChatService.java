@@ -20,10 +20,6 @@ public class ChatService {
 
     static Logger log = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
-
-    public static RankingConstantsObj rankingConstants;
-
-
     public static void main(String[] args) {
 
         log.setLevel(Level.toLevel("verbose"));
@@ -33,8 +29,6 @@ public class ChatService {
         staticFiles.externalLocation("../ui/dist");
 //        staticFiles.expireTime(600);
 
-        // fetches some ranking constants for sorting and such
-        rankingConstants = RankingConstantsObj.fetchRankingConstants();
 
         webSocket("/threaded_chat", ThreadedChatWebSocket.class);
 
@@ -178,8 +172,6 @@ public class ChatService {
                     p = new Paginator(DiscussionNoTextView.class, limit, "private is false and deleted is false").
                             orderBy(orderBy);
                 }
-
-
 
 
                 LazyList<DiscussionNoTextView> dntvs = p.getPage(page);
@@ -425,6 +417,51 @@ public class ChatService {
 
         });
 
+        get("/get_unread_replies", (req, res) -> {
+
+            try {
+
+                UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
+                // Fetch your unread replies
+                LazyList<CommentBreadcrumbsView> cbv = CommentBreadcrumbsView.where(
+                        "parent_user_id = ? and user_id != ? and read = false",
+                        userObj.getId(), userObj.getId());
+
+                Comments comments = Comments.create(cbv, null);
+
+                log.info(comments.json());
+
+                return comments.json();
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return Tools.buildMessage(e.getMessage());
+            }
+
+
+        });
+
+        post("/mark_reply_as_read/:id", (req, res) -> {
+            try {
+                UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
+                Long commentId = Long.valueOf(req.params(":id"));
+
+                // Mark the reply as read
+                String message = Actions.markReplyAsRead(commentId);
+
+                return message;
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return Tools.buildMessage(e.getMessage());
+            }
+
+        });
+
 
         before((req, res) -> {
             Tools.dbInit();
@@ -446,9 +483,9 @@ public class ChatService {
     public static String constructOrderByCustom(String orderBy) {
         // For the custom sorting based on ranking
         if (orderBy.equals("custom")) {
-            orderBy = "ranking(created, " + rankingConstants.getCreatedWeight() +
-                    ",number_of_votes, " + rankingConstants.getNumberOfVotesWeight() +
-                    ",avg_rank, " + rankingConstants.getAvgRankWeight() +
+            orderBy = "ranking(created, " + Constants.INSTANCE.getRankingConstants().getCreatedWeight() +
+                    ",number_of_votes, " + Constants.INSTANCE.getRankingConstants().getNumberOfVotesWeight() +
+                    ",avg_rank, " + Constants.INSTANCE.getRankingConstants().getAvgRankWeight() +
                     ") desc";
         }
 
@@ -458,14 +495,13 @@ public class ChatService {
     public static String constructOrderByPopularTagsCustom(String orderBy) {
         // For the custom sorting based on ranking
         if (orderBy.equals("custom")) {
-            orderBy = "ranking(created, " + rankingConstants.getCreatedWeight() +
-                    ",count, " + rankingConstants.getNumberOfVotesWeight() +
+            orderBy = "ranking(created, " + Constants.INSTANCE.getRankingConstants().getCreatedWeight() +
+                    ",count, " + Constants.INSTANCE.getRankingConstants().getNumberOfVotesWeight() +
                     ") desc";
         }
 
         return orderBy;
     }
-
 
 
 }

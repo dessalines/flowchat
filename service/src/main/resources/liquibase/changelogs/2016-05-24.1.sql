@@ -96,6 +96,7 @@ select d.id,
        cv.num_of_children,
 --       avg(cr.rank) as avg_rank,
        d.deleted,
+       d.read,
        d.created,
        d.modified
 from comment as d
@@ -111,16 +112,19 @@ order by breadcrumbs;
 -- Necessary to join to the rank, couldn't get it working with the complicated intermediary above
 create view comment_breadcrumbs_view as
 select d.*,
+d2.user_id as parent_user_id,
 avg(cr.rank) as avg_rank,
 count(cr.rank) as number_of_votes
 from comment_intermediate_view as d
+join comment as d2 on d.parent_id = d2.id
 left join comment_rank as cr on d.id = cr.comment_id
-group by d.id, d.user_id, d.user_name, d.discussion_id, d.text_,
+group by d.id, d2.user_id, d.user_id, d.user_name, d.discussion_id, d.text_,
                 d.path_length, d.parent_id, d.child_id,
                 d.breadcrumbs,
                 d.num_of_parents,
                 d.num_of_children,
                 d.deleted,
+                d.read,
                 d.created,
                 d.modified
 order by d.breadcrumbs;

@@ -3,7 +3,9 @@ package chat_websocket.chat_websocket;
 import ch.qos.logback.classic.Logger;
 import com.chat.db.Transformations;
 import com.chat.types.CommentObj;
+import com.chat.types.Comments;
 import com.chat.types.DiscussionObj;
+import com.chat.webservice.Constants;
 import org.javalite.activejdbc.LazyList;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -32,6 +34,7 @@ public class AppTest {
 
     @Before
     public void setUp() {
+        Constants.INSTANCE.getRankingConstants();
         Tools.dbInit();
     }
 
@@ -50,13 +53,11 @@ public class AppTest {
 
     @Test
     public void testCommentObjJson() {
-//        LazyList<CommentThreadedView> ctv = CommentThreadedView.where("discussion_id = ?", 1);
-//
-//        List<CommentObj> cos = Transformations.convertCommentsToEmbeddedObjects(ctv, null);
-//
-//        log.info(cos.get(0).getEmbedded().get(0).getDeleteId().toString());
-//        assertTrue(cos.get(0).getEmbedded().get(0).getDeleteId().equals(2L)
-//        || cos.get(1).getEmbedded().get(0).getDeleteId().equals(2L));
+        LazyList<CommentThreadedView> ctv = CommentThreadedView.where("discussion_id = ?", 1);
+
+        List<CommentObj> cos = Transformations.convertCommentsToEmbeddedObjects(ctv, null);
+
+        assertTrue(cos.get(0).getEmbedded().get(0).getId().equals(2L));
     }
 
     @Test
@@ -111,14 +112,28 @@ public class AppTest {
     public void testDiscussionConvert() throws SQLException {
         DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", 1);
         DiscussionObj df = DiscussionObj.create(dfv, null);
-        log.info(df.json());
+
+        assertTrue(df.getId().equals(1L));
     }
 
     @Test
     public void testDiscussionCollect() throws SQLException {
         LazyList<DiscussionNoTextView> dntvs = DiscussionNoTextView.findAll();
         Set<Long> ids = dntvs.collectDistinct("id");
-        log.info(Tools.convertListToInQuery(ids));
+
+        assertTrue(Tools.convertListToInQuery(ids).equals("(1, 2, 3)"));
+    }
+
+    @Test
+    public void testNotification() throws SQLException {
+        LazyList<CommentBreadcrumbsView> cbv = CommentBreadcrumbsView.where(
+                "parent_user_id = ? and user_id != ? and read = false",
+                4,4);
+
+        Comments comments = Comments.replies(cbv);
+
+        assertTrue(comments.getComments().get(0).getRead().equals(false));
+
     }
 
 

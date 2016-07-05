@@ -4,6 +4,7 @@ package com.chat.types;
 import com.chat.db.Tables;
 import com.chat.tools.Tools;
 import com.chat.webservice.ChatService;
+import com.chat.webservice.Constants;
 import org.javalite.activejdbc.Model;
 
 import java.sql.Timestamp;
@@ -16,13 +17,14 @@ import java.util.List;
  * Created by tyler on 6/7/16.
  */
 public class CommentObj implements JSONWriter {
-    private Long id, userId, discussionId, parentId, topParentId, pathLength, numOfParents, numOfChildren;
+    private Long id, userId, discussionId, parentId, topParentId, parentUserId,
+            pathLength, numOfParents, numOfChildren;
     private String userName, text;
     private Timestamp created, modified;
     private List<CommentObj> embedded;
     private List<Long> breadcrumbs;
     private Integer avgRank, userRank, numberOfVotes;
-    private Boolean deleted;
+    private Boolean deleted, read;
 
     public CommentObj(Long id,
                       Long userId,
@@ -31,6 +33,7 @@ public class CommentObj implements JSONWriter {
                       String text,
                       Long pathLength,
                       Long topParentId,
+                      Long parentUserId,
                       String breadcrumbs,
                       Long numOfParents,
                       Long numOfChildren,
@@ -38,6 +41,7 @@ public class CommentObj implements JSONWriter {
                       Integer userRank,
                       Integer numberOfVotes,
                       Boolean deleted,
+                      Boolean read,
                       Timestamp created,
                       Timestamp modified
     ) {
@@ -45,6 +49,7 @@ public class CommentObj implements JSONWriter {
         this.userId = userId;
         this.userName = userName;
         this.topParentId = topParentId;
+        this.parentUserId = parentUserId;
         this.text = text;
         this.discussionId = discussionId;
         this.numOfParents = numOfParents;
@@ -56,6 +61,7 @@ public class CommentObj implements JSONWriter {
         this.modified = modified;
         this.numberOfVotes = numberOfVotes;
         this.deleted = deleted;
+        this.read = read;
 
         this.embedded = new ArrayList<>();
 
@@ -72,6 +78,7 @@ public class CommentObj implements JSONWriter {
                 cv.getString("text_"),
                 cv.getLong("path_length"),
                 cv.getLong("parent_id"),
+                cv.getLong("parent_user_id"),
                 cv.getString("breadcrumbs"),
                 cv.getLong("num_of_parents"),
                 cv.getLong("num_of_children"),
@@ -79,6 +86,7 @@ public class CommentObj implements JSONWriter {
                 vote,
                 cv.getInteger("number_of_votes"),
                 cv.getBoolean("deleted"),
+                cv.getBoolean("read"),
                 cv.getTimestamp("created"),
                 cv.getTimestamp("modified"));
     }
@@ -128,7 +136,8 @@ public class CommentObj implements JSONWriter {
 
 
         private static Double getRank(CommentObj co) {
-            RankingConstantsObj rco = ChatService.rankingConstants;
+
+            RankingConstantsObj rco = Constants.INSTANCE.getRankingConstants();
 
             Double timeDifference= (new Date().getTime()-co.getCreated().getTime())*0.001;
             Double timeRank = rco.getCreatedWeight()/timeDifference;
@@ -222,4 +231,7 @@ public class CommentObj implements JSONWriter {
 
     public Boolean getDeleted() {return deleted;}
 
+    public Long getParentUserId() {return parentUserId;}
+
+    public Boolean getRead() {return read;}
 }

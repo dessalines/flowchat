@@ -112,6 +112,7 @@ create table comment (
     discussion_id bigint not null,
     text_ text not null,
     deleted boolean not null default false,
+    read boolean not null default false,
     created timestamp default current_timestamp,
     modified timestamp,
     constraint fk1_comment_user foreign key (user_id)
@@ -187,7 +188,7 @@ insert into discussion_tag (discussion_id, tag_id)
 
 insert into comment (text_, user_id, discussion_id)
 	values ('Node 1',1,1),('Node 1.1',2,1),('Node 2',3,1),('Node 1.1.1',2,1),('Node 2.1',1,1),
-	('Node 1.2',2,1);
+	('Node 1.2',2,1),('Node 3',4,1),('Node 3.1',2,1);
 
 insert into comment_rank (comment_id, user_id, rank)
     values (1, 2, 40), (1, 3, 75), (2, 1, 100);
@@ -198,7 +199,9 @@ insert into comment_tree (parent_id, child_id, path_length)
               (3,3,0), (3,5,1),
               (4,4,0),
               (5,5,0),
-              (6,6,0);
+              (6,6,0),
+              (7,7,0), (7,8,1),
+              (8,8,0);
 
 insert into ranking_constants (created_weight,number_of_votes_weight,avg_rank_weight)
     values (1000000, .001, .01);
