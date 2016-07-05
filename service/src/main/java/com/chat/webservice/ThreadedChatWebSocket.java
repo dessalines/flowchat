@@ -52,7 +52,7 @@ public class ThreadedChatWebSocket {
 
 
         // send the comments
-        session.getRemote().sendString(new Comments(comments, fetchVotesMap(ss.getUserObj().getId())).json());
+        session.getRemote().sendString(Comments.create(comments, fetchVotesMap(ss.getUserObj().getId())).json());
 
         // send the user's comments votes to them only
         LazyList<CommentRank> votes = CommentRank.where("user_id = ?", ss.getUserObj().getId());

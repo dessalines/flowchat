@@ -219,6 +219,14 @@ public class Actions {
 
     }
 
+    public static String markReplyAsRead(Long commentId) {
+
+        Comment c = Comment.findFirst("id = ?", commentId);
+        c.set("read", true).saveIt();
+
+        return Tools.buildMessage("Success");
+
+    }
 
 
     private static class UserFromHeader {
