@@ -17,7 +17,6 @@ export class DiscussionService {
   private createDiscussionUrl: string = "http://localhost:4567/create_discussion";
   private saveDiscussionUrl: string = "http://localhost:4567/save_discussion";
 
-
   private getDiscussionsUrl(limit: number, page: number, tagId: string,
     orderBy: string): string {
     return 'http://localhost:4567/get_discussions/' + tagId + '/' +

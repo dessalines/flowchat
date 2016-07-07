@@ -11,6 +11,8 @@ import {ChatComponent} from '../chat';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import {TYPEAHEAD_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+import {MarkdownPipe} from '../../pipes/markdown.pipe';
+import { MomentPipe } from '../../pipes/moment.pipe';
 
 
 @Component({
@@ -21,7 +23,8 @@ import {TYPEAHEAD_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
   directives: [MODAL_DIRECTVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES, ROUTER_DIRECTIVES,
     TYPEAHEAD_DIRECTIVES],
   providers: [LoginService],
-  viewProviders: [BS_VIEW_PROVIDERS]
+  viewProviders: [BS_VIEW_PROVIDERS],
+  pipes: [MomentPipe, MarkdownPipe]
 })
 export class NavbarComponent implements OnInit {
 
@@ -36,7 +39,7 @@ export class NavbarComponent implements OnInit {
   private discussionTypeaheadLoading: boolean = false;
   private discussionTypeaheadNoResults: boolean = false;
 
-  private unreadComments: Array<Comment>;
+  private unreadMessages: Array<Comment>;
 
   constructor(private userService: UserService,
     private loginService: LoginService,
@@ -137,12 +140,25 @@ export class NavbarComponent implements OnInit {
   }
 
   fetchNotifications() {
-    this.notificationsService.getUnreadComments().subscribe(t => {
-      console.log(t);
-      this.unreadComments = t.comments;
-      console.log(this.unreadComments);
+    this.notificationsService.getUnreadMessages().subscribe(
+      t => this.unreadMessages = t.comments);
+  }
+
+  gotoMessage(message: Comment) {
+
+    // Mark the message as read
+    this.notificationsService.markMessageAsRead(message.id).subscribe(t => {
+      // Remove it from the array
+      let index = this.unreadMessages.indexOf(message);
+      this.unreadMessages.splice(index,1);
+
+      // Navigate to the parent message (IE, your message)
+      this.router.navigate(['/Discussion', { discussionId: message.discussionId}, 
+        'ChatSub', {commentId: message.parentId}]);
+  
     });
   }
+    
 
 
 }
