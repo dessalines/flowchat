@@ -29,6 +29,8 @@ public class ChatService {
         staticFiles.externalLocation("../ui/dist");
 //        staticFiles.expireTime(600);
 
+        // Instantiates the ranking constants
+        ConstantsService.INSTANCE.getRankingConstants();
 
         webSocket("/threaded_chat", ThreadedChatWebSocket.class);
 
@@ -428,7 +430,7 @@ public class ChatService {
                         "parent_user_id = ? and user_id != ? and read = false",
                         userObj.getId(), userObj.getId());
 
-                Comments comments = Comments.create(cbv, null);
+                Comments comments = Comments.replies(cbv);
 
                 log.info(comments.json());
 
@@ -439,7 +441,6 @@ public class ChatService {
                 e.printStackTrace();
                 return Tools.buildMessage(e.getMessage());
             }
-
 
         });
 
@@ -483,9 +484,9 @@ public class ChatService {
     public static String constructOrderByCustom(String orderBy) {
         // For the custom sorting based on ranking
         if (orderBy.equals("custom")) {
-            orderBy = "ranking(created, " + Constants.INSTANCE.getRankingConstants().getCreatedWeight() +
-                    ",number_of_votes, " + Constants.INSTANCE.getRankingConstants().getNumberOfVotesWeight() +
-                    ",avg_rank, " + Constants.INSTANCE.getRankingConstants().getAvgRankWeight() +
+            orderBy = "ranking(created, " + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight() +
+                    ",number_of_votes, " + ConstantsService.INSTANCE.getRankingConstants().getNumberOfVotesWeight() +
+                    ",avg_rank, " + ConstantsService.INSTANCE.getRankingConstants().getAvgRankWeight() +
                     ") desc";
         }
 
@@ -495,8 +496,8 @@ public class ChatService {
     public static String constructOrderByPopularTagsCustom(String orderBy) {
         // For the custom sorting based on ranking
         if (orderBy.equals("custom")) {
-            orderBy = "ranking(created, " + Constants.INSTANCE.getRankingConstants().getCreatedWeight() +
-                    ",count, " + Constants.INSTANCE.getRankingConstants().getNumberOfVotesWeight() +
+            orderBy = "ranking(created, " + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight() +
+                    ",count, " + ConstantsService.INSTANCE.getRankingConstants().getNumberOfVotesWeight() +
                     ") desc";
         }
 

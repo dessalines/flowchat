@@ -36,7 +36,6 @@ public class RankingConstantsObj {
     public Double getCreatedWeight() {
         return createdWeight;
     }
-
     public Double getNumberOfVotesWeight() {
         return numberOfVotesWeight;
     }

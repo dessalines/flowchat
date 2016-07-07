@@ -55,9 +55,9 @@ public class Tools {
 
         try {
             new DB("default").open("org.postgresql.Driver",
-                    "jdbc:postgresql://127.0.0.1/test",
-                    "tyler",
-                    "test");
+                    DataSources.PROPERTIES.getProperty("jdbc_location"),
+                    DataSources.PROPERTIES.getProperty("jdbc_user"),
+                    DataSources.PROPERTIES.getProperty("jdbc_password"));
         } catch (DBException e) {
             e.printStackTrace();
             dbClose();
@@ -82,6 +82,12 @@ public class Tools {
             prop.load(input);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally  {
+            try {
+                input.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return prop;
 

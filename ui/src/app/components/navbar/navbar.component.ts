@@ -4,7 +4,8 @@ import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS, DROPDOWN_DIRECTIVES} from 'ng2-boots
 import {LoginService} from '../../services/login.service';
 import {UserService} from '../../services/user.service';
 import {DiscussionService} from '../../services/discussion.service';
-import {User, Discussion, Tools} from '../../shared';
+import {NotificationsService} from '../../services/notifications.service';
+import {User, Discussion, Comment, Tools} from '../../shared';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
 import {ChatComponent} from '../chat';
 import { Subject } from 'rxjs/Subject';
@@ -35,10 +36,13 @@ export class NavbarComponent implements OnInit {
   private discussionTypeaheadLoading: boolean = false;
   private discussionTypeaheadNoResults: boolean = false;
 
+  private unreadComments: Array<Comment>;
+
   constructor(private userService: UserService,
     private loginService: LoginService,
     private router: Router,
-    private discussionService: DiscussionService) {
+    private discussionService: DiscussionService,
+    private notificationsService: NotificationsService) {
 
   }
 
@@ -48,6 +52,7 @@ export class NavbarComponent implements OnInit {
     }
 
     this.setupDiscussionSearch();
+    this.fetchNotifications();
   }
 
   getOrCreateUser() {
@@ -109,9 +114,7 @@ export class NavbarComponent implements OnInit {
       .distinctUntilChanged()
       .switchMap((term: string) => this.discussionService.searchDiscussions(term));
 
-    this.discussionResultsObservable.subscribe(t => {
-      this.discussionSearchResults = t.discussions;
-    });
+    this.discussionResultsObservable.subscribe(t => this.discussionSearchResults = t.discussions);
     // this.tagSearch('a');
   }
 
@@ -133,6 +136,13 @@ export class NavbarComponent implements OnInit {
     this.discussionTypeaheadNoResults = e;
   }
 
+  fetchNotifications() {
+    this.notificationsService.getUnreadComments().subscribe(t => {
+      console.log(t);
+      this.unreadComments = t.comments;
+      console.log(this.unreadComments);
+    });
+  }
 
 
 }

@@ -13,15 +13,15 @@
 
 .card-columns {
   -webkit-column-count: 3;
-     -moz-column-count: 3;
-          column-count: 3;
+  -moz-column-count: 3;
+  column-count: 3;
   -webkit-column-gap: 1.25rem;
-     -moz-column-gap: 1.25rem;
-          column-gap: 1.25rem;
+  -moz-column-gap: 1.25rem;
+  column-gap: 1.25rem;
 }
 
 .label {
-	vertical-align: middle;
+  vertical-align: middle;
 }
 
 .list-group-item {
@@ -34,7 +34,8 @@
 }
 
 .truncate {
-  display: inline-block; /* or inline-block */
+  display: inline-block;
+  /* or inline-block */
   text-overflow: ellipsis;
   word-wrap: break-word;
   overflow: hidden;
@@ -46,21 +47,32 @@ blockquote {
   margin: 0 10px .5rem;
   padding-left: 10px;
   border-left: 3px solid #ccc;
-} 
-
-.dropdown-menu>li>a {
-    display: block;
-    padding: 3px 20px;
-    clear: both;
-    font-weight: 400;
-    line-height: 1.42857143;
-    color: #333;
-    white-space: nowrap;
 }
 
-.dropdown-menu>.active>a, .dropdown-menu>.active>a:focus, .dropdown-menu>.active>a:hover {
-    color: #fff;
-    text-decoration: none;
-    background-color: #337ab7;
-    outline: 0;
+.dropdown-menu>li>a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #333;
+  white-space: nowrap;
+}
+
+.dropdown-menu>.active>a,
+.dropdown-menu>.active>a:focus,
+.dropdown-menu>.active>a:hover {
+  color: #fff;
+  text-decoration: none;
+  background-color: #337ab7;
+  outline: 0;
+}
+
+.navbar-label {
+  font-size: 10px;
+  padding: 0 3px;
+  line-height: 10px;
+  position: absolute;
+  display: block;
+  right: 15px;
 }

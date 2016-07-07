@@ -1,10 +1,8 @@
 package com.chat.types;
 
 
-import com.chat.db.Tables;
 import com.chat.tools.Tools;
-import com.chat.webservice.ChatService;
-import com.chat.webservice.Constants;
+import com.chat.webservice.ConstantsService;
 import org.javalite.activejdbc.Model;
 
 import java.sql.Timestamp;
@@ -137,7 +135,7 @@ public class CommentObj implements JSONWriter {
 
         private static Double getRank(CommentObj co) {
 
-            RankingConstantsObj rco = Constants.INSTANCE.getRankingConstants();
+            RankingConstantsObj rco = ConstantsService.INSTANCE.getRankingConstants();
 
             Double timeDifference= (new Date().getTime()-co.getCreated().getTime())*0.001;
             Double timeRank = rco.getCreatedWeight()/timeDifference;
