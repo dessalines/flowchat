@@ -5,18 +5,15 @@ import com.chat.db.Transformations;
 import com.chat.types.CommentObj;
 import com.chat.types.Comments;
 import com.chat.types.DiscussionObj;
-import com.chat.webservice.Constants;
+import com.chat.webservice.ConstantsService;
 import org.javalite.activejdbc.LazyList;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-import java.sql.Array;
 import java.sql.SQLException;
 import java.util.List;
 
-import java.sql.Timestamp;
 import java.util.*;
-import java.util.stream.IntStream;
 
 import com.chat.tools.Tools;
 import org.postgresql.jdbc.PgArray;
@@ -34,7 +31,7 @@ public class AppTest {
 
     @Before
     public void setUp() {
-        Constants.INSTANCE.getRankingConstants();
+        ConstantsService.INSTANCE.getRankingConstants();
         Tools.dbInit();
     }
 

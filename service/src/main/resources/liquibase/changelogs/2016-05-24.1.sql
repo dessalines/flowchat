@@ -146,4 +146,4 @@ order by a.id, b.breadcrumbs;
 
 
 
---rollback drop view user_view cascade; drop view user_login_view cascade; drop view comment_threaded_view cascade; drop view comment_breadcrumbs_view cascade; drop view children_view cascade;
+--rollback drop view user_view cascade; drop view user_login_view cascade; drop view comment_threaded_view cascade; drop view comment_breadcrumbs_view cascade; drop view children_view cascade; drop view discussion_full_view cascade; drop view discussion_notext_view cascade;

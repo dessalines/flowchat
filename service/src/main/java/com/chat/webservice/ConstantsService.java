@@ -1,17 +1,16 @@
 package com.chat.webservice;
 
-import com.chat.db.Tables;
 import com.chat.types.RankingConstantsObj;
 
 /**
  * Created by tyler on 7/5/16.
  */
-public enum Constants {
+public enum ConstantsService {
     INSTANCE;
 
     private RankingConstantsObj rco;
 
-    Constants() {
+    ConstantsService() {
         rco = RankingConstantsObj.fetchRankingConstants();
     }
 

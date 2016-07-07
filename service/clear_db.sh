@@ -1,0 +1,1 @@
+mvn liquibase:dropAll

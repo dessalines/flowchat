@@ -16,7 +16,8 @@
         <li class="nav-item">
           <form class="form-inline">
             <input #discussionTerm="ngForm" (keyup)="discussionSearch(discussionTerm.value)"
-              [(ngModel)]="discussionSearchTerm" [typeahead]="discussionSearchResults"
+              [(ngModel)]="discussionSearchTerm"
+              [typeahead]="discussionSearchResults"
               (typeaheadOnSelect)="discussionTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'title'"
               (typeaheadLoading)="discussionChangeTypeaheadLoading($event)"
@@ -40,15 +41,22 @@
         </li>
       </ul>
       <ul *ngIf="userService.isFullUser()" class="nav navbar-nav pull-xs-right">
-        <li class="nav-item">
-          <a class="nav-link link-unstyled"><i class="fa fa-fw fa-bell"></i></a>
+        <li dropdown class="nav-item" keyboardNav="true">
+          <a class="nav-link link-unstyled" role="button"
+            type="button" dropdownToggle>
+            <span class="label label-info navbar-label">{{unreadComments?.length}}</span>
+            <i class="fa fa-fw fa-bell-o"></i>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li role="menuitem"><a class="dropdown-item" href="#">Derp</a></li>
+          </ul>
         </li>
         <li dropdown class="nav-item" keyboardNav="true">
-          <a id="simple-btn-keyboard-nav" class="nav-link link-unstyled"
-            role="button" type="button" dropdownToggle>
-          {{userService.getUser().name}}<span class="caret"></span>
-        </a>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="simple-btn-keyboard-nav">
+          <a class="nav-link link-unstyled" role="button"
+            type="button" dropdownToggle>
+            {{userService.getUser().name}}<span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
             <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
             <li class="divider dropdown-divider"></li>
             <li role="menuitem"><a (click)="logout()" class="dropdown-item"
