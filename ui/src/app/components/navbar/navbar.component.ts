@@ -10,7 +10,7 @@ import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
 import {ChatComponent} from '../chat';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import {TYPEAHEAD_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+import {TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 import {MarkdownPipe} from '../../pipes/markdown.pipe';
 import { MomentPipe } from '../../pipes/moment.pipe';
 
@@ -21,7 +21,7 @@ import { MomentPipe } from '../../pipes/moment.pipe';
   templateUrl: 'navbar.component.html',
   styleUrls: ['navbar.component.css'],
   directives: [MODAL_DIRECTVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES, ROUTER_DIRECTIVES,
-    TYPEAHEAD_DIRECTIVES],
+    TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES],
   providers: [LoginService],
   viewProviders: [BS_VIEW_PROVIDERS],
   pipes: [MomentPipe, MarkdownPipe]
