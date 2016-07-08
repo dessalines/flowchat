@@ -72,7 +72,11 @@ export class DiscussionCardComponent implements OnInit {
 
 
   isCreator(): boolean {
-    return this.userService.getUser().id == this.discussion.userId;
+    if (this.userService.getUser() != null) {
+      return this.userService.getUser().id == this.discussion.userId;
+    } else {
+      return false;
+    }
   }
 
   toggleEditMode() {
