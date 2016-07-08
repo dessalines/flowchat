@@ -98,7 +98,11 @@ export class NavbarComponent implements OnInit {
 
   logout() {
     this.userService.logout();
+
+    // Then relog back in as a random user (Necessary because a lot of fetches fail otherwise)
+    this.getOrCreateUser();
     this.router.navigate(['Home']);
+   
   }
 
   createDiscussion() {
