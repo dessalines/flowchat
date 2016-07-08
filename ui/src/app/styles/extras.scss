@@ -85,3 +85,7 @@ blockquote {
   display: block;
   right: 15px;
 }
+
+.card-title, .card-text, .card-text>p {
+  margin-bottom: .2rem;
+}
