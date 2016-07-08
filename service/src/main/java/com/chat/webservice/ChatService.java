@@ -182,7 +182,7 @@ public class ChatService {
                 Set<Long> ids = dntvs.collectDistinct("id");
 
                 // Get your votes for those discussions:
-                Map<Long, Integer> discussionRankMap = Transformations.convertDiscussionRankToMap(ids, userObj);
+                Map<Long, Integer> discussionRankMap = (!ids.isEmpty()) ? Transformations.convertDiscussionRankToMap(ids, userObj) : null;
 
                 // Build discussion objects
                 Discussions discussions = Discussions.create(dntvs, discussionRankMap);

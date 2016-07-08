@@ -169,7 +169,14 @@ insert into full_user (user_id, email, password_encrypted)
 insert into discussion (title, user_id, link, text_, private)
     values ('Cats', 1, 'http://google.com', null, false),
     ('Dogs', 2, null,'**ima** dog', false),
-    ('Only kittens',3,  null, 'kittens only here plz.', true);
+    ('Only kittens',3,  null, 'kittens only here plz.', true),
+    ('Kittens', 1, 'http://google.com', null, false),
+    ('Bees are cool, no?', 1, 'http://google.com', null, false),
+    ('Should I go there?', 1, 'http://google.com', null, false),
+    ('FULLCOMMUNISM FTW', 1, 'http://google.com', null, false),
+    ('Love weed, hate poor people', 1, 'http://google.com', null, false),
+    ('Puppies', 1, 'http://google.com', null, false),
+    ('Mittens', 1, 'http://google.com', null, false);
 
 insert into private_discussion_user(discussion_id, user_id)
     values (3,4);

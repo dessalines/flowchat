@@ -1,28 +1,24 @@
 # FlowChat
 
 # TODO
+- Update Readme
+- Get font awesome working locally
 - Add https support
 - Add a paypal donate button
-- Create a beautiful front page like [slack's](https://slack.com/is)
+- Create a beautiful about page like [slack's](https://slack.com/is)
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - Figure out how to get thumbnails from links.... might be tough for non-imgur-like things. 
   - Get working for imgur first. 
 - Build startup documentation, setting up postgres, git clone. 
-- Set up new repo on github called flow
+- Set up new repo on github called flowchat
   - Set up Digital Ocean Server
   - Get domain name, flowchat or flow.ml
   - Set up Travis-CI builds
   - Set up deployment with [travis-ci](https://neemzy.org/articles/deploy-to-your-own-server-through-ssh-with-travis-ci)
-- Add a forum mod startup page:
-  - Currently, only have the rank weighting on it.
-- Front page is the list of discussions.
-  - Needs to have smart scrolling
-  - Add popular tags
-- Poll every so often for new messages.
+- Paginate / smart scrolling for both comments and discussions
 - Add moderator abilities: 
   - removing comments
   - blocking users
-- Add tooltips for everything, move to icons not text
 
 # Finished
 - Move sorting stuff to .properties file

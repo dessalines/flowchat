@@ -118,7 +118,7 @@ public class AppTest {
         LazyList<DiscussionNoTextView> dntvs = DiscussionNoTextView.findAll();
         Set<Long> ids = dntvs.collectDistinct("id");
 
-        assertTrue(Tools.convertListToInQuery(ids).equals("(1, 2, 3)"));
+        assertTrue(Tools.convertListToInQuery(ids).contains("(1, 2, 3"));
     }
 
     @Test
