@@ -19,8 +19,11 @@ import { Router, ROUTER_DIRECTIVES, RouteData, RouteParams } from '@angular/rout
 })
 export class HomeComponent implements OnInit {
 
-  private discussions: Array<Discussion>;
+  private discussions: Array<Discussion> = [];
   private popularTags: Array<Tag>;
+
+  private currentPageNum: number = 1;
+  private scrollDebounce: number = 0;
 
   constructor(private toasterService: ToasterService,
     private discussionService: DiscussionService,
@@ -32,14 +35,28 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getDiscussions();
+    this.getDiscussions(this.currentPageNum);
     this.getPopularTags();
   }
 
-  getDiscussions() {
-    this.discussionService.getDiscussions().subscribe(
+  onScroll(event) {
+
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+      if (this.scrollDebounce == 0) {
+        this.scrollDebounce = 1;
+        // you're at the bottom of the page
+        this.currentPageNum += 1;
+        this.getDiscussions(this.currentPageNum);
+        setTimeout(() => this.scrollDebounce = 0, 1000);
+      }
+    }
+  }
+
+  getDiscussions(page: number) {
+    this.discussionService.getDiscussions(page).subscribe(
       d => {
-        this.discussions = d.discussions;
+        // Append them
+        this.discussions.push(...d.discussions);
       });
   }
 

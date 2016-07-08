@@ -1,13 +1,15 @@
 <div class="container">
   <h3>New Discussions</h3>
+  <small>
   <ul *ngIf="popularTags" class="list-inline">trending tags:
     <li class="label label-default list-inline-item"
       *ngFor="let tag of popularTags">
       <a class="link-unstyled" [routerLink]="['/Tag', {tagId: tag.id}]">{{removeQuotes(tag.name)}}</a>
     </li>
   </ul>
+  </small>
   <hr>
-  <div class="card-columns">
+  <div (window:scroll)="onScroll($event)" class="card-columns">
     <app-discussion-card *ngFor="let discussion of discussions"
       [discussion]="discussion"></app-discussion-card>
   </div>

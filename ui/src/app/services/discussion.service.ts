@@ -17,7 +17,7 @@ export class DiscussionService {
   private createDiscussionUrl: string = "http://localhost:4567/create_discussion";
   private saveDiscussionUrl: string = "http://localhost:4567/save_discussion";
 
-  private getDiscussionsUrl(limit: number, page: number, tagId: string,
+  private getDiscussionsUrl(page: number, limit: number, tagId: string,
     orderBy: string): string {
     return 'http://localhost:4567/get_discussions/' + tagId + '/' +
       limit + '/' + page + '/' + orderBy;
@@ -33,9 +33,9 @@ export class DiscussionService {
       .catch(this.handleError);
   }
 
-  getDiscussions(limit: number = 10, page: number = 1, tagId: string = 'all',
+  getDiscussions(page: number = 1, limit: number = 3, tagId: string = 'all',
     orderBy: string = 'custom') {
-    return this.http.get(this.getDiscussionsUrl(limit, page, tagId, orderBy), this.userService.getOptions())
+    return this.http.get(this.getDiscussionsUrl(page, limit, tagId, orderBy), this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
