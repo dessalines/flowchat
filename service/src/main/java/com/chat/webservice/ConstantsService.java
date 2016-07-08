@@ -1,5 +1,6 @@
 package com.chat.webservice;
 
+import com.chat.tools.Tools;
 import com.chat.types.RankingConstantsObj;
 
 /**
@@ -11,7 +12,14 @@ public enum ConstantsService {
     private RankingConstantsObj rco;
 
     ConstantsService() {
+
+        // Need to write the sorting comments from the properties file to the DB
+        // They are used both in code, and in the DB
+        RankingConstantsObj.writeRankingConstantsToDBFromPropertiesFile();
+
+        // Fetch them from the DB
         rco = RankingConstantsObj.fetchRankingConstants();
+
     }
 
     public RankingConstantsObj getRankingConstants() {

@@ -1,11 +1,8 @@
-# chat-websocket
+# FlowChat
 
 # TODO
 
-- Top nav with bell alerts for if someone replied directly to your comment, clicking goes to that discussion comment parent. 
-  - [Periodically fetching observable](http://www.codegur.online/36086596/periodically-updating-observable-value-in-angular2)
-  - Add 'read' boolean to comments. 
-  - [Good Notification Example](http://infinite-woodland-5276.herokuapp.com/index.html)
+
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - Figure out how to get thumbnails from links.... might be tough for non-imgur-like things. 
   - Get working for imgur first. 
@@ -27,6 +24,11 @@
 - Add tooltips for everything, move to icons not text
 
 # Finished
+- Move sorting stuff to .properties file
+- Top nav with bell alerts for if someone replied directly to your comment, clicking goes to that discussion comment parent. 
+  - [Periodically fetching observable](http://www.codegur.online/36086596/periodically-updating-observable-value-in-angular2)
+  - Add 'read' boolean to comments. 
+  - [Good Notification Example](http://infinite-woodland-5276.herokuapp.com/index.html)
 - Search bar, search for (public) discussions, or tags
   - Only got it for discussions
 - Add trending algorithms [1](http://sorentwo.com/2013/12/30/let-postgres-do-the-work.html)
