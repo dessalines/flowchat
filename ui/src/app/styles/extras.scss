@@ -49,6 +49,10 @@ blockquote {
   border-left: 3px solid #ccc;
 }
 
+.dropdown-menu {
+  margin: 8px 0 0;
+}
+
 .dropdown-menu>li>a {
   display: block;
   padding: 3px 20px;
@@ -61,6 +65,7 @@ blockquote {
 
 .dropdown-menu>li>div>div>p {
   margin-bottom: .2rem;
+  white-space: normal;
 }
 
 .dropdown-menu>.active>a,

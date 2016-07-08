@@ -47,7 +47,7 @@
             <span *ngIf="unreadMessages?.length > 0" class="label label-info navbar-label">{{unreadMessages?.length}}</span>
             <i class="fa fa-fw fa-envelope-o"></i>
           </a>
-          <ul class="dropdown-menu" role="menu">
+          <ul class="dropdown-menu messages-dropdown" role="menu">
             <h6 class="dropdown-header">Messages</h6>
             <li *ngFor="let message of unreadMessages"
               role="menuitem">
