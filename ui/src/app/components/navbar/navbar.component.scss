@@ -5,7 +5,7 @@
 .navbar {
   border-bottom: 1px solid #e5e5e5;
   background-color: #f5f5f5;
-  height: 60px;
+  min-height: 60px;
 }
 
 .navbar-brand {
@@ -15,8 +15,12 @@
 }
 
 .messages-dropdown {
-  left: -200px;
+  left: -400px;
   width: 435px;
+}
+
+.user-dropdown {
+  left: -60px;
 }
 
 .navbar-label {
@@ -37,12 +41,20 @@
   padding-top: .3rem;
 }
 
+.nav-item>form {
+  margin-top: -.1rem
+}
+
 .nav-item.dropdown {
-    margin-left: .6rem;
+  margin-left: .6rem;
 }
 
 @media (min-width: 544px) {
   .form-inline .form-control {
     width: 350px;
   }
+}
+
+.btn-primary-outline {
+  border-color: #433a3c;
 }

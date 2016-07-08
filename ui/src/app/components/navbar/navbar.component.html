@@ -1,5 +1,5 @@
 <nav class="navbar navbar-full navbar-light">
-  <div class="container">
+  <div class="container-fluid">
     <button class="navbar-toggler hidden-sm-up"
       type="button" data-toggle="collapse"
       data-target="#exCollapsingNavbar2">
@@ -23,6 +23,17 @@
             <button class="btn-link" type="submit"><i class="fa fa-fw fa-search"></i></button>
           </form>
         </li>
+        <li class="nav-item">
+          <a class="nav-link link-unstyled">About</a>
+        </li>
+        <li class="nav-item">
+          <a role="button" class="nav-link link-unstyled"
+            (click)="createDiscussion()">Create a discussion</a>
+        </li>
+        <li class="nav-item">
+          <a role="button" class="nav-link link-unstyled"
+            tooltipPlacement="bottom" tooltip="Donate"><small><i class="fa fa-fw fa-beer text-muted"></i></small></a>
+        </li>
       </ul>
       <ul *ngIf="userService.isFullUser()" class="nav navbar-nav pull-xs-right">
         <li dropdown class="nav-item" keyboardNav="true">
@@ -41,13 +52,13 @@
                 (click)="gotoMessage(message)">
                 <div [innerHTML]="message.text | markdown"></div>
                 <small>
-                <ul class="list-inline">
-                  <li class="list-inline-item">from {{message.userName}}</li>
-                  <li *ngIf="message.deleted" class="text-muted list-inline-item"><small><i>deleted {{message.modified | moment}}</i></small></li>
+                  <ul class="list-inline">
+                    <li class="list-inline-item">from {{message.userName}}</li>
+                    <li *ngIf="message.deleted" class="text-muted list-inline-item"><small><i>deleted {{message.modified | moment}}</i></small></li>
             <span *ngIf="!message.deleted">
-                    <li *ngIf="!message.modified" class="text-muted list-inline-item"><small>{{message.created | moment}}</small></li>
-                    <li *ngIf="message.modified" class="text-muted list-inline-item"><small><i>modified {{message.modified | moment}}</i></small></li>
-                  </span>
+                      <li *ngIf="!message.modified" class="text-muted list-inline-item"><small>{{message.created | moment}}</small></li>
+                      <li *ngIf="message.modified" class="text-muted list-inline-item"><small><i>modified {{message.modified | moment}}</i></small></li>
+                    </span>
           </ul>
           </small>
           </div>
@@ -59,7 +70,7 @@
           type="button" dropdownToggle>
             {{userService.getUser().name}}<span class="caret"></span>
           </a>
-        <ul class="dropdown-menu" role="menu">
+        <ul class="dropdown-menu user-dropdown" role="menu">
           <!--             <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
             <li class="divider dropdown-divider"></li> -->
           <li role="menuitem"><a (click)="logout()" class="dropdown-item"
@@ -68,11 +79,6 @@
       </li>
       </ul>
       <ul class="nav navbar-nav pull-xs-right">
-        <li class="nav-item">
-          <a role="button" class="nav-link link-unstyled"
-            (click)="createDiscussion()" tooltipPlacement="bottom"
-            tooltip="Create a discussion"><i class="fa fa-fw fa-plus"></i></a>
-        </li>
         <li *ngIf="!userService.isFullUser()" class="nav-item">
           <a role="button" class="nav-link link-unstyled"
             (click)="loginModal.show()">Login/Signup</a>
