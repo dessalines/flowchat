@@ -10,10 +10,6 @@
       <a class="navbar-brand" [routerLink]="['Home']"><i class="fa fa-fw fa-comment-o"></i>&nbsp;FlowChat</a>
       <ul class="nav navbar-nav">
         <li class="nav-item">
-          <a role="button" class="nav-link link-unstyled"
-            (click)="createDiscussion()">Create discussion</a>
-        </li>
-        <li class="nav-item">
           <form class="form-inline">
             <input #discussionTerm="ngForm" (keyup)="discussionSearch(discussionTerm.value)"
               [(ngModel)]="discussionSearchTerm"
@@ -28,56 +24,62 @@
           </form>
         </li>
       </ul>
-      <ul class="nav navbar-nav pull-xs-right">
-        <li class="nav-item">
-          <a *ngIf="!userService.isFullUser()" role="button"
-            class="nav-link link-unstyled"
-            (click)="loginModal.show()">Login/Signup</a>
-        </li>
-        <li class="nav-item hidden-xs-up">
-          <a *ngIf="userService.isAnonymousUser()"
-            (click)="logout()" role="button"
-            class="nav-link link-unstyled">Logout</a>
-        </li>
-      </ul>
       <ul *ngIf="userService.isFullUser()" class="nav navbar-nav pull-xs-right">
         <li dropdown class="nav-item" keyboardNav="true">
           <a class="nav-link link-unstyled" role="button"
-            type="button" dropdownToggle>
+            type="button" dropdownToggle tooltipPlacement="bottom"
+            tooltip="Messages">
             <span *ngIf="unreadMessages?.length > 0" class="label label-info navbar-label">{{unreadMessages?.length}}</span>
             <i class="fa fa-fw fa-envelope-o"></i>
           </a>
-          <ul class="dropdown-menu messages-dropdown" role="menu">
+          <ul class="dropdown-menu messages-dropdown"
+            role="menu">
             <h6 class="dropdown-header">Messages</h6>
             <li *ngFor="let message of unreadMessages"
               role="menuitem">
-              <div class="dropdown-item" role="button" (click)="gotoMessage(message)">
+              <div class="dropdown-item" role="button"
+                (click)="gotoMessage(message)">
                 <div [innerHTML]="message.text | markdown"></div>
                 <small>
                 <ul class="list-inline">
                   <li class="list-inline-item">from {{message.userName}}</li>
                   <li *ngIf="message.deleted" class="text-muted list-inline-item"><small><i>deleted {{message.modified | moment}}</i></small></li>
-                  <span *ngIf="!message.deleted">
+            <span *ngIf="!message.deleted">
                     <li *ngIf="!message.modified" class="text-muted list-inline-item"><small>{{message.created | moment}}</small></li>
                     <li *ngIf="message.modified" class="text-muted list-inline-item"><small><i>modified {{message.modified | moment}}</i></small></li>
                   </span>
-                </ul>
-                </small>
-              </div>
-            </li>
           </ul>
+          </small>
+          </div>
         </li>
-        <li dropdown class="nav-item" keyboardNav="true">
-          <a class="nav-link link-unstyled" role="button"
-            type="button" dropdownToggle>
+      </ul>
+      </li>
+      <li dropdown class="nav-item" keyboardNav="true">
+        <a class="nav-link link-unstyled" role="button"
+          type="button" dropdownToggle>
             {{userService.getUser().name}}<span class="caret"></span>
           </a>
-          <ul class="dropdown-menu" role="menu">
-            <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
-            <li class="divider dropdown-divider"></li>
-            <li role="menuitem"><a (click)="logout()" class="dropdown-item"
-                href="#">Logout</a></li>
-          </ul>
+        <ul class="dropdown-menu" role="menu">
+          <!--             <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
+            <li class="divider dropdown-divider"></li> -->
+          <li role="menuitem"><a (click)="logout()" class="dropdown-item"
+              href="#"><i class="fa fa-fw fa-sign-out"></i>Logout</a></li>
+        </ul>
+      </li>
+      </ul>
+      <ul class="nav navbar-nav pull-xs-right">
+        <li class="nav-item">
+          <a role="button" class="nav-link link-unstyled"
+            (click)="createDiscussion()" tooltipPlacement="bottom"
+            tooltip="Create a discussion"><i class="fa fa-fw fa-plus"></i></a>
+        </li>
+        <li *ngIf="!userService.isFullUser()" class="nav-item">
+          <a role="button" class="nav-link link-unstyled"
+            (click)="loginModal.show()">Login/Signup</a>
+        </li>
+        <li *ngIf="userService.isAnonymousUser()"
+          class="nav-item hidden-xs-up">
+          <a (click)="logout()" role="button" class="nav-link link-unstyled">Logout</a>
         </li>
       </ul>
     </div>

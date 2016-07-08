@@ -37,6 +37,10 @@
   padding-top: .3rem;
 }
 
+.nav-item.dropdown {
+    margin-left: .6rem;
+}
+
 @media (min-width: 544px) {
   .form-inline .form-control {
     width: 350px;

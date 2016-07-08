@@ -1,8 +1,7 @@
 # FlowChat
 
 # TODO
-
-
+- Create a beautiful front page like [slack's](https://slack.com/is)
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - Figure out how to get thumbnails from links.... might be tough for non-imgur-like things. 
   - Get working for imgur first. 
