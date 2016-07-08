@@ -1,2 +1,2 @@
-pkill -9 -f target/chat-websocket.jar
-nohup java -jar target/chat-websocket.jar >> log.out &
+pkill -9 -f target/flowchat.jar
+nohup java -jar target/flowchat.jar >> log.out &

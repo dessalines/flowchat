@@ -1,6 +1,6 @@
 {
-  "name": "chat-practice-ui",
-  "version": "0.0.0",
+  "name": "flowchat",
+  "version": "0.0.1",
   "license": "MIT",
   "angular-cli": {},
   "scripts": {

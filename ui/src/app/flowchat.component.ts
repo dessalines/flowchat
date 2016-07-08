@@ -13,9 +13,9 @@ import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2
 
 @Component({
   moduleId: module.id,
-  selector: 'chat-practice-ui-app',
-  templateUrl: 'chat-practice-ui.component.html',
-  styleUrls: ['chat-practice-ui.component.css'],
+  selector: 'flowchat-app',
+  templateUrl: 'flowchat.component.html',
+  styleUrls: ['flowchat.component.css'],
   directives: [NavbarComponent, ROUTER_DIRECTIVES, ToasterContainerComponent],
   providers: [UserService, ToasterService, DiscussionService, TagService, NotificationsService]
 })
@@ -25,7 +25,7 @@ import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2
     { path: '/tag/:tagId', name: 'Tag', component: TagComponent},
     { path: '/discussion/:discussionId/...', name: 'Discussion', component: ChatListComponent }
 ])
-export class ChatPracticeUiAppComponent {
+export class FlowChatAppComponent {
   public title = 'derp';
 
 
