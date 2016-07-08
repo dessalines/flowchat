@@ -19,7 +19,7 @@ export class TagService {
 
   constructor(private http: Http) {}
 
-  getTag(id: string) {
+  getTag(id: number) {
     return this.http.get(this.getTagUrl + id)
       .map(this.extractData)
       .catch(this.handleError);
