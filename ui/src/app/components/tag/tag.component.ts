@@ -17,32 +17,47 @@ import {FooterComponent} from '../footer/index';
 })
 export class TagComponent implements OnInit {
 
-  private discussions: Array<Discussion>;
+  private discussions: Array<Discussion> = [];
 
   private tag: Tag;
 
+  private currentPageNum: number = 1;
+  private scrollDebounce: number = 0;
+
   constructor(private routeParams: RouteParams,
     private discussionService: DiscussionService,
-    private tagService: TagService) { 
-    
-
+    private tagService: TagService) {
   }
 
   ngOnInit() {
 
-    let tagId = this.routeParams.params['tagId'];
+    let tagId: number = Number(this.routeParams.params['tagId']);
 
+    this.getTag(tagId);
+    this.getDiscussions(tagId, this.currentPageNum);
+  }
+
+  getTag(tagId: number) {
     this.tagService.getTag(tagId).subscribe(t => {
       this.tag = t;
     });
-
-    this.discussionService.getDiscussions(undefined, undefined, tagId).subscribe(
-      d => this.discussions = d.discussions);
-
   }
 
-  fillDiscussion() {
+  getDiscussions(tagId: number, page: number) {
+    this.discussionService.getDiscussions(page, undefined, tagId.toString()).subscribe(
+      d => this.discussions.push(...d.discussions));
+  }
 
+  onScroll(event) {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+      if (this.scrollDebounce == 0) {
+        this.scrollDebounce = 1;
+        // you're at the bottom of the page
+        this.currentPageNum += 1;
+        this.getDiscussions(this.tag.id, this.currentPageNum);
+        setTimeout(() => this.scrollDebounce = 0, 1000);
+      }
+    }
   }
 
 }
