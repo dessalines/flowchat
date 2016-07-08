@@ -61,8 +61,15 @@ export class UserService {
   }
 
   logout() {
-    this.user = null;
+    // Log out
+    this.user = {
+      id: null,
+      name: null,
+      auth: null
+    }
+
     this.clearCookies();
+
   }
 
   sendLoginEvent(user: User) {
