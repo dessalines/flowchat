@@ -7,7 +7,7 @@
           <small *ngIf="discussion && isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
         </h4>
       </div>
-      <img *ngIf="parseImage(discussion?.link)" class="img-fluid" src="parseImage(discussion?.link)">
+      <img *ngIf="discussion?.link && parseImageThumbnail(discussion?.link)" class="img-fluid" [src]="parseImageThumbnail(discussion?.link)">
       <div class="card-block card-block-no-top">
         <p *ngIf="discussion?.text" class="card-text"
           [innerHTML]="discussion.text | markdown"></p>

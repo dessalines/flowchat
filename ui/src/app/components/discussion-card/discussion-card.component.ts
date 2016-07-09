@@ -2,6 +2,7 @@ import { Component, OnInit, Input} from '@angular/core';
 import {Discussion} from '../../shared/discussion.interface';
 import {Tag} from '../../shared/tag.interface';
 import {User} from '../../shared/user.interface';
+import {Tools} from '../../shared/tools';
 import { MomentPipe } from '../../pipes/moment.pipe';
 import {MarkdownPipe} from '../../pipes/markdown.pipe';
 import {UserService} from '../../services/user.service';
@@ -278,6 +279,10 @@ export class DiscussionCardComponent implements OnInit {
 
   removeQuotes(text: string) {
     return text.replace(/['"]+/g, '');
+  }
+
+  parseImageThumbnail(link: string) {
+    return Tools.parseImageThumbnail(link);
   }
 
 }
