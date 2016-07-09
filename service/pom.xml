@@ -5,7 +5,6 @@
 	<artifactId>flowchat</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
-
 		<!--The Database location and login, here's a sample-->
 		<jdbc.url>jdbc:postgresql://127.0.0.1/flowchat</jdbc.url>
 		<jdbc.username>postgres</jdbc.username>
@@ -22,6 +21,7 @@
 
 		<main.class>com.chat.webservice.ChatService</main.class>
 		<activejdbc.version>1.4.11</activejdbc.version>
+		<version>${project.version}</version>
 	</properties>
 
 
