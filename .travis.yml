@@ -4,7 +4,7 @@ jdk:
 services:
   - postgresql
 before_install: 
-  - psql -c 'create database test;' -U postgres
+  - psql -c 'create database flowchat;' -U postgres
   - cd ui
   - npm install
   - cd ../service
