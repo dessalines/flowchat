@@ -90,7 +90,7 @@
               (typeaheadNoResults)="tagChangeTypeaheadNoResults($event)"
               class="form-control" minlength="5"
               maxlength="20" pattern="[a-zA-Z0-9_-]+">
-            <button [disabled]="!tagTerm.valid" (click)="createTag()"
+            <button [disabled]="!tagTerm.valid || tagTerm.value.length == 0" (click)="createTag()"
               class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
           </div>
           <ul *ngIf="discussion?.tags" class="col-md-6 list-inline form-control-label">
