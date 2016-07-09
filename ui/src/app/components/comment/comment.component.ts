@@ -167,6 +167,14 @@ export class CommentComponent implements OnInit {
       this.editable = true;
     }
   }
+
+  isDiscussionOwner() {
+    if (this.userService.getUser() != null) {
+      return this.comment.discussionOwnerId == this.userService.getUser().id ;
+    } else {
+      return false;
+    }
+  }
 }
 
 interface ReplyData {

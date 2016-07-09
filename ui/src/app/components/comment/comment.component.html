@@ -40,7 +40,7 @@
 			<li role="button" *ngIf="editable" (click)="toggleShowEdit()" class="list-inline-item">
 				<i class="fa fa-fw fa-edit" tooltipPlacement="bottom" tooltip="Edit"></i>
 			</li>
-			<li role="button" *ngIf="editable" (click)="deleteComment()" class="list-inline-item">
+			<li role="button" *ngIf="editable || isDiscussionOwner()" (click)="deleteComment()" class="list-inline-item">
 				<i class="fa fa-fw fa-remove" tooltipPlacement="bottom" tooltip="Delete"></i>
 			</li>
 			</span>
