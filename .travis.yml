@@ -8,3 +8,5 @@ before_script:
 before_install: 
   - cd service
   - ls
+addons:
+  postgresql: "9.3"

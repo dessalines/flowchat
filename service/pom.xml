@@ -83,8 +83,8 @@
 					<changeLogFile>src/main/resources/liquibase/db.changelog-master.xml</changeLogFile>
 					<driver>org.postgresql.Driver</driver>
 					<url>jdbc:postgresql://127.0.0.1/test</url>
-					<username>tyler</username>
-					<password>test</password>
+					<username>postgres</username>
+					<password></password>
 				</configuration>
 				<executions>
 					<execution>
