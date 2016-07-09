@@ -24,4 +24,20 @@ export class Tools {
   static removeQuotes(text: string) {
     return text.replace(/['"]+/g, '');
   }
+
+  static parseImageThumbnail(link: string) {
+    // Check to see if its already a link
+    if (link.match(/\.(jpeg|jpg|gif|png)/) != null) {
+      return link;
+    }
+
+    else if (link.match(/(imgur.com)/) != null) {
+      // Extract its id:
+      let imgurId = link.split('/').pop();
+      let imgurLink = 'http://i.imgur.com/' + imgurId + '.jpg';
+      return imgurLink;
+    }
+
+    return null;
+  }
 }

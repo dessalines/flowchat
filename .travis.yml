@@ -7,7 +7,7 @@ before_install:
   - psql -c 'create database flowchat;' -U postgres
   - cd service
 after_success:
-  - sshpass -p$DEPLOY_PASS ssh -o StrictHostKeyChecking=no $DEPLOY_USER@DEPLOY_HOST "cd ~/git/flowchat;git pull;./install.sh"
+  - sshpass -p$DEPLOY_PASS ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "cd ~/git/flowchat;git pull;./install.sh"
 env:
   global:
     secure: "c5U8l0oi79ZBY4ku4PdKqlHwOd+2sH9BgBG9rhjNzNQfI/XH+hP4TfN4qCmawb9CtaEm05vbWm2Jc8L0ncNjK84hfet5SgLQc/NhBB/GdVR2L7l6u6QQAdH04xwhC6NQV8MlB/Z+rJzFbpG782bHltf0tcs+GFBveQJdMlf15MBi5peq7JW/6faqZEB8GmxAMjt9CgcoBfV6bLD2f5Li1vlNSlgFvnnT7we5OEdahvcwSxDIQxRFkQc6OO4ti7yr7c04/qEPrqLeajuJn7dJPTgTtH2pbUtxNngiUSxR9OE/IjtpxAEuB6CZieun3SYnFu7lyR2wX8yAxJKJmtjU7Z9EfrIoNmyMw/l/ZyXwz438OsANKZ7pviUTKVsWGAodQH6MLoXqVenw33LpnIjlmtWmgKrjLROmL1ncbQr/JO37IkbWWkOcggQzUTUtrc2gS4hPDiV7M4YRGpkTLHw626gucllzbX6WL7jnNFvUiEPCkFdL3J565+7H1WHt+F+ZQc3Py069dWO+6XEJT9XAYUY+oRdOK0J296TfzSBMzaL5jIczRis+IX7LVlBBuvWhXx+gM/AMUXSJUjFZhzPCbW0p4Bc9SaGif//XTm529J7S/k43nhPm+D3cfeOJ7w7Pu7fwmLPheln8ldDzzhNm8cXYIef+s+mM4yyoGYoJdEQ="
