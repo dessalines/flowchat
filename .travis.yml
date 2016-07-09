@@ -3,9 +3,8 @@ jdk:
   - oraclejdk8
 services:
   - postgresql
-before_script:
-  - psql -c 'create database test;' -U postgres
 before_install: 
+  - psql -c 'create database test;' -U postgres
   - cd service
   - ls
 addons:
