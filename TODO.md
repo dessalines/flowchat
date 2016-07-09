@@ -2,8 +2,8 @@
 
 # TODO
 - Update Readme
-- Get font awesome working locally
-- Add a paypal donate button
+  - Add pictures
+  - Make discussion and comment data more realistic
 - Create a beautiful about page like [slack's](https://slack.com/is)
   - Changed mind, just copy the README.md markdown to html
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
@@ -18,8 +18,10 @@
   - Set up deployment with [travis-ci](https://neemzy.org/articles/
   deploy-to-your-own-server-through-ssh-with-travis-ci)
   - Add https support
+- Get font awesome working locally
 
 # Finished
+- Add a paypal donate button
 - Paginate / smart scrolling for both comments and discussions
   - got discussions, but comments I think I've gotta leave till later, uber complicated
 - Add moderator abilities:
