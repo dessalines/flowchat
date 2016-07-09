@@ -181,7 +181,7 @@ insert into full_user (user_id, email, password_encrypted)
 
 
 insert into discussion (title, user_id, link, text_, private)
-    values ('Cats', 1, 'http://google.com', null, false),
+    values ('Power to the People?', 1, 'https://grist.files.wordpress.com/2016/03/black-panthers.jpg?w=1200&h=675&crop=1', null, false),
     ('Dogs', 2, null,'**ima** dog', false),
     ('Only kittens',3,  null, 'kittens only here plz.', true),
     ('Kittens', 1, 'http://google.com', null, false),
