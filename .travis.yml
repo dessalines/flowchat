@@ -8,7 +8,7 @@ before_install:
 - cd service
 after_success:
 - export SSHPASS=$DEPLOY_PASS
-- sshpass -e ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "source ~/.nvm/nvm.sh;cd ~/git/flowchat;git pull;./install.sh"
+- sshpass -e ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "source ~/.nvm/nvm.sh;cd ~/git/flowchat;git pull;git checkout master;./install.sh"
 addons:
   postgresql: '9.3'
   apt:
