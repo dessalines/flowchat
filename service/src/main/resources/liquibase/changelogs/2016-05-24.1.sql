@@ -95,6 +95,7 @@ select d.id,
        d.user_id,
        u.name as user_name,
        d.discussion_id,
+       d2.user_id as discussion_owner_id,
        d.text_,
        p.path_length, p.parent_id, p.child_id,
        array_agg(crumbs.parent_id order by crumbs.parent_id) as breadcrumbs,
@@ -110,8 +111,9 @@ join comment_tree as p on d.id = p.child_id
 join comment_tree as crumbs on crumbs.child_id = p.child_id
 join children_view as cv on d.id = cv.parent_id
 join user_ as u on d.user_id = u.id
+join discussion as d2 on d2.id = d.discussion_id
 --where p.parent_id = 1
-group by d.id, p.path_length, p.parent_id, p.child_id, cv.num_of_children, u.name
+group by d.id, p.path_length, p.parent_id, p.child_id, cv.num_of_children, u.name, d2.user_id
 order by breadcrumbs;
 
 
@@ -124,7 +126,7 @@ count(cr.rank) as number_of_votes
 from comment_intermediate_view as d
 join comment as d2 on d.parent_id = d2.id
 left join comment_rank as cr on d.id = cr.comment_id
-group by d.id, d2.user_id, d.user_id, d.user_name, d.discussion_id, d.text_,
+group by d.id, d2.user_id, d.user_id, d.user_name, d.discussion_id, d.discussion_owner_id, d.text_,
                 d.path_length, d.parent_id, d.child_id,
                 d.breadcrumbs,
                 d.num_of_parents,

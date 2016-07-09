@@ -15,7 +15,7 @@ import java.util.List;
  * Created by tyler on 6/7/16.
  */
 public class CommentObj implements JSONWriter {
-    private Long id, userId, discussionId, parentId, topParentId, parentUserId,
+    private Long id, userId, discussionId, discussionOwnerId, parentId, topParentId, parentUserId,
             pathLength, numOfParents, numOfChildren;
     private String userName, text;
     private Timestamp created, modified;
@@ -28,6 +28,7 @@ public class CommentObj implements JSONWriter {
                       Long userId,
                       String userName,
                       Long discussionId,
+                      Long discussionOwnerId,
                       String text,
                       Long pathLength,
                       Long topParentId,
@@ -50,6 +51,7 @@ public class CommentObj implements JSONWriter {
         this.parentUserId = parentUserId;
         this.text = text;
         this.discussionId = discussionId;
+        this.discussionOwnerId = discussionOwnerId;
         this.numOfParents = numOfParents;
         this.numOfChildren = numOfChildren;
         this.avgRank = avgRank;
@@ -73,6 +75,7 @@ public class CommentObj implements JSONWriter {
                 cv.getLong("user_id"),
                 cv.getString("user_name"),
                 cv.getLong("discussion_id"),
+                cv.getLong("discussion_owner_id"),
                 cv.getString("text_"),
                 cv.getLong("path_length"),
                 cv.getLong("parent_id"),
@@ -185,6 +188,10 @@ public class CommentObj implements JSONWriter {
 
     public Long getDiscussionId() {
         return discussionId;
+    }
+
+    public Long getDiscussionOwnerId() {
+        return discussionOwnerId;
     }
 
     public Long getParentId() {
