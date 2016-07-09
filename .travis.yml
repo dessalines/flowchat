@@ -1,16 +1,11 @@
 language: java
 jdk: 
   - oraclejdk8
-node_js:
-  - "6"
 services:
   - postgresql
 before_install: 
   - psql -c 'create database flowchat;' -U postgres
-  - cd ui
-  - npm install
-  - cd ../service
-  - ls
+  - cd service
 after_success:
   - sshpass -p$DEPLOY_PASS ssh -o StrictHostKeyChecking=no $DEPLOY_USER@DEPLOY_HOST "cd ~/git/flowchat;git pull;./install.sh"
 env:
