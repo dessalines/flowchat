@@ -82,7 +82,7 @@
 				<configuration>
 					<changeLogFile>src/main/resources/liquibase/db.changelog-master.xml</changeLogFile>
 					<driver>org.postgresql.Driver</driver>
-					<url>jdbc:postgresql://127.0.0.1/test</url>
+					<url>jdbc:postgresql://127.0.0.1/flowchat</url>
 					<username>postgres</username>
 					<password></password>
 				</configuration>
