@@ -23,11 +23,11 @@ Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 [Change log](https://github.com/tchoulihan/flowchat/releases)
 
 ## Screenshots:
-<img src="http://i.imgur.com/DKgWaGo.png">
+<!-- <img src="http://i.imgur.com/DKgWaGo.png"> -->
 
-## Installation
+## Installation 
 
-*If you want to self-host [FlowChat](https://flowchat.tk)*
+*If you want to self-host flowchat.*
 
 ### Requirements
 - Java 8
@@ -40,27 +40,26 @@ Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 ### Setup a postgres database
 [Here](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04) are some instructions to get your DB up and running.
 
-### Edit your app.properties file to point to your database
+### Edit your pom.xml file to point to your database
 ```sh
 cd flowchat
-vim app.properties
+vim service/pom.xml
+```
 
-# it looks like this, edit it to point to your own database
-----
-# The Database location and login, here's a sample
-jdbc_location=jdbc:postgresql://127.0.0.1/test
-jdbc_user=
-jdbc_password=
-
-# The sorting for discussions, comments, and tags are:
-# Sorting score = 
-# 	created_weight/(now_seconds - comment_seconds) + 
-# 	number_of_votes*number_of_votes_weight + 
-# 	avg_rank*avg_rank_weight
-sorting_created_weight=100000
-sorting_number_of_votes_weight=0.001
-sorting_avg_rank_weight=0.01
-----
+Edit it to point to your own database
+```xml
+<!--The Database location and login, here's a sample-->
+<jdbc.url>jdbc:postgresql://127.0.0.1/flowchat</jdbc.url>
+<jdbc.username>postgres</jdbc.username>
+<jdbc.password></jdbc.password
+<!--The sorting for discussions, comments, and tags are:
+ 	Sorting score =
+		created_weight/(now_seconds - comment_seconds) +
+		number_of_votes*number_of_votes_weight +
+		avg_rank*avg_rank_weight-->
+<sorting_created_weight>100000</sorting_created_weight>
+<sorting_number_of_votes_weight>0.001</sorting_number_of_votes_weight>
+<sorting_avg_rank_weight>0.01</sorting_avg_rank_weight>
 ```
 ### Install flowchat
 `./install.sh`

@@ -55,9 +55,9 @@ public class Tools {
 
         try {
             new DB("default").open("org.postgresql.Driver",
-                    DataSources.PROPERTIES.getProperty("jdbc_location"),
-                    DataSources.PROPERTIES.getProperty("jdbc_user"),
-                    DataSources.PROPERTIES.getProperty("jdbc_password"));
+                    DataSources.PROPERTIES.getProperty("jdbc.url"),
+                    DataSources.PROPERTIES.getProperty("jdbc.username"),
+                    DataSources.PROPERTIES.getProperty("jdbc.password"));
         } catch (DBException e) {
             e.printStackTrace();
             dbClose();

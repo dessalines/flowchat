@@ -5,6 +5,21 @@
 	<artifactId>flowchat</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
+
+		<!--The Database location and login, here's a sample-->
+		<jdbc.url>jdbc:postgresql://127.0.0.1/flowchat</jdbc.url>
+		<jdbc.username>postgres</jdbc.username>
+		<jdbc.password></jdbc.password>
+
+		<!--The sorting for discussions, comments, and tags are:
+ 			Sorting score =
+				created_weight/(now_seconds - comment_seconds) +
+				number_of_votes*number_of_votes_weight +
+				avg_rank*avg_rank_weight-->
+		<sorting_created_weight>100000</sorting_created_weight>
+		<sorting_number_of_votes_weight>0.001</sorting_number_of_votes_weight>
+		<sorting_avg_rank_weight>0.01</sorting_avg_rank_weight>
+
 		<main.class>com.chat.webservice.ChatService</main.class>
 		<activejdbc.version>1.4.11</activejdbc.version>
 	</properties>
@@ -82,9 +97,9 @@
 				<configuration>
 					<changeLogFile>src/main/resources/liquibase/db.changelog-master.xml</changeLogFile>
 					<driver>org.postgresql.Driver</driver>
-					<url>jdbc:postgresql://127.0.0.1/flowchat</url>
-					<username>postgres</username>
-					<password></password>
+					<url>${jdbc.url}</url>
+					<username>${jdbc.username}</username>
+					<password>${jdbc.password}</password>
 				</configuration>
 				<executions>
 					<execution>
@@ -95,18 +110,28 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0-alpha-2</version>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>write-project-properties</goal>
+						</goals>
+						<configuration>
+							<outputFile>${project.build.outputDirectory}/app.properties</outputFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 
 	</build>
 
 
 	<dependencies>
-
-		<dependency>
-			<groupId>com.github.spullara.mustache.java</groupId>
-			<artifactId>compiler</artifactId>
-			<version>0.9.1</version>
-		</dependency>
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -138,7 +163,6 @@
 			<version>9.4.1208.jre7</version>
 		</dependency>
 
-		<!-- http://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -210,11 +234,6 @@
 			<version>2.32</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.xerial</groupId>
-			<artifactId>sqlite-jdbc</artifactId>
-			<version>3.7.2</version>
-		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
