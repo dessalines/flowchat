@@ -46,10 +46,7 @@ public class ThreadedChatWebSocket {
         // Send them their user info
         session.getRemote().sendString(ss.getUserObj().json("user"));
 
-
         LazyList<Model> comments = fetchComments(ss);
-
-
 
         // send the comments
         session.getRemote().sendString(Comments.create(comments, fetchVotesMap(ss.getUserObj().getId())).json());
@@ -64,7 +61,6 @@ public class ThreadedChatWebSocket {
         log.info("session scope " + ss + " joined");
 
         Tools.dbClose();
-
 
     }
 

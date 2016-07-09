@@ -33,7 +33,7 @@ export class DiscussionService {
       .catch(this.handleError);
   }
 
-  getDiscussions(page: number = 1, limit: number = 3, tagId: string = 'all',
+  getDiscussions(page: number = 1, limit: number = 12, tagId: string = 'all',
     orderBy: string = 'custom') {
     return this.http.get(this.getDiscussionsUrl(page, limit, tagId, orderBy), this.userService.getOptions())
       .map(this.extractData)

@@ -143,6 +143,34 @@
             Results Found
           </div>
         </div>
+        <div class="form-group row">
+          <label class="col-sm-1 form-control-label">Block Users</label>
+          <div class="col-md-5">
+            <input #blockedUserTerm (keyup)="blockedUserSearch(blockedUserTerm.value)"
+              [(ngModel)]="blockedUserSearchTerm"
+              [typeahead]="blockedUserSearchResults"
+              (typeaheadOnSelect)="blockedUserTypeaheadOnSelect($event.item)"
+              [typeaheadOptionField]="'name'"
+              (typeaheadLoading)="blockedUserChangeTypeaheadLoading($event)"
+              (typeaheadNoResults)="blockedUserChangeTypeaheadNoResults($event)"
+              class="form-control">
+            <div *ngIf="blockedUserTypeaheadLoading===true">
+              <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+            </div>
+          </div>
+          <ul *ngIf="discussion?.blockedUsers" class="col-md-6 list-inline form-control-label">
+            <li role="button" (click)="removeBlockedUser(blockedUser)"
+              class="label label-default list-inline-item"
+              *ngFor="let blockedUser of discussion.blockedUsers">
+              <span>{{blockedUser.name}}<i class="fa fa-fw fa-remove"></i></span>
+            </li>
+          </ul>
+          <div *ngIf="blockedUserTypeaheadNoResults===true"
+            class="">
+            <i class="fa fa-fw fa-remove"></i>No
+            Results Found
+          </div>
+        </div>
         <br>
         <div class="btn-group" role="group">
           <button (click)="saveDiscussion()" class="btn btn-primary">Save</button>
