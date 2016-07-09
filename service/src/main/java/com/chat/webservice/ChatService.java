@@ -3,6 +3,7 @@ package com.chat.webservice;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import com.chat.DataSources;
 import com.chat.db.Actions;
 import com.chat.db.Transformations;
 import com.chat.tools.Tools;
@@ -34,8 +35,8 @@ public class ChatService {
 
         webSocket("/threaded_chat", ThreadedChatWebSocket.class);
 
-        get("/test", (req, res) -> {
-            return "{\"data\": [{\"message\":\"derp\"}]}";
+        get("/version", (req, res) -> {
+            return "{\"version\":\"" + DataSources.PROPERTIES.getProperty("version") + "\"}";
         });
 
         // Get the user id
