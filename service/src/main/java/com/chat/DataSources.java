@@ -16,7 +16,9 @@ public class DataSources {
 
     public static final Integer EXPIRE_SECONDS = 86400 * 7; // stays logged in for 7 days
 
-    public static final String PROPERTIES_FILE = CODE_DIR + "/../app.properties";
+//    public static final String PROPERTIES_FILE = CODE_DIR + "/../app.properties";
+
+    public static final String PROPERTIES_FILE = CODE_DIR + "/target/classes/app.properties";
 
     public static final Properties PROPERTIES = Tools.loadProperties(PROPERTIES_FILE);
 
