@@ -5,7 +5,19 @@ services:
   - postgresql
 before_install: 
   - psql -c 'create database test;' -U postgres
-  - cd service
+  - cd ui
+  - npm install
+  - cd ../service
   - ls
+after_success:
+  - sshpass -p$DEPLOY_PASS ssh -o StrictHostKeyChecking=no $DEPLOY_USER@DEPLOY_HOST "cd ~/git/flowchat;git pull;./install.sh"
+env:
+  global:
+    secure: "c5U8l0oi79ZBY4ku4PdKqlHwOd+2sH9BgBG9rhjNzNQfI/XH+hP4TfN4qCmawb9CtaEm05vbWm2Jc8L0ncNjK84hfet5SgLQc/NhBB/GdVR2L7l6u6QQAdH04xwhC6NQV8MlB/Z+rJzFbpG782bHltf0tcs+GFBveQJdMlf15MBi5peq7JW/6faqZEB8GmxAMjt9CgcoBfV6bLD2f5Li1vlNSlgFvnnT7we5OEdahvcwSxDIQxRFkQc6OO4ti7yr7c04/qEPrqLeajuJn7dJPTgTtH2pbUtxNngiUSxR9OE/IjtpxAEuB6CZieun3SYnFu7lyR2wX8yAxJKJmtjU7Z9EfrIoNmyMw/l/ZyXwz438OsANKZ7pviUTKVsWGAodQH6MLoXqVenw33LpnIjlmtWmgKrjLROmL1ncbQr/JO37IkbWWkOcggQzUTUtrc2gS4hPDiV7M4YRGpkTLHw626gucllzbX6WL7jnNFvUiEPCkFdL3J565+7H1WHt+F+ZQc3Py069dWO+6XEJT9XAYUY+oRdOK0J296TfzSBMzaL5jIczRis+IX7LVlBBuvWhXx+gM/AMUXSJUjFZhzPCbW0p4Bc9SaGif//XTm529J7S/k43nhPm+D3cfeOJ7w7Pu7fwmLPheln8ldDzzhNm8cXYIef+s+mM4yyoGYoJdEQ="
+    secure: "HOOi4hSjPQajCbEYXmnb56MqTSRkZPnppZLTe7uOm4A2WTYDigtI6jZH0km0/6PZwA/yI6WDzedFKAVHbsiFept7Pceoscq181WeNSwysioRAtUB58bS2O2M3DcWwWC4/OwJf6lYAXM+LGs7zt/37Pt653FinaefXUwkI0WSdEgZfnaSd8tIFINjqw8j5aF+OWS18+sopWLH1hCTAqC+ivt9Nl30/cQBEcsst0LrH04ENAnJSreuBNwynQMuM6WyrdIfUOaqEWbqpLf2ZU9LIpKDDl4UyeDMGE2BhuwgQGDX7g992SI73D2WbY0ACnarrU2Dg95CNFCzFNaZGtKxkvzmOTERy5Zh3ZZJl5Gu69ZuXxvZ/q/S1rrNzsTwGJkWyYsyKN2AlHiKZSAq504EGZO9Y2eEG/7kUgefi9aefP48B3BHzcFlW4w9QtuNtXNDgp5qX4jsu73iozow6q9v2dtWBQH6poSnGuOvTu0M89d6Kvfu6bL/aZjRcrPh0JBdlWOq0uOIj3wvVlVe2FQM2aEdWpvZFcsRTiUxNMrZnRTqSb2DmUXJ4Gdm9sV6Sp4fVZCbZKtCP6RaUcJoDkC3jEy33kY0ssWpTe3IZJ/8jW1hIKknYOVA3+6doKMunTGpcwwtOwkQYjx9v0ylbR7Oit+r1VqZ7zCQPA6cbP/t+1Y="
+    secure: "SPHrl9K4FjT/KUSCCQUd2f8nE1A3DvdOeVrxj+FDbytGJrHWpFKmhztCvn6z65Yv2vM/KAdyTxqewV7W9SW4NBI6oXj1Ad6jxAfR0e73v9LpPgxNNiK18DltM9wxQza7dBBDpSQtEVrExF4Jd/Zjqt+R3s6tRy9w1UiH+GBM6qWP+Upq3xpmPDBeIbGJg2//0Hr7Kc5wefSd5ykXFDpVrOZxrK+sgXZa6pdAPbYItngeyf6EqRUVeIHldt99Egcs24iRiROXNfrcTtkpNzIBMnRBkYeA4zyVzoNYAM12ZT52hEFetOvGox7K7wfz53doT0LJGHejAWLgI63QTsY7eGIyDwWFL120HLieWIDJ8RZRKjwj7Ts2FEDhdxpuVmA4wZbp8Ayw/hQGnMCcIcTK8GmDo0WwaEXCFJ8uG3Fx318V4r6l49IWvf1NlL4Fhu9xAFyKXjSFXkeez7x+bzkOpjDfIGthQQjv/QX6jGY9KLBTqffWmzNiaS2Io5JkEv4C9R88W9CkUMzL/xugKfiU0BvgQDO/XrgCvJpmtNT2UPO9eJVRxjWsveLos07zfb18Q759fjZINRPM9ChvP2hqUINYAyxyUIc1WdA/Ys2L0qarSbkyWRbB+hfrP5J/adsNgm8nI1+smGZGj+VCeJ54M8mmjCykExfLO0eQ3/nJ9m0="
 addons:
   postgresql: "9.3"
+  apt:
+    packages:
+      - sshpass
