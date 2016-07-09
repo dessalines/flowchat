@@ -59,6 +59,9 @@ public class Tables {
     @Table("private_discussion_user")
     public static class PrivateDiscussionUser extends Model {}
 
+    @Table("blocked_discussion_user")
+    public static class BlockedDiscussionUser extends Model {}
+
     @Table("tag")
     public static class Tag extends Model {}
 

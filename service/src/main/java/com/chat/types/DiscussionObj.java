@@ -5,10 +5,7 @@ import org.javalite.activejdbc.Model;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * Created by tyler on 6/19/16.
@@ -19,10 +16,11 @@ public class DiscussionObj implements JSONWriter {
     private Boolean private_, deleted;
     private Integer avgRank, userRank, numberOfVotes;
     private List<TagObj> tags;
-    private List<UserObj> privateUsers;
+    private List<UserObj> privateUsers, blockedUsers;
     private Timestamp created, modified;
 
-    public DiscussionObj() {}
+    public DiscussionObj() {
+    }
 
     public DiscussionObj(Long id,
                          Long userId,
@@ -38,6 +36,8 @@ public class DiscussionObj implements JSONWriter {
                          String tagNames,
                          String privateUserIds,
                          String privateUserNames,
+                         String blockedUserIds,
+                         String blockedUserNames,
                          Boolean deleted,
                          Timestamp created,
                          Timestamp modified) {
@@ -52,7 +52,8 @@ public class DiscussionObj implements JSONWriter {
         this.userRank = userRank;
         this.numberOfVotes = numberOfVotes;
         this.tags = (!tagIds.contains("{NULL")) ? setTags(tagIds, tagNames) : null;
-        this.privateUsers = setPrivateUsers(privateUserIds, privateUserNames);
+        this.privateUsers = setMultiUserType(privateUserIds, privateUserNames, true);
+        this.blockedUsers = setMultiUserType(blockedUserIds, blockedUserNames, false);
         this.deleted = deleted;
         this.created = created;
         this.modified = modified;
@@ -66,7 +67,13 @@ public class DiscussionObj implements JSONWriter {
                 throw new NoSuchElementException("Private discussion, not allowed to view");
             }
         }
+    }
 
+    public void checkBlocked(UserObj userObj) {
+        System.out.println(Arrays.toString(getBlockedUsers().toArray()));
+        if (getBlockedUsers().contains(userObj)) {
+            throw new NoSuchElementException("You have been blocked from this discussion");
+        }
     }
 
     public static DiscussionObj create(Model d, Integer vote) {
@@ -84,6 +91,8 @@ public class DiscussionObj implements JSONWriter {
                 d.getString("tag_names"),
                 d.getString("private_user_ids"),
                 d.getString("private_user_names"),
+                d.getString("blocked_user_ids"),
+                d.getString("blocked_user_names"),
                 d.getBoolean("deleted"),
                 d.getTimestamp("created"),
                 d.getTimestamp("modified"));
@@ -114,16 +123,18 @@ public class DiscussionObj implements JSONWriter {
         return dedupeTagObjs;
     }
 
-    public List<UserObj> setPrivateUsers(String privateUserIds, String privateUserNames) {
+    public List<UserObj> setMultiUserType(String multiUserIds, String multiUserNames, Boolean addCreated) {
         List<UserObj> users = new ArrayList<>();
 
         // Add the creating user
-        UserObj creator = UserObj.create(getUserId(), getUserName());
-        users.add(creator);
+        if (addCreated) {
+            UserObj creator = UserObj.create(getUserId(), getUserName());
+            users.add(creator);
+        }
 
-        if (!privateUserIds.contains("{NULL")) {
-            String[] ids = Tools.pgArrayAggToArray(privateUserIds);
-            String[] names = Tools.pgArrayAggToArray(privateUserNames);
+        if (!multiUserIds.contains("{NULL")) {
+            String[] ids = Tools.pgArrayAggToArray(multiUserIds);
+            String[] names = Tools.pgArrayAggToArray(multiUserNames);
             for (int i = 0; i < ids.length; i++) {
                 users.add(UserObj.create(Long.valueOf(ids[i]), names[i]));
             }
@@ -146,7 +157,9 @@ public class DiscussionObj implements JSONWriter {
         return userId;
     }
 
-    public String getUserName() {return userName;}
+    public String getUserName() {
+        return userName;
+    }
 
     public String getTitle() {
         return title;
@@ -180,6 +193,10 @@ public class DiscussionObj implements JSONWriter {
         return privateUsers;
     }
 
+    public List<UserObj> getBlockedUsers() {
+        return blockedUsers;
+    }
+
     public Timestamp getCreated() {
         return created;
     }
@@ -188,5 +205,7 @@ public class DiscussionObj implements JSONWriter {
         return modified;
     }
 
-    public Boolean getDeleted() { return deleted; }
+    public Boolean getDeleted() {
+        return deleted;
+    }
 }

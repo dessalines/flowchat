@@ -91,6 +91,20 @@ create table private_discussion_user (
     constraint fk3_private_discussion_unique_1 unique(discussion_id, user_id)
 );
 
+create table blocked_discussion_user (
+    id bigserial primary key,
+    discussion_id bigint not null,
+    user_id bigint not null,
+    created timestamp default current_timestamp,
+    constraint fk1_blocked_discussion_user_discussion foreign key (discussion_id)
+        references discussion (id)
+        on update cascade on delete cascade,
+    constraint fk2_blocked_discussion_user foreign key (user_id)
+        references user_ (id)
+        on update cascade on delete cascade,
+    constraint fk3_blocked_discussion_unique_1 unique(discussion_id, user_id)
+);
+
 create table favorite_discussion_user (
     id bigserial primary key,
     discussion_id bigint not null,
@@ -154,7 +168,7 @@ create table comment_rank (
 
 create table ranking_constants (
     id bigserial primary key,
-    created_weight numeric(12,4),
+    created_weight numeric(20,4),
     number_of_votes_weight numeric(12,4),
     avg_rank_weight numeric(12,4)
 );
@@ -180,6 +194,9 @@ insert into discussion (title, user_id, link, text_, private)
 
 insert into private_discussion_user(discussion_id, user_id)
     values (3,4);
+
+insert into blocked_discussion_user(discussion_id, user_id)
+    values(4,4);
 
 insert into favorite_discussion_user(discussion_id, user_id)
     values (1,4),(3,4);

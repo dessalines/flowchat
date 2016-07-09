@@ -44,12 +44,21 @@ export class DiscussionCardComponent implements OnInit {
   private tagTypeaheadLoading: boolean = false;
   private tagTypeaheadNoResults: boolean = false;
 
+  // For the private users
   private userSearchTermStream = new Subject<string>();
   private userResultsObservable: Observable<any>;
   private userSearchResults: Array<User>;
   private userSearchTerm: string = '';
   private userTypeaheadLoading: boolean = false;
   private userTypeaheadNoResults: boolean = false;
+
+  // Blocked users
+  private blockedUserSearchTermStream = new Subject<string>();
+  private blockedUserResultsObservable: Observable<any>;
+  private blockedUserSearchResults: Array<User>;
+  private blockedUserSearchTerm: string = '';
+  private blockedUserTypeaheadLoading: boolean = false;
+  private blockedUserTypeaheadNoResults: boolean = false;
 
   constructor(private userService: UserService,
     private discussionService: DiscussionService,
@@ -60,6 +69,7 @@ export class DiscussionCardComponent implements OnInit {
   ngOnInit() {
     this.setupTagSearch();
     this.setupUserSearch();
+    this.setupBlockedUserSearch();
 
     // console.log(this.routeParamService.params());
     // console.log(this.routeParamService.data());
@@ -221,6 +231,49 @@ export class DiscussionCardComponent implements OnInit {
 
   privateUsersWithoutYou() {
     return this.discussion.privateUsers.slice(1);
+  }
+
+  // Blocked user methods
+  setupBlockedUserSearch() {
+    this.blockedUserResultsObservable = this.blockedUserSearchTermStream
+      .debounceTime(300)
+      .distinctUntilChanged()
+      .switchMap((term: string) => this.userService.searchUsers(term));
+
+    this.blockedUserResultsObservable.subscribe(t => this.blockedUserSearchResults = t.users);
+    // this.tagSearch('a');
+  }
+
+  blockedUserSearch(term: string) {
+    if (term !== '') {
+      this.blockedUserSearchTermStream.next(term);
+    }
+  }
+
+  blockedUserTypeaheadOnSelect(user: User) {
+
+    // Create the array if necessary
+    if (this.discussion.blockedUsers == null) {
+      this.discussion.blockedUsers = [];
+    }
+
+    // add it to the list
+    this.discussion.blockedUsers.push(user);
+    this.userSearchTerm = '';
+
+  }
+
+  blockedUserChangeTypeaheadLoading(e: boolean): void {
+    this.blockedUserTypeaheadLoading = e;
+  }
+
+  blockedUserChangeTypeaheadNoResults(e: boolean): void {
+    this.blockedUserTypeaheadNoResults = e;
+  }
+
+  removeBlockedUser(user: User) {
+    let index = this.discussion.blockedUsers.indexOf(user);
+    this.discussion.blockedUsers.splice(index, 1);
   }
 
   removeQuotes(text: string) {

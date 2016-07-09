@@ -139,6 +139,9 @@ public class ChatService {
                 // check to make sure user is entitled to view it
                 df.checkPrivate(userObj);
 
+                // Check to make sure user isn't blocked
+                df.checkBlocked(userObj);
+
                 log.info(df.json());
 
                 return df.json();

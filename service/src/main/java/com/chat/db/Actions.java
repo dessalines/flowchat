@@ -172,6 +172,15 @@ public class Actions {
             }
         }
 
+        if (do_.getBlockedUsers() != null) {
+            BlockedDiscussionUser.delete("discussion_id = ?", do_.getId());
+
+            for (UserObj userObj : do_.getBlockedUsers()) {
+                BlockedDiscussionUser.createIt("discussion_id", do_.getId(),
+                        "user_id", userObj.getId());
+            }
+        }
+
         // Fetch the full view
         DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", do_.getId());
 

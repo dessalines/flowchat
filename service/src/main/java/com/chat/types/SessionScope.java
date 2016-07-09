@@ -32,8 +32,6 @@ public class SessionScope {
         this.topParentId = topParentId;
     }
 
-
-
     public static Set<UserObj> getUserObjects(Set<SessionScope> scopes) {
         return scopes.stream().map(SessionScope::getUserObj).collect(Collectors.toSet());
     }
