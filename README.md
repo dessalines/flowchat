@@ -3,18 +3,20 @@
 ![](http://img.shields.io/version/0.0.1.png?color=green)
 [![Build Status](https://travis-ci.org/tchoulihan/flowchat.png)](https://travis-ci.org/tchoulihan/flowchat)
 
+[FlowChat](https://flowchat.tk) is an open-source, self-hostable, live-updating discussion platform, featuring chatrooms with threaded conversations, and voting. 
 
-[FlowChat](https://flowchat.tk) is an open-source, self-hostable, live-updating discussion platform, like a chatroom, but with threaded conversations, and voting. 
-
-Flowchat tries to solve the problem of having a live group discussion, while being able to have threaded, side conversations, so every comment doesn't have to interrupt the flow. 
+Flowchat tries to solve the problem of having a fluid, free-feeling group chat, while allowing for side conversations so that every comment doesn't interrupt the flow, and so multiple conversations can take place at once. 
 
 It features:
-- A complete chat application live updating, and threaded discussion.
+- A complete chat application with live updating, and threaded discussion.
 - Private or public discussions
 - Customizable discussion and comment sorting by recentness, and popularity.
 - Discussion hashtags
 - Discussion creators can block users, or delete comments
 - [Range voting](http://rangevoting.org/UniqBest.html), not simple thumbs up or thumbs down, for mass expressiveness, for both comments and discussions.
+
+Tech used:
+- Java Spark, ActiveJDBC, Angular2, Liquibase, Postgres
 
 Check out a sample discussion [here](https://flowchat.tk/discussion/1).
 
