@@ -468,6 +468,24 @@ public class ChatService {
 
         });
 
+        post("/mark_all_replies_as_read", (req, res) -> {
+            try {
+                UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
+
+                // Mark the reply as read
+                String message = Actions.markAllRepliesAsRead(userObj.getId());
+
+                return message;
+
+            } catch (Exception e) {
+                res.status(666);
+                e.printStackTrace();
+                return Tools.buildMessage(e.getMessage());
+            }
+
+        });
+
         before((req, res) -> {
             Tools.dbInit();
         });
@@ -482,7 +500,7 @@ public class ChatService {
         });
 
         init();
-        
+
     }
 
 

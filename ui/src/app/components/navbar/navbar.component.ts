@@ -162,6 +162,11 @@ export class NavbarComponent implements OnInit {
   
     });
   }
+
+  markAllNotificationsAsRead() {
+    this.notificationsService.markAllAsRead().subscribe(
+      t => this.unreadMessages = []);
+  }
     
 
 

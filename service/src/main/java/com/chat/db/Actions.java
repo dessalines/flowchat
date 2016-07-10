@@ -11,6 +11,7 @@ import com.chat.tools.Tools;
 import com.chat.types.DiscussionObj;
 import com.chat.types.TagObj;
 import com.chat.types.UserObj;
+import org.javalite.activejdbc.LazyList;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
@@ -232,6 +233,27 @@ public class Actions {
 
         Comment c = Comment.findFirst("id = ?", commentId);
         c.set("read", true).saveIt();
+
+        return Tools.buildMessage("Success");
+
+    }
+
+    public static String markAllRepliesAsRead(Long userId) {
+
+        // Fetch your unread replies
+        LazyList<CommentBreadcrumbsView> cbv = CommentBreadcrumbsView.where(
+                "parent_user_id = ? and user_id != ? and read = false",
+                userId, userId);
+
+        Set<Long> ids = cbv.collectDistinct("id");
+
+        if (ids.size() > 0) {
+
+            String inQuery = Tools.convertListToInQuery(ids);
+
+            Comment.update("read = ?", "id in " + inQuery, true);
+
+        }
 
         return Tools.buildMessage("Success");
 

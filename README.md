@@ -1,24 +1,25 @@
-[FlowChat](https://flowchat.tk) &mdash; A live updating, threaded discussion platform with voting. 
+[FlowChat](http://flowchat.tk) &mdash; A live updating, threaded chat platform with voting. 
 ==========
 ![](http://img.shields.io/version/0.1.0.png?color=green)
 [![Build Status](https://travis-ci.org/tchoulihan/flowchat.png)](https://travis-ci.org/tchoulihan/flowchat)
 
-[FlowChat](https://flowchat.tk) is an open-source, self-hostable, live-updating discussion platform, featuring chatrooms with threaded conversations, and voting. 
+[FlowChat](http://flowchat.tk) is an open-source, self-hostable, live-updating discussion platform, featuring chatrooms with threaded conversations, and voting. 
 
 Flowchat tries to solve the problem of having a fluid, free-feeling group chat, while allowing for side conversations so that every comment doesn't interrupt the flow, and so multiple conversations can take place at once. 
 
 It features:
-- A complete chat application with live updating, and threaded discussion.
+- A complete chat application with live updating, threaded discussion.
+- [Range voting](http://rangevoting.org/UniqBest.html) for both comments and discussions. Range voting is easier to use and more expressive than simple like and dislike.
 - Private or public discussions
 - Customizable discussion and comment sorting by recentness, and popularity.
-- Discussion hashtags
-- Discussion creators can block users, or delete comments
-- [Range voting](http://rangevoting.org/UniqBest.html), not simple thumbs up or thumbs down, for mass expressiveness, for both comments and discussions.
+- Discussion hashtags. 
+- Discussion creators can block users, or delete comments.
+
 
 Tech used:
 - [Java Spark](https://github.com/perwendel/spark), [Bootstrap v4](https://github.com/twbs/bootstrap), [Angular2](https://github.com/angular/angular), [Angular-cli](https://github.com/angular/angular-cli), [ng2-bootstrap](http://valor-software.com/ng2-bootstrap/), [ActiveJDBC](http://javalite.io/activejdbc), [Liquibase](http://www.liquibase.org/), [Postgres](https://www.postgresql.org/), [Markdown-it](https://github.com/markdown-it/markdown-it), [angular2-toaster](https://github.com/Stabzs/Angular2-Toaster)
 
-Check out a sample discussion [here](https://flowchat.tk/discussion/1).
+Check out a sample discussion [here](http://flowchat.tk/#/discussion/13).
 
 Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 

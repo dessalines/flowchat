@@ -166,6 +166,29 @@ public class CommentObj implements JSONWriter {
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CommentObj that = (CommentObj) o;
+
+        if (!id.equals(that.id)) return false;
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
+        if (discussionId != null ? !discussionId.equals(that.discussionId) : that.discussionId != null) return false;
+
+        return read != null ? read.equals(that.read) : that.read == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (discussionId != null ? discussionId.hashCode() : 0);
+        return result;
+    }
+
     public Integer getAvgRank() {
         return avgRank;
     }
