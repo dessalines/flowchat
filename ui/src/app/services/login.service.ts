@@ -7,14 +7,15 @@ import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
 import {User} from '../shared';
 import {UserService} from './user.service';
+import {environment} from '../environment';
 
 
 @Injectable()
 export class LoginService {
 
-  private getOrCreateUrl: string = 'http://localhost:4567/get_user';
-  private loginUrl: string = 'http://localhost:4567/login';
-  private signupUrl: string = 'http://localhost:4567/signup';
+  private getOrCreateUrl: string = environment.endpoint + 'get_user';
+  private loginUrl: string = environment.endpoint + 'login';
+  private signupUrl: string = environment.endpoint + 'signup';
 
   constructor(private http: Http,
     private userService: UserService) { 

@@ -1,17 +1,17 @@
 # FlowChat
 
 # TODO
-- Add a version page
-- Update Readme
-  - Add pictures
-  - Make discussion and comment data more realistic, and with pictures
-    - Use star wars subreddit as an example
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - Add https support
 - Get font awesome working locally
 - Add periodic DB backups
 
 # Finished
+- Add a version page
+- Update Readme
+  - Add pictures
+  - Make discussion and comment data more realistic, and with pictures
+    - Use star wars subreddit as an example
 - Set up new repo on github called flowchat
   - Set up deployment with [travis-ci](https://neemzy.org/articles/
   deploy-to-your-own-server-through-ssh-with-travis-ci)

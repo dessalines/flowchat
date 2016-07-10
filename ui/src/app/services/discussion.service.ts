@@ -7,19 +7,20 @@ import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
 import {UserService} from './user.service';
 import {Discussion} from '../shared/discussion.interface';
+import {environment} from '../environment';
 
 @Injectable()
 export class DiscussionService {
 
-  private getDiscussionUrl: string = 'http://localhost:4567/get_discussion/';
-  private queryDiscussionsUrl: string = 'http://localhost:4567/discussion_search/';
-  private saveRankUrl: string = 'http://localhost:4567/save_discussion_rank/';
-  private createDiscussionUrl: string = "http://localhost:4567/create_discussion";
-  private saveDiscussionUrl: string = "http://localhost:4567/save_discussion";
+  private getDiscussionUrl: string = environment.endpoint + 'get_discussion/';
+  private queryDiscussionsUrl: string = environment.endpoint + 'discussion_search/';
+  private saveRankUrl: string = environment.endpoint + 'save_discussion_rank/';
+  private createDiscussionUrl: string = environment.endpoint + 'create_discussion';
+  private saveDiscussionUrl: string = environment.endpoint + 'save_discussion';
 
   private getDiscussionsUrl(page: number, limit: number, tagId: string,
     orderBy: string): string {
-    return 'http://localhost:4567/get_discussions/' + tagId + '/' +
+    return environment.endpoint + 'get_discussions/' + tagId + '/' +
       limit + '/' + page + '/' + orderBy;
   }
 

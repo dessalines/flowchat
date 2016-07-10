@@ -4,16 +4,17 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import { Http, Response } from '@angular/http';
+import {environment} from '../environment';
 
 @Injectable()
 export class TagService {
 
-  private getTagUrl: string = 'http://localhost:4567/get_tag/';
-  private queryTagsUrl: string = 'http://localhost:4567/tag_search/';
-  private createTagUrl: string = 'http://localhost:4567/create_tag';
+  private getTagUrl: string = environment.endpoint + 'get_tag/';
+  private queryTagsUrl: string = environment.endpoint + 'tag_search/';
+  private createTagUrl: string = environment.endpoint + 'create_tag';
 
   private getPopularTagsUrl(limit: number, page: number, orderBy: string): string {
-    return 'http://localhost:4567/get_popular_tags/' + 
+    return environment.endpoint + 'get_popular_tags/' + 
       limit + '/' + page + '/' + orderBy;
   }
 

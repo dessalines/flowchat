@@ -10,12 +10,13 @@ import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
 import {UserService} from './user.service';
 import {Comment} from '../shared/comment.interface';
+import {environment} from '../environment';
 
 @Injectable()
 export class NotificationsService {
 
-  private getUnreadUrl: string = 'http://localhost:4567/get_unread_replies';
-  private markAsReadUrl: string = 'http://localhost:4567/mark_reply_as_read/';
+  private getUnreadUrl: string = environment.endpoint + 'get_unread_replies';
+  private markAsReadUrl: string = environment.endpoint + 'mark_reply_as_read/';
 
   private fetchInterval: number = 60000;
 
