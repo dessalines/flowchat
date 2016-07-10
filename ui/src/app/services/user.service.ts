@@ -7,6 +7,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import { Http, Response } from '@angular/http';
+import {environment} from '../environment';
 
 @Injectable()
 export class UserService {
@@ -19,10 +20,10 @@ export class UserService {
 
   public userObservable = this.userSource.asObservable();
 
-  private queryUsersUrl: string = 'http://localhost:4567/user_search/';
+  private queryUsersUrl: string = environment.endpoint + '/user_search/';
 
-  private fetchFavoriteDiscussionsUrl: string = 'http://localhost:4567/get_favorite_discussions';
-  private removeFavoriteDiscussionUrl: string = 'http://localhost:4567/remove_favorite_discussion/';
+  private fetchFavoriteDiscussionsUrl: string = environment.endpoint + 'get_favorite_discussions';
+  private removeFavoriteDiscussionUrl: string = environment.endpoint + 'remove_favorite_discussion/';
 
 
   constructor(private http: Http) {
