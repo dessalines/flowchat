@@ -181,19 +181,22 @@ insert into full_user (user_id, email, password_encrypted)
 
 
 insert into discussion (title, user_id, link, text_, private)
-    values ('Power to the People?', 1, 'https://grist.files.wordpress.com/2016/03/black-panthers.jpg?w=1200&h=675&crop=1', null, false),
-    ('Dogs', 2, null,'**ima** dog', false),
-    ('Only kittens',3,  null, 'kittens only here plz.', true),
-    ('Kittens', 1, 'http://google.com', null, false),
-    ('Bees are cool, no?', 1, 'http://google.com', null, false),
-    ('Should I go there?', 1, 'http://google.com', null, false),
-    ('FULLCOMMUNISM FTW', 1, 'http://google.com', null, false),
-    ('Love weed, hate poor people', 1, 'http://google.com', null, false),
-    ('Puppies', 1, 'http://google.com', null, false),
-    ('Mittens', 1, 'http://google.com', null, false);
+    values
+    ('Mittens', 1, 'http://google.com', null, true),
+    ('Luke skywalker would''ve looked incredible with a mask, no?', 2, 'http://mentalfloss.com/sites/default/legacy/blogs/wp-content/uploads/2012/03/017.jpg',null, false),
+    ('New to Minneapolis, what are some good restaurants in the area?', 1, null, null, false),
+    ('Holy crap, Mulgrew from orange is the new black was in star trek!', 1, 'http://i.imgur.com/gdKaHX2.jpg', null, false),
+    ('HikariCP support: Ask questions here.',3,  null, null, false),
+    ('Last year I got my first bee hives: this is my first harvest.', 1, 'http://i.imgur.com/pf77REO.jpg', null, false),
+    ('What''s the most cynical view you have?', 1, null, null, false),
+    ('Power to the People, a look at the Black Panther Party, and Huey P. Newton.', 1, 'https://grist.files.wordpress.com/2016/03/black-panthers.jpg?w=1200&h=675&crop=1', null, false),
+    ('Its hard to stay mad at him', 1, 'http://i.imgur.com/xndKJ8L.gif', null, false),
+    ('Boba Fett, the biggest badass in the universe.', 1, 'http://i.imgur.com/nuPI9B8.jpg', null, false);
+
+
 
 insert into private_discussion_user(discussion_id, user_id)
-    values (3,4);
+    values (1,4);
 
 insert into blocked_discussion_user(discussion_id, user_id)
     values(4,4);
@@ -205,10 +208,10 @@ insert into discussion_rank (discussion_id, user_id, rank)
     values (1,1,21),(1,3,81),(2,2,87);
 
 insert into tag (name)
-    values ('animals'),('things_like'),('feathers');
+    values ('StarWars'),('StarTrek'),('OrangeIsTheNewBlack'),('BLM'),('doggos'),('Minneapolis'),('Whoadude'),('Panthers'),('HikariCP');
 
 insert into discussion_tag (discussion_id, tag_id)
-    values (1,1),(1,2),(3,3);
+    values (2,1),(4,2),(4,3),(8,4),(8,8),(9,5),(3,6),(6,7),(10,1),(5,9);
 
 insert into comment (text_, user_id, discussion_id)
 	values ('Node 1',1,1),('Node 1.1',2,1),('Node 2',3,1),('Node 1.1.1',2,1),('Node 2.1',1,1),

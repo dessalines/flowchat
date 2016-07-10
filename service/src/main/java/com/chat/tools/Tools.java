@@ -195,8 +195,8 @@ public class Tools {
 
     }
 
-    public static String buildMessage(String error) {
-        return "{\"message\": \"" + error + "\"}";
+    public static String buildMessage(String message) {
+        return "{\"message\": \"" + message + "\"}";
     }
 
 }

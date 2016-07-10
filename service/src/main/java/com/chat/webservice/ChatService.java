@@ -234,9 +234,8 @@ public class ChatService {
                 Integer rank = Integer.valueOf(req.params(":rank"));
 
                 String message = Actions.saveDiscussionVote(userObj.getId(), discussionId, rank);
-                log.info(message);
 
-                return message;
+                return Tools.buildMessage(message);
 
             } catch (Exception e) {
                 res.status(666);

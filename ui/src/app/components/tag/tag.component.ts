@@ -49,7 +49,7 @@ export class TagComponent implements OnInit {
   }
 
   onScroll(event) {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+    if (this.tag != null && (window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
       if (this.scrollDebounce == 0) {
         this.scrollDebounce = 1;
         // you're at the bottom of the page

@@ -54,14 +54,12 @@ public class AppTest {
 
         List<CommentObj> cos = Transformations.convertCommentsToEmbeddedObjects(ctv, null);
 
-//        assertTrue(cos.get(0).getEmbedded().get(0).getId().equals(2L));
+        assertTrue(cos.get(0).getEmbedded().get(0).getId().equals(2L));
     }
 
     @Test
     public void testCollect() throws SQLException {
         LazyList<CommentThreadedView> ctv = CommentThreadedView.where("discussion_id = ?", 1);
-
-        log.info(ctv.toJson(true));
 
         Long test = (Long) ctv.collect("id", "id", new Long(2)).get(0);
 
@@ -71,10 +69,7 @@ public class AppTest {
 
         List<Long> list = Tools.convertArrayToList(parentBreadCrumbsStr);
 
-        log.info(Arrays.toString(list.toArray()));
-
         assertTrue(list.get(0).equals(Long.valueOf(1)));
-
 
     }
 
@@ -82,26 +77,10 @@ public class AppTest {
     public void testFindComment() throws SQLException {
         LazyList<CommentThreadedView> ctv = CommentThreadedView.where("discussion_id = ?", 1);
 
-        log.info(ctv.toJson(false));
-
         CommentThreadedView testFound = CommentThreadedView.findFirst("id = ?", 4L);
 
-        log.info(testFound.toJson(false));
-
-//        ctv.collect("", "id", 4L).get(0);
-
-//        Integer index = ctv.indexOf(testFound);
-//
-//        log.info(index.toString());
-//
-//
-//
         Integer index = Tools.findIndexByIdInLazyList(ctv, 4L);
-        log.info(index.toString());
-        log.info(ctv.get(index).toString());
-
-//
-//        log.info(ctv2.toString());
+        assertTrue(index.equals(2));
 
     }
 
