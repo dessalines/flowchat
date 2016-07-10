@@ -5,9 +5,7 @@ import com.chat.db.Transformations;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by tyler on 6/7/16.
@@ -27,12 +25,15 @@ public class Comments implements JSONWriter {
     }
 
     public static Comments replies(LazyList<? extends Model> comments) {
-        List<CommentObj> commentObjs = new ArrayList<>();
+        Set<CommentObj> commentObjs = new LinkedHashSet<>();
         for (Model c : comments) {
             commentObjs.add(CommentObj.create(c, null));
         }
 
-        return new Comments(commentObjs);
+        // Convert to a list
+        List<CommentObj> list = new ArrayList<>(commentObjs);
+
+        return new Comments(list);
 
     }
 

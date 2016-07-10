@@ -42,7 +42,10 @@
           </a>
           <ul class="dropdown-menu messages-dropdown"
             role="menu">
-            <h6 class="dropdown-header">Messages</h6>
+            <h6 class="dropdown-header">Messages 
+              <small role="button" (click)="markAllNotificationsAsRead()" tooltipPlacement="bottom"
+            tooltip="Mark all as read"><i class="fa fa-fw fa-check"></i></small>
+            </h6>
             <li *ngFor="let message of unreadMessages"
               role="menuitem">
               <div class="dropdown-item" role="button"

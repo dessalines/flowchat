@@ -17,6 +17,7 @@ export class NotificationsService {
 
   private getUnreadUrl: string = environment.endpoint + 'get_unread_replies';
   private markAsReadUrl: string = environment.endpoint + 'mark_reply_as_read/';
+  private markAllAsReadUrl: string = environment.endpoint + 'mark_all_replies_as_read';
 
   private fetchInterval: number = 60000;
 
@@ -34,6 +35,12 @@ export class NotificationsService {
 
   markMessageAsRead(id: number) {
     return this.http.post(this.markAsReadUrl + id, null, this.userService.getOptions())
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  markAllAsRead() {
+    return this.http.post(this.markAllAsReadUrl, null, this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
