@@ -27,7 +27,7 @@ export class Tools {
 
   static parseImageThumbnail(link: string) {
     // Check to see if its already a link
-    if (link.match(/\.(jpeg|jpg|gif|png)/) != null) {
+    if (link.match(/\.(jpeg|jpg|gif|png|gifv)/) != null) {
       return link;
     }
 
