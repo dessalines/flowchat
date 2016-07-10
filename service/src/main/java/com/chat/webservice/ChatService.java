@@ -468,10 +468,10 @@ public class ChatService {
 
         });
 
-
         before((req, res) -> {
             Tools.dbInit();
         });
+
         after((req, res) -> {
             Tools.dbClose();
             res.header("Access-Control-Allow-Origin", "*");
@@ -481,8 +481,8 @@ public class ChatService {
 
         });
 
-
         init();
+        
     }
 
 
