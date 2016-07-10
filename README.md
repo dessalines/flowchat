@@ -1,6 +1,6 @@
 [FlowChat](https://flowchat.tk) &mdash; A live updating, threaded discussion platform with voting. 
 ==========
-![](http://img.shields.io/version/0.0.1.png?color=green)
+![](http://img.shields.io/version/0.1.0.png?color=green)
 [![Build Status](https://travis-ci.org/tchoulihan/flowchat.png)](https://travis-ci.org/tchoulihan/flowchat)
 
 [FlowChat](https://flowchat.tk) is an open-source, self-hostable, live-updating discussion platform, featuring chatrooms with threaded conversations, and voting. 
@@ -16,7 +16,7 @@ It features:
 - [Range voting](http://rangevoting.org/UniqBest.html), not simple thumbs up or thumbs down, for mass expressiveness, for both comments and discussions.
 
 Tech used:
-- Java Spark, ActiveJDBC, Angular2, Liquibase, Postgres
+- [Java Spark](https://github.com/perwendel/spark), [Bootstrap v4](https://github.com/twbs/bootstrap), [Angular2](https://github.com/angular/angular), [Angular-cli](https://github.com/angular/angular-cli), [ng2-bootstrap](http://valor-software.com/ng2-bootstrap/), [ActiveJDBC](http://javalite.io/activejdbc), [Liquibase](http://www.liquibase.org/), [Postgres](https://www.postgresql.org/), [Markdown-it](https://github.com/markdown-it/markdown-it), [angular2-toaster](https://github.com/Stabzs/Angular2-Toaster)
 
 Check out a sample discussion [here](https://flowchat.tk/discussion/1).
 
