@@ -2,7 +2,7 @@
 cd ui
 npm i angular-cli -g
 npm i
-ng build -prod
+ng build
 cd ..
 
 # Building the back end
