@@ -214,7 +214,6 @@ export class ChatComponent implements OnInit {
 
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
       if (this.scrollDebounce == 0) {
-        console.log('at the bottom of the page');
         this.scrollDebounce = 1;
         // you're at the bottom of the page
         this.currentTopLimit += this.currentCommentBatchSize;
@@ -230,10 +229,7 @@ export class ChatComponent implements OnInit {
       maxDepth: this.maxDepth
     }
 
-    console.log(nextPageData);
-
     this.threadedChatService.send(nextPageData);
-
   }
 
   private editComment(editedComment: Comment) {

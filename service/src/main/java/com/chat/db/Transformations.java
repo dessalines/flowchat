@@ -77,7 +77,7 @@ public class Transformations {
         }
 
         Collections.sort(cos, new CommentObj.CommentObjComparator());
-        
+
         Integer limit = (topLimit < cos.size()) ? topLimit.intValue() : cos.size();
 
         return cos.subList(0, limit);
