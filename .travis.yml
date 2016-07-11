@@ -7,6 +7,7 @@ before_install:
 - psql -c 'create database flowchat;' -U postgres
 - cd service
 after_success:
+- cd ..
 - ./deploy.sh
 addons:
   postgresql: '9.3'
