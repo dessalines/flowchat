@@ -17,9 +17,13 @@ public class Comments implements JSONWriter {
         this.comments = comments;
     }
 
-    public static Comments create(LazyList<? extends Model> comments, Map<Long, Integer> votes) {
+    public static Comments create(
+            LazyList<? extends Model> comments,
+            Map<Long, Integer> votes,
+            Long topLimit, Long maxDepth) {
 
-        List<CommentObj> commentObjs = Transformations.convertCommentsToEmbeddedObjects(comments, votes);
+        List<CommentObj> commentObjs = Transformations.convertCommentsToEmbeddedObjects(
+                comments, votes, topLimit, maxDepth);
 
         return new Comments(commentObjs);
     }
@@ -40,4 +44,5 @@ public class Comments implements JSONWriter {
     public List<CommentObj> getComments() {
         return comments;
     }
+
 }

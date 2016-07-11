@@ -191,7 +191,7 @@ public class ChatService {
                 Map<Long, Integer> discussionRankMap = (!ids.isEmpty()) ? Transformations.convertDiscussionRankToMap(ids, userObj) : null;
 
                 // Build discussion objects
-                Discussions discussions = Discussions.create(dntvs, discussionRankMap);
+                Discussions discussions = Discussions.create(dntvs, discussionRankMap, p.getCount());
 
                 return discussions.json();
 
@@ -214,7 +214,7 @@ public class ChatService {
                 LazyList<DiscussionNoTextView> discussionsRows =
                         DiscussionNoTextView.find(queryStr.toString()).limit(5);
 
-                Discussions discussions = Discussions.create(discussionsRows, null);
+                Discussions discussions = Discussions.create(discussionsRows, null, Long.valueOf(discussionsRows.size()));
 
                 return discussions.json();
 
@@ -296,7 +296,7 @@ public class ChatService {
                     LazyList<DiscussionNoTextView> dntv = DiscussionNoTextView.where(
                             "id in " + Tools.convertListToInQuery(favDiscussionIds));
 
-                    Discussions d = Discussions.create(dntv, null);
+                    Discussions d = Discussions.create(dntv, null, Long.valueOf(dntv.size()));
 
                     log.info(d.json());
 

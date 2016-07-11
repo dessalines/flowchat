@@ -1,6 +1,7 @@
-package com.chat.types;
+package com.chat.types.websocket.input;
 
 import com.chat.tools.Tools;
+import com.chat.types.JSONWriter;
 
 import java.io.IOException;
 

@@ -1,6 +1,7 @@
-package com.chat.types;
+package com.chat.types.websocket.input;
 
 import com.chat.tools.Tools;
+import com.chat.types.JSONWriter;
 
 import java.io.IOException;
 
@@ -10,8 +11,6 @@ import java.io.IOException;
 public class CommentRankData implements JSONWriter {
     private Integer rank;
     private Long commentId;
-
-
 
     public CommentRankData() {}
 
