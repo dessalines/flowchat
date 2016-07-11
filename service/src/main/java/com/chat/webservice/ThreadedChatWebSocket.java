@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Logger;
 import com.chat.db.Actions;
 import com.chat.tools.Tools;
 import com.chat.types.*;
+import com.chat.types.websocket.input.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -27,6 +28,9 @@ import static com.chat.db.Tables.*;
 @WebSocket
 public class ThreadedChatWebSocket {
 
+    private static Long topLimit = 20L;
+    private static Long maxDepth = 20L;
+
     public static Logger log = (Logger) LoggerFactory.getLogger(ThreadedChatWebSocket.class);
 
     static Set<SessionScope> sessionScopes = new HashSet<>();
@@ -49,12 +53,10 @@ public class ThreadedChatWebSocket {
         LazyList<Model> comments = fetchComments(ss);
 
         // send the comments
-        session.getRemote().sendString(Comments.create(comments, fetchVotesMap(ss.getUserObj().getId())).json());
+        session.getRemote().sendString(Comments.create(comments,
+                fetchVotesMap(ss.getUserObj().getId()), topLimit, maxDepth).json());
 
-        // send the user's comments votes to them only
-        LazyList<CommentRank> votes = CommentRank.where("user_id = ?", ss.getUserObj().getId());
-
-        // send the updated users to everyone in the right scope(just discussion
+        // send the updated users to everyone in the right scope(just discussion)
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes, session);
         broadcastMessage(filteredScopes, Users.create(SessionScope.getUserObjects(filteredScopes)).json());
 
@@ -102,6 +104,9 @@ public class ThreadedChatWebSocket {
             case Vote:
                 saveCommentVote(session, dataStr);
                 break;
+            case NextPage:
+                messageNextPage(session, dataStr);
+                break;
         }
 
 
@@ -118,7 +123,7 @@ public class ThreadedChatWebSocket {
         JsonNode rootNode = Tools.JACKSON.readTree(someData);
 
             Iterator<String> it = rootNode.fieldNames();
-
+            log.info(rootNode.asText());
             while (it.hasNext()) {
                 String nodeName = it.next();
                 switch(nodeName) {
@@ -132,6 +137,8 @@ public class ThreadedChatWebSocket {
                         return MessageType.Vote;
                     case "deleteId":
                         return MessageType.Delete;
+                    case "topLimit":
+                        return MessageType.NextPage;
                 }
             }
         } catch (IOException e) {
@@ -142,7 +149,23 @@ public class ThreadedChatWebSocket {
     }
 
     enum MessageType {
-        Edit, Reply, TopReply, Vote, Delete
+        Edit, Reply, TopReply, Vote, Delete, NextPage
+    }
+
+    public void messageNextPage(Session session, String nextPageDataStr) {
+        SessionScope ss = SessionScope.findBySession(sessionScopes, session);
+
+        // Get the object
+        NextPageData nextPageData = NextPageData.fromJson(nextPageDataStr);
+
+        // Refetch the comments based on the new limit
+        LazyList<Model> comments = fetchComments(ss);
+
+        // send the comments from up to the new limit to them
+        sendMessage(session, Comments.create(comments,
+                fetchVotesMap(ss.getUserObj().getId()),
+                nextPageData.getTopLimit(), nextPageData.getMaxDepth()).json());
+
     }
 
     public void messageReply(Session session, String replyDataStr) {
@@ -175,8 +198,6 @@ public class ThreadedChatWebSocket {
         // Convert to a proper commentObj
         CommentObj co = CommentObj.create(ctv, null);
 
-
-//        comments = fetchComments();
 
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
                 sessionScopes, session, co.getBreadcrumbs());
@@ -326,6 +347,7 @@ public class ThreadedChatWebSocket {
 
     }
 
+
     private static LazyList<Model> fetchComments(SessionScope scope) {
         if (scope.getTopParentId() != null) {
             return CommentBreadcrumbsView.where("discussion_id = ? and parent_id = ?",
@@ -333,9 +355,9 @@ public class ThreadedChatWebSocket {
         } else {
             return CommentThreadedView.where("discussion_id = ?", scope.getDiscussionId());
         }
-
-
     }
+
+
 
     // These create maps from a user's comment id, to their rank/vote
     private static Map<Long, Integer> fetchVotesMap(Long userId) {

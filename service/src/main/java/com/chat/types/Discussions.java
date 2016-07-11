@@ -12,13 +12,16 @@ import java.util.Map;
  */
 public class Discussions implements JSONWriter {
     private List<DiscussionObj> discussions;
+    private Long count;
 
-    private Discussions(List<DiscussionObj> discussions) {
+    private Discussions(List<DiscussionObj> discussions, Long count) {
+        this.count = count;
         this.discussions = discussions;
     }
 
     public static Discussions create(LazyList<? extends Model> discussions,
-                                             Map<Long, Integer> votes) {
+                                             Map<Long, Integer> votes, Long count) {
+
         // Convert to a list of discussion objects
         List<DiscussionObj> dos = new ArrayList<>();
 
@@ -29,9 +32,12 @@ public class Discussions implements JSONWriter {
             dos.add(df);
         }
 
-        return new Discussions(dos);
+        return new Discussions(dos, count);
     }
 
+    public Long getCount() {
+        return count;
+    }
 
     public List<DiscussionObj> getDiscussions() {
         return discussions;

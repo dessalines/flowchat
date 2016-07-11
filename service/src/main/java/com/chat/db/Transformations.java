@@ -43,7 +43,9 @@ public class Transformations {
         return commentObjMap;
     }
 
-    public static List<CommentObj> convertCommentsMapToEmbeddedObjects(Map<Long, CommentObj> commentObjMap) {
+    public static List<CommentObj> convertCommentsMapToEmbeddedObjects(
+            Map<Long, CommentObj> commentObjMap,
+            Long topLimit, Long maxDepth) {
 
         List<CommentObj> cos = new ArrayList<>();
 
@@ -64,28 +66,39 @@ public class Transformations {
                 // Get the immediate parent
                 CommentObj parent = commentObjMap.get(parentId);
 
-                // Add it to the embedded object
-                parent.getEmbedded().add(co);
-
-                Collections.sort(parent.getEmbedded(), new CommentObj.CommentObjComparator());
+                // Add it to the embedded object, if the path length/maxDepth is below a certain limit
+                if (co.getPathLength() < maxDepth) {
+                    parent.getEmbedded().add(co);
+                    Collections.sort(parent.getEmbedded(), new CommentObj.CommentObjComparator());
+                }
 
             }
 
         }
 
         Collections.sort(cos, new CommentObj.CommentObjComparator());
+        
+        Integer limit = (topLimit < cos.size()) ? topLimit.intValue() : cos.size();
+
+        return cos.subList(0, limit);
+    }
+
+    public static List<CommentObj> convertCommentsToEmbeddedObjects(
+            List<? extends Model> cvs,
+            Map<Long, Integer> votes,
+            Long topLimit, Long maxDepth) {
+
+        Map<Long, CommentObj> commentObjMap = convertCommentThreadedViewToMap(cvs, votes);
+
+        List<CommentObj> cos = convertCommentsMapToEmbeddedObjects(commentObjMap, topLimit, maxDepth);
 
         return cos;
     }
 
-    public static List<CommentObj> convertCommentsToEmbeddedObjects(List<? extends Model> cvs,
-                                                                    Map<Long, Integer> votes) {
-
-        Map<Long, CommentObj> commentObjMap = convertCommentThreadedViewToMap(cvs, votes);
-
-        List<CommentObj> cos = convertCommentsMapToEmbeddedObjects(commentObjMap);
-
-        return cos;
+    public static List<CommentObj> convertCommentsToEmbeddedObjects(
+            List<? extends Model> cvs,
+            Map<Long, Integer> votes) {
+        return convertCommentsToEmbeddedObjects(cvs, votes, Long.MAX_VALUE, Long.MAX_VALUE);
     }
 
 

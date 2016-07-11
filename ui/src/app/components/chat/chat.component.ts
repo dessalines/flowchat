@@ -26,6 +26,11 @@ import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
 export class ChatComponent implements OnInit {
 
   private comments: Array<Comment>;
+  private scrollDebounce: number = 0;
+  private currentTopLimit: number = 20;
+  private currentCommentBatchSize: number = 20;
+  private maxDepth: number = 20;
+
   private users: Array<User>;
   private newCommentId: number;
 
@@ -205,6 +210,32 @@ export class ChatComponent implements OnInit {
 
   }
 
+  onScroll(event) {
+
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+      if (this.scrollDebounce == 0) {
+        console.log('at the bottom of the page');
+        this.scrollDebounce = 1;
+        // you're at the bottom of the page
+        this.currentTopLimit += this.currentCommentBatchSize;
+        this.sendNextPage(this.currentTopLimit);
+        setTimeout(() => this.scrollDebounce = 0, 1000);
+      }
+    }
+  }
+
+  sendNextPage(limit: number) {
+    let nextPageData: NextPageData = {
+      topLimit: limit,
+      maxDepth: this.maxDepth
+    }
+
+    console.log(nextPageData);
+
+    this.threadedChatService.send(nextPageData);
+
+  }
+
   private editComment(editedComment: Comment) {
 
     // If its the top level, stop and return 
@@ -300,4 +331,9 @@ export class ChatComponent implements OnInit {
 
 interface TopReplyData {
   topReply: string;
+}
+
+interface NextPageData {
+  topLimit: number;
+  maxDepth: number;
 }

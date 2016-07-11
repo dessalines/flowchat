@@ -1,6 +1,7 @@
-package com.chat.types;
+package com.chat.types.websocket.input;
 
 import com.chat.tools.Tools;
+import com.chat.types.JSONWriter;
 
 import java.io.IOException;
 
@@ -10,11 +11,6 @@ import java.io.IOException;
 public class ReplyData implements JSONWriter {
     private Long parentId;
     private String reply;
-
-    public ReplyData(Long parentId, String reply) {
-        this.parentId = parentId;
-        this.reply = reply;
-    }
 
     public ReplyData() {}
 
