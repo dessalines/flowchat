@@ -102,7 +102,7 @@ export class NavbarComponent implements OnInit {
     // Then relog back in as a random user (Necessary because a lot of fetches fail otherwise)
     this.getOrCreateUser();
     this.router.navigate(['Home']);
-   
+
   }
 
   createDiscussion() {
@@ -132,7 +132,7 @@ export class NavbarComponent implements OnInit {
   }
 
   discussionTypeaheadOnSelect(discussion: Discussion) {
-    this.router.navigate(['Discussion', { discussionId: discussion.id}]);
+    this.router.navigate(['Discussion', { discussionId: discussion.id }]);
   }
 
   discussionChangeTypeaheadLoading(e: boolean): void {
@@ -145,7 +145,18 @@ export class NavbarComponent implements OnInit {
 
   fetchNotifications() {
     this.notificationsService.getUnreadMessages().subscribe(
-      t => this.unreadMessages = t.comments);
+      t => {
+        this.unreadMessages = t.comments;
+        this.renameDocumentTitleBasedOnMessages();
+      });
+  }
+
+  renameDocumentTitleBasedOnMessages() {
+    if (this.unreadMessages.length > 0) {
+      document.title = 'FlowChat (' + this.unreadMessages.length + ')';
+    } else {
+      document.title = 'FlowChat';
+    }
   }
 
   gotoMessage(message: Comment) {
@@ -154,20 +165,24 @@ export class NavbarComponent implements OnInit {
     this.notificationsService.markMessageAsRead(message.id).subscribe(t => {
       // Remove it from the array
       let index = this.unreadMessages.indexOf(message);
-      this.unreadMessages.splice(index,1);
+      this.unreadMessages.splice(index, 1);
+      this.renameDocumentTitleBasedOnMessages();
 
       // Navigate to the parent message (IE, your message)
-      this.router.navigate(['/Discussion', { discussionId: message.discussionId}, 
-        'ChatSub', {commentId: message.parentId}]);
-  
+      this.router.navigate(['/Discussion', { discussionId: message.discussionId },
+        'ChatSub', { commentId: message.parentId }]);
+
     });
   }
 
   markAllNotificationsAsRead() {
     this.notificationsService.markAllAsRead().subscribe(
-      t => this.unreadMessages = []);
+      t => {
+        this.unreadMessages = [];
+        this.renameDocumentTitleBasedOnMessages();
+      });
   }
-    
+
 
 
 }
