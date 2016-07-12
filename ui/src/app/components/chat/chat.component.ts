@@ -259,7 +259,7 @@ export class ChatComponent implements OnInit {
     // If its the top level, stop and return 
     if (newComment.parentId == null) {
       this.comments.unshift(newComment);
-      setTimeout(() => { location.hash = "#comment_" + newComment.id; }, 50);
+      setTimeout(() => { document.getElementById("comment_" + newComment.id).scrollIntoView();},50);
       return;
     }
 
@@ -269,7 +269,7 @@ export class ChatComponent implements OnInit {
 
     // Focus on the new comment if not replying
     if (!this.isReplying) {
-      setTimeout(() => { location.hash = "#comment_" + newComment.id; }, 50);
+      setTimeout(() => { document.getElementById("comment_" + newComment.id).scrollIntoView();},50);
     }
 
   }
@@ -284,7 +284,7 @@ export class ChatComponent implements OnInit {
         // For new comments
         if (parent.id == newComment.parentId) {
           if (isNew) {
-            parent.embedded.push(newComment);
+            parent.embedded.unshift(newComment);
             this.recursiveCommentStopper = true;
           } else {
             this.replaceEditedComment(parent.embedded, newComment);

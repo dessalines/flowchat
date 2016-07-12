@@ -11,7 +11,7 @@ It features:
 - A complete chat application with live updating, threaded discussion.
 - [Range voting](http://rangevoting.org/UniqBest.html) for both comments and discussions. Range voting is easier to use and more expressive than simple like and dislike.
 - Private or public discussions
-- Customizable discussion and comment sorting by recentness, and popularity.
+- Customizable discussion and comment sorting, by recentness, and popularity.
 - Discussion hashtags. 
 - Discussion creators can block users, or delete comments.
 
