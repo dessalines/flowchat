@@ -14,6 +14,7 @@ import {TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootst
 import {MarkdownPipe} from '../../pipes/markdown.pipe';
 import { MomentPipe } from '../../pipes/moment.pipe';
 
+declare var Favico: any;
 
 @Component({
   moduleId: module.id,
@@ -41,6 +42,8 @@ export class NavbarComponent implements OnInit {
 
   private unreadMessages: Array<Comment>;
 
+  private favIcon: any;
+
   constructor(private userService: UserService,
     private loginService: LoginService,
     private router: Router,
@@ -50,12 +53,21 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.setupFavIcon();
+
     if (!this.userService.getUser()) {
       this.getOrCreateUser();
     }
 
     this.setupDiscussionSearch();
     this.fetchNotifications();
+  }
+
+  setupFavIcon() {
+    this.favIcon = new Favico({
+      animation: 'pop'
+    });
   }
 
   getOrCreateUser() {
@@ -147,15 +159,15 @@ export class NavbarComponent implements OnInit {
     this.notificationsService.getUnreadMessages().subscribe(
       t => {
         this.unreadMessages = t.comments;
-        this.renameDocumentTitleBasedOnMessages();
+        this.changeFaviconBasedOnMessages();
       });
   }
 
-  renameDocumentTitleBasedOnMessages() {
+  changeFaviconBasedOnMessages() {
     if (this.unreadMessages.length > 0) {
-      document.title = 'FlowChat (' + this.unreadMessages.length + ')';
+      this.favIcon.badge(this.unreadMessages.length);
     } else {
-      document.title = 'FlowChat';
+      this.favIcon.reset();
     }
   }
 
@@ -166,7 +178,7 @@ export class NavbarComponent implements OnInit {
       // Remove it from the array
       let index = this.unreadMessages.indexOf(message);
       this.unreadMessages.splice(index, 1);
-      this.renameDocumentTitleBasedOnMessages();
+      this.changeFaviconBasedOnMessages();
 
       // Navigate to the parent message (IE, your message)
       this.router.navigate(['/Discussion', { discussionId: message.discussionId },
@@ -179,7 +191,7 @@ export class NavbarComponent implements OnInit {
     this.notificationsService.markAllAsRead().subscribe(
       t => {
         this.unreadMessages = [];
-        this.renameDocumentTitleBasedOnMessages();
+        this.changeFaviconBasedOnMessages();
       });
   }
 

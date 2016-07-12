@@ -1,13 +1,17 @@
 # FlowChat
 
 # TODO
+
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - Add https support
-- Figure out `autosize.min.js` issue, stop using it from a CDN.
+- Figure out `autosize.min.js`, and `favico` issue, stop using it from a CDN.
 - Get font awesome working locally
 - Add periodic DB backups
 
 # Finished
+- Add favicon badge for unread messages
+  - [example](https://github.com/ejci/favico.js)
+  - Could only get this working through CDN and declare var any
 - Smart comment scrolling, fetch size 20, max depth 20
 - Add a version page
 - Update Readme

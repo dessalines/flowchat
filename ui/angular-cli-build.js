@@ -19,7 +19,8 @@ module.exports = function(defaults) {
       'autosize/dist/autosize.min.js',
       'ng2-bootstrap/**/*.js',
       'moment/moment.js',
-      'angular2-toaster/**/*.+(js|js.map|css)'
+      'angular2-toaster/**/*.+(js|js.map|css)',
+      'favico.js/favico.js'
     ]
   });
 };
