@@ -25,7 +25,7 @@ export class NotificationsService {
     private userService: UserService) {
   }
 
-  getUnreadMessages() {
+  getUnreadMessages(): any {
     return Observable.interval(this.fetchInterval).startWith(0).flatMap(() => {
       return this.http.get(this.getUnreadUrl, this.userService.getOptions())
         .map(this.extractData)
