@@ -15,7 +15,7 @@
 				created_weight/(now_seconds - comment_seconds) +
 				number_of_votes*number_of_votes_weight +
 				avg_rank*avg_rank_weight-->
-		<sorting_created_weight>100000</sorting_created_weight>
+		<sorting_created_weight>3600</sorting_created_weight>
 		<sorting_number_of_votes_weight>0.001</sorting_number_of_votes_weight>
 		<sorting_avg_rank_weight>0.01</sorting_avg_rank_weight>
 
@@ -66,7 +66,7 @@
 							<minimizeJar>false</minimizeJar>
 							<filters>
 								<filter>
-									<!-- exclude signatures, the bundling process breaks them for some 
+									<!-- exclude signatures, the bundling process breaks them for some
 										reason -->
 									<artifact>*:*</artifact>
 									<excludes>
