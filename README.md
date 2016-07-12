@@ -1,16 +1,18 @@
-[FlowChat](http://flowchat.tk) &mdash; A live updating, threaded chat platform with voting. 
+[FlowChat](http://flowchat.tk) &mdash; An open-source, live updating, threaded chat platform with voting. 
 ==========
 ![](http://img.shields.io/version/0.1.0.png?color=green)
 [![Build Status](https://travis-ci.org/tchoulihan/flowchat.png)](https://travis-ci.org/tchoulihan/flowchat)
 
-[FlowChat](http://flowchat.tk) is an open-source, self-hostable, live-updating discussion platform, featuring chatrooms with threaded conversations, and voting. 
+[FlowChat](http://flowchat.tk) is an open-source, self-hostable, live-updating discussion platform, featuring chatrooms with threaded conversations, and voting.
 
-Flowchat tries to solve the problem of having a fluid, free-feeling group chat, while allowing for side conversations so that every comment doesn't interrupt the flow, and so multiple conversations can take place at once. 
+It can act as an alternative to forums, as a private team communication platform(like slack), or a content creation platform(like reddit).  
+
+Flowchat tries to solve the problem of having a fluid, free-feeling group chat, while allowing for side conversations so that every comment isn't at the top level. Multiple conversations can take place at once, without interrupting the flow of the chatroom.
 
 It features:
 - A complete chat application with live updating, threaded discussion.
-- [Range voting](http://rangevoting.org/UniqBest.html) for both comments and discussions. Range voting is easier to use and more expressive than simple like and dislike.
 - Private or public discussions
+- [Range voting](http://rangevoting.org/UniqBest.html) for both comments and discussions. Range voting is easier to use and more expressive than simple like and dislike.
 - Customizable discussion and comment sorting, by recentness, and popularity.
 - Discussion hashtags. 
 - Discussion creators can block users, or delete comments.
