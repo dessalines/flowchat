@@ -1,7 +1,7 @@
 import { provideRouter, RouterConfig } from '@angular/router';
-import {HomeComponent} from './components/home';
-import {TagComponent} from './components/tag';
-import {ChatListComponent} from './components/chat-list';
+import {HomeComponent} from './components/home/index';
+import {TagComponent} from './components/tag/index';
+import {ChatListComponent} from './components/chat-list/index';
 import {chatListRoutes} from './components/chat-list/chat-list.routes';
 
 const routes: RouterConfig = [

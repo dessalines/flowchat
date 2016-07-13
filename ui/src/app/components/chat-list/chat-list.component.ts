@@ -15,7 +15,7 @@ export class ChatListComponent implements OnInit {
     private userService: UserService) {}
 
   ngOnInit() {
-  	
+	
   }
 
 }

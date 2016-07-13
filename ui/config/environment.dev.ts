@@ -1,3 +1,5 @@
 export const environment = {
-  production: false
+  production: false,
+  endpoint: 'http://localhost:4567/',
+  websocket: 'ws://localhost:4567/threaded_chat'
 };

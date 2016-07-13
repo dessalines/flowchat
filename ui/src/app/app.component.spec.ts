@@ -5,18 +5,18 @@ import {
   it,
   inject
 } from '@angular/core/testing';
-import { FlowChatAppComponent } from '../app/flowchat.component';
+import { AppComponent } from './app.component';
 
-beforeEachProviders(() => [FlowChatAppComponent]);
+beforeEachProviders(() => [AppComponent]);
 
 describe('App: Flowchat', () => {
   it('should create the app',
-      inject([FlowChatAppComponent], (app: FlowChatAppComponent) => {
+      inject([AppComponent], (app: AppComponent) => {
     expect(app).toBeTruthy();
   }));
 
   it('should have as title \'flowchat works!\'',
-      inject([FlowChatAppComponent], (app: FlowChatAppComponent) => {
+      inject([AppComponent], (app: AppComponent) => {
     expect(app.title).toEqual('flowchat-ui works!');
   }));
 });
