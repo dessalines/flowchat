@@ -1,2 +1,2 @@
 export {environment} from './environment';
-export {FlowChatAppComponent} from './flowchat.component';
+export {AppComponent} from './app.component';

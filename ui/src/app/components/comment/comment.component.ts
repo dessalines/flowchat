@@ -6,7 +6,7 @@ import { MomentPipe } from '../../pipes/moment.pipe';
 import {MarkdownEditComponent} from '../markdown-edit/index';
 import * as moment from 'moment';
 import {MarkdownPipe} from '../../pipes/markdown.pipe';
-import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import {TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 
 @Component({

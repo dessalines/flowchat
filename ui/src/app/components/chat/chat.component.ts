@@ -7,8 +7,7 @@ import {DiscussionCardComponent} from '../discussion-card/index';
 import {UserService} from '../../services/user.service';
 import {DiscussionService} from '../../services/discussion.service';
 import {Subscription} from 'rxjs/Subscription';
-import { RouteConfig, ROUTER_DIRECTIVES, Router, RouteParams} from '@angular/router-deprecated';
-import {RouteParamService} from '../../services/route-param.service';
+import {Router, ActivatedRoute} from '@angular/router';
 import {MarkdownEditComponent} from '../markdown-edit/index';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
 import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
@@ -57,9 +56,8 @@ export class ChatComponent implements OnInit {
 
   constructor(private threadedChatService: ThreadedChatService,
     private userService: UserService,
+    private route: ActivatedRoute,
     private router: Router,
-    private routeParams: RouteParams,
-    private routeParamService: RouteParamService,
     private discussionService: DiscussionService,
     private toasterService: ToasterService) {
 
@@ -69,10 +67,14 @@ export class ChatComponent implements OnInit {
   ngOnInit() {
     // console.log(this.routeParams);
     // console.log(this.routeParamService.params());
-    this.discussionId = Number(this.routeParamService.params().get("discussionId"));
-    if (this.routeParams.get("commentId") != null) {
-      this.topParentId = Number(this.routeParams.get("commentId"));
+
+    this.discussionId = +this.route.snapshot.params["discussionId"];
+
+    
+    if (+this.route.snapshot.params["commentId"] != null) {
+      this.topParentId =+this.route.snapshot.params["commentId"];
     }
+
     this.threadedChatService.connect(this.discussionId, this.topParentId);
     
     this.subscribeToChat();
@@ -84,7 +86,7 @@ export class ChatComponent implements OnInit {
   }
 
   editMode(): Boolean {
-    return Boolean(this.routeParamService.params().get("editMode"));
+    return Boolean(this.route.snapshot.params["editMode"]);
   }
 
   ngOnDestroy() {

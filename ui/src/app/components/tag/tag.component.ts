@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouteConfig, ROUTER_DIRECTIVES, Router, RouteParams} from '@angular/router-deprecated';
+import {Router, ActivatedRoute} from '@angular/router';
 import {DiscussionService} from '../../services/discussion.service';
 import {TagService} from '../../services/tag.service';
 import {Discussion} from '../../shared/discussion.interface';
@@ -24,14 +24,15 @@ export class TagComponent implements OnInit {
   private currentPageNum: number = 1;
   private scrollDebounce: number = 0;
 
-  constructor(private routeParams: RouteParams,
+  constructor(private route: ActivatedRoute,
+    private router: Router,
     private discussionService: DiscussionService,
     private tagService: TagService) {
   }
 
   ngOnInit() {
 
-    let tagId: number = Number(this.routeParams.params['tagId']);
+    let tagId: number = +this.route.snapshot.params['tagId'];
 
     this.getTag(tagId);
     this.getDiscussions(tagId, this.currentPageNum);

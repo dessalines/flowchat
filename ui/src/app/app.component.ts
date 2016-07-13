@@ -1,5 +1,5 @@
 import { Component, ViewContainerRef} from '@angular/core';
-import { RouteConfig, ROUTER_DIRECTIVES, Router } from '@angular/router-deprecated';
+import { RouteConfig, ROUTER_DIRECTIVES, Router } from '@angular/router';
 import { ChatComponent } from './components/chat/index';
 import { ChatListComponent } from './components/chat-list/index';
 import { NavbarComponent } from './components/navbar/index';
@@ -13,9 +13,9 @@ import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2
 
 @Component({
   moduleId: module.id,
-  selector: 'flowchat-app',
-  templateUrl: 'flowchat.component.html',
-  styleUrls: ['flowchat.component.css'],
+  selector: 'app-root',
+  templateUrl: 'app.component.html',
+  styleUrls: ['app.component.css'],
   directives: [NavbarComponent, ROUTER_DIRECTIVES, ToasterContainerComponent],
   providers: [UserService, ToasterService, DiscussionService, TagService, NotificationsService]
 })
@@ -25,7 +25,7 @@ import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2
     { path: '/tag/:tagId', name: 'Tag', component: TagComponent},
     { path: '/discussion/:discussionId/...', name: 'Discussion', component: ChatListComponent }
 ])
-export class FlowChatAppComponent {
+export class AppComponent {
   public title = 'derp';
 
 
