@@ -6,7 +6,7 @@ import {UserService} from '../../services/user.service';
 import {DiscussionService} from '../../services/discussion.service';
 import {NotificationsService} from '../../services/notifications.service';
 import {User, Discussion, Comment, Tools} from '../../shared';
-import { Router } from '@angular/router';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import {ChatComponent} from '../chat';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
@@ -22,7 +22,7 @@ declare var Favico: any;
   templateUrl: 'navbar.component.html',
   styleUrls: ['navbar.component.css'],
   directives: [MODAL_DIRECTVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES,
-    TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES],
+    TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES, ROUTER_DIRECTIVES],
   providers: [LoginService],
   viewProviders: [BS_VIEW_PROVIDERS],
   pipes: [MomentPipe, MarkdownPipe]

@@ -3,8 +3,10 @@
     <li class="text-muted list-inline-item" role="button"
       (click)="collapsed = !collapsed">{{collapseText()}}</li>
     <li class="text-primary list-inline-item">{{comment.userName}}</li>
-    <li *ngIf="comment.avgRank" class="label label-pill label-default list-inline-item" tooltipPlacement="bottom" tooltip="Average Score">{{comment.avgRank}}</li>
-    <li *ngIf="rank" class="label label-pill label-info list-inline-item" tooltipPlacement="bottom" tooltip="Your Vote">{{rank}}</li>
+    <li *ngIf="comment.avgRank" class="label label-pill label-default list-inline-item"
+      tooltipPlacement="bottom" tooltip="Average Score">{{comment.avgRank}}</li>
+    <li *ngIf="rank" class="label label-pill label-info list-inline-item"
+      tooltipPlacement="bottom" tooltip="Your Vote">{{rank}}</li>
     <li *ngIf="comment.avgRank" class="text-muted list-inline-item"><small>{{comment.numberOfVotes}} votes</small></li>
     <li *ngIf="comment.deleted" class="text-muted list-inline-item"><small><i>deleted {{comment.modified | moment}}</i></small></li>
     <span *ngIf="!comment.deleted">
@@ -29,32 +31,32 @@
     </div>
   </div>
   <small *ngIf="!showReply && !showEdit">
-		<ul class="list-inline">
-			<span *ngIf="!comment.deleted">
-			<li *ngIf="userService.getUser().id != comment.userId" role="button" class="list-inline-item" (click)="toggleShowVoteSlider()">
-				<i class="fa fa-fw fa-star-half-o" tooltipPlacement="bottom" tooltip="Vote"></i>
-			</li>
-			<li role="button" class="list-inline-item" (click)="toggleShowReply()">
-				<i class="fa fa-fw fa-reply" tooltipPlacement="bottom" tooltip="Reply"></i>
-			</li>
-			<li role="button" *ngIf="editable" (click)="toggleShowEdit()" class="list-inline-item">
-				<i class="fa fa-fw fa-edit" tooltipPlacement="bottom" tooltip="Edit"></i>
-			</li>
-			<li role="button" *ngIf="editable || isDiscussionOwner()" (click)="deleteComment()" class="list-inline-item">
-				<i class="fa fa-fw fa-remove" tooltipPlacement="bottom" tooltip="Delete"></i>
-			</li>
-			</span>
-			<li *ngIf="comment.parentId" role="button" class="list-inline-item">
-				<i [routerLink]="['/Discussion', {discussionId: comment.discussionId}, 'ChatSub', {commentId: comment.parentId}]" class="fa fa-fw fa-level-up" tooltipPlacement="bottom" tooltip="View Parent"></i>
-			</li>
-			<li *ngIf="!comment.parentId" role="button" class="list-inline-item">
-				<i [routerLink]="['/Discussion', {discussionId: comment.discussionId}]" class="fa fa-fw fa-level-up" tooltipPlacement="bottom" tooltip="View Discussion"></i>
-			</li>
-			<li *ngIf="comment.id != comment.topParentId || comment.parentId == null" role="button" class="list-inline-item">
-				<i [routerLink]="['/Discussion', {discussionId: comment.discussionId}, 'ChatSub', {commentId: comment.id}]" class="fa fa-fw fa-level-down" tooltipPlacement="bottom" tooltip="View Children"></i>
-			</li>
-		</ul>
-	</small>
+    <ul class="list-inline">
+      <span *ngIf="!comment.deleted">
+      <li *ngIf="userService.getUser().id != comment.userId" role="button" class="list-inline-item" (click)="toggleShowVoteSlider()">
+        <i class="fa fa-fw fa-star-half-o" tooltipPlacement="bottom" tooltip="Vote"></i>
+      </li>
+      <li role="button" class="list-inline-item" (click)="toggleShowReply()">
+        <i class="fa fa-fw fa-reply" tooltipPlacement="bottom" tooltip="Reply"></i>
+      </li>
+      <li role="button" *ngIf="editable" (click)="toggleShowEdit()" class="list-inline-item">
+        <i class="fa fa-fw fa-edit" tooltipPlacement="bottom" tooltip="Edit"></i>
+      </li>
+      <li role="button" *ngIf="editable || isDiscussionOwner()" (click)="deleteComment()" class="list-inline-item">
+        <i class="fa fa-fw fa-remove" tooltipPlacement="bottom" tooltip="Delete"></i>
+      </li>
+      </span>
+      <li *ngIf="comment.parentId" role="button" class="list-inline-item">
+        <a [routerLink]="['/Discussion', {discussionId: comment.discussionId}, 'ChatSub', {commentId: comment.parentId}]"><i class="fa fa-fw fa-level-up" tooltipPlacement="bottom" tooltip="View Parent"></i></a>
+      </li>
+      <li *ngIf="!comment.parentId" role="button" class="list-inline-item">
+        <a [routerLink]="['/Discussion', {discussionId: comment.discussionId}]"><i class="fa fa-fw fa-level-up" tooltipPlacement="bottom" tooltip="View Discussion"></i></a>
+      </li>
+      <li *ngIf="comment.id != comment.topParentId || comment.parentId == null" role="button" class="list-inline-item">
+        <a [routerLink]="['/Discussion', {discussionId: comment.discussionId}, 'ChatSub', {commentId: comment.id}]"><i class="fa fa-fw fa-level-down" tooltipPlacement="bottom" tooltip="View Children"></i></a>
+      </li>
+    </ul>
+  </small>
   <div *ngIf="showVoteSlider">
     <input [value]="rank" (mouseup)="saveRank($event.target.value)"
       (input)="updateRank($event.target.value)"

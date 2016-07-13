@@ -1,5 +1,5 @@
 import { Component, ViewContainerRef} from '@angular/core';
-import { RouteConfig, ROUTER_DIRECTIVES, Router } from '@angular/router';
+import { ROUTER_DIRECTIVES, Router } from '@angular/router';
 import { ChatComponent } from './components/chat/index';
 import { ChatListComponent } from './components/chat-list/index';
 import { NavbarComponent } from './components/navbar/index';
@@ -19,12 +19,6 @@ import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2
   directives: [NavbarComponent, ROUTER_DIRECTIVES, ToasterContainerComponent],
   providers: [UserService, ToasterService, DiscussionService, TagService, NotificationsService]
 })
-@RouteConfig([
-    // { path: '/**', redirectTo: ['Home'] },
-    { path: '/', name: 'Home', component: HomeComponent, useAsDefault: true },
-    { path: '/tag/:tagId', name: 'Tag', component: TagComponent},
-    { path: '/discussion/:discussionId/...', name: 'Discussion', component: ChatListComponent }
-])
 export class AppComponent {
   public title = 'derp';
 

@@ -7,7 +7,8 @@
           <small *ngIf="discussion && isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
         </h4>
       </div>
-      <a *ngIf="discussion?.link && parseImageThumbnail(discussion?.link)" href="{{discussion?.link}}" target="_blank">
+      <a *ngIf="discussion?.link && parseImageThumbnail(discussion?.link)"
+        href="{{discussion?.link}}" target="_blank">
         <img class="img-fluid" [src]="parseImageThumbnail(discussion?.link)">
       </a>
       <div class="card-block card-block-no-top">
@@ -43,9 +44,11 @@
               target="_blank"><i class="fa fa-external-link"
               aria-hidden="true" tooltipPlacement="bottom" tooltip="Link"></i></a>
           </li>
-          <li class="list-inline-item" role="button"><i class="fa fa-fw fa-comments-o"
-              [routerLink]="['/Discussion', {discussionId: discussion?.id}]"
-              tooltipPlacement="bottom" tooltip="Comments"></i></li>
+          <li class="list-inline-item" role="button">
+            <a [routerLink]="['/Discussion', {discussionId: discussion?.id}]">
+              <i class="fa fa-fw fa-comments-o" tooltipPlacement="bottom"
+                tooltip="Comments"></i></a>
+          </li>
         </ul>
         <div *ngIf="showVoteSlider">
           <input [value]="discussion?.userRank" (mouseup)="saveDiscussionRank($event.target.value)"
