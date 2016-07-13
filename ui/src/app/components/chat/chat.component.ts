@@ -187,7 +187,7 @@ export class ChatComponent implements OnInit {
     }
 
     if (data.discussion) {
-      this.userService.updateFavoriteDiscussions(data.discussion);
+      this.userService.pushToFavoriteDiscussions(data.discussion);
     }
 
   }
