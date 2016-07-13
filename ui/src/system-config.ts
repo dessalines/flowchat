@@ -1,3 +1,7 @@
+// SystemJS configuration file, see links for more information
+// https://github.com/systemjs/systemjs
+// https://github.com/systemjs/systemjs/blob/master/docs/config-api.md
+
 /***********************************************************************************************
  * User Configuration.
  **********************************************************************************************/
@@ -33,8 +37,9 @@ const barrels: string[] = [
   '@angular/core',
   '@angular/common',
   '@angular/compiler',
+  '@angular/forms',
   '@angular/http',
-  '@angular/router-deprecated',
+  '@angular/router',
   '@angular/platform-browser',
   '@angular/platform-browser-dynamic',
 
@@ -73,7 +78,7 @@ System.config({
   map: {
     '@angular': 'vendor/@angular',
     'rxjs': 'vendor/rxjs',
-    'main': 'main.js',
+    'main': 'main.js'
   },
   packages: cliSystemConfigPackages
 });
