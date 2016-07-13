@@ -2,9 +2,11 @@
 
 # TODO
 
+- Discussion Trending by time spans
+- When you log back in, repull your favorite discussions
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
 - Add https support
-- Figure out `autosize.min.js`, and `favico` issue, stop using it from a CDN.
+- Figure out `autosize.min.js`, and `favico` issue, stop using them from a CDN.
 - Get font awesome working locally
 - Add periodic DB backups
 

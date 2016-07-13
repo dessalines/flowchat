@@ -48,6 +48,7 @@ export class UserService {
   public setUser(user: User) {
     this.user = user;
     this.setCookies(this.user);
+    this.fetchFavoriteDiscussions();
   }
 
   setUserFromCookie() {
@@ -68,7 +69,7 @@ export class UserService {
       name: null,
       auth: null
     }
-
+    this.favoriteDiscussions = [];
     this.clearCookies();
 
   }
@@ -143,7 +144,7 @@ export class UserService {
   }
 
   // This is different, because it doesn't actually do an http fetch
-  updateFavoriteDiscussions(discussion: Discussion) {
+  pushToFavoriteDiscussions(discussion: Discussion) {
 
     if (this.favoriteDiscussions === undefined) {
       this.favoriteDiscussions = [];
