@@ -9,7 +9,7 @@
           class="list-group">
           <li *ngFor="let discussion of userService.getFavoriteDiscussions()"
             class="list-group-item">
-            <a class="" [routerLink]="['/Discussion', {discussionId: discussion.id}]"
+            <a class="" [routerLink]="['/discussion', discussion.id]"
               class="link-unstyled">{{discussion.title}}</a>
             <a role="button" (click)="userService.removeFavoriteDiscussion(discussion.id)"
               class="link-unstyled fa fa-fw fa-remove pull-xs-right"></a>

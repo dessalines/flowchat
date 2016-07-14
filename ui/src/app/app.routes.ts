@@ -2,13 +2,31 @@ import { provideRouter, RouterConfig } from '@angular/router';
 import {HomeComponent} from './components/home/index';
 import {TagComponent} from './components/tag/index';
 import {ChatListComponent} from './components/chat-list/index';
-import {chatListRoutes} from './components/chat-list/chat-list.routes';
+import {ChatComponent} from './components/chat/index';
 
 const routes: RouterConfig = [
-  ...chatListRoutes,
-  { path: '', component: HomeComponent },
-  { path: 'tag/:tagId', component: TagComponent },
-  { path: 'discussion/:discussionId/...', component: ChatListComponent }
+  {
+    path: '',
+    component: HomeComponent
+  },
+  {
+    path: 'tag/:tagId',
+    component: TagComponent
+  },
+  {
+    path: 'discussion',
+    component: ChatListComponent,
+    children: [
+      {
+        path: ':discussionId', 
+        component: ChatComponent
+      },
+      {
+        path: 'comment/:commentId',
+        component: ChatComponent
+      }
+    ]
+  }
 ];
 
 export const appRouterProviders = [

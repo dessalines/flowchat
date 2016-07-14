@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
+import {Router, ActivatedRoute, ROUTER_DIRECTIVES} from '@angular/router';
 import {DiscussionService} from '../../services/discussion.service';
 import {TagService} from '../../services/tag.service';
 import {Discussion} from '../../shared/discussion.interface';
@@ -12,7 +12,7 @@ import {FooterComponent} from '../footer/index';
   selector: 'app-tag',
   templateUrl: 'tag.component.html',
   styleUrls: ['tag.component.css'],
-  directives: [DiscussionCardComponent, FooterComponent],
+  directives: [DiscussionCardComponent, FooterComponent, ROUTER_DIRECTIVES],
   providers: []
 })
 export class TagComponent implements OnInit {

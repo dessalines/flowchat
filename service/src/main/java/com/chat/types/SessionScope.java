@@ -86,7 +86,7 @@ public class SessionScope {
 
         String maybeUndefined = session.getUpgradeRequest().getParameterMap().get("topParentId").iterator().next();
 
-        if (!maybeUndefined.equals("null")) {
+        if (!maybeUndefined.equals("NaN")) {
             topParentId = Long.valueOf(maybeUndefined);
         }
 
