@@ -47,13 +47,13 @@
       </li>
       </span>
       <li *ngIf="comment.parentId" role="button" class="list-inline-item">
-        <a [routerLink]="['/Discussion', {discussionId: comment.discussionId}, 'ChatSub', {commentId: comment.parentId}]"><i class="fa fa-fw fa-level-up" tooltipPlacement="bottom" tooltip="View Parent"></i></a>
+        <a [routerLink]="['/discussion', comment.discussionId, 'comment', comment.parentId]"><i class="fa fa-fw fa-level-up" tooltipPlacement="bottom" tooltip="View Parent"></i></a>
       </li>
       <li *ngIf="!comment.parentId" role="button" class="list-inline-item">
-        <a [routerLink]="['/Discussion', {discussionId: comment.discussionId}]"><i class="fa fa-fw fa-level-up" tooltipPlacement="bottom" tooltip="View Discussion"></i></a>
+        <a [routerLink]="['/discussion', comment.discussionId]"><i class="fa fa-fw fa-level-up" tooltipPlacement="bottom" tooltip="View Discussion"></i></a>
       </li>
       <li *ngIf="comment.id != comment.topParentId || comment.parentId == null" role="button" class="list-inline-item">
-        <a [routerLink]="['/Discussion', {discussionId: comment.discussionId}, 'ChatSub', {commentId: comment.id}]"><i class="fa fa-fw fa-level-down" tooltipPlacement="bottom" tooltip="View Children"></i></a>
+        <a [routerLink]="['/discussion', comment.discussionId, 'comment', comment.id]"><i class="fa fa-fw fa-level-down" tooltipPlacement="bottom" tooltip="View Children"></i></a>
       </li>
     </ul>
   </small>

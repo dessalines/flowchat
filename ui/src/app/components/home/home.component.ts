@@ -7,14 +7,14 @@ import {Tag} from '../../shared/tag.interface';
 import {Tools} from '../../shared/tools';
 import {DiscussionCardComponent} from '../discussion-card/index';
 import {FooterComponent} from '../footer/index';
-import { Router } from '@angular/router';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 
 @Component({
   moduleId: module.id,
   selector: 'app-home',
   templateUrl: 'home.component.html',
   styleUrls: ['home.component.css'],
-  directives: [DiscussionCardComponent, FooterComponent],
+  directives: [DiscussionCardComponent, FooterComponent, ROUTER_DIRECTIVES],
   providers: []
 })
 export class HomeComponent implements OnInit {

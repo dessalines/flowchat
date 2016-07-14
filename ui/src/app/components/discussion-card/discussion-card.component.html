@@ -1,9 +1,9 @@
 <div class="card">
-  <div *ngIf="!discussion?.deleted">
+  <div *ngIf="discussion && !discussion?.deleted">
     <div *ngIf="!editMode">
       <div class="card-block card-block-no-bottom">
         <h4 class="card-title">
-          <a [routerLink]="['/Discussion', {discussionId: discussion?.id}]" class="link-unstyled">{{discussion?.title}} </a>
+          <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">{{discussion?.title}} </a>
           <small *ngIf="discussion && isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
         </h4>
       </div>
@@ -17,7 +17,7 @@
         <small>
         <ul *ngIf="discussion?.tags" class="list-inline">tags:
           <li class="label label-default list-inline-item" *ngFor="let tag of discussion?.tags">
-            <a class="link-unstyled" [routerLink]="['/Tag', {tagId: tag.id}]">{{removeQuotes(tag.name)}}</a>
+            <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
       </small>
@@ -45,7 +45,7 @@
               aria-hidden="true" tooltipPlacement="bottom" tooltip="Link"></i></a>
           </li>
           <li class="list-inline-item" role="button">
-            <a [routerLink]="['/Discussion', {discussionId: discussion?.id}]">
+            <a [routerLink]="['/discussion', discussion?.id]">
               <i class="fa fa-fw fa-comments-o" tooltipPlacement="bottom"
                 tooltip="Comments"></i></a>
           </li>

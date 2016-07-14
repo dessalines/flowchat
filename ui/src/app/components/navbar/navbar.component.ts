@@ -105,7 +105,7 @@ export class NavbarComponent implements OnInit {
   }
 
   gotoSample() {
-    this.router.navigate(['Discussion']);
+    this.router.navigate(['/discussion']);
   }
 
   logout() {
@@ -113,14 +113,14 @@ export class NavbarComponent implements OnInit {
 
     // Then relog back in as a random user (Necessary because a lot of fetches fail otherwise)
     this.getOrCreateUser();
-    this.router.navigate(['Home']);
+    this.router.navigate(['/']);
 
   }
 
   createDiscussion() {
     this.discussionService.createDiscussion().subscribe(d => {
       console.log(d);
-      this.router.navigate(['Discussion', { discussionId: d.id, editMode: true }]);
+      this.router.navigate(['/discussion', d.id, {editMode: true }]);
     },
       error => console.log(error));
   }
@@ -144,7 +144,7 @@ export class NavbarComponent implements OnInit {
   }
 
   discussionTypeaheadOnSelect(discussion: Discussion) {
-    this.router.navigate(['Discussion', { discussionId: discussion.id }]);
+    this.router.navigate(['/discussion', discussion.id]);
   }
 
   discussionChangeTypeaheadLoading(e: boolean): void {
@@ -181,8 +181,8 @@ export class NavbarComponent implements OnInit {
       this.changeFaviconBasedOnMessages();
 
       // Navigate to the parent message (IE, your message)
-      this.router.navigate(['/Discussion', { discussionId: message.discussionId },
-        'ChatSub', { commentId: message.parentId }]);
+      this.router.navigate(['/discussion', message.discussionId ,
+        'comment', message.parentId ]);
 
     });
   }

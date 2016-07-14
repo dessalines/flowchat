@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Router } from '@angular/router';
+import {Router, ROUTER_DIRECTIVES } from '@angular/router';
 import {ChatComponent} from '../chat/index';
 import {UserService} from '../../services/user.service';
 
@@ -8,6 +8,7 @@ import {UserService} from '../../services/user.service';
   selector: 'app-chat-list',
   templateUrl: 'chat-list.component.html',
   styleUrls: ['chat-list.component.css'],
+  directives: [ROUTER_DIRECTIVES]
 })
 export class ChatListComponent implements OnInit {
 

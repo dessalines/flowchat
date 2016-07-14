@@ -69,8 +69,7 @@ export class ChatComponent implements OnInit {
     // console.log(this.routeParamService.params());
 
     this.discussionId = +this.route.snapshot.params["discussionId"];
-
-    
+    console.log(this.topParentId);
     if (+this.route.snapshot.params["commentId"] != null) {
       this.topParentId =+this.route.snapshot.params["commentId"];
     }
@@ -127,7 +126,7 @@ export class ChatComponent implements OnInit {
       },
       error => {
         this.toasterService.pop("error", "Error", error);
-        this.router.navigate(['/Home']);
+        this.router.navigate(['/']);
       })
   }
 
