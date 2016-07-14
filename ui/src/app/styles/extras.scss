@@ -86,10 +86,16 @@ blockquote {
   right: 15px;
 }
 
-.card-title, .card-text, .card-text>p {
+.card-title,
+.card-text,
+.card-text>p {
   margin-bottom: .2rem;
 }
 
 .navbar-brand {
   font-weight: 900;
+}
+
+.ng-pristine.ng-invalid {
+  box-shadow: none;
 }
