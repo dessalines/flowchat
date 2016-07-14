@@ -24,6 +24,8 @@ export class TagComponent implements OnInit {
   private currentPageNum: number = 1;
   private scrollDebounce: number = 0;
 
+  private sub: any;
+
   constructor(private route: ActivatedRoute,
     private router: Router,
     private discussionService: DiscussionService,
@@ -32,10 +34,19 @@ export class TagComponent implements OnInit {
 
   ngOnInit() {
 
-    let tagId: number = +this.route.snapshot.params['tagId'];
+    this.sub = this.route.params.subscribe(params => {
+      let tagId: number = +params['tagId'];
+      this.discussions = [];
+      this.currentPageNum = 1;
+      this.scrollDebounce = 0;
+      this.getTag(tagId);
+      this.getDiscussions(tagId, this.currentPageNum);
+    });
 
-    this.getTag(tagId);
-    this.getDiscussions(tagId, this.currentPageNum);
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   getTag(tagId: number) {
@@ -46,7 +57,10 @@ export class TagComponent implements OnInit {
 
   getDiscussions(tagId: number, page: number) {
     this.discussionService.getDiscussions(page, undefined, tagId.toString()).subscribe(
-      d => this.discussions.push(...d.discussions));
+      d => {
+        this.discussions.push(...d.discussions);
+        console.log(d.discussions);
+      });
   }
 
   onScroll(event) {
