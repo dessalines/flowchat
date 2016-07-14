@@ -22,7 +22,7 @@ const routes: RouterConfig = [
         component: ChatComponent
       },
       {
-        path: 'comment/:commentId',
+        path: ':discussionId/comment/:commentId',
         component: ChatComponent
       }
     ]

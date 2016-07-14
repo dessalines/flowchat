@@ -19,7 +19,7 @@ import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
   templateUrl: 'chat.component.html',
   styleUrls: ['chat.component.css'],
   providers: [HTTP_PROVIDERS, ThreadedChatService],
-  directives: [CommentComponent, MarkdownEditComponent, DiscussionCardComponent,MODAL_DIRECTVES],
+  directives: [CommentComponent, MarkdownEditComponent, DiscussionCardComponent, MODAL_DIRECTVES],
   viewProviders: [BS_VIEW_PROVIDERS]
 })
 export class ChatComponent implements OnInit {
@@ -52,6 +52,8 @@ export class ChatComponent implements OnInit {
   // This is set to true on ngOnDestroy, to not do an alert for reconnect
   private websocketSoftClose: boolean = false;
 
+  private sub: any;
+
   @ViewChild('reconnectModal') reconnectModal;
 
   constructor(private threadedChatService: ThreadedChatService,
@@ -61,26 +63,36 @@ export class ChatComponent implements OnInit {
     private discussionService: DiscussionService,
     private toasterService: ToasterService) {
 
-
+    console.log('init');
   }
 
   ngOnInit() {
     // console.log(this.routeParams);
     // console.log(this.routeParamService.params());
 
-    this.discussionId = +this.route.snapshot.params["discussionId"];
-    console.log(this.topParentId);
-    if (+this.route.snapshot.params["commentId"] != null) {
-      this.topParentId =+this.route.snapshot.params["commentId"];
-    }
+    this.sub = this.route.params.subscribe(params => {
+      this.discussionId = +params["discussionId"];
 
-    this.threadedChatService.connect(this.discussionId, this.topParentId);
-    
-    this.subscribeToChat();
-    this.subscribeToUserServiceWatcher();
-    this.websocketCloseWatcher();
+      if (+params["commentId"] != null) {
+        this.topParentId = +params["commentId"];
+      }
 
-    this.subscribeToDiscussion();
+      if (this.threadedChatService.ws != null) {
+        this.unloadSubscriptions();
+      }
+
+      this.threadedChatService.connect(this.discussionId, this.topParentId);
+
+
+      this.subscribeToChat();
+      this.subscribeToUserServiceWatcher();
+      this.websocketCloseWatcher();
+
+      this.subscribeToDiscussion();
+    });
+
+
+
 
   }
 
@@ -89,14 +101,20 @@ export class ChatComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.unloadSubscriptions();
+    this.sub.unsubscribe();
+  }
+
+  unloadSubscriptions() {
     this.websocketSoftClose = true;
     if (this.userServiceWatcher != null) {
       this.threadedChatService.ws.close(true);
       console.log('Destroying chat component');
       this.userServiceWatcher.unsubscribe();
       this.threadedChatSubscription.unsubscribe();
-      this.threadedChatService = null;
+      // this.threadedChatService = null;
       this.discussionSubscription.unsubscribe();
+      // this.sub.unsubscribe();
     }
   }
 
@@ -260,7 +278,7 @@ export class ChatComponent implements OnInit {
     // If its the top level, stop and return 
     if (newComment.parentId == null) {
       this.comments.unshift(newComment);
-      setTimeout(() => { document.getElementById("comment_" + newComment.id).scrollIntoView();},50);
+      setTimeout(() => { document.getElementById("comment_" + newComment.id).scrollIntoView(); }, 50);
       return;
     }
 
@@ -270,7 +288,7 @@ export class ChatComponent implements OnInit {
 
     // Focus on the new comment if not replying
     if (!this.isReplying) {
-      setTimeout(() => { document.getElementById("comment_" + newComment.id).scrollIntoView();},50);
+      setTimeout(() => { document.getElementById("comment_" + newComment.id).scrollIntoView(); }, 50);
     }
 
   }
@@ -290,7 +308,7 @@ export class ChatComponent implements OnInit {
           } else {
             this.replaceEditedComment(parent.embedded, newComment);
           }
-        } 
+        }
         // Top level comments
         else {
           this.recursiveComment(newComment, parent.embedded, isNew);
