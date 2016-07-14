@@ -1,6 +1,6 @@
 [FlowChat](http://flowchat.tk) &mdash; An open-source, live updating, threaded chat platform with voting. 
 ==========
-![](http://img.shields.io/version/0.1.0.png?color=green)
+![](http://img.shields.io/version/0.2.0.png?color=green)
 [![Build Status](https://travis-ci.org/tchoulihan/flowchat.png)](https://travis-ci.org/tchoulihan/flowchat)
 
 [FlowChat](http://flowchat.tk) is an open-source, self-hostable, live-updating discussion platform, featuring chatrooms with threaded conversations, and voting.

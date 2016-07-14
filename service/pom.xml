@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.tchoulihan</groupId>
 	<artifactId>flowchat</artifactId>
-	<version>0.1.0</version>
+	<version>0.2.0</version>
 	<properties>
 		<!--The Database location and login, here's a sample-->
 		<jdbc.url>jdbc:postgresql://127.0.0.1/flowchat</jdbc.url>
