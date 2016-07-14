@@ -106,6 +106,8 @@ export class ChatComponent implements OnInit {
   unloadSubscriptions() {
     this.websocketSoftClose = true;
     if (this.userServiceWatcher != null) {
+      this.scrollDebounce = 0;
+      this.currentTopLimit = 20;
       this.threadedChatService.ws.close(true);
       console.log('Destroying chat component');
       this.userServiceWatcher.unsubscribe();
