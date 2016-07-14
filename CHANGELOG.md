@@ -1,14 +1,10 @@
 # FlowChat
 
-# TODO
+# Release 0.2.0
+- Fixing tab Refetching.[1](https://github.com/tchoulihan/flowchat/commit/96558421bef042c167acaa709d6e36cd30701b3c)
+- Using angular rc4.[1](https://github.com/tchoulihan/flowchat/commit/bc7f6379691659fe8da20c01eb3c947ffe19d98b)
+- When you log back in, repull your favorite discussions.[1](https://github.com/tchoulihan/flowchat/commit/fca846fe2ce6861d0c31da65ea9445241470cd3e)
 
-- Discussion Trending by time spans
-- When you log back in, repull your favorite discussions
-- Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
-- Add https support
-- Figure out `autosize.min.js`, and `favico` issue, stop using them from a CDN.
-- Get font awesome working locally
-- Add periodic DB backups
 
 # Finished
 - Add favicon badge for unread messages
@@ -109,3 +105,11 @@
   - Hierarchical data in SQL [1](http://stackoverflow.com/questions/8252323/mysql-closure-table-hierarchical-database-how-to-pull-information-out-in-the-c) [2](http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way-to-parse-a-flat-table-into-a-tree/)
 - Possibly add range voting?
 	- Use default html sliders [1](http://stackoverflow.com/questions/15935837/how-to-display-a-range-input-slider-vertically) [styling](http://danielstern.ca/range.css/#/) [fiddle](http://jsfiddle.net/Mmgxg/)
+
+  # TODO
+- Discussion Trending by time spans
+- Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
+- Add https support
+- Figure out `autosize.min.js`, and `favico` issue, stop using them from a CDN.
+- Get font awesome working locally
+- Add periodic DB backups
