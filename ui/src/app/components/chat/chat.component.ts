@@ -62,8 +62,6 @@ export class ChatComponent implements OnInit {
     private router: Router,
     private discussionService: DiscussionService,
     private toasterService: ToasterService) {
-
-    console.log('init');
   }
 
   ngOnInit() {
