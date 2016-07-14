@@ -25,7 +25,7 @@ Check out a sample discussion [here](http://flowchat.tk/#/discussion/13).
 
 Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 
-[Change log](https://github.com/tchoulihan/flowchat/releases)
+[Change log](CHANGELOG.md)
 
 ## Screenshots:
 <img src="http://i.imgur.com/lZBMsn5.png">
@@ -70,7 +70,15 @@ Edit it to point to your own database
 <sorting_avg_rank_weight>0.01</sorting_avg_rank_weight>
 ```
 ### Install flowchat
+
+for local testing: 
+
 `./install.sh`
+
+for a production environment, edit `ui/config/environment.dev.ts` to point to your hostname, then run:
+
+`./install.sh -prod`
+
 
 Load up the homepage at http://localhost:4567
 
