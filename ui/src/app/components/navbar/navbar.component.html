@@ -4,16 +4,20 @@
       <a class="navbar-brand" [routerLink]="['/']"><i class="fa fa-fw fa-comment-o"></i>&nbsp;FlowChat</a>
       <ul class="nav navbar-nav">
         <li class="nav-item">
-          <form class="form-inline">
-            <input #discussionTerm="ngForm" (keyup)="discussionSearch(discussionTerm.value)"
-              [(ngModel)]="discussionSearchTerm"
-              [typeahead]="discussionSearchResults"
+          <form [formGroup]="discussionForm" class="form-inline">
+            <input 
+              formControlName="discussionSearchControl"
+              #discussionTerm="ngForm" (keyup)="discussionSearch(discussionTerm.value)"
+              [(ngModel)]="asyncSelected"
+              [typeahead]="discussionResultsObservableTwo"
               (typeaheadOnSelect)="discussionTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'title'"
               (typeaheadLoading)="discussionChangeTypeaheadLoading($event)"
               (typeaheadNoResults)="discussionChangeTypeaheadNoResults($event)"
               class="form-control" type="text"
-              placeholder="Search">
+              placeholder="Search"
+              name="discussion_form"
+              >
             <button class="btn-link" type="submit"><i class="fa fa-fw fa-search"></i></button>
           </form>
         </li>
@@ -116,6 +120,7 @@
                     class="form-control" placeholder="choose a username"
                     required minlength="5"
                     maxlength="20" pattern="[a-zA-Z0-9_-]+"
+                    name="signup_username"
                   />
                   <div *ngIf="signupName.dirty" class="row col-sm-12 help-block text-danger">
                     <small *ngIf="signupName.errors?.required">A username is required</small>
@@ -130,7 +135,8 @@
                     ngControl="signupPassword"
                     type="password" class="form-control"
                     placeholder="password"
-                    required />
+                    required 
+                    name="signup_password"/>
                   <div *ngIf="signupPassword.dirty" class="row col-sm-12 help-block text-danger">
                     <small *ngIf="signupPassword.errors?.required">a password is required</small>
                   </div>
@@ -143,7 +149,8 @@
                     ngControl="signupVerifyPassword"
                     type="password" class="form-control"
                     placeholder="verify password"
-                    required />
+                    required 
+                    name="signup_verify_password"/>
                   <div *ngIf="signupVerifyPassword.dirty" class="row col-sm-12 help-block text-danger">
                     <small *ngIf="signupVerifyPassword.errors?.required">a password is required</small>
                   </div>
@@ -155,6 +162,7 @@
                     ngControl="signupEmail"
                     class="form-control" placeholder="email (optional)"
                     pattern="\S+@\S+\.\S+"
+                    name="signup_email"
                   />
                   <div *ngIf="signupEmail.dirty" class="row col-sm-12 help-block text-danger">
                     <small *ngIf="signupEmail.errors?.pattern">Invalid Email</small>
@@ -181,7 +189,8 @@
                     #loginName="ngForm" ngControl="loginName"
                     class="form-control" placeholder="username or email"
                     minlength="5" maxlength="140"
-                    required />
+                    required 
+                    name="login_username"/>
                   <div *ngIf="loginName.dirty" class="row col-sm-12 help-block text-danger">
                     <small *ngIf="loginName.errors?.required">A username is required</small>
                     <small *ngIf="loginName.errors?.minlength">Username must be more than 5 characters</small>
@@ -194,7 +203,8 @@
                     ngControl="loginPassword"
                     type="password" type="password"
                     class="form-control" placeholder="password"
-                    required />
+                    required 
+                    name="login_password"/>
                   <div *ngIf="loginPassword.dirty" class="row col-sm-12 help-block text-danger">
                     <small *ngIf="loginPassword.errors?.required">a password is required</small>
                   </div>

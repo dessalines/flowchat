@@ -1,4 +1,5 @@
 import { Component, OnInit, Input} from '@angular/core';
+import {FORM_DIRECTIVES} from '@angular/forms';
 import {Discussion} from '../../shared/discussion.interface';
 import {Tag} from '../../shared/tag.interface';
 import {User} from '../../shared/user.interface';
@@ -25,7 +26,8 @@ import 'rxjs/add/operator/switchMap';
   selector: 'app-discussion-card',
   templateUrl: 'discussion-card.component.html',
   styleUrls: ['discussion-card.component.css'],
-  directives: [MarkdownEditComponent, TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES, ROUTER_DIRECTIVES],
+  directives: [MarkdownEditComponent, TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES,
+    ROUTER_DIRECTIVES, FORM_DIRECTIVES],
   pipes: [MomentPipe, MarkdownPipe]
 })
 export class DiscussionCardComponent implements OnInit {
@@ -144,11 +146,11 @@ export class DiscussionCardComponent implements OnInit {
   tagTypeaheadOnSelect(tag: Tag) {
     this.addTag(tag);
 
-    
+
   }
 
   addTag(tag: Tag) {
-        // Create the array if necessary
+    // Create the array if necessary
     if (this.discussion.tags == null) {
       this.discussion.tags = [];
     }
@@ -183,7 +185,7 @@ export class DiscussionCardComponent implements OnInit {
       this.toasterService.pop('success', 'New Tag Created', d.name);
       this.addTag(d);
     });
-    
+
   }
 
   // User search methods
