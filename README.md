@@ -44,8 +44,8 @@ Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 *If you want to self-host flowchat.*
 
 ### Requirements
-- Java 8
-- Nodejs/npm, [nvm](https://github.com/creationix/nvm) is the preferred installation method.
+- Java 8 + Maven
+- Node + npm, [nvm](https://github.com/creationix/nvm) is the preferred installation method.
 - Postgres 9.3 or higher
 
 ### Download Flowchat
