@@ -8,7 +8,7 @@
     </li>
   </ul>
   </small>
-  <div (window:scroll)="onScroll($event)" class="card-columns">
+  <div (window:scroll)="onScroll($event)" class="card-columns card-columns-lg-4 card-columns-md-3 card-columns-xs-1">
     <app-discussion-card *ngFor="let discussion of discussions"
       [discussion]="discussion"></app-discussion-card>
   </div>
