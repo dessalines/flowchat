@@ -4,6 +4,7 @@ import { AppComponent, environment } from './app/';
 import { appRouterProviders } from './app/app.routes';
 import {HTTP_PROVIDERS} from '@angular/http';
 import {Location,LocationStrategy,HashLocationStrategy} from '@angular/common';
+import {FORM_PROVIDERS} from '@angular/forms';
 
 if (environment.production) {
   enableProdMode();
@@ -11,6 +12,7 @@ if (environment.production) {
 
 bootstrap(AppComponent, [
   appRouterProviders,
-  HTTP_PROVIDERS, {provide: LocationStrategy, useClass: HashLocationStrategy}
+  HTTP_PROVIDERS, {provide: LocationStrategy, useClass: HashLocationStrategy},
+  FORM_PROVIDERS
 ]);
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {CORE_DIRECTIVES} from '@angular/common';
-import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS, DROPDOWN_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+import {MODAL_DIRECTIVES, BS_VIEW_PROVIDERS, DROPDOWN_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+import {FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl} from '@angular/forms';
 import {LoginService} from '../../services/login.service';
 import {UserService} from '../../services/user.service';
 import {DiscussionService} from '../../services/discussion.service';
@@ -21,8 +22,9 @@ declare var Favico: any;
   selector: 'app-navbar',
   templateUrl: 'navbar.component.html',
   styleUrls: ['navbar.component.css'],
-  directives: [MODAL_DIRECTVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES,
-    TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES, ROUTER_DIRECTIVES],
+  directives: [MODAL_DIRECTIVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES,
+    TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES, ROUTER_DIRECTIVES,
+    FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
   providers: [LoginService],
   viewProviders: [BS_VIEW_PROVIDERS],
   pipes: [MomentPipe, MarkdownPipe]
@@ -33,8 +35,17 @@ export class NavbarComponent implements OnInit {
   private login: Login = {};
 
   // The search bar
+  // <!-- #discussionTerm="ngForm" (keyup)="discussionSearch(discussionTerm.value)" -->
+  public discussionSearchControl:FormControl = new FormControl();
+ 
+  public discussionForm:FormGroup= new FormGroup({
+    discussionSearchControl: this.discussionSearchControl
+  });
+
+  private asyncSelected: string = '';
   private discussionSearchTermStream = new Subject<string>();
   private discussionResultsObservable: Observable<any>;
+  private discussionResultsObservableTwo: Observable<any>;
   private discussionSearchResults: Array<Discussion>;
   private discussionSearchTerm: string = '';
   private discussionTypeaheadLoading: boolean = false;
@@ -133,7 +144,15 @@ export class NavbarComponent implements OnInit {
       .distinctUntilChanged()
       .switchMap((term: string) => this.discussionService.searchDiscussions(term));
 
+
     this.discussionResultsObservable.subscribe(t => this.discussionSearchResults = t.discussions);
+
+    this.discussionResultsObservableTwo = Observable.create((observer: any) => {
+      let query = new RegExp(this.asyncSelected, 'ig');
+      observer.next(this.discussionSearchResults.filter((title: any) => {
+        return query.test(title.name);
+      }));
+    });
     // this.tagSearch('a');
   }
 

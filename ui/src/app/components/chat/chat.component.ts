@@ -10,7 +10,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {Router, ActivatedRoute} from '@angular/router';
 import {MarkdownEditComponent} from '../markdown-edit/index';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
-import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
+import {MODAL_DIRECTIVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
 
 
 @Component({
@@ -19,7 +19,7 @@ import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
   templateUrl: 'chat.component.html',
   styleUrls: ['chat.component.css'],
   providers: [HTTP_PROVIDERS, ThreadedChatService],
-  directives: [CommentComponent, MarkdownEditComponent, DiscussionCardComponent, MODAL_DIRECTVES],
+  directives: [CommentComponent, MarkdownEditComponent, DiscussionCardComponent, MODAL_DIRECTIVES],
   viewProviders: [BS_VIEW_PROVIDERS]
 })
 export class ChatComponent implements OnInit {
