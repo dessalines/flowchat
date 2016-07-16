@@ -4,16 +4,16 @@
       <a class="navbar-brand" [routerLink]="['/']"><i class="fa fa-fw fa-comment-o"></i>&nbsp;FlowChat</a>
       <ul class="nav navbar-nav">
         <li class="nav-item">
-          <form [formGroup]="discussionForm" class="form-inline">
+          <form [formGroup]="discussionSearchForm" class="form-inline">
             <input 
               formControlName="discussionSearchControl"
-              #discussionTerm="ngForm" (keyup)="discussionSearch(discussionTerm.value)"
-              [(ngModel)]="asyncSelected"
-              [typeahead]="discussionResultsObservableTwo"
+              [(ngModel)]="discussionSearchSelected"
+              [typeahead]="discussionSearchResultsObservable"
               (typeaheadOnSelect)="discussionTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'title'"
               (typeaheadLoading)="discussionChangeTypeaheadLoading($event)"
               (typeaheadNoResults)="discussionChangeTypeaheadNoResults($event)"
+              [typeaheadWaitMs]="200"
               class="form-control" type="text"
               placeholder="Search"
               name="discussion_form"

@@ -36,18 +36,14 @@ export class NavbarComponent implements OnInit {
 
   // The search bar
   // <!-- #discussionTerm="ngForm" (keyup)="discussionSearch(discussionTerm.value)" -->
-  public discussionSearchControl:FormControl = new FormControl();
- 
-  public discussionForm:FormGroup= new FormGroup({
+  public discussionSearchControl: FormControl = new FormControl();
+
+  public discussionSearchForm: FormGroup = new FormGroup({
     discussionSearchControl: this.discussionSearchControl
   });
 
-  private asyncSelected: string = '';
-  private discussionSearchTermStream = new Subject<string>();
-  private discussionResultsObservable: Observable<any>;
-  private discussionResultsObservableTwo: Observable<any>;
-  private discussionSearchResults: Array<Discussion>;
-  private discussionSearchTerm: string = '';
+  private discussionSearchSelected: string = '';
+  private discussionSearchResultsObservable: Observable<any>;
   private discussionTypeaheadLoading: boolean = false;
   private discussionTypeaheadNoResults: boolean = false;
 
@@ -131,7 +127,7 @@ export class NavbarComponent implements OnInit {
   createDiscussion() {
     this.discussionService.createDiscussion().subscribe(d => {
       console.log(d);
-      this.router.navigate(['/discussion', d.id, {editMode: true }]);
+      this.router.navigate(['/discussion', d.id, { editMode: true }]);
     },
       error => console.log(error));
   }
@@ -139,28 +135,16 @@ export class NavbarComponent implements OnInit {
   // Discussion searching methods
   // Tag search methods
   setupDiscussionSearch() {
-    this.discussionResultsObservable = this.discussionSearchTermStream
-      .debounceTime(300)
-      .distinctUntilChanged()
-      .switchMap((term: string) => this.discussionService.searchDiscussions(term));
-
-
-    this.discussionResultsObservable.subscribe(t => this.discussionSearchResults = t.discussions);
-
-    this.discussionResultsObservableTwo = Observable.create((observer: any) => {
-      let query = new RegExp(this.asyncSelected, 'ig');
-      observer.next(this.discussionSearchResults.filter((title: any) => {
-        return query.test(title.name);
-      }));
+    this.discussionSearchResultsObservable = Observable.create((observer: any) => {
+      console.log(this.discussionSearchControl.value);
+      this.discussionService.searchDiscussions(this.discussionSearchControl.value)
+        .subscribe((result: any) => {
+          console.log(result);
+          observer.next(result.discussions);
+        });
     });
-    // this.tagSearch('a');
   }
 
-  discussionSearch(term: string) {
-    if (term !== '') {
-      this.discussionSearchTermStream.next(term);
-    }
-  }
 
   discussionTypeaheadOnSelect(discussion: Discussion) {
     this.router.navigate(['/discussion', discussion.id]);
@@ -200,8 +184,8 @@ export class NavbarComponent implements OnInit {
       this.changeFaviconBasedOnMessages();
 
       // Navigate to the parent message (IE, your message)
-      this.router.navigate(['/discussion', message.discussionId ,
-        'comment', message.parentId ]);
+      this.router.navigate(['/discussion', message.discussionId,
+        'comment', message.parentId]);
 
     });
   }
