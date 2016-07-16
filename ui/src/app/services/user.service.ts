@@ -20,7 +20,7 @@ export class UserService {
 
   public userObservable = this.userSource.asObservable();
 
-  private queryUsersUrl: string = environment.endpoint + '/user_search/';
+  private queryUsersUrl: string = environment.endpoint + 'user_search/';
 
   private fetchFavoriteDiscussionsUrl: string = environment.endpoint + 'get_favorite_discussions';
   private removeFavoriteDiscussionUrl: string = environment.endpoint + 'remove_favorite_discussion/';

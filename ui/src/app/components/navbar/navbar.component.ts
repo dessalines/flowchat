@@ -35,13 +35,10 @@ export class NavbarComponent implements OnInit {
   private login: Login = {};
 
   // The search bar
-  // <!-- #discussionTerm="ngForm" (keyup)="discussionSearch(discussionTerm.value)" -->
   public discussionSearchControl: FormControl = new FormControl();
-
   public discussionSearchForm: FormGroup = new FormGroup({
     discussionSearchControl: this.discussionSearchControl
   });
-
   private discussionSearchSelected: string = '';
   private discussionSearchResultsObservable: Observable<any>;
   private discussionTypeaheadLoading: boolean = false;
