@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 import * as markdown_it from 'markdown-it';
-
+import {Tools} from '../../shared/tools';
 declare var autosize: any;
 
 @Component({
@@ -26,12 +26,14 @@ export class MarkdownEditComponent implements OnInit {
 
   private previewMode: boolean = false;
 
-  private markdownIt: any;
+  private markdownIt: markdown_it.MarkdownIt;
 
 
   constructor() {
     this.markdownIt = new markdown_it();
   }
+
+
 
   ngOnInit() {
     if (this.inputText != null) {
@@ -52,7 +54,9 @@ export class MarkdownEditComponent implements OnInit {
 
   preview() {
     this.previewMode = !this.previewMode;
-    this.html = this.markdownIt.render(this.textBox);
+    let mdHtml = this.markdownIt.render(this.textBox);
+    this.html = Tools.markdownReplacements(mdHtml);
+    console.log(this.html);
   }
 
   bold() {
