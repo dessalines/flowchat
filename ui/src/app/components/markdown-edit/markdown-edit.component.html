@@ -60,6 +60,5 @@
   <textarea #textArea *ngIf="!previewMode"
     class="form-control" ngDefaultControl [(ngModel)]="textBox"
     (keyup)="setText()" rows="{{rows}}"></textarea>
-    {{html | json}}
   <div *ngIf="previewMode" [innerHTML]="html"></div>
 </fieldset>

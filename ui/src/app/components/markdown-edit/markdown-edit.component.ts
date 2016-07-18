@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
+import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
 import * as markdown_it from 'markdown-it';
 import {Tools} from '../../shared/tools';
 declare var autosize: any;
@@ -22,14 +23,14 @@ export class MarkdownEditComponent implements OnInit {
   @ViewChild('textArea') textArea;
 
   private textBox: string;
-  private html: string;
+  private html: SafeHtml;
 
   private previewMode: boolean = false;
 
   private markdownIt: markdown_it.MarkdownIt;
 
 
-  constructor() {
+  constructor(private sanitizer: DomSanitizationService) {
     this.markdownIt = new markdown_it();
   }
 
@@ -55,7 +56,7 @@ export class MarkdownEditComponent implements OnInit {
   preview() {
     this.previewMode = !this.previewMode;
     let mdHtml = this.markdownIt.render(this.textBox);
-    this.html = Tools.markdownReplacements(mdHtml);
+    this.html = this.sanitizer.bypassSecurityTrustHtml(Tools.markdownReplacements(mdHtml));
     console.log(this.html);
   }
 

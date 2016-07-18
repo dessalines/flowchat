@@ -1,5 +1,6 @@
 import { Component, OnInit, Input} from '@angular/core';
 import {FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl} from '@angular/forms';
+import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
 import {Discussion} from '../../shared/discussion.interface';
 import {Tag} from '../../shared/tag.interface';
 import {User} from '../../shared/user.interface';
@@ -61,7 +62,8 @@ export class DiscussionCardComponent implements OnInit {
     private discussionService: DiscussionService,
     private tagService: TagService,
     private toasterService: ToasterService,
-    private router: Router) { }
+    private router: Router,
+    private sanitizer: DomSanitizationService) { }
 
   ngOnInit() {
     this.setupTagSearch();
@@ -252,6 +254,15 @@ export class DiscussionCardComponent implements OnInit {
 
   parseImageThumbnail(link: string) {
     return Tools.parseImageThumbnail(link);
+  }
+
+  private getDiscussionText(): SafeHtml {
+    if (this.discussion != null) {
+      return this.sanitizer.bypassSecurityTrustHtml(
+        new MarkdownPipe().transform(this.discussion.text));
+    } else {
+      return '';
+    }
   }
 
 }
