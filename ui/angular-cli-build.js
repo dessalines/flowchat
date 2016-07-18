@@ -20,6 +20,7 @@ module.exports = function(defaults) {
       'tether/dist/js/tether.min.js',
       'bootstrap/dist/js/bootstrap.min.js',
       'markdown-it/dist/markdown-it.min.js',
+      'markdown-it-emoji/dist/markdown-it-emoji.min.js',
       'autosize/dist/autosize.min.js',
       'ng2-bootstrap/**/*.js',
       'moment/moment.js',

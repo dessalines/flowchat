@@ -1,6 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 import * as markdown_it from 'markdown-it';
 
+declare module '...' {
+  var markdownitEmoji: any;
+  export = markdownitEmoji;
+}
+
 declare var autosize: any;
 
 @Component({
@@ -26,11 +31,12 @@ export class MarkdownEditComponent implements OnInit {
 
   private previewMode: boolean = false;
 
-  private markdownIt: any;
+  private markdownIt: markdown_it.MarkdownIt;
 
 
   constructor() {
     this.markdownIt = new markdown_it();
+    this.markdownIt.use(markdownitEmoji);
   }
 
   ngOnInit() {
