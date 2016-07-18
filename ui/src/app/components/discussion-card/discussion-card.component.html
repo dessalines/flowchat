@@ -13,7 +13,7 @@
       </a>
       <div class="card-block card-block-no-top">
         <p *ngIf="discussion?.text" class="card-text"
-          [innerHTML]="discussion.text | markdown"></p>
+          [innerHTML]="getDiscussionText()"></p>
         <small>
         <ul *ngIf="discussion?.tags" class="list-inline">tags:
           <li class="label label-default list-inline-item" *ngFor="let tag of discussion?.tags">
