@@ -51,4 +51,14 @@ export class Tools {
       '<div class="embed-responsive embed-responsive-16by9"><iframe src="//player.vimeo.com/video/$1" class="embed-responsive-item" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>');
     return replaced;
   }
+
+  static isImageType(text: string): boolean {
+    let str: string = text.toString();
+    let match = str.match(/(https?:\/\/.*(?:png|jpg|jpeg|gifv|gif|imgur|youtube|vimeo))/g);
+    if (match != null && match.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

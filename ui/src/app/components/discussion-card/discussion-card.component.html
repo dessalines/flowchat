@@ -7,7 +7,7 @@
           <small *ngIf="discussion && isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
         </h4>
       </div>
-      <a *ngIf="discussion?.link"
+      <a *ngIf="discussion?.link && isImageType(discussion?.link)"
         href="{{discussion?.link}}" target="_blank">
         <div [innerHTML]="discussion.link | markdown"></div>
       </a>
