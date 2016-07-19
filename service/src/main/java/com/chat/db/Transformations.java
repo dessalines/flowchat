@@ -59,7 +59,7 @@ public class Transformations {
             Long parentId = commentObjMap.get(id).getParentId();
 
             // If its top level, add it
-            if (parentId == null || id == co.getTopParentId()) {
+            if (parentId == null || id.equals(co.getTopParentId())) {
                 cos.add(co);
             }
             else {
