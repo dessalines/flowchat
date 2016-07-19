@@ -7,24 +7,18 @@
  **********************************************************************************************/
 /** Map relative paths to URLs. */
 const map: any = {
-  'jquery': 'vendor/jquery/dist/jquery.min.js',
+  // 'jquery': 'vendor/jquery/dist/jquery.min.js',
+  // 'bootstrap': 'vendor/bootstrap/dist/js/bootstrap.min.js',
   'tether': 'vendor/tether/dist/js/tether.min.js',
-  'bootstrap': 'vendor/bootstrap/dist/js/bootstrap.min.js',
   'moment': 'vendor/moment/moment.js',
   'markdown-it': 'vendor/markdown-it/dist/markdown-it.min.js',
-  'markdown-it-emoji': 'vendor/markdown-it-emoji/dist/markdown-it-emoji.min.js',
-  'autosize': 'vendor/autosize/dist/autosize.min.js',
   'ng2-bootstrap': 'vendor/ng2-bootstrap',
   'angular2-toaster': 'vendor/angular2-toaster',
-  'favico.js': 'vendor/favico.js/favico.js'
 };
 
 /** User packages configuration. */
 const packages: any = {
   'moment': {
-    format: 'cjs'
-  },
-  'favico.js': {
     format: 'cjs'
   }
 };
