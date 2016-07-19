@@ -12,6 +12,7 @@ const map: any = {
   'bootstrap': 'vendor/bootstrap/dist/js/bootstrap.min.js',
   'moment': 'vendor/moment/moment.js',
   'markdown-it': 'vendor/markdown-it/dist/markdown-it.min.js',
+  'markdown-it-emoji': 'vendor/markdown-it-emoji/dist/markdown-it-emoji.min.js',
   'autosize': 'vendor/autosize/dist/autosize.min.js',
   'ng2-bootstrap': 'vendor/ng2-bootstrap',
   'angular2-toaster': 'vendor/angular2-toaster',

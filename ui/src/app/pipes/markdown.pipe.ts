@@ -2,17 +2,22 @@ import { Pipe, PipeTransform } from '@angular/core';
 import * as markdown_it from 'markdown-it';
 import {Tools} from '../shared/tools';
 
+declare var markdownitEmoji: any;
+
 @Pipe({
   name: 'markdown',
 })
 export class MarkdownPipe implements PipeTransform {
 
-  private md: markdown_it.MarkdownIt = markdown_it();
+  private markdownIt: markdown_it.MarkdownIt;
+
+  constructor() {
+    this.markdownIt = markdown_it();
+    this.markdownIt.use(markdownitEmoji);
+  }
 
   transform(value: string): any {
-    console.log('md pipe');
-    // return Tools.markdownReplacements(markdown_it().render(value));
-    return this.md.render(value);
+    return this.markdownIt.render(value);
   }
 
 }
