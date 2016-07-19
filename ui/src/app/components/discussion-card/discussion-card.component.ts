@@ -251,4 +251,8 @@ export class DiscussionCardComponent implements OnInit {
     return text.replace(/['"]+/g, '');
   }
 
+  isImageType(text: string): boolean {
+    return Tools.isImageType(text);
+  }
+
 }
