@@ -62,8 +62,7 @@ export class DiscussionCardComponent implements OnInit {
     private discussionService: DiscussionService,
     private tagService: TagService,
     private toasterService: ToasterService,
-    private router: Router,
-    private sanitizer: DomSanitizationService) { }
+    private router: Router) { }
 
   ngOnInit() {
     this.setupTagSearch();
@@ -250,19 +249,6 @@ export class DiscussionCardComponent implements OnInit {
 
   removeQuotes(text: string) {
     return text.replace(/['"]+/g, '');
-  }
-
-  parseImageThumbnail(link: string) {
-    return Tools.parseImageThumbnail(link);
-  }
-
-  private getDiscussionText(): SafeHtml {
-    if (this.discussion != null) {
-      return this.sanitizer.bypassSecurityTrustHtml(
-        new MarkdownPipe().transform(this.discussion.text));
-    } else {
-      return '';
-    }
   }
 
 }
