@@ -1,7 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
-import * as markdown_it from 'markdown-it';
 import {Tools} from '../../shared/tools';
+import {MarkdownPipe} from '../../pipes/markdown.pipe';
+
+declare var markdownitEmoji: any;
+>>>>>>> master
 declare var autosize: any;
 
 @Component({
@@ -27,14 +30,7 @@ export class MarkdownEditComponent implements OnInit {
 
   private previewMode: boolean = false;
 
-  private markdownIt: markdown_it.MarkdownIt;
-
-
-  constructor(private sanitizer: DomSanitizationService) {
-    this.markdownIt = new markdown_it();
-  }
-
-
+  constructor() {}
 
   ngOnInit() {
     if (this.inputText != null) {
@@ -55,9 +51,8 @@ export class MarkdownEditComponent implements OnInit {
 
   preview() {
     this.previewMode = !this.previewMode;
-    let mdHtml = this.markdownIt.render(this.textBox);
-    this.html = this.sanitizer.bypassSecurityTrustHtml(Tools.markdownReplacements(mdHtml));
-    console.log(this.html);
+    this.html = new MarkdownPipe().transform(this.textBox);
+        // this.html = this.sanitizer.bypassSecurityTrustHtml(Tools.markdownReplacements(mdHtml));
   }
 
   bold() {
