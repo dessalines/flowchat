@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
 import {Comment} from '../../shared/comment.interface';
 import {ThreadedChatService} from '../../services/threaded-chat.service';
 import {UserService} from '../../services/user.service';

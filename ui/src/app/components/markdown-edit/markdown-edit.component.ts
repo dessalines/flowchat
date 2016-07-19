@@ -4,7 +4,6 @@ import {Tools} from '../../shared/tools';
 import {MarkdownPipe} from '../../pipes/markdown.pipe';
 
 declare var markdownitEmoji: any;
->>>>>>> master
 declare var autosize: any;
 
 @Component({
@@ -30,7 +29,7 @@ export class MarkdownEditComponent implements OnInit {
 
   private previewMode: boolean = false;
 
-  constructor() {}
+  constructor(private sanitizer: DomSanitizationService) {}
 
   ngOnInit() {
     if (this.inputText != null) {
@@ -51,8 +50,7 @@ export class MarkdownEditComponent implements OnInit {
 
   preview() {
     this.previewMode = !this.previewMode;
-    this.html = new MarkdownPipe().transform(this.textBox);
-        // this.html = this.sanitizer.bypassSecurityTrustHtml(Tools.markdownReplacements(mdHtml));
+    this.html = new MarkdownPipe(this.sanitizer).transform(this.textBox);
   }
 
   bold() {

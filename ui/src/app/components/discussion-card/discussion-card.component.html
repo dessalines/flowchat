@@ -7,13 +7,13 @@
           <small *ngIf="discussion && isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
         </h4>
       </div>
-      <a *ngIf="discussion?.link && parseImageThumbnail(discussion?.link)"
+      <a *ngIf="discussion?.link"
         href="{{discussion?.link}}" target="_blank">
-        <img class="img-fluid" [src]="parseImageThumbnail(discussion?.link)">
+        <div [innerHTML]="discussion.link | markdown"></div>
       </a>
       <div class="card-block card-block-no-top">
         <p *ngIf="discussion?.text" class="card-text"
-          [innerHTML]="getDiscussionText()"></p>
+          [innerHTML]="discussion.text | markdown"></p>
         <small>
         <ul *ngIf="discussion?.tags" class="list-inline">tags:
           <li class="label label-default list-inline-item" *ngFor="let tag of discussion?.tags">
