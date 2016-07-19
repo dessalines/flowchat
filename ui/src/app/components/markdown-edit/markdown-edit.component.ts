@@ -1,11 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
-import * as markdown_it from 'markdown-it';
+import {MarkdownPipe} from '../../pipes/markdown.pipe';
 
-declare module '...' {
-  var markdownitEmoji: any;
-  export = markdownitEmoji;
-}
-
+declare var markdownitEmoji: any;
 declare var autosize: any;
 
 @Component({
@@ -31,13 +27,7 @@ export class MarkdownEditComponent implements OnInit {
 
   private previewMode: boolean = false;
 
-  private markdownIt: markdown_it.MarkdownIt;
-
-
-  constructor() {
-    this.markdownIt = new markdown_it();
-    this.markdownIt.use(markdownitEmoji);
-  }
+  constructor() {}
 
   ngOnInit() {
     if (this.inputText != null) {
@@ -58,7 +48,7 @@ export class MarkdownEditComponent implements OnInit {
 
   preview() {
     this.previewMode = !this.previewMode;
-    this.html = this.markdownIt.render(this.textBox);
+    this.html = new MarkdownPipe().transform(this.textBox);
   }
 
   bold() {
