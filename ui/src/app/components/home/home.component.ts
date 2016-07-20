@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
 
   private discussions: Array<Discussion> = [];
   private popularTags: Array<Tag>;
-  private discussionSorting: string = "time-3600";
+  private discussionSorting: string = "time-86400";
 
   private currentPageNum: number = 1;
   private scrollDebounce: number = 0;
@@ -40,8 +40,12 @@ export class HomeComponent implements OnInit {
     this.getPopularTags();
   }
 
-  resort() {
-    console.log('resorting');
+  resort($event) {
+    console.log('resorting' + $event);
+    this.discussionSorting = $event;
+    this.discussions = [];
+    this.currentPageNum = 1;
+    this.scrollDebounce = 0;
     this.getDiscussions(this.currentPageNum, this.discussionSorting);
   }
 

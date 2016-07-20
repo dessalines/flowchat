@@ -18,6 +18,7 @@ import {FooterComponent} from '../footer/index';
 export class TagComponent implements OnInit {
 
   private discussions: Array<Discussion> = [];
+  private discussionSorting: string = "time-86400";
 
   private tag: Tag;
 
@@ -40,7 +41,7 @@ export class TagComponent implements OnInit {
       this.currentPageNum = 1;
       this.scrollDebounce = 0;
       this.getTag(tagId);
-      this.getDiscussions(tagId, this.currentPageNum);
+      this.getDiscussions(tagId, this.currentPageNum, this.discussionSorting);
     });
 
   }
@@ -55,8 +56,8 @@ export class TagComponent implements OnInit {
     });
   }
 
-  getDiscussions(tagId: number, page: number) {
-    this.discussionService.getDiscussions(page, undefined, tagId.toString()).subscribe(
+  getDiscussions(tagId: number, page: number, orderBy: string) {
+    this.discussionService.getDiscussions(page, undefined, tagId.toString(), orderBy).subscribe(
       d => {
         this.discussions.push(...d.discussions);
         console.log(d.discussions);
@@ -69,10 +70,19 @@ export class TagComponent implements OnInit {
         this.scrollDebounce = 1;
         // you're at the bottom of the page
         this.currentPageNum += 1;
-        this.getDiscussions(this.tag.id, this.currentPageNum);
+        this.getDiscussions(this.tag.id, this.currentPageNum, this.discussionSorting);
         setTimeout(() => this.scrollDebounce = 0, 1000);
       }
     }
+  }
+
+  resort($event) {
+    console.log('resorting' + $event);
+    this.discussionSorting = $event;
+    this.discussions = [];
+    this.currentPageNum = 1;
+    this.scrollDebounce = 0;
+    this.getDiscussions(this.tag.id, this.currentPageNum, this.discussionSorting);
   }
 
 }
