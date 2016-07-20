@@ -59,6 +59,7 @@
   </small>
   <div *ngIf="showVoteSlider">
     <input [value]="rank" (mouseup)="saveRank($event.target.value)"
+      (touchend)="saveRank($event.target.value)"
       (input)="updateRank($event.target.value)"
       type="range" min="0" max="100" step="1"
       (value)="rank" />
