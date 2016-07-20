@@ -1,4 +1,6 @@
 import { Component, OnInit, Input} from '@angular/core';
+import {FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl} from '@angular/forms';
+import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
 import {Discussion} from '../../shared/discussion.interface';
 import {Tag} from '../../shared/tag.interface';
 import {User} from '../../shared/user.interface';
@@ -25,7 +27,8 @@ import 'rxjs/add/operator/switchMap';
   selector: 'app-discussion-card',
   templateUrl: 'discussion-card.component.html',
   styleUrls: ['discussion-card.component.css'],
-  directives: [MarkdownEditComponent, TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES, ROUTER_DIRECTIVES],
+  directives: [MarkdownEditComponent, TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES,
+    ROUTER_DIRECTIVES, FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
   pipes: [MomentPipe, MarkdownPipe]
 })
 export class DiscussionCardComponent implements OnInit {
@@ -36,27 +39,22 @@ export class DiscussionCardComponent implements OnInit {
 
   @Input() editMode: boolean = false;
 
-  private tagSearchTermStream = new Subject<string>();
-  private tagResultsObservable: Observable<any>;
-  private tagSearchResults: Array<Tag>;
-  private tagSearchTerm: string = '';
+  // tag searching
+  private tagSearchResultsObservable: Observable<any>;
+  private tagSearchSelected: string = '';
   private tooManyTagsError: boolean = false;
   private tagTypeaheadLoading: boolean = false;
   private tagTypeaheadNoResults: boolean = false;
 
   // For the private users
-  private userSearchTermStream = new Subject<string>();
-  private userResultsObservable: Observable<any>;
-  private userSearchResults: Array<User>;
-  private userSearchTerm: string = '';
+  private userSearchResultsObservable: Observable<any>;
+  private userSearchSelected: string = '';
   private userTypeaheadLoading: boolean = false;
   private userTypeaheadNoResults: boolean = false;
 
   // Blocked users
-  private blockedUserSearchTermStream = new Subject<string>();
-  private blockedUserResultsObservable: Observable<any>;
-  private blockedUserSearchResults: Array<User>;
-  private blockedUserSearchTerm: string = '';
+  private blockedUserSearchResultsObservable: Observable<any>;
+  private blockedUserSearchSelected: string = '';
   private blockedUserTypeaheadLoading: boolean = false;
   private blockedUserTypeaheadNoResults: boolean = false;
 
@@ -70,11 +68,6 @@ export class DiscussionCardComponent implements OnInit {
     this.setupTagSearch();
     this.setupUserSearch();
     this.setupBlockedUserSearch();
-
-    // console.log(this.routeParamService.params());
-    // console.log(this.routeParamService.data());
-    // console.log(this.routeParamService.data()["editMode"]);
-    // this.editMode = Boolean(this.routeParamService.data()["editMode"]);
   }
 
   ngAfterViewInit() {
@@ -126,29 +119,21 @@ export class DiscussionCardComponent implements OnInit {
 
   // Tag search methods
   setupTagSearch() {
-    this.tagResultsObservable = this.tagSearchTermStream
-      .debounceTime(300)
-      .distinctUntilChanged()
-      .switchMap((term: string) => this.tagService.searchTags(term));
-
-    this.tagResultsObservable.subscribe(t => this.tagSearchResults = t.tags);
-    // this.tagSearch('a');
+    this.tagSearchResultsObservable = Observable.create((observer: any) => {
+      this.tagService.searchTags(this.tagSearchSelected)
+        .subscribe((result: any) => {
+          observer.next(result.tags);
+        });
+    });
   }
 
-  tagSearch(term: string) {
-    if (term !== '') {
-      this.tagSearchTermStream.next(term);
-    }
-  }
 
   tagTypeaheadOnSelect(tag: Tag) {
     this.addTag(tag);
-
-    
   }
 
   addTag(tag: Tag) {
-        // Create the array if necessary
+    // Create the array if necessary
     if (this.discussion.tags == null) {
       this.discussion.tags = [];
     }
@@ -156,7 +141,7 @@ export class DiscussionCardComponent implements OnInit {
     // add it to the list
     if (this.discussion.tags.length < 3) {
       this.discussion.tags.push(tag);
-      this.tagSearchTerm = '';
+      this.tagSearchSelected = '';
     } else {
       this.tooManyTagsError = true;
     }
@@ -177,30 +162,23 @@ export class DiscussionCardComponent implements OnInit {
   }
 
   createTag() {
-    this.tagService.createTag(this.tagSearchTerm).subscribe(d => {
+    this.tagService.createTag(this.tagSearchSelected).subscribe(d => {
       console.log(d);
-      this.tagSearchTerm = '';
+      this.tagSearchSelected = '';
       this.toasterService.pop('success', 'New Tag Created', d.name);
       this.addTag(d);
     });
-    
+
   }
 
   // User search methods
   setupUserSearch() {
-    this.userResultsObservable = this.userSearchTermStream
-      .debounceTime(300)
-      .distinctUntilChanged()
-      .switchMap((term: string) => this.userService.searchUsers(term));
-
-    this.userResultsObservable.subscribe(t => this.userSearchResults = t.users);
-    // this.tagSearch('a');
-  }
-
-  userSearch(term: string) {
-    if (term !== '') {
-      this.userSearchTermStream.next(term);
-    }
+    this.userSearchResultsObservable = Observable.create((observer: any) => {
+      this.userService.searchUsers(this.userSearchSelected)
+        .subscribe((result: any) => {
+          observer.next(result.users);
+        });
+    });
   }
 
   userTypeaheadOnSelect(user: User) {
@@ -212,7 +190,7 @@ export class DiscussionCardComponent implements OnInit {
 
     // add it to the list
     this.discussion.privateUsers.push(user);
-    this.userSearchTerm = '';
+    this.userSearchSelected = '';
 
   }
 
@@ -235,19 +213,12 @@ export class DiscussionCardComponent implements OnInit {
 
   // Blocked user methods
   setupBlockedUserSearch() {
-    this.blockedUserResultsObservable = this.blockedUserSearchTermStream
-      .debounceTime(300)
-      .distinctUntilChanged()
-      .switchMap((term: string) => this.userService.searchUsers(term));
-
-    this.blockedUserResultsObservable.subscribe(t => this.blockedUserSearchResults = t.users);
-    // this.tagSearch('a');
-  }
-
-  blockedUserSearch(term: string) {
-    if (term !== '') {
-      this.blockedUserSearchTermStream.next(term);
-    }
+    this.blockedUserSearchResultsObservable = Observable.create((observer: any) => {
+      this.userService.searchUsers(this.blockedUserSearchSelected)
+        .subscribe((result: any) => {
+          observer.next(result.users);
+        });
+    });
   }
 
   blockedUserTypeaheadOnSelect(user: User) {
@@ -259,7 +230,7 @@ export class DiscussionCardComponent implements OnInit {
 
     // add it to the list
     this.discussion.blockedUsers.push(user);
-    this.userSearchTerm = '';
+    this.blockedUserSearchSelected = '';
 
   }
 
@@ -280,8 +251,8 @@ export class DiscussionCardComponent implements OnInit {
     return text.replace(/['"]+/g, '');
   }
 
-  parseImageThumbnail(link: string) {
-    return Tools.parseImageThumbnail(link);
+  isImageType(text: string): boolean {
+    return Tools.isImageType(text);
   }
 
 }
