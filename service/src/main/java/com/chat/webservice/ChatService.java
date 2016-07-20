@@ -162,7 +162,7 @@ public class ChatService {
                 Long tagId = (!req.params(":tagId").equals("all")) ? Long.valueOf(req.params(":tagId")) : null;
                 Integer limit = (req.params(":limit") != null) ? Integer.valueOf(req.params(":limit")) : 10;
                 Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
-                String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "custom";
+                String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-3600";
 
                 orderBy = constructOrderByCustom(orderBy);
                 UserObj userObj = Actions.getOrCreateUserObj(req, res);
@@ -505,15 +505,22 @@ public class ChatService {
 
 
     public static String constructOrderByCustom(String orderBy) {
-        // For the custom sorting based on ranking
-        if (orderBy.equals("custom")) {
-            orderBy = "ranking(created, " + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight() +
+
+        String orderByOut;
+        if (orderBy.startsWith("time-")) {
+            Long timeValue = Long.valueOf(orderBy.split("-")[1]);
+
+            // For the custom sorting based on ranking
+            orderByOut = "ranking(created, " + timeValue +
                     ",number_of_votes, " + ConstantsService.INSTANCE.getRankingConstants().getNumberOfVotesWeight() +
                     ",avg_rank, " + ConstantsService.INSTANCE.getRankingConstants().getAvgRankWeight() +
                     ") desc";
+
+        } else {
+            orderByOut = orderBy.replaceAll("$", " ");
         }
 
-        return orderBy;
+        return orderByOut;
     }
 
     public static String constructOrderByPopularTagsCustom(String orderBy) {
