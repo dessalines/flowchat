@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit {
 
   private discussions: Array<Discussion> = [];
   private popularTags: Array<Tag>;
+  private discussionSorting: string = "time-3600";
 
   private currentPageNum: number = 1;
   private scrollDebounce: number = 0;
@@ -35,8 +36,13 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getDiscussions(this.currentPageNum);
+    this.getDiscussions(this.currentPageNum, this.discussionSorting);
     this.getPopularTags();
+  }
+
+  resort() {
+    console.log('resorting');
+    this.getDiscussions(this.currentPageNum, this.discussionSorting);
   }
 
   onScroll(event) {
@@ -46,14 +52,14 @@ export class HomeComponent implements OnInit {
         this.scrollDebounce = 1;
         // you're at the bottom of the page
         this.currentPageNum += 1;
-        this.getDiscussions(this.currentPageNum);
+        this.getDiscussions(this.currentPageNum, this.discussionSorting);
         setTimeout(() => this.scrollDebounce = 0, 1000);
       }
     }
   }
 
-  getDiscussions(page: number) {
-    this.discussionService.getDiscussions(page).subscribe(
+  getDiscussions(page: number, orderBy: string) {
+    this.discussionService.getDiscussions(page, undefined, undefined, orderBy).subscribe(
       d => {
         // Append them
         this.discussions.push(...d.discussions);
