@@ -45,18 +45,19 @@
               aria-hidden="true" tooltipPlacement="bottom" tooltip="Link"></i></a>
           </li>
           <li class="list-inline-item" role="button">
-            <a [routerLink]="['/discussion', discussion?.id]" class="link-unstyled">
+            <a [routerLink]="['/discussion', discussion?.id]"
+              class="link-unstyled">
               <i class="fa fa-fw fa-comments-o" tooltipPlacement="bottom"
                 tooltip="Comments"></i></a>
           </li>
         </ul>
         <div *ngIf="showVoteSlider">
           <input [value]="discussion?.userRank" (mouseup)="saveDiscussionRank($event.target.value)"
+            (touchend)="saveDiscussionRank($event.target.value)"
             (input)="updateDiscussionRank($event.target.value)"
             type="range" min="0" max="100"
             step="1" (value)="discussion?.userRank"
-            name="discussion_rank"
-          />
+            name="discussion_rank" />
         </div>
       </div>
     </div>
@@ -66,8 +67,8 @@
           <label class="col-sm-1 form-control-label">Title</label>
           <div class="col-sm-11">
             <input [(ngModel)]="discussion.title" class="form-control"
-              maxlength="140" 
-              name="discussion_title"/>
+              maxlength="140" name="discussion_title"
+            />
           </div>
         </div>
         <div class="form-group row">
@@ -76,8 +77,7 @@
             <input [(ngModel)]="discussion.link" #discussionLink="ngForm"
               placeholder="optional" class="form-control"
               pattern="[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?"
-              name="discussion_link"
-            />
+              name="discussion_link" />
             <div *ngIf="discussionLink.dirty" class="row col-sm-12 help-block text-danger">
               <small *ngIf="discussionLink.errors?.pattern">Invalid URL</small>
             </div>
@@ -86,7 +86,8 @@
         <div class="checkbox">
           <label>
             <input [(ngModel)]="discussion.private_"
-              type="checkbox" name="discussion_private" /> Private
+              type="checkbox" name="discussion_private"
+            /> Private
           </label>
         </div>
         <app-markdown-edit [focus]="false" [inputText]="discussion.text"
@@ -95,16 +96,15 @@
         <div class="form-group row">
           <label class="col-sm-1 form-control-label">Tags</label>
           <div class="col-md-5 input-group">
-            <input #tagTerm="ngForm"
-              [(ngModel)]="tagSearchSelected" [typeahead]="tagSearchResultsObservable"
+            <input #tagTerm="ngForm" [(ngModel)]="tagSearchSelected"
+              [typeahead]="tagSearchResultsObservable"
               (typeaheadOnSelect)="tagTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'name'"
               (typeaheadLoading)="tagChangeTypeaheadLoading($event)"
-              (typeaheadNoResults)="tagChangeTypeaheadNoResults($event)" 
-              [typeaheadWaitMs]="200"
-              class="form-control" minlength="5"
-              maxlength="20" pattern="[a-zA-Z0-9_-]+"
-              name="tag_search">
+              (typeaheadNoResults)="tagChangeTypeaheadNoResults($event)"
+              [typeaheadWaitMs]="200" class="form-control"
+              minlength="5" maxlength="20"
+              pattern="[a-zA-Z0-9_-]+" name="tag_search">
             <button [disabled]="!tagTerm.valid || tagTerm.value.length == 0"
               (click)="createTag()" class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
           </div>
@@ -133,15 +133,13 @@
         <div *ngIf="discussion?.private_" class="form-group row">
           <label class="col-sm-1 form-control-label">Invite Users</label>
           <div class="col-md-5">
-            <input #userTerm="ngForm"
-              [(ngModel)]="userSearchSelected"
+            <input #userTerm="ngForm" [(ngModel)]="userSearchSelected"
               [typeahead]="userSearchResultsObservable"
               (typeaheadOnSelect)="userTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'name'"
               (typeaheadLoading)="userChangeTypeaheadLoading($event)"
               (typeaheadNoResults)="userChangeTypeaheadNoResults($event)"
-              [typeaheadWaitMs]="200"
-              class="form-control"
+              [typeaheadWaitMs]="200" class="form-control"
               name="user_search">
             <div *ngIf="userTypeaheadLoading===true">
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
@@ -163,15 +161,13 @@
         <div class="form-group row">
           <label class="col-sm-1 form-control-label">Block Users</label>
           <div class="col-md-5">
-            <input #blockedUserTerm="ngForm"
-              [(ngModel)]="blockedUserSearchSelected"
+            <input #blockedUserTerm="ngForm" [(ngModel)]="blockedUserSearchSelected"
               [typeahead]="blockedUserSearchResultsObservable"
               (typeaheadOnSelect)="blockedUserTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'name'"
               (typeaheadLoading)="blockedUserChangeTypeaheadLoading($event)"
               (typeaheadNoResults)="blockedUserChangeTypeaheadNoResults($event)"
-              [typeaheadWaitMs]="200"
-              class="form-control"
+              [typeaheadWaitMs]="200" class="form-control"
               name="block_user_search">
             <div *ngIf="blockedUserTypeaheadLoading===true">
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
