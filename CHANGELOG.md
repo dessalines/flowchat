@@ -1,5 +1,13 @@
 # FlowChat
 
+# Release 0.3.0
+- Custom discussion sorting. #9.
+- Added emoji support. #8.
+- Added embedded videos. #7.
+- Fixed non-image type links from being in a discussion component. #14.
+- Figured out sub-comment bug. #11.
+- Figured out markdown-refresh bug. #10.
+
 # Release 0.2.0
 - Fixing tab Refetching.[1](https://github.com/tchoulihan/flowchat/commit/96558421bef042c167acaa709d6e36cd30701b3c)
 - Using angular rc4.[1](https://github.com/tchoulihan/flowchat/commit/bc7f6379691659fe8da20c01eb3c947ffe19d98b)
