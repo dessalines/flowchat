@@ -1,13 +1,30 @@
 <div class="container">
-  <h3>Trending Discussions</h3>
-  <small>
-  <ul *ngIf="popularTags" class="list-inline">trending tags:
-    <li class="label label-default list-inline-item"
-      *ngFor="let tag of popularTags">
-      <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
-    </li>
-  </ul>
-  </small>
+  <div class="row">
+    <div class="col-xs-12 col-md-10">
+      <h3>Trending Discussions</h3>
+      <small>
+        <ul *ngIf="popularTags" class="list-inline">trending tags:
+          <li class="label label-default list-inline-item"
+          *ngFor="let tag of popularTags">
+            <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
+          </li>
+        </ul>
+      </small>
+    </div>
+    <div class="col-xs-12 col-md-2">
+      <select [ngModel]="discussionSorting" (ngModelChange)="resort($event)" class="form-control">
+        <option disabled>Sorting</option>
+        <option disabled>──────────</option>
+        <option value="modified__desc">New</option>
+        <option value="time-3600">Hour</option>
+        <option value="time-86400">Day</option>
+        <option value="time-604800">Week</option>
+        <option value="time-2628000">Month</option>
+        <option value="time-31540000">Year</option>
+        <option value="avg_rank__desc">All-Time</option>
+      </select>
+    </div>
+  </div>
   <div (window:scroll)="onScroll($event)" class="card-columns card-columns-lg-4 card-columns-md-3 card-columns-xs-1">
     <app-discussion-card *ngFor="let discussion of discussions"
       [discussion]="discussion"></app-discussion-card>

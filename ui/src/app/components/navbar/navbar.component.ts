@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {CORE_DIRECTIVES} from '@angular/common';
-import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS, DROPDOWN_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+import {MODAL_DIRECTIVES, BS_VIEW_PROVIDERS, DROPDOWN_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+import {FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl} from '@angular/forms';
 import {LoginService} from '../../services/login.service';
 import {UserService} from '../../services/user.service';
 import {DiscussionService} from '../../services/discussion.service';
@@ -21,8 +22,9 @@ declare var Favico: any;
   selector: 'app-navbar',
   templateUrl: 'navbar.component.html',
   styleUrls: ['navbar.component.css'],
-  directives: [MODAL_DIRECTVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES,
-    TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES, ROUTER_DIRECTIVES],
+  directives: [MODAL_DIRECTIVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES,
+    TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES, ROUTER_DIRECTIVES,
+    FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
   providers: [LoginService],
   viewProviders: [BS_VIEW_PROVIDERS],
   pipes: [MomentPipe, MarkdownPipe]
@@ -33,10 +35,12 @@ export class NavbarComponent implements OnInit {
   private login: Login = {};
 
   // The search bar
-  private discussionSearchTermStream = new Subject<string>();
-  private discussionResultsObservable: Observable<any>;
-  private discussionSearchResults: Array<Discussion>;
-  private discussionSearchTerm: string = '';
+  public discussionSearchControl: FormControl = new FormControl();
+  public discussionSearchForm: FormGroup = new FormGroup({
+    discussionSearchControl: this.discussionSearchControl
+  });
+  private discussionSearchSelected: string = '';
+  private discussionSearchResultsObservable: Observable<any>;
   private discussionTypeaheadLoading: boolean = false;
   private discussionTypeaheadNoResults: boolean = false;
 
@@ -120,7 +124,7 @@ export class NavbarComponent implements OnInit {
   createDiscussion() {
     this.discussionService.createDiscussion().subscribe(d => {
       console.log(d);
-      this.router.navigate(['/discussion', d.id, {editMode: true }]);
+      this.router.navigate(['/discussion', d.id, { editMode: true }]);
     },
       error => console.log(error));
   }
@@ -128,20 +132,16 @@ export class NavbarComponent implements OnInit {
   // Discussion searching methods
   // Tag search methods
   setupDiscussionSearch() {
-    this.discussionResultsObservable = this.discussionSearchTermStream
-      .debounceTime(300)
-      .distinctUntilChanged()
-      .switchMap((term: string) => this.discussionService.searchDiscussions(term));
-
-    this.discussionResultsObservable.subscribe(t => this.discussionSearchResults = t.discussions);
-    // this.tagSearch('a');
+    this.discussionSearchResultsObservable = Observable.create((observer: any) => {
+      console.log(this.discussionSearchControl.value);
+      this.discussionService.searchDiscussions(this.discussionSearchControl.value)
+        .subscribe((result: any) => {
+          console.log(result);
+          observer.next(result.discussions);
+        });
+    });
   }
 
-  discussionSearch(term: string) {
-    if (term !== '') {
-      this.discussionSearchTermStream.next(term);
-    }
-  }
 
   discussionTypeaheadOnSelect(discussion: Discussion) {
     this.router.navigate(['/discussion', discussion.id]);
@@ -181,8 +181,8 @@ export class NavbarComponent implements OnInit {
       this.changeFaviconBasedOnMessages();
 
       // Navigate to the parent message (IE, your message)
-      this.router.navigate(['/discussion', message.discussionId ,
-        'comment', message.parentId ]);
+      this.router.navigate(['/discussion', message.discussionId,
+        'comment', message.parentId]);
 
     });
   }

@@ -1,6 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
-import * as markdown_it from 'markdown-it';
+import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
+import {Tools} from '../../shared/tools';
+import {MarkdownPipe} from '../../pipes/markdown.pipe';
 
+declare var markdownitEmoji: any;
 declare var autosize: any;
 
 @Component({
@@ -22,16 +25,11 @@ export class MarkdownEditComponent implements OnInit {
   @ViewChild('textArea') textArea;
 
   private textBox: string;
-  private html: string;
+  private html: SafeHtml;
 
   private previewMode: boolean = false;
 
-  private markdownIt: any;
-
-
-  constructor() {
-    this.markdownIt = new markdown_it();
-  }
+  constructor(private sanitizer: DomSanitizationService) {}
 
   ngOnInit() {
     if (this.inputText != null) {
@@ -52,7 +50,7 @@ export class MarkdownEditComponent implements OnInit {
 
   preview() {
     this.previewMode = !this.previewMode;
-    this.html = this.markdownIt.render(this.textBox);
+    this.html = new MarkdownPipe(this.sanitizer).transform(this.textBox);
   }
 
   bold() {
