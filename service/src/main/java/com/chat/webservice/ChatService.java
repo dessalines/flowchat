@@ -514,10 +514,10 @@ public class ChatService {
             orderByOut = "ranking(created, " + timeValue +
                     ",number_of_votes, " + ConstantsService.INSTANCE.getRankingConstants().getNumberOfVotesWeight() +
                     ",avg_rank, " + ConstantsService.INSTANCE.getRankingConstants().getAvgRankWeight() +
-                    ") desc";
+                    ") desc nulls last";
 
         } else {
-            orderByOut = orderBy.replaceAll("$", " ");
+            orderByOut = orderBy.replaceAll("__", " ").concat(" nulls last");
         }
 
         return orderByOut;
