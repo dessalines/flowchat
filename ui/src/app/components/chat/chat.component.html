@@ -14,7 +14,7 @@
     </div>
   </div>
 </div>
-<nav *ngIf="!topParentId && !clearTopReply"
+<nav *ngIf="!topParentId && !clearTopReply && !isReplying"
   class="navbar navbar-fixed-bottom navbar-light bg-faded">
   <app-markdown-edit (textEvent)="setTopReply($event)"
     [rows]="1"></app-markdown-edit>
