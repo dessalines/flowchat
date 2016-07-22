@@ -39,6 +39,7 @@ $brand-warning:             #f0ad4e !default;
 $brand-danger:              #d9534f !default;
 
 $black:                     #333 !default;
+$light_blue:                #fcfcfc !default;
 
 // Options
 //
@@ -86,7 +87,7 @@ $border-width:               1px !default;
 //
 // Settings for the `<body>` element.
 
-$body-bg:                    #fff !default;
+$body-bg:                    $light_blue !default;
 $body-color:                 $gray-dark !default;
 
 
