@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row">
-    <div class="col-xs-12 col-md-10">
+    <div class="col-xs-12 col-md-10 trending-discussions">
       <h3>Trending Discussions</h3>
       <small>
         <ul *ngIf="popularTags" class="list-inline">trending tags:
@@ -25,7 +25,7 @@
       </select>
     </div>
   </div>
-  <div (window:scroll)="onScroll($event)" class="card-columns card-columns-lg-4 card-columns-md-3 card-columns-xs-1">
+  <div (window:scroll)="onScroll($event)" class="card-columns card-columns-lg-4 card-columns-md-3 card-columns-sm-2 card-columns-xs-1">
     <app-discussion-card *ngFor="let discussion of discussions"
       [discussion]="discussion"></app-discussion-card>
   </div>

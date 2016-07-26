@@ -25,6 +25,9 @@
 // Colors
 //
 // Grayscale and brand colors for use across Bootstrap.
+$web-font-path: "https://fonts.googleapis.com/css?family=Source+Sans+Pro" !default;
+@import url($web-font-path);
+
 
 $gray-dark:                 #373a3c !default;
 $gray:                      #55595c !default;
@@ -144,7 +147,8 @@ $grid-gutter-width:          1.875rem !default; // 30px
 //
 // Font, line-height, and color for body text, headings, and more.
 
-$font-family-sans-serif:     "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+// $font-family-sans-serif:     "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-family-sans-serif:  "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 $font-family-serif:          Georgia, "Times New Roman", Times, serif !default;
 $font-family-monospace:      Menlo, Monaco, Consolas, "Courier New", monospace !default;
 $font-family-base:           $font-family-sans-serif !default;
