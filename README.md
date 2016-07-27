@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/tchoulihan/flowchat.svg?branch=master)](https://travis-ci.org/tchoulihan/flowchat)
 
 <!---
-I made a live-updating, threaded discussion alternative to reddit and slack called FlowChat, written in java and angular2. Self-hostable, and open-source. 
+I made a live-updating, threaded discussion alternative to reddit and slack called FlowChat, written in java and angular2. Self-hostable, and open-source.
 -->
 
 [FlowChat](http://flowchat.tk) is an open-source, self-hostable, **live-updating** discussion platform, featuring chatrooms with threaded conversations, and voting.
