@@ -28,7 +28,7 @@ public class ChatService {
         log.getLoggerContext().getLogger("spark.webserver").setLevel(Level.OFF);
 
         staticFiles.externalLocation("../ui/dist");
-//        staticFiles.expireTime(600);
+        staticFiles.expireTime(600);
 
         // Instantiates the ranking constants
         ConstantsService.INSTANCE.getRankingConstants();
