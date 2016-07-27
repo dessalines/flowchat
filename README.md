@@ -1,7 +1,7 @@
 [FlowChat](http://flowchat.tk) &mdash; An open-source, live updating, threaded chat platform with voting. 
 ==========
 ![](http://img.shields.io/version/0.3.0.png?color=green)
-[![Build Status](https://travis-ci.org/tchoulihan/flowchat.png)](https://travis-ci.org/tchoulihan/flowchat)
+[![Build Status](https://travis-ci.org/tchoulihan/flowchat.svg?branch=master)](https://travis-ci.org/tchoulihan/flowchat)
 
 <!---
 I made a live-updating, threaded discussion alternative to reddit and slack called FlowChat, written in java and angular2. Self-hostable, and open-source. 
