@@ -4,7 +4,7 @@
       <h3>Trending Discussions</h3>
       <small>
         <ul *ngIf="popularTags" class="list-inline">trending tags:
-          <li class="label label-default list-inline-item"
+          <li class="tag tag-default list-inline-item"
           *ngFor="let tag of popularTags">
             <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
           </li>

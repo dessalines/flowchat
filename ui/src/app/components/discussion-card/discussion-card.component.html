@@ -16,7 +16,7 @@
           [innerHTML]="discussion.text | markdown"></p>
         <small>
         <ul *ngIf="discussion?.tags" class="list-inline">tags:
-          <li class="label label-default list-inline-item" *ngFor="let tag of discussion?.tags">
+          <li class="tag tag-default list-inline-item" *ngFor="let tag of discussion?.tags">
             <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
@@ -27,14 +27,14 @@
           by {{discussion?.userName}}
       </small>
         <ul class="list-inline">
-          <li *ngIf="discussion?.private_" class="label label-danger list-inline-item">Private</li>
+          <li *ngIf="discussion?.private_" class="tag tag-danger list-inline-item">Private</li>
           <li *ngIf="discussion && !isCreator()" role="button"
             class="list-inline-item" (click)="toggleShowVoteSlider()"
             tooltipPlacement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
-          <li *ngIf="discussion?.avgRank" class="label label-pill label-default list-inline-item"
+          <li *ngIf="discussion?.avgRank" class="tag tag-pill tag-default list-inline-item"
             tooltipPlacement="bottom" tooltip="Average Score">
             {{discussion?.avgRank}}</li>
-          <li *ngIf="discussion?.userRank" class="label label-pill label-info list-inline-item"
+          <li *ngIf="discussion?.userRank" class="tag tag-pill tag-info list-inline-item"
             tooltipPlacement="bottom" tooltip="Your Vote">
             {{discussion?.userRank}}</li>
           <li *ngIf="discussion?.numberOfVotes" class="text-muted list-inline-item">
@@ -110,7 +110,7 @@
           </div>
           <ul *ngIf="discussion?.tags" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeTag(tag)"
-              class="label label-default list-inline-item"
+              class="tag tag-default list-inline-item"
               *ngFor="let tag of discussion?.tags">
               <span>{{removeQuotes(tag.name)}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
@@ -147,7 +147,7 @@
           </div>
           <ul *ngIf="discussion?.privateUsers" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removePrivateUser(privateUser)"
-              class="label label-default list-inline-item"
+              class="tag tag-default list-inline-item"
               *ngFor="let privateUser of privateUsersWithoutYou()">
               <span>{{privateUser.name}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
@@ -175,7 +175,7 @@
           </div>
           <ul *ngIf="discussion?.blockedUsers" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeBlockedUser(blockedUser)"
-              class="label label-default list-inline-item"
+              class="tag tag-default list-inline-item"
               *ngFor="let blockedUser of discussion.blockedUsers">
               <span>{{blockedUser.name}}<i class="fa fa-fw fa-remove"></i></span>
             </li>

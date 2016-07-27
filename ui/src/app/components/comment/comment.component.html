@@ -3,9 +3,9 @@
     <li class="text-muted list-inline-item" role="button"
       (click)="collapsed = !collapsed">{{collapseText()}}</li>
     <li class="text-primary list-inline-item">{{comment.userName}}</li>
-    <li *ngIf="comment.avgRank" class="label label-pill label-default list-inline-item"
+    <li *ngIf="comment.avgRank" class="tag tag-pill tag-default list-inline-item"
       tooltipPlacement="bottom" tooltip="Average Score">{{comment.avgRank}}</li>
-    <li *ngIf="rank" class="label label-pill label-info list-inline-item"
+    <li *ngIf="rank" class="tag tag-pill tag-info list-inline-item"
       tooltipPlacement="bottom" tooltip="Your Vote">{{rank}}</li>
     <li *ngIf="comment.avgRank" class="text-muted list-inline-item"><small>{{comment.numberOfVotes}} votes</small></li>
     <li *ngIf="comment.deleted" class="text-muted list-inline-item"><small><i>deleted {{comment.modified | moment}}</i></small></li>
