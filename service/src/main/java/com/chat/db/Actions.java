@@ -218,27 +218,23 @@ public class Actions {
 
     }
 
-    public static String deleteFavoriteDiscussion(Long userId, Long discussionId) {
+    public static void deleteFavoriteDiscussion(Long userId, Long discussionId) {
 
         FavoriteDiscussionUser fdu = FavoriteDiscussionUser.findFirst(
                 "user_id = ? and discussion_id = ?", userId, discussionId);
 
         fdu.delete();
 
-        return Tools.buildMessage("Success");
-
     }
 
-    public static String markReplyAsRead(Long commentId) {
+    public static void markReplyAsRead(Long commentId) {
 
         Comment c = Comment.findFirst("id = ?", commentId);
         c.set("read", true).saveIt();
 
-        return Tools.buildMessage("Success");
-
     }
 
-    public static String markAllRepliesAsRead(Long userId) {
+    public static void markAllRepliesAsRead(Long userId) {
 
         // Fetch your unread replies
         LazyList<CommentBreadcrumbsView> cbv = CommentBreadcrumbsView.where(
@@ -254,8 +250,6 @@ public class Actions {
             Comment.update("read = ?", "id in " + inQuery, true);
 
         }
-
-        return Tools.buildMessage("Success");
 
     }
 
@@ -435,37 +429,26 @@ public class Actions {
 
     }
 
-    public static String saveDiscussionVote(Long userId, Long discussionId, Integer rank) {
+    public static void saveDiscussionVote(Long userId, Long discussionId, Integer rank) {
 
-        String message = null;
         // fetch the vote if it exists
         DiscussionRank d = DiscussionRank.findFirst("user_id = ? and discussion_id = ?" ,
                 userId, discussionId);
 
-
-        if (d == null) {
-            if (rank != null) {
+        if (rank != null) {
+            if (d == null) {
                 DiscussionRank.createIt(
-                        "discussion_id" , discussionId,
-                        "user_id" , userId,
-                        "rank" , rank);
-                message = "Discussion Vote Created";
+                        "discussion_id", discussionId,
+                        "user_id", userId,
+                        "rank", rank);
             } else {
-                message = "Discussion Vote not created";
-            }
-        } else {
-            if (rank != null) {
-                d.set("rank" , rank).saveIt();
-                message = "Discussion Vote updated";
-            }
-            // If the rank is null, then delete the ballot
-            else {
-                d.delete();
-                message = "Discussion Vote deleted";
+                d.set("rank", rank).saveIt();
             }
         }
-
-        return message;
+        // If the rank is null, then delete the ballot
+        else {
+            d.delete();
+        }
 
     }
 

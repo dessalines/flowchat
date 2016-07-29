@@ -74,7 +74,7 @@
         <div class="form-group row">
           <label class="col-sm-1 form-control-label">Link</label>
           <div class="col-sm-11">
-            <input [(ngModel)]="discussion.link" #discussionLink="ngForm"
+            <input [(ngModel)]="discussion.link" #discussionLink="ngModel"
               placeholder="optional" class="form-control"
               pattern="[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?"
               name="discussion_link" />
@@ -96,7 +96,7 @@
         <div class="form-group row">
           <label class="col-sm-1 form-control-label">Tags</label>
           <div class="col-md-5 input-group">
-            <input #tagTerm="ngForm" [(ngModel)]="tagSearchSelected"
+            <input #tagTerm="ngModel" [(ngModel)]="tagSearchSelected"
               [typeahead]="tagSearchResultsObservable"
               (typeaheadOnSelect)="tagTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'name'"
@@ -133,7 +133,7 @@
         <div *ngIf="discussion?.private_" class="form-group row">
           <label class="col-sm-1 form-control-label">Invite Users</label>
           <div class="col-md-5">
-            <input #userTerm="ngForm" [(ngModel)]="userSearchSelected"
+            <input #userTerm="ngModel" [(ngModel)]="userSearchSelected"
               [typeahead]="userSearchResultsObservable"
               (typeaheadOnSelect)="userTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'name'"
@@ -161,7 +161,7 @@
         <div class="form-group row">
           <label class="col-sm-1 form-control-label">Block Users</label>
           <div class="col-md-5">
-            <input #blockedUserTerm="ngForm" [(ngModel)]="blockedUserSearchSelected"
+            <input #blockedUserTerm="ngModel" [(ngModel)]="blockedUserSearchSelected"
               [typeahead]="blockedUserSearchResultsObservable"
               (typeaheadOnSelect)="blockedUserTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'name'"

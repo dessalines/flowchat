@@ -14,6 +14,7 @@ import { Observable } from 'rxjs/Observable';
 import {TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 import {MarkdownPipe} from '../../pipes/markdown.pipe';
 import { MomentPipe } from '../../pipes/moment.pipe';
+import {ToasterService} from 'angular2-toaster/angular2-toaster';
 
 declare var Favico: any;
 
@@ -25,7 +26,7 @@ declare var Favico: any;
   directives: [MODAL_DIRECTIVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES,
     TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES, ROUTER_DIRECTIVES,
     FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
-  providers: [LoginService],
+  providers: [],
   viewProviders: [BS_VIEW_PROVIDERS],
   pipes: [MomentPipe, MarkdownPipe]
 })
@@ -52,7 +53,8 @@ export class NavbarComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     private discussionService: DiscussionService,
-    private notificationsService: NotificationsService) {
+    private notificationsService: NotificationsService,
+    private toasterService: ToasterService) {
 
   }
 
@@ -79,7 +81,10 @@ export class NavbarComponent implements OnInit {
       user => {
         this.setupUser(user);
       },
-      error => console.log(error));
+      error => {
+        console.log(error);
+        this.toasterService.pop("error", "Error", error);
+      });
   }
 
   signupSubmit() {
@@ -89,7 +94,10 @@ export class NavbarComponent implements OnInit {
       user => {
         this.setupUser(user);
       },
-      error => console.log(error));
+      error => {
+        console.log(error);
+        this.toasterService.pop("error", "Error", error);
+      });
 
   }
 
@@ -99,7 +107,10 @@ export class NavbarComponent implements OnInit {
       user => {
         this.setupUser(user);
       },
-      error => console.log(error));
+      error => {
+        console.log(error);
+        this.toasterService.pop("error", "Error", error);
+      });
   }
 
   setupUser(user: any) {

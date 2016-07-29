@@ -115,7 +115,7 @@
               class="form-horizontal" role="form">
               <div class="form-group">
                 <div class="col-sm-12">
-                  <input [(ngModel)]="signup.username" #signupName="ngForm"
+                  <input [(ngModel)]="signup.username" #signupName="ngModel"
                     ngControl="signupName"
                     class="form-control" placeholder="choose a username"
                     required minlength="5"
@@ -131,7 +131,7 @@
               </div>
               <div class="form-group">
                 <div class="col-sm-12">
-                  <input [(ngModel)]="signup.password" #signupPassword="ngForm"
+                  <input [(ngModel)]="signup.password" #signupPassword="ngModel"
                     ngControl="signupPassword"
                     type="password" class="form-control"
                     placeholder="password"
@@ -145,7 +145,7 @@
               <div class="form-group">
                 <div class="col-sm-12">
                   <input [(ngModel)]="signup.verifyPassword"
-                    #signupVerifyPassword="ngForm"
+                    #signupVerifyPassword="ngModel"
                     ngControl="signupVerifyPassword"
                     type="password" class="form-control"
                     placeholder="verify password"
@@ -158,7 +158,7 @@
               </div>
               <div class="form-group">
                 <div class="col-sm-12">
-                  <input [(ngModel)]="signup.email" #signupEmail="ngForm"
+                  <input [(ngModel)]="signup.email" #signupEmail="ngModel"
                     ngControl="signupEmail"
                     class="form-control" placeholder="email (optional)"
                     pattern="\S+@\S+\.\S+"
@@ -186,7 +186,7 @@
               <div class="form-group">
                 <div class="col-sm-12">
                   <input [(ngModel)]="login.usernameOrEmail"
-                    #loginName="ngForm" ngControl="loginName"
+                    #loginName="ngModel" ngControl="loginName"
                     class="form-control" placeholder="username or email"
                     minlength="5" maxlength="140"
                     required 
@@ -199,7 +199,7 @@
               </div>
               <div class="form-group">
                 <div class="col-sm-12">
-                  <input [(ngModel)]="login.password" #loginPassword="ngForm"
+                  <input [(ngModel)]="login.password" #loginPassword="ngModel"
                     ngControl="loginPassword"
                     type="password" type="password"
                     class="form-control" placeholder="password"
