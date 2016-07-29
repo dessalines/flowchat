@@ -51,7 +51,7 @@ export class TagService {
   
   private handleError(error: any) {
     // We'd also dig deeper into the error to get a better message
-    let errMsg = error.json().message;
+    let errMsg = error._body;
     return Observable.throw(errMsg);
   }
 

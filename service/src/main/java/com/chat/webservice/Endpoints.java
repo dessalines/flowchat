@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import static com.chat.tools.Tools.buildMessage;
 import static spark.Spark.*;
 
 /**
@@ -33,15 +32,15 @@ public class Endpoints {
         });
 
         before((req, res) -> {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Content-Encoding", "gzip");
+            res.header("Access-Control-Allow-Credentials", "true");
+            res.header("Access-Control-Allow-Headers", "content-type,user");
             Tools.dbInit();
         });
 
         after((req, res) -> {
             Tools.dbClose();
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Content-Encoding", "gzip");
-            res.header("Access-Control-Allow-Credentials", "true");
-            res.header("Access-Control-Allow-Headers", "content-type,user");
         });
 
     }
@@ -68,7 +67,6 @@ public class Endpoints {
             Tables.UserLoginView ulv = Actions.login(userOrEmail, password, req, res);
 
             return ulv.toJson(false);
-
 
         });
 
@@ -109,9 +107,9 @@ public class Endpoints {
     public static void exceptions() {
 
         exception(NoSuchElementException.class, (e, req, res) -> {
-            res.status(HttpStatus.BAD_REQUEST_400);
             e.printStackTrace();
-            res.body(buildMessage(e.getMessage()));
+            res.status(HttpStatus.BAD_REQUEST_400);
+            res.body(e.getMessage());
         });
     }
 
@@ -250,11 +248,9 @@ public class Endpoints {
 
             return discussions.json();
 
-
         });
 
         get("/discussion_search/:query", (req, res) -> {
-
 
             String query = req.params(":query");
 
@@ -277,11 +273,11 @@ public class Endpoints {
             Long discussionId = Long.valueOf(req.params(":id"));
             Integer rank = Integer.valueOf(req.params(":rank"));
 
-            String message = Actions.saveDiscussionVote(userObj.getId(), discussionId, rank);
+            Actions.saveDiscussionVote(userObj.getId(), discussionId, rank);
 
             res.status(HttpStatus.OK_200);
 
-            return Tools.buildMessage(message);
+            return "";
 
         });
 
@@ -345,19 +341,18 @@ public class Endpoints {
 
             Long discussionId = Long.valueOf(req.params(":id"));
 
-            String message = Actions.deleteFavoriteDiscussion(userObj.getId(), discussionId);
+            Actions.deleteFavoriteDiscussion(userObj.getId(), discussionId);
 
             res.status(HttpStatus.OK_200);
 
-            return message;
+            return "";
 
         });
     }
 
     public static void reply() {
-        get("/get_unread_replies", (req, res) -> {
 
-            try {
+        get("/get_unread_replies", (req, res) -> {
 
                 UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
@@ -372,12 +367,6 @@ public class Endpoints {
 
                 return comments.json();
 
-            } catch (Exception e) {
-                res.status(666);
-                e.printStackTrace();
-                return Tools.buildMessage(e.getMessage());
-            }
-
         });
 
         post("/mark_reply_as_read/:id", (req, res) -> {
@@ -387,11 +376,11 @@ public class Endpoints {
             Long commentId = Long.valueOf(req.params(":id"));
 
             // Mark the reply as read
-            String message = Actions.markReplyAsRead(commentId);
+            Actions.markReplyAsRead(commentId);
 
             res.status(HttpStatus.OK_200);
 
-            return message;
+            return "";
 
         });
 
@@ -400,11 +389,11 @@ public class Endpoints {
             UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
             // Mark the reply as read
-            String message = Actions.markAllRepliesAsRead(userObj.getId());
+            Actions.markAllRepliesAsRead(userObj.getId());
 
             res.status(HttpStatus.OK_200);
 
-            return message;
+            return "";
 
         });
     }

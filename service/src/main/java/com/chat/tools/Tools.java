@@ -193,10 +193,6 @@ public class Tools {
 
     }
 
-    public static String buildMessage(String message) {
-        return "{\"message\": \"" + message + "\"}";
-    }
-
     public static String constructOrderByCustom(String orderBy) {
 
         String orderByOut;
