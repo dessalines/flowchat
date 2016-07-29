@@ -3,6 +3,7 @@ package com.chat.tools;
 import ch.qos.logback.classic.Logger;
 import com.chat.DataSources;
 import com.chat.db.Actions;
+import com.chat.webservice.ConstantsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -194,6 +195,36 @@ public class Tools {
 
     public static String buildMessage(String message) {
         return "{\"message\": \"" + message + "\"}";
+    }
+
+    public static String constructOrderByCustom(String orderBy) {
+
+        String orderByOut;
+        if (orderBy.startsWith("time-")) {
+            Long timeValue = Long.valueOf(orderBy.split("-")[1]);
+
+            // For the custom sorting based on ranking
+            orderByOut = "ranking(created, " + timeValue +
+                    ",number_of_votes, " + ConstantsService.INSTANCE.getRankingConstants().getNumberOfVotesWeight() +
+                    ",avg_rank, " + ConstantsService.INSTANCE.getRankingConstants().getAvgRankWeight() +
+                    ") desc nulls last";
+
+        } else {
+            orderByOut = orderBy.replaceAll("__", " ").concat(" nulls last");
+        }
+
+        return orderByOut;
+    }
+
+    public static String constructOrderByPopularTagsCustom(String orderBy) {
+        // For the custom sorting based on ranking
+        if (orderBy.equals("custom")) {
+            orderBy = "ranking(created, " + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight() +
+                    ",count, " + ConstantsService.INSTANCE.getRankingConstants().getNumberOfVotesWeight() +
+                    ") desc";
+        }
+
+        return orderBy;
     }
 
 }
