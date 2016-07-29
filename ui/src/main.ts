@@ -14,7 +14,7 @@ if (environment.production) {
 
 bootstrap(AppComponent, [
   appRouterProviders,
-  HTTP_PROVIDERS, 
+  HTTP_PROVIDERS,
   disableDeprecatedForms(),
   provideForms(),
   {provide: LocationStrategy, useClass: HashLocationStrategy},

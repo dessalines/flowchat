@@ -96,7 +96,7 @@
         <div class="form-group row">
           <label class="col-sm-1 form-control-label">Tags</label>
           <div class="col-md-5 input-group">
-            <input #tagTerm="ngModel" [(ngModel)]="tagSearchSelected"
+            <input [(ngModel)]="tagSearchSelected"
               [typeahead]="tagSearchResultsObservable"
               (typeaheadOnSelect)="tagTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'name'"
@@ -104,8 +104,8 @@
               (typeaheadNoResults)="tagChangeTypeaheadNoResults($event)"
               [typeaheadWaitMs]="200" class="form-control"
               minlength="5" maxlength="20"
-              pattern="[a-zA-Z0-9_-]+" name="tag_search">
-            <button [disabled]="!tagTerm.valid || tagTerm.value.length == 0"
+              pattern="[a-zA-Z0-9_-]+" name="tag_search" #tagTerm="ngModel">
+            <button [disabled]="tagSearchSelected.length < 5 || tagSearchSelected.length > 20 || rgex.test(tagSearchSelected) == false"
               (click)="createTag()" class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
           </div>
           <ul *ngIf="discussion?.tags" class="col-md-6 list-inline form-control-label">
@@ -133,7 +133,7 @@
         <div *ngIf="discussion?.private_" class="form-group row">
           <label class="col-sm-1 form-control-label">Invite Users</label>
           <div class="col-md-5">
-            <input #userTerm="ngModel" [(ngModel)]="userSearchSelected"
+            <input [(ngModel)]="userSearchSelected"
               [typeahead]="userSearchResultsObservable"
               (typeaheadOnSelect)="userTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'name'"
@@ -161,7 +161,7 @@
         <div class="form-group row">
           <label class="col-sm-1 form-control-label">Block Users</label>
           <div class="col-md-5">
-            <input #blockedUserTerm="ngModel" [(ngModel)]="blockedUserSearchSelected"
+            <input [(ngModel)]="blockedUserSearchSelected"
               [typeahead]="blockedUserSearchResultsObservable"
               (typeaheadOnSelect)="blockedUserTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'name'"
