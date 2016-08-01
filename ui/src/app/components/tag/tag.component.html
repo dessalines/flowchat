@@ -18,9 +18,11 @@
       </select>
     </div>
   </div>
-  <div (window:scroll)="onScroll($event)" class="card-columns">
-    <app-discussion-card *ngFor="let discussion of discussions"
-      [discussion]="discussion"></app-discussion-card>
+  <div class="card-deck-wrapper">
+    <div (window:scroll)="onScroll($event)" class="card-deck">
+      <app-discussion-card class="col-md-4" *ngFor="let discussion of discussions"
+        [discussion]="discussion"></app-discussion-card>
+    </div>
   </div>
 </div>
 <app-footer></app-footer>
