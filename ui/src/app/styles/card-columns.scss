@@ -13,7 +13,20 @@
 //     }
 //   }
 // }
+
+.card-deck {
+
+  .col-md-4 {
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+  .card {
+    margin-bottom: 20px;
+  }
+}
+
 .card-columns {
+
   @include media-breakpoint-up(xs) {
     &.card-columns-xs-1 {
       -webkit-column-count: 1;

@@ -12,7 +12,8 @@
       </small>
     </div>
     <div class="col-xs-12 col-md-2">
-      <select [ngModel]="discussionSorting" (ngModelChange)="resort($event)" class="form-control">
+      <select [ngModel]="discussionSorting" (ngModelChange)="resort($event)"
+        class="form-control">
         <option disabled>Sorting</option>
         <option disabled>──────────</option>
         <option value="modified__desc">New</option>
@@ -25,9 +26,11 @@
       </select>
     </div>
   </div>
-  <div (window:scroll)="onScroll($event)" class="card-columns card-columns-lg-4 card-columns-md-3 card-columns-sm-2 card-columns-xs-1">
-    <app-discussion-card *ngFor="let discussion of discussions"
-      [discussion]="discussion"></app-discussion-card>
+  <div class="card-deck-wrapper">
+    <div (window:scroll)="onScroll($event)" class="card-deck">
+      <app-discussion-card class="col-md-4" *ngFor="let discussion of discussions"
+        [discussion]="discussion"></app-discussion-card>
+    </div>
   </div>
 </div>
 <app-footer></app-footer>
