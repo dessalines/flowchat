@@ -232,7 +232,7 @@ export class ChatComponent implements OnInit {
   onScroll(event) {
 
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-      if (this.scrollDebounce == 0) {
+      if (this.scrollDebounce == 0 && this.isReplying == false) {
         this.scrollDebounce = 1;
         // you're at the bottom of the page
         this.currentTopLimit += this.currentCommentBatchSize;
