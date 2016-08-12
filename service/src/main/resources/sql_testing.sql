@@ -12,3 +12,5 @@ order by ranking(created, 3600,
 
                     -- 31540000, 2628000, 604800, 86400, 3600
                     -- .001, 0.01
+
+select ranking(created, 3600, count, 0.001) from popular_tags_view;

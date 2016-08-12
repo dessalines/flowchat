@@ -106,7 +106,7 @@ public class Endpoints {
 
     public static void exceptions() {
 
-        exception(NoSuchElementException.class, (e, req, res) -> {
+        exception(Exception.class, (e, req, res) -> {
             e.printStackTrace();
             res.status(HttpStatus.BAD_REQUEST_400);
             res.body(e.getMessage());
