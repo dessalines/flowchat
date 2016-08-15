@@ -15,7 +15,7 @@ import {environment} from '../environment';
 @Injectable()
 export class NotificationsService {
 
-  private getUnreadUrl: string = environment.endpoint + 'get_unread_replies';
+  private getUnreadUrl: string = environment.endpoint + 'unread_replies';
   private markAsReadUrl: string = environment.endpoint + 'mark_reply_as_read/';
   private markAllAsReadUrl: string = environment.endpoint + 'mark_all_replies_as_read';
 
