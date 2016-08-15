@@ -213,14 +213,19 @@ public class Tools {
     }
 
     public static String constructOrderByPopularTagsCustom(String orderBy) {
-        // For the custom sorting based on ranking
-        if (orderBy.equals("custom")) {
-            orderBy = "ranking(created, " + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight() +
+
+        String orderByOut;
+        if (orderBy.startsWith("time-")) {
+            Long timeValue = Long.valueOf(orderBy.split("-")[1]);
+
+            orderByOut = "ranking(created, " + timeValue +
                     ",count, " + ConstantsService.INSTANCE.getRankingConstants().getNumberOfVotesWeight() +
                     ") desc";
+        } else {
+            orderByOut = "created desc";
         }
 
-        return orderBy;
+        return orderByOut;
     }
 
 }
