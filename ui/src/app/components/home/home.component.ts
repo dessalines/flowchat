@@ -47,6 +47,7 @@ export class HomeComponent implements OnInit {
     this.currentPageNum = 1;
     this.scrollDebounce = 0;
     this.getDiscussions(this.currentPageNum, this.sorting);
+    this.getPopularTags(this.sorting);
   }
 
   onScroll(event) {
