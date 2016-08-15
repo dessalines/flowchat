@@ -13,7 +13,6 @@ import org.javalite.activejdbc.Paginator;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static spark.Spark.*;
@@ -36,6 +35,7 @@ public class Endpoints {
             res.header("Content-Encoding", "gzip");
             res.header("Access-Control-Allow-Credentials", "true");
             res.header("Access-Control-Allow-Headers", "content-type,user");
+            res.header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
             Tools.dbInit();
         });
 
@@ -47,7 +47,7 @@ public class Endpoints {
 
     public static void user() {
 
-        get("/get_user", (req, res) -> {
+        get("/user", (req, res) -> {
 
             UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
@@ -115,7 +115,7 @@ public class Endpoints {
 
     public static void tag() {
 
-        get("/get_tag/:id", (req, res) -> {
+        get("/tag/:id", (req, res) -> {
 
             Long id = Long.valueOf(req.params(":id"));
 
@@ -142,7 +142,7 @@ public class Endpoints {
 
         });
 
-        post("/create_tag", (req, res) -> {
+        post("/tag", (req, res) -> {
 
 
             String name = Tools.createMapFromReqBody(req.body()).get("name");
@@ -155,7 +155,7 @@ public class Endpoints {
 
         });
 
-        get("/get_popular_tags/:limit/:page/:orderBy", (req, res) -> {
+        get("/tags/:limit/:page/:orderBy", (req, res) -> {
 
             Integer limit = (req.params(":limit") != null) ? Integer.valueOf(req.params(":limit")) : 10;
             Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
@@ -163,10 +163,10 @@ public class Endpoints {
 
             orderBy = Tools.constructOrderByPopularTagsCustom(orderBy);
 
-            Paginator p = new Paginator(Tables.PopularTagsView.class, limit, "1=1").
+            Paginator p = new Paginator(Tables.TagsView.class, limit, "1=1").
                     orderBy(orderBy);
 
-            LazyList<Tables.PopularTagsView> popularTags = p.getPage(page);
+            LazyList<Tables.TagsView> popularTags = p.getPage(page);
 
             return popularTags.toJson(false);
 
@@ -177,7 +177,7 @@ public class Endpoints {
     public static void discussion() {
 
 
-        get("/get_discussion/:id", (req, res) -> {
+        get("/discussion/:id", (req, res) -> {
 
 
             Long id = Long.valueOf(req.params(":id"));
@@ -209,7 +209,7 @@ public class Endpoints {
         });
 
         // Get the user id
-        get("/get_discussions/:tagId/:limit/:page/:orderBy", (req, res) -> {
+        get("/discussions/:tagId/:limit/:page/:orderBy", (req, res) -> {
 
 
             Long tagId = (!req.params(":tagId").equals("all")) ? Long.valueOf(req.params(":tagId")) : null;
@@ -265,7 +265,7 @@ public class Endpoints {
 
         });
 
-        post("/save_discussion_rank/:id/:rank", (req, res) -> {
+        post("/discussion_rank/:id/:rank", (req, res) -> {
 
             UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
@@ -281,7 +281,7 @@ public class Endpoints {
 
         });
 
-        post("/create_discussion", (req, res) -> {
+        post("/discussion", (req, res) -> {
 
             UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
@@ -293,7 +293,7 @@ public class Endpoints {
 
         });
 
-        post("/save_discussion", (req, res) -> {
+        put("/discussion", (req, res) -> {
 
             UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
@@ -307,7 +307,7 @@ public class Endpoints {
 
         });
 
-        get("/get_favorite_discussions", (req, res) -> {
+        get("/favorite_discussions", (req, res) -> {
 
             UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
@@ -335,7 +335,7 @@ public class Endpoints {
 
         });
 
-        post("/remove_favorite_discussion/:id", (req, res) -> {
+        post("/favorite_discussion/:id", (req, res) -> {
 
             UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
@@ -352,7 +352,7 @@ public class Endpoints {
 
     public static void reply() {
 
-        get("/get_unread_replies", (req, res) -> {
+        get("/unread_replies", (req, res) -> {
 
                 UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
