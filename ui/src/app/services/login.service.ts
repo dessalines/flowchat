@@ -13,7 +13,7 @@ import {environment} from '../environment';
 @Injectable()
 export class LoginService {
 
-  private getOrCreateUrl: string = environment.endpoint + 'get_user';
+  private getOrCreateUrl: string = environment.endpoint + 'user';
   private loginUrl: string = environment.endpoint + 'login';
   private signupUrl: string = environment.endpoint + 'signup';
 
