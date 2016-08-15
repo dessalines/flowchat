@@ -9,12 +9,12 @@ import {environment} from '../environment';
 @Injectable()
 export class TagService {
 
-  private getTagUrl: string = environment.endpoint + 'get_tag/';
+  private getTagUrl: string = environment.endpoint + 'tag/';
   private queryTagsUrl: string = environment.endpoint + 'tag_search/';
-  private createTagUrl: string = environment.endpoint + 'create_tag';
+  private createTagUrl: string = environment.endpoint + 'tag';
 
   private getPopularTagsUrl(limit: number, page: number, orderBy: string): string {
-    return environment.endpoint + 'get_popular_tags/' + 
+    return environment.endpoint + 'tags/' + 
       limit + '/' + page + '/' + orderBy;
   }
 

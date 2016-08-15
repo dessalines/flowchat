@@ -12,15 +12,15 @@ import {environment} from '../environment';
 @Injectable()
 export class DiscussionService {
 
-  private getDiscussionUrl: string = environment.endpoint + 'get_discussion/';
+  private getDiscussionUrl: string = environment.endpoint + 'discussion/';
   private queryDiscussionsUrl: string = environment.endpoint + 'discussion_search/';
-  private saveRankUrl: string = environment.endpoint + 'save_discussion_rank/';
-  private createDiscussionUrl: string = environment.endpoint + 'create_discussion';
-  private saveDiscussionUrl: string = environment.endpoint + 'save_discussion';
+  private saveRankUrl: string = environment.endpoint + 'discussion_rank/';
+  private createDiscussionUrl: string = environment.endpoint + 'discussion';
+  private saveDiscussionUrl: string = environment.endpoint + 'discussion';
 
   private getDiscussionsUrl(page: number, limit: number, tagId: string,
     orderBy: string): string {
-    return environment.endpoint + 'get_discussions/' + tagId + '/' +
+    return environment.endpoint + 'discussions/' + tagId + '/' +
       limit + '/' + page + '/' + orderBy;
   }
 
@@ -60,7 +60,7 @@ export class DiscussionService {
   }
 
   saveDiscussion(discussion: Discussion) {
-    return this.http.post(this.saveDiscussionUrl, discussion, this.userService.getOptions())
+    return this.http.put(this.saveDiscussionUrl, discussion, this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
