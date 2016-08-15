@@ -22,8 +22,8 @@ export class UserService {
 
   private queryUsersUrl: string = environment.endpoint + 'user_search/';
 
-  private fetchFavoriteDiscussionsUrl: string = environment.endpoint + 'get_favorite_discussions';
-  private removeFavoriteDiscussionUrl: string = environment.endpoint + 'remove_favorite_discussion/';
+  private fetchFavoriteDiscussionsUrl: string = environment.endpoint + 'favorite_discussions';
+  private removeFavoriteDiscussionUrl: string = environment.endpoint + 'favorite_discussion/';
 
 
   constructor(private http: Http) {

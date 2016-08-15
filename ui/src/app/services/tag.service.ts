@@ -9,12 +9,12 @@ import {environment} from '../environment';
 @Injectable()
 export class TagService {
 
-  private getTagUrl: string = environment.endpoint + 'get_tag/';
+  private getTagUrl: string = environment.endpoint + 'tag/';
   private queryTagsUrl: string = environment.endpoint + 'tag_search/';
-  private createTagUrl: string = environment.endpoint + 'create_tag';
+  private createTagUrl: string = environment.endpoint + 'tag';
 
   private getPopularTagsUrl(limit: number, page: number, orderBy: string): string {
-    return environment.endpoint + 'get_popular_tags/' + 
+    return environment.endpoint + 'tags/' + 
       limit + '/' + page + '/' + orderBy;
   }
 
@@ -42,7 +42,7 @@ export class TagService {
   }
 
   getPopularTags(limit: number = 10, page: number = 1,
-    orderBy: string = 'custom') {
+    orderBy: string = 'time-86400') {
     return this.http.get(this.getPopularTagsUrl(limit, page, orderBy))
       .map(this.extractData)
       .catch(this.handleError);

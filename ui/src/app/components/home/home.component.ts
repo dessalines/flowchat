@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
 
   private discussions: Array<Discussion> = [];
   private popularTags: Array<Tag>;
-  private discussionSorting: string = "time-86400";
+  private sorting: string = "time-86400";
 
   private currentPageNum: number = 1;
   private scrollDebounce: number = 0;
@@ -36,17 +36,18 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getDiscussions(this.currentPageNum, this.discussionSorting);
-    this.getPopularTags();
+    this.getDiscussions(this.currentPageNum, this.sorting);
+    this.getPopularTags(this.sorting);
   }
 
   resort($event) {
     console.log('resorting' + $event);
-    this.discussionSorting = $event;
+    this.sorting = $event;
     this.discussions = [];
     this.currentPageNum = 1;
     this.scrollDebounce = 0;
-    this.getDiscussions(this.currentPageNum, this.discussionSorting);
+    this.getDiscussions(this.currentPageNum, this.sorting);
+    this.getPopularTags(this.sorting);
   }
 
   onScroll(event) {
@@ -56,7 +57,7 @@ export class HomeComponent implements OnInit {
         this.scrollDebounce = 1;
         // you're at the bottom of the page
         this.currentPageNum += 1;
-        this.getDiscussions(this.currentPageNum, this.discussionSorting);
+        this.getDiscussions(this.currentPageNum, this.sorting);
         setTimeout(() => this.scrollDebounce = 0, 1000);
       }
     }
@@ -70,8 +71,8 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  getPopularTags() {
-    this.tagService.getPopularTags().subscribe(
+  getPopularTags(orderBy: string) {
+    this.tagService.getPopularTags(undefined, undefined, orderBy).subscribe(
       t => {
         this.popularTags = t
         console.log(this.popularTags);
