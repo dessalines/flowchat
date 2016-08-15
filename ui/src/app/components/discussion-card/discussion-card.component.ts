@@ -43,6 +43,7 @@ export class DiscussionCardComponent implements OnInit {
   private tagSearchResultsObservable: Observable<any>;
   private tagSearchSelected: string = '';
   private tooManyTagsError: boolean = false;
+  private alreadyAddedTagError: boolean = false;
   private tagTypeaheadLoading: boolean = false;
   private tagTypeaheadNoResults: boolean = false;
 
@@ -140,13 +141,20 @@ export class DiscussionCardComponent implements OnInit {
       this.discussion.tags = [];
     }
 
-    // add it to the list
-    if (this.discussion.tags.length < 3) {
+    this.tooManyTagsError = this.alreadyAddedTagError = false;
+
+    if (this.discussion.tags.filter(t => t.id == tag.id).length) {
+      this.alreadyAddedTagError = true;
+      return;
+    }
+
+    if (this.discussion.tags.length >= 3) {
+      this.tooManyTagsError = true;
+    } else {
       this.discussion.tags.push(tag);
       this.tagSearchSelected = '';
-    } else {
-      this.tooManyTagsError = true;
     }
+
   }
 
   tagChangeTypeaheadLoading(e: boolean): void {
@@ -160,7 +168,7 @@ export class DiscussionCardComponent implements OnInit {
   removeTag(tag: Tag) {
     let index = this.discussion.tags.indexOf(tag);
     this.discussion.tags.splice(index, 1);
-    this.tooManyTagsError = false;
+    this.tooManyTagsError = this.alreadyAddedTagError = false;
   }
 
   createTag() {

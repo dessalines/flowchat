@@ -129,6 +129,9 @@
           <div *ngIf="tooManyTagsError" class="row col-sm-12 help-block text-danger">
             <small>Can't Add more than 3 tags</small>
           </div>
+          <div *ngIf="alreadyAddedTagError" class="row col-sm-12 help-block text-danger">
+            <small>Already added that tag</small>
+          </div>
         </div>
         <div *ngIf="discussion?.private_" class="form-group row">
           <label class="col-sm-1 form-control-label">Invite Users</label>
