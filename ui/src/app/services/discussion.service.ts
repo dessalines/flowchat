@@ -12,15 +12,15 @@ import {environment} from '../environment';
 @Injectable()
 export class DiscussionService {
 
-  private getDiscussionUrl: string = environment.endpoint + 'get_discussion/';
+  private getDiscussionUrl: string = environment.endpoint + 'discussion/';
   private queryDiscussionsUrl: string = environment.endpoint + 'discussion_search/';
-  private saveRankUrl: string = environment.endpoint + 'save_discussion_rank/';
-  private createDiscussionUrl: string = environment.endpoint + 'create_discussion';
-  private saveDiscussionUrl: string = environment.endpoint + 'save_discussion';
+  private saveRankUrl: string = environment.endpoint + 'discussion_rank/';
+  private createDiscussionUrl: string = environment.endpoint + 'discussion';
+  private saveDiscussionUrl: string = environment.endpoint + 'discussion';
 
   private getDiscussionsUrl(page: number, limit: number, tagId: string,
     orderBy: string): string {
-    return environment.endpoint + 'get_discussions/' + tagId + '/' +
+    return environment.endpoint + 'discussions/' + tagId + '/' +
       limit + '/' + page + '/' + orderBy;
   }
 
@@ -35,7 +35,7 @@ export class DiscussionService {
   }
 
   getDiscussions(page: number = 1, limit: number = 12, tagId: string = 'all',
-    orderBy: string = 'custom') {
+    orderBy: string = 'time-86400') {
     return this.http.get(this.getDiscussionsUrl(page, limit, tagId, orderBy), this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
@@ -60,7 +60,7 @@ export class DiscussionService {
   }
 
   saveDiscussion(discussion: Discussion) {
-    return this.http.post(this.saveDiscussionUrl, discussion, this.userService.getOptions())
+    return this.http.put(this.saveDiscussionUrl, discussion, this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
