@@ -35,7 +35,7 @@ export class DiscussionService {
   }
 
   getDiscussions(page: number = 1, limit: number = 12, tagId: string = 'all',
-    orderBy: string = 'custom') {
+    orderBy: string = 'time-86400') {
     return this.http.get(this.getDiscussionsUrl(page, limit, tagId, orderBy), this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
