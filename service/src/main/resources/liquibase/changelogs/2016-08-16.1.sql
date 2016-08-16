@@ -31,17 +31,17 @@ create table community (
 
 create table community_role (
     id bigserial primary key,
-    name varchar(140) not null,
+    role varchar(140) not null,
     created timestamp default current_timestamp,
-    constraint fk1_community_role_unique_1 unique(name)
+    constraint fk1_community_role_unique_1 unique(role)
 );
 
 
 -- Create the community roles
-insert into community_role (name)
+insert into community_role (role)
     values ('Creator'),('Mod'),('User'),('Blocked');
 
---rollback drop table community_role;
+--rollback drop table community_role cascade;
 
 create table user_community (
     id bigserial primary key,
@@ -67,11 +67,11 @@ create table user_community (
 
 create table log_action (
     id bigserial primary key,
-    type varchar(140) not null,
-    constraint fk1_log_action_unique_1 unique(type)
+    action_ varchar(140) not null,
+    constraint fk1_log_action_unique_1 unique(action_)
 );
 
-insert into log_action (type)
+insert into log_action (action_)
     values ('Deleted'),('Restored'),('Blocked'),('Unblocked'),('Favorited'),('Unfavorited');
 
 --rollback drop table log_action cascade;
@@ -162,18 +162,16 @@ create table user_community_log (
 
 create table discussion_role (
     id bigserial primary key,
-    name varchar(140) not null,
+    role varchar(140) not null,
     created timestamp default current_timestamp,
-    constraint fk1_discussion_role_unique_1 unique(name)
+    constraint fk1_discussion_role_unique_1 unique(role)
 );
 
 -- Create the discussion roles
-insert into discussion_role (name)
+insert into discussion_role (role)
     values ('Creator'),('User'),('Blocked');
 
 --rollback drop table discussion_role cascade;
-
--- TODO need to change the views too
 
 create table user_discussion (
     id bigserial primary key,
@@ -211,7 +209,7 @@ insert into user_discussion(user_id, discussion_id, discussion_role_id)
     from blocked_discussion_user;
 
 
---rollback drop table user_discussion;
+--rollback drop table user_discussion cascade;
 
 
 -- renaming the private and blocked tables(using the discussion_role table now)
@@ -219,26 +217,50 @@ alter table private_discussion_user rename to deprecated_private_discussion_user
 alter table blocked_discussion_user rename to deprecated_blocked_discussion_user;
 alter table discussion rename to deprecated_discussion;
 
--- The new discussion table without the user_id
---create table discussion (
---    id bigserial primary key,
---    title varchar(140) not null,
---    link varchar(255),
---    text_ text,
---    private boolean not null default false,
---    deleted boolean not null default false,
---    created timestamp default current_timestamp,
---    modified timestamp
---);
-
 select * into discussion from deprecated_discussion;
 
 alter table discussion drop column user_id;
 
---rollback drop table discussion;
+--rollback drop table discussion cascade;
 --rollback alter table deprecated_discussion rename to discussion;
 --rollback alter table deprecated_private_discussion_user rename to private_discussion_user;
 --rollback alter table deprecated_blocked_discussion_user rename to blocked_discussion_user;
+
+alter view discussion_full_view rename to deprecated_discussion_full_view;
+
+create view discussion_full_view as
+select d.id,
+    d.title,
+    d.link,
+    d.text_,
+    d.private,
+    d.deleted,
+    avg(dr.rank) as avg_rank,
+    count(distinct dr.id) as number_of_votes,
+    d.created,
+    d.modified
+from discussion as d
+left join discussion_rank as dr on dr.discussion_id = d.id
+group by d.id, d.title, d.link, d.text_, d.private, d.deleted, d.created, d.modified
+order by d.id;
+
+--rollback alter view deprecated_discussion_full_view rename to discussion_full_view;
+
+alter view discussion_notext_view rename to deprecated_discussion_notext_view;
+
+create view discussion_notext_view as
+select id,
+    title,
+    link,
+    private,
+    deleted,
+    avg_rank,
+    number_of_votes,
+    created,
+    modified
+from discussion_full_view;
+
+--rollback alter view deprecated_discussion_notext_view rename to discussion_notext_view;
 
 
 
