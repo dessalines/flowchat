@@ -61,7 +61,7 @@ create table user_community (
     constraint fk4_user_community_unique_1 unique(user_id, community_id)
 );
 
---rollback drop table user_community;
+--rollback drop table user_community cascade;
 
 -- The delete/restore log tables
 
@@ -261,6 +261,27 @@ select id,
 from discussion_full_view;
 
 --rollback alter view deprecated_discussion_notext_view rename to discussion_notext_view;
+
+create view discussion_tag_view as
+select dt.discussion_id, dt.tag_id, t.name
+from discussion_tag as dt
+inner join discussion as d on d.id = dt.discussion_id
+inner join tag as t on t.id = dt.tag_id;
+
+create view user_discussion_view as
+select ud.user_id, ud.discussion_id, u.name
+from user_discussion as ud
+inner join discussion as d on d.id = ud.discussion_id
+inner join user_ as u on u.id = ud.user_id;
+
+create view user_community_view as
+select uc.user_id, uc.community_id, u.name
+from user_community as uc
+inner join discussion as d on d.id = uc.community_id
+inner join user_ as u on u.id = uc.user_id;
+
+
+
 
 
 
