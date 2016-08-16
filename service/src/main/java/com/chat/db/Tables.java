@@ -41,11 +41,23 @@ public class Tables {
     @Table("discussion")
     public static class Discussion extends Model {}
 
+    @Table("discussion_role")
+    public static class DiscussionRole extends Model {}
+
+    @Table("user_discussion")
+    public static class UserDiscussion extends Model {}
+
+    @Table("user_discussion_view")
+    public static class UserDiscussionView extends Model {}
+
     @Table("discussion_full_view")
     public static class DiscussionFullView extends Model {}
 
     @Table("discussion_notext_view")
     public static class DiscussionNoTextView extends Model {}
+
+    @Table("discussion_tag_view")
+    public static class DiscussionTagView extends Model {}
 
     @Table("discussion_rank")
     public static class DiscussionRank extends Model {}
@@ -70,5 +82,34 @@ public class Tables {
 
     @Table("tags_view")
     public static class TagsView extends Model {}
+
+    @Table("community")
+    public static class Community extends Model {}
+
+    @Table("community_role")
+    public static class CommunityRole extends Model {}
+
+    @Table("user_community")
+    public static class UserCommunity extends Model {}
+
+    @Table("user_community_view")
+    public static class UserCommunityView extends Model {}
+
+    @Table("log_action")
+    public static class LogAction extends Model {}
+
+    @Table("comment_log")
+    public static class CommentLog extends Model {}
+
+    @Table("discussion_log")
+    public static class DiscussionLog extends Model {}
+
+    @Table("user_discussion_log")
+    public static class UserDiscussionLog extends Model {}
+
+    @Table("user_community_log")
+    public static class UserCommunityLog extends Model {}
+
+
 
 }

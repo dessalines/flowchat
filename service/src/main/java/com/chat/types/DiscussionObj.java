@@ -1,6 +1,8 @@
 package com.chat.types;
 
+import com.chat.db.Tables;
 import com.chat.tools.Tools;
+import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
 import java.io.IOException;
@@ -32,12 +34,9 @@ public class DiscussionObj implements JSONWriter {
                          Integer avgRank,
                          Integer userRank,
                          Integer numberOfVotes,
-                         String tagIds,
-                         String tagNames,
-                         String privateUserIds,
-                         String privateUserNames,
-                         String blockedUserIds,
-                         String blockedUserNames,
+                         List<TagObj> tags,
+                         List<UserObj> privateUsers,
+                         List<UserObj> blockedUsers,
                          Boolean deleted,
                          Timestamp created,
                          Timestamp modified) {
@@ -51,9 +50,9 @@ public class DiscussionObj implements JSONWriter {
         this.avgRank = avgRank;
         this.userRank = userRank;
         this.numberOfVotes = numberOfVotes;
-        this.tags = (!tagIds.contains("{NULL")) ? setTags(tagIds, tagNames) : null;
-        this.privateUsers = setMultiUserType(privateUserIds, privateUserNames, true);
-        this.blockedUsers = setMultiUserType(blockedUserIds, blockedUserNames, false);
+        this.tags = tags;
+        this.privateUsers = privateUsers;
+        this.blockedUsers = blockedUsers;
         this.deleted = deleted;
         this.created = created;
         this.modified = modified;
@@ -76,7 +75,10 @@ public class DiscussionObj implements JSONWriter {
         }
     }
 
-    public static DiscussionObj create(Model d, Integer vote) {
+    public static DiscussionObj create(Model d,
+                                       LazyList<Tables.DiscussionTagView> discussionTags,
+                                       LazyList<Tables.UserDiscussionView> userDiscussions,
+                                       Integer vote) {
         return new DiscussionObj(d.getLongId(),
                 d.getLong("user_id"),
                 d.getString("user_name"),
@@ -121,28 +123,6 @@ public class DiscussionObj implements JSONWriter {
         List<TagObj> dedupeTagObjs = new ArrayList<>(new LinkedHashSet<>(tags));
 
         return dedupeTagObjs;
-    }
-
-    public List<UserObj> setMultiUserType(String multiUserIds, String multiUserNames, Boolean addCreated) {
-        List<UserObj> users = new ArrayList<>();
-
-        // Add the creating user
-        if (addCreated) {
-            UserObj creator = UserObj.create(getUserId(), getUserName());
-            users.add(creator);
-        }
-
-        if (!multiUserIds.contains("{NULL")) {
-            String[] ids = Tools.pgArrayAggToArray(multiUserIds);
-            String[] names = Tools.pgArrayAggToArray(multiUserNames);
-            for (int i = 0; i < ids.length; i++) {
-                users.add(UserObj.create(Long.valueOf(ids[i]), names[i]));
-            }
-        }
-
-        List<UserObj> dedupeUserObjs = new ArrayList<>(new LinkedHashSet<>(users));
-
-        return dedupeUserObjs;
     }
 
     public String getText() {
