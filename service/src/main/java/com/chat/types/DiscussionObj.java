@@ -13,8 +13,9 @@ import java.util.*;
  * Created by tyler on 6/19/16.
  */
 public class DiscussionObj implements JSONWriter {
-    private Long id, userId;
-    private String userName, title, link, text;
+    private Long id;
+    private UserObj creator;
+    private String title, link, text;
     private Boolean private_, deleted;
     private Integer avgRank, userRank, numberOfVotes;
     private List<TagObj> tags;
@@ -25,8 +26,6 @@ public class DiscussionObj implements JSONWriter {
     }
 
     public DiscussionObj(Long id,
-                         Long userId,
-                         String userName,
                          String title,
                          String link,
                          String text,
@@ -35,14 +34,14 @@ public class DiscussionObj implements JSONWriter {
                          Integer userRank,
                          Integer numberOfVotes,
                          List<TagObj> tags,
+                         UserObj creator,
                          List<UserObj> privateUsers,
                          List<UserObj> blockedUsers,
                          Boolean deleted,
                          Timestamp created,
                          Timestamp modified) {
         this.id = id;
-        this.userId = userId;
-        this.userName = userName;
+        this.creator = creator;
         this.title = title;
         this.link = link;
         this.text = text;
@@ -51,6 +50,7 @@ public class DiscussionObj implements JSONWriter {
         this.userRank = userRank;
         this.numberOfVotes = numberOfVotes;
         this.tags = tags;
+        this.creator = creator;
         this.privateUsers = privateUsers;
         this.blockedUsers = blockedUsers;
         this.deleted = deleted;
@@ -58,6 +58,20 @@ public class DiscussionObj implements JSONWriter {
         this.modified = modified;
 
 
+    }
+
+    public enum DISCUSSION_ROLE {
+        CREATOR(1), USER(2), BLOCKED(3);
+
+        private Integer num;
+
+        DISCUSSION_ROLE(Integer num) {
+            this.num = num;
+        }
+
+        public Integer getNum() {
+            return num;
+        }
     }
 
     public void checkPrivate(UserObj userObj) {
@@ -79,9 +93,32 @@ public class DiscussionObj implements JSONWriter {
                                        LazyList<Tables.DiscussionTagView> discussionTags,
                                        LazyList<Tables.UserDiscussionView> userDiscussions,
                                        Integer vote) {
+
+        List<TagObj> tags = new ArrayList<>();
+        for (Tables.DiscussionTagView dtv : discussionTags) {
+            tags.add(TagObj.create(dtv.getLongId(), dtv.getString("name")));
+        }
+        UserObj creator = null;
+        List<UserObj> privateUsers = new ArrayList<>();
+        List<UserObj> blockedUsers = new ArrayList<>();
+
+        for (Tables.UserDiscussionView udv : userDiscussions) {
+
+            DISCUSSION_ROLE dr = udv.getLong("discussion_role_id").intValue();
+
+            switch(udv.getLong("discussion_role_id").intValue()) {
+                case DISCUSSION_ROLE.BLOCKED.getNum().intValue():
+                    blockedUsers.add(UserObj.create(udv.getLong("user_id"), udv.getString("name")));
+                    break;
+                case DISCUSSION_ROLE.USER.getNum():
+            }
+        }
+
+
+
+
+
         return new DiscussionObj(d.getLongId(),
-                d.getLong("user_id"),
-                d.getString("user_name"),
                 d.getString("title"),
                 d.getString("link"),
                 d.getString("text_"),
@@ -89,12 +126,10 @@ public class DiscussionObj implements JSONWriter {
                 d.getInteger("avg_rank"),
                 vote,
                 d.getInteger("number_of_votes"),
-                d.getString("tag_ids"),
-                d.getString("tag_names"),
-                d.getString("private_user_ids"),
-                d.getString("private_user_names"),
-                d.getString("blocked_user_ids"),
-                d.getString("blocked_user_names"),
+                tags,
+                creator,
+                privateUsers,
+                blockedUsers,
                 d.getBoolean("deleted"),
                 d.getTimestamp("created"),
                 d.getTimestamp("modified"));
@@ -188,4 +223,6 @@ public class DiscussionObj implements JSONWriter {
     public Boolean getDeleted() {
         return deleted;
     }
+
+
 }
