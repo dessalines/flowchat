@@ -3,8 +3,7 @@ import {User} from './user.interface.ts';
 
 export interface Discussion {
   id: number;
-  userId: number;
-  userName: string;
+  creator: User;
   title: string;
   link?: string;
   text?: string;

@@ -87,7 +87,7 @@ public class AppTest {
     @Test
     public void testDiscussionConvert() throws SQLException {
         DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", 1);
-        DiscussionObj df = DiscussionObj.create(dfv, null);
+        DiscussionObj df = DiscussionObj.create(dfv, null, null, null);
 
         assertTrue(df.getId().equals(1L));
     }

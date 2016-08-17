@@ -68,12 +68,6 @@ public class Tables {
     @Table("discussion_tag")
     public static class DiscussionTag extends Model {}
 
-    @Table("private_discussion_user")
-    public static class PrivateDiscussionUser extends Model {}
-
-    @Table("blocked_discussion_user")
-    public static class BlockedDiscussionUser extends Model {}
-
     @Table("tag")
     public static class Tag extends Model {}
 
