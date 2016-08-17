@@ -103,10 +103,7 @@ public class Transformations {
 
 
 
-    public static Map<Long, Integer> convertDiscussionRankToMap(Set<Long> discussionIds, UserObj userObj) {
-        LazyList<DiscussionRank> drs = DiscussionRank.where(
-                "discussion_id in " + Tools.convertListToInQuery(discussionIds) + " and user_id = ?",
-                userObj.getId());
+    public static Map<Long, Integer> convertDiscussionRankToMap(List<DiscussionRank> drs) {
 
         // Convert those votes to a map from id to rank
         Map<Long, Integer> discussionRankMap = new HashMap<>();
@@ -124,4 +121,22 @@ public class Transformations {
     }
 
 
+    public static <T extends Model> Map<Long,List<T>> convertDiscussionRowsToMap(List<T> discussionTags) {
+
+        Map<Long,List<T>> map = new HashMap<>();
+
+        for (T dtv : discussionTags) {
+            Long id = dtv.getLong("discussion_id");
+            List<T> arr = map.get(id);
+
+            if (arr == null) {
+                arr = new ArrayList<>();
+                map.put(id, arr);
+            }
+
+            arr.add(dtv);
+        }
+
+        return map;
+    }
 }

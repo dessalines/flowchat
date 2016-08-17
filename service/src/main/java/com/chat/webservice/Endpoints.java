@@ -9,6 +9,7 @@ import com.chat.tools.Tools;
 import com.chat.types.*;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.Paginator;
 import org.slf4j.LoggerFactory;
 
@@ -193,7 +194,13 @@ public class Endpoints {
 
             Integer vote = (dr != null) ? dr.getInteger("rank") : null;
 
-            DiscussionObj df = DiscussionObj.create(dfv, vote);
+            // Get the tags for those discussions:
+            LazyList<Tables.DiscussionTagView> tags = Tables.DiscussionTagView.where("discussion_id = ?", id);
+
+            // Get the users for those discussions
+            LazyList<Tables.UserDiscussionView> users = Tables.UserDiscussionView.where("discussion_id = ?", id);
+
+            DiscussionObj df = DiscussionObj.create(dfv, tags, users, vote);
 
             // check to make sure user is entitled to view it
             df.checkPrivate(userObj);
@@ -241,10 +248,20 @@ public class Endpoints {
             Set<Long> ids = dntvs.collectDistinct("id");
 
             // Get your votes for those discussions:
-            Map<Long, Integer> discussionRankMap = (!ids.isEmpty()) ? Transformations.convertDiscussionRankToMap(ids, userObj) : null;
+            LazyList<Tables.DiscussionRank> drs = Tables.DiscussionRank.where(
+                    "discussion_id in " + Tools.convertListToInQuery(ids) + " and user_id = ?",
+                    userObj.getId());
+
+            // Get the tags for those discussions:
+            LazyList<Tables.DiscussionTagView> tags = Tables.DiscussionTagView.where(
+                    "discussion_id in " + Tools.convertListToInQuery(ids));
+
+            // Get the users for those discussions
+            LazyList<Tables.UserDiscussionView> users = Tables.UserDiscussionView.where(
+                    "discussion_id in " + Tools.convertListToInQuery(ids));
 
             // Build discussion objects
-            Discussions discussions = Discussions.create(dntvs, discussionRankMap, p.getCount());
+            Discussions discussions = Discussions.create(dntvs, tags, users, drs, p.getCount());
 
             return discussions.json();
 
@@ -259,7 +276,7 @@ public class Endpoints {
             LazyList<Tables.DiscussionNoTextView> discussionsRows =
                     Tables.DiscussionNoTextView.find(queryStr.toString()).limit(5);
 
-            Discussions discussions = Discussions.create(discussionsRows, null, Long.valueOf(discussionsRows.size()));
+            Discussions discussions = Discussions.create(discussionsRows, null, null, null, Long.valueOf(discussionsRows.size()));
 
             return discussions.json();
 
@@ -320,7 +337,7 @@ public class Endpoints {
                 LazyList<Tables.DiscussionNoTextView> dntv = Tables.DiscussionNoTextView.where(
                         "id in " + Tools.convertListToInQuery(favDiscussionIds));
 
-                Discussions d = Discussions.create(dntv, null, Long.valueOf(dntv.size()));
+                Discussions d = Discussions.create(dntv, null, null, null, Long.valueOf(dntv.size()));
 
                 log.info(d.json());
 

@@ -24,7 +24,7 @@
         <small class="text-muted">
         <span *ngIf="!discussion?.modified">created {{discussion?.created | moment}}</span>
         <span *ngIf="discussion?.modified"><i>modified {{discussion?.modified | moment}}</i></span>
-          by {{discussion?.userName}}
+          by {{discussion?.creator.name}}
       </small>
         <ul class="list-inline">
           <li *ngIf="discussion?.private_" class="tag tag-danger list-inline-item">Private</li>
@@ -199,6 +199,6 @@
     </div>
   </div>
   <div *ngIf="discussion?.deleted">
-    <i>deleted {{discussion?.modified | moment}}</i>    by {{discussion?.userName}}
+    <i>deleted {{discussion?.modified | moment}}</i>    by {{discussion?.creator.name}}
   </div>
 </div>

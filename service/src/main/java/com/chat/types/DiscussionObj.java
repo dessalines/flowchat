@@ -2,7 +2,6 @@ package com.chat.types;
 
 import com.chat.db.Tables;
 import com.chat.tools.Tools;
-import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
 import java.io.IOException;
@@ -22,8 +21,7 @@ public class DiscussionObj implements JSONWriter {
     private List<UserObj> privateUsers, blockedUsers;
     private Timestamp created, modified;
 
-    public DiscussionObj() {
-    }
+    public DiscussionObj() {}
 
     public DiscussionObj(Long id,
                          String title,
@@ -60,20 +58,6 @@ public class DiscussionObj implements JSONWriter {
 
     }
 
-    public enum DISCUSSION_ROLE {
-        CREATOR(1), USER(2), BLOCKED(3);
-
-        private Integer num;
-
-        DISCUSSION_ROLE(Integer num) {
-            this.num = num;
-        }
-
-        public Integer getNum() {
-            return num;
-        }
-    }
-
     public void checkPrivate(UserObj userObj) {
         if (getPrivate_().equals(true)) {
             if (!getPrivateUsers().contains(userObj)) {
@@ -90,33 +74,43 @@ public class DiscussionObj implements JSONWriter {
     }
 
     public static DiscussionObj create(Model d,
-                                       LazyList<Tables.DiscussionTagView> discussionTags,
-                                       LazyList<Tables.UserDiscussionView> userDiscussions,
+                                       List<Tables.DiscussionTagView> discussionTags,
+                                       List<Tables.UserDiscussionView> userDiscussions,
                                        Integer vote) {
-
-        List<TagObj> tags = new ArrayList<>();
-        for (Tables.DiscussionTagView dtv : discussionTags) {
-            tags.add(TagObj.create(dtv.getLongId(), dtv.getString("name")));
+        // convert the tags
+        List<TagObj> tags = null;
+        if (discussionTags != null) {
+            tags = new ArrayList<>();
+            for (Tables.DiscussionTagView dtv : discussionTags) {
+                tags.add(TagObj.create(dtv.getLong("tag_id"), dtv.getString("name")));
+            }
         }
+
+        // convert the user discussion roles
         UserObj creator = null;
         List<UserObj> privateUsers = new ArrayList<>();
         List<UserObj> blockedUsers = new ArrayList<>();
 
-        for (Tables.UserDiscussionView udv : userDiscussions) {
+        if (userDiscussions != null) {
+            for (Tables.UserDiscussionView udv : userDiscussions) {
 
-            DISCUSSION_ROLE dr = udv.getLong("discussion_role_id").intValue();
+                DiscussionRole role = DiscussionRole.values()[udv.getLong("discussion_role_id").intValue() - 1];
 
-            switch(udv.getLong("discussion_role_id").intValue()) {
-                case DISCUSSION_ROLE.BLOCKED.getNum().intValue():
-                    blockedUsers.add(UserObj.create(udv.getLong("user_id"), udv.getString("name")));
-                    break;
-                case DISCUSSION_ROLE.USER.getNum():
+                UserObj userObj = UserObj.create(udv.getLong("user_id"), udv.getString("name"));
+
+                switch (role) {
+                    case BLOCKED:
+                        blockedUsers.add(userObj);
+                        break;
+                    case USER:
+                        privateUsers.add(userObj);
+                        break;
+                    case CREATOR:
+                        creator = userObj;
+                        break;
+                }
             }
         }
-
-
-
-
 
         return new DiscussionObj(d.getLongId(),
                 d.getString("title"),
@@ -146,34 +140,12 @@ public class DiscussionObj implements JSONWriter {
         return null;
     }
 
-    public static List<TagObj> setTags(String tagIds, String tagNames) {
-        List<TagObj> tags = new ArrayList<>();
-        String[] ids = Tools.pgArrayAggToArray(tagIds);
-        String[] names = Tools.pgArrayAggToArray(tagNames);
-
-        for (int i = 0; i < ids.length; i++) {
-            tags.add(TagObj.create(Long.valueOf(ids[i]), names[i]));
-        }
-
-        List<TagObj> dedupeTagObjs = new ArrayList<>(new LinkedHashSet<>(tags));
-
-        return dedupeTagObjs;
-    }
-
     public String getText() {
         return text;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public String getUserName() {
-        return userName;
     }
 
     public String getTitle() {
@@ -224,5 +196,5 @@ public class DiscussionObj implements JSONWriter {
         return deleted;
     }
 
-
+    public UserObj getCreator() {return creator;}
 }

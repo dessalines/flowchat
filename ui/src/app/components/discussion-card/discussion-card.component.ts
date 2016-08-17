@@ -79,7 +79,7 @@ export class DiscussionCardComponent implements OnInit {
 
   isCreator(): boolean {
     if (this.userService.getUser() != null) {
-      return this.userService.getUser().id == this.discussion.userId;
+      return this.userService.getUser().id == this.discussion.creator.id;
     } else {
       return false;
     }

@@ -3,7 +3,6 @@ export interface Comment {
 	userId: number;
 	userName: string;
 	discussionId: number;
-	discussionOwnerId: number;
 	parentId: number;
 	topParentId: number;
 	text: string;
