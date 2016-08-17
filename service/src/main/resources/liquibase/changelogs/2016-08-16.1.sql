@@ -269,13 +269,13 @@ inner join discussion as d on d.id = dt.discussion_id
 inner join tag as t on t.id = dt.tag_id;
 
 create view user_discussion_view as
-select ud.user_id, ud.discussion_id, u.name
+select ud.user_id, ud.discussion_id, u.name, ud.discussion_role_id
 from user_discussion as ud
 inner join discussion as d on d.id = ud.discussion_id
 inner join user_ as u on u.id = ud.user_id;
 
 create view user_community_view as
-select uc.user_id, uc.community_id, u.name
+select uc.user_id, uc.community_id, u.name, uc.community_role_id
 from user_community as uc
 inner join discussion as d on d.id = uc.community_id
 inner join user_ as u on u.id = uc.user_id;
