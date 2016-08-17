@@ -215,10 +215,8 @@ insert into user_discussion(user_id, discussion_id, discussion_role_id)
 -- A backup table for the old discussion data
 select * into deprecated_discussion from discussion;
 alter table discussion drop column user_id cascade;
-
---rollback delete from discussion;
---rollback alter table discussion add column user_id bigint not null;
---rollback insert into discussion (id, user_id, title, link, text_, private, deleted, created, modified) select id, user_id, title, link, text_, private, deleted, created, modified from deprecated_discussion;
+--rollback alter table discussion add column user_id bigint not null default 999;
+--rollback update discussion set user_id = deprecated_discussion.user_id from deprecated_discussion where discussion.id = deprecated_discussion.id;
 --rollback drop table deprecated_discussion;
 
 -- backup the private and blocked tables(using the discussion_role table now)

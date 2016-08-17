@@ -5,6 +5,7 @@ import {FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl} from 
 import {LoginService} from '../../services/login.service';
 import {UserService} from '../../services/user.service';
 import {DiscussionService} from '../../services/discussion.service';
+import {CommunityService} from '../../services/community.service';
 import {NotificationsService} from '../../services/notifications.service';
 import {User, Discussion, Comment, Tools} from '../../shared';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
@@ -53,6 +54,7 @@ export class NavbarComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     private discussionService: DiscussionService,
+    private communityService: CommunityService,
     private notificationsService: NotificationsService,
     private toasterService: ToasterService) {
 
@@ -136,6 +138,14 @@ export class NavbarComponent implements OnInit {
     this.discussionService.createDiscussion().subscribe(d => {
       console.log(d);
       this.router.navigate(['/discussion', d.id, { editMode: true }]);
+    },
+      error => console.log(error));
+  }
+
+  createCommunity() {
+    this.communityService.createCommunity().subscribe(d => {
+      console.log(d);
+      this.router.navigate(['/community', d.id, { editMode: true }]);
     },
       error => console.log(error));
   }

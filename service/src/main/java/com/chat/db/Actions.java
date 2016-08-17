@@ -150,6 +150,9 @@ public class Actions {
         Discussion d = Discussion.findFirst("id = ?" , do_.getId());
         LazyList<UserDiscussionView> udv = UserDiscussionView.where("discussion_id = ?", do_.getId());
 
+        log.info(udv.toJson(true));
+        log.info(do_.json());
+
         if (do_.getTitle() != null) d.set("title" , do_.getTitle());
         if (do_.getLink() != null) d.set("link" , do_.getLink());
         if (do_.getText() != null) d.set("text_" , do_.getText());
@@ -171,26 +174,22 @@ public class Actions {
 
         if (do_.getPrivateUsers() != null) {
             // Get the user ids that are currently private
-            List<Long> privateUserIds = udv.collect("user_id", "discussion_role_id", DiscussionRole.USER);
+            List<Long> privateUserIds = udv.collect("user_id", "discussion_role_id", DiscussionRole.USER.getVal());
 
-            UserDiscussion.delete("discussion_id = ? and discussion_role_id = ?", do_.getId(), DiscussionRole.USER);
+
+            UserDiscussion.delete("discussion_id = ? and discussion_role_id = ?", do_.getId(), DiscussionRole.USER.getVal());
 
             for (UserObj userObj : do_.getPrivateUsers()) {
                 UserDiscussion.createIt("discussion_id", do_.getId(),
                         "user_id", userObj.getId(),
-                        "discussion_role_id", DiscussionRole.USER);
+                        "discussion_role_id", DiscussionRole.USER.getVal());
 
                 // If a user wasn't already a member, create an audit row
-                if (privateUserIds.contains(userObj.getId())) {
+                if (!privateUserIds.contains(userObj.getId())) {
                     UserDiscussionLog.createIt("discussion_id", do_.getId(),
                             "user_id", do_.getCreator().getId(),
                             "target_user_id", userObj.getId(),
-                            "discussion_role_id", LogAction.UNBLOCKED);
-                } else {
-                    UserDiscussionLog.createIt("discussion_id", do_.getId(),
-                            "user_id", do_.getCreator().getId(),
-                            "target_user_id", userObj.getId(),
-                            "discussion_role_id", LogAction.BLOCKED);
+                            "log_action_id", LogAction.BLOCKED.getVal());
                 }
 
             }
@@ -198,30 +197,34 @@ public class Actions {
         }
 
         if (do_.getBlockedUsers() != null) {
+
             // Get the user ids that are currently blocked
-            List<Long> blockedUserIds = udv.collect("user_id", "discussion_role_id", DiscussionRole.BLOCKED);
+            List<Long> blockedUserIds = udv.collect("user_id", "discussion_role_id", DiscussionRole.BLOCKED.getVal());
 
-            UserDiscussion.delete("discussion_id = ? and discussion_role_id = ?", do_.getId(), DiscussionRole.BLOCKED);
+            UserDiscussion.delete("discussion_id = ? and discussion_role_id = ?", do_.getId(), DiscussionRole.BLOCKED.getVal());
 
-            for (UserObj userObj : do_.getPrivateUsers()) {
+            for (UserObj userObj : do_.getBlockedUsers()) {
                 UserDiscussion.createIt("discussion_id", do_.getId(),
                         "user_id", userObj.getId(),
-                        "discussion_role_id", DiscussionRole.BLOCKED);
+                        "discussion_role_id", DiscussionRole.BLOCKED.getVal());
+
 
                 // If a user wasn't already blocked, create an audit row
-                if (blockedUserIds.contains(userObj.getId())) {
+                if (!blockedUserIds.contains(userObj.getId())) {
                     UserDiscussionLog.createIt("discussion_id", do_.getId(),
                             "user_id", do_.getCreator().getId(),
                             "target_user_id", userObj.getId(),
-                            "discussion_role_id", LogAction.BLOCKED);
-                } else {
-                    UserDiscussionLog.createIt("discussion_id", do_.getId(),
-                            "user_id", do_.getCreator().getId(),
-                            "target_user_id", userObj.getId(),
-                            "discussion_role_id", LogAction.UNBLOCKED);
+                            "log_action_id", LogAction.BLOCKED.getVal());
                 }
+
             }
+
+            // If a user was blocked, and now they are missing
+            // TODO figure out a good way to add a log UNBLOCKED
+
         }
+
+
 
         // Fetch the full view
         DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", do_.getId());
