@@ -20,6 +20,7 @@ module.exports = function(defaults) {
       // 'bootstrap/dist/js/bootstrap.min.js',
       'tether/dist/js/tether.min.js',
       'markdown-it/dist/markdown-it.min.js',
+      // TODO try to find minified versions of these, rather than loading all the individual libraries
       'ng2-bootstrap/**/*.js',
       'moment/moment.js',
       'angular2-toaster/**/*.+(js|js.map|css)'

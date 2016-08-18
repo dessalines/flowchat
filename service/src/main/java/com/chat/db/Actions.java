@@ -10,7 +10,6 @@ import com.chat.db.Tables.*;
 import com.chat.tools.Tools;
 import com.chat.types.*;
 import com.chat.types.DiscussionRole;
-import com.chat.types.LogAction;
 import org.javalite.activejdbc.LazyList;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -133,12 +132,12 @@ public class Actions {
 
         Discussion d = Discussion.createIt("title", title);
 
-        UserDiscussion.createIt("user_id", userId,
+        DiscussionUser.createIt("user_id", userId,
                 "discussion_id", d.getLong("id"),
                 "discussion_role_id", com.chat.types.DiscussionRole.CREATOR.getVal());
 
         DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", d.getLongId());
-        List<UserDiscussionView> udv = UserDiscussionView.where("discussion_id = ?", d.getLongId());
+        List<DiscussionUserView> udv = DiscussionUserView.where("discussion_id = ?", d.getLongId());
 
         return DiscussionObj.create(dfv, null, udv, null);
     }
@@ -148,7 +147,7 @@ public class Actions {
         Timestamp cTime = new Timestamp(new Date().getTime());
 
         Discussion d = Discussion.findFirst("id = ?" , do_.getId());
-        LazyList<UserDiscussionView> udv = UserDiscussionView.where("discussion_id = ?", do_.getId());
+        LazyList<DiscussionUserView> udv = DiscussionUserView.where("discussion_id = ?", do_.getId());
 
         log.info(udv.toJson(true));
         log.info(do_.json());
@@ -177,10 +176,10 @@ public class Actions {
             List<Long> privateUserIds = udv.collect("user_id", "discussion_role_id", DiscussionRole.USER.getVal());
 
 
-            UserDiscussion.delete("discussion_id = ? and discussion_role_id = ?", do_.getId(), DiscussionRole.USER.getVal());
+            DiscussionUser.delete("discussion_id = ? and discussion_role_id = ?", do_.getId(), DiscussionRole.USER.getVal());
 
             for (UserObj userObj : do_.getPrivateUsers()) {
-                UserDiscussion.createIt("discussion_id", do_.getId(),
+                DiscussionUser.createIt("discussion_id", do_.getId(),
                         "user_id", userObj.getId(),
                         "discussion_role_id", DiscussionRole.USER.getVal());
 
@@ -201,10 +200,10 @@ public class Actions {
             // Get the user ids that are currently blocked
             List<Long> blockedUserIds = udv.collect("user_id", "discussion_role_id", DiscussionRole.BLOCKED.getVal());
 
-            UserDiscussion.delete("discussion_id = ? and discussion_role_id = ?", do_.getId(), DiscussionRole.BLOCKED.getVal());
+            DiscussionUser.delete("discussion_id = ? and discussion_role_id = ?", do_.getId(), DiscussionRole.BLOCKED.getVal());
 
             for (UserObj userObj : do_.getBlockedUsers()) {
-                UserDiscussion.createIt("discussion_id", do_.getId(),
+                DiscussionUser.createIt("discussion_id", do_.getId(),
                         "user_id", userObj.getId(),
                         "discussion_role_id", DiscussionRole.BLOCKED.getVal());
 
@@ -229,7 +228,7 @@ public class Actions {
         // Fetch the full view
         DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", do_.getId());
         List<DiscussionTagView> dtv = DiscussionTagView.where("discussion_id = ?", do_.getId());
-        List<UserDiscussionView> ud = UserDiscussionView.where("discussion_id = ?", do_.getId());
+        List<DiscussionUserView> ud = DiscussionUserView.where("discussion_id = ?", do_.getId());
 
         DiscussionObj doOut = DiscussionObj.create(dfv, dtv, ud, null);
 

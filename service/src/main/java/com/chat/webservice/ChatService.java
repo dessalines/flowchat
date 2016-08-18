@@ -40,6 +40,7 @@ public class ChatService {
         Endpoints.status();
         Endpoints.user();
         Endpoints.discussion();
+        Endpoints.community();
         Endpoints.tag();
         Endpoints.reply();
         Endpoints.exceptions();
