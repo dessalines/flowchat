@@ -149,7 +149,7 @@ insert into discussion_user(user_id, discussion_id, discussion_role_id)
 --rollback drop table discussion_user cascade;
 
 -- Adding a default community called vanilla
-insert into community (id, name) values (1, 'vanilla');
+insert into community (name) values ('vanilla');
 
 alter table discussion add column community_id bigint not null default 1;
 alter table discussion add constraint fk4_discussion_community foreign key (community_id)
@@ -182,6 +182,7 @@ drop table blocked_discussion_user;
 
 create view discussion_full_view as
 select d.id,
+    d.community_id,
     d.title,
     d.link,
     d.text_,
@@ -189,9 +190,9 @@ select d.id,
     d.deleted,
     avg(dr.rank) as avg_rank,
     count(distinct dr.id) as number_of_votes,
-    array_agg(dt.tag_id) as tag_ids
+    array_agg(dt.tag_id) as tag_ids,
     d.created,
-    d.modified,
+    d.modified
 from discussion as d
 left join discussion_tag as dt on dt.discussion_id = d.id
 left join discussion_rank as dr on dr.discussion_id = d.id
@@ -204,6 +205,7 @@ order by d.id;
 
 create view discussion_notext_view as
 select id,
+    community_id,
     title,
     link,
     private,
@@ -309,7 +311,7 @@ select c.id,
     c.deleted,
     avg(cr.rank) as avg_rank,
     count(distinct cr.id) as number_of_votes,
-    array_agg(dt.tag_id) as tag_ids,
+    array_agg(ct.tag_id) as tag_ids,
     c.created,
     c.modified
 from community as c
@@ -319,15 +321,15 @@ group by c.id, c.name, c.text_, c.private, c.deleted, c.created, c.modified
 order by c.id;
 
 create view community_notext_view as
-select c.id,
-    c.name,
-    c.private,
-    c.deleted,
+select id,
+    name,
+    private,
+    deleted,
     avg_rank,
     number_of_votes,
-    array_agg(dt.tag_id) as tag_ids,
-    c.created,
-    c.modified
+    tag_ids,
+    created,
+    modified
 from community_view;
 
 create view community_tag_view as
@@ -335,8 +337,6 @@ select dt.community_id, dt.tag_id, t.name
 from community_tag as dt
 inner join community as d on d.id = dt.community_id
 inner join tag as t on t.id = dt.tag_id;
-
---rollback drop view community_tag_view;
 
 
 

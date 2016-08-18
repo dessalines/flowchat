@@ -7,6 +7,7 @@ import {HomeComponent} from './components/home/index';
 import {TagComponent} from './components/tag/index';
 import {UserService} from './services/user.service';
 import {DiscussionService} from './services/discussion.service';
+import {CommunityService} from './services/community.service';
 import {LoginService} from './services/login.service';
 import {SeoService} from './services/seo.service';
 import {TagService} from './services/tag.service';
@@ -19,7 +20,7 @@ import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
   directives: [NavbarComponent, ROUTER_DIRECTIVES, ToasterContainerComponent],
-  providers: [UserService, ToasterService, DiscussionService, TagService, NotificationsService, LoginService]
+  providers: [UserService, ToasterService, DiscussionService, CommunityService, TagService, NotificationsService, LoginService]
 })
 export class AppComponent {
   public title = 'derp';

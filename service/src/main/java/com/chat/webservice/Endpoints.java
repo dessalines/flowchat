@@ -206,7 +206,9 @@ public class Endpoints {
             // Get the users for those discussions
             LazyList<Tables.DiscussionUserView> users = Tables.DiscussionUserView.where("discussion_id = ?", id);
 
-            Discussion df = Discussion.create(dfv, tags, users, vote);
+            Tables.CommunityNoTextView community = Tables.CommunityNoTextView.findFirst("id = ?", dfv.getLong("community_id"));
+
+            Discussion df = Discussion.create(dfv, community, tags, users, vote);
 
             // check to make sure user is entitled to view it
             df.checkPrivate(userObj);
@@ -222,10 +224,11 @@ public class Endpoints {
         });
 
         // Get the user id
-        get("/discussions/:tagId/:limit/:page/:orderBy", (req, res) -> {
+        get("/discussions/:tagId/:communityId/:limit/:page/:orderBy", (req, res) -> {
 
 
             Long tagId = (!req.params(":tagId").equals("all")) ? Long.valueOf(req.params(":tagId")) : null;
+            Long communityId = (!req.params(":communityId").equals("all")) ? Long.valueOf(req.params(":communityId")) : null;
             Integer limit = (req.params(":limit") != null) ? Integer.valueOf(req.params(":limit")) : 10;
             Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
             String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-" + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight();
@@ -237,14 +240,34 @@ public class Endpoints {
 
             // TODO for now don't show where private is false
             if (tagId != null) {
-                p = new Paginator(Tables.DiscussionNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
-                        "and private is false and deleted is false and title != ?",
-                        tagId, "A new discussion").
-                        orderBy(orderBy);
+                if (communityId != null) {
+                    p = new Paginator(Tables.DiscussionNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
+                            "and community_id = ? " +
+                            "and private is false and deleted is false and title != ?",
+                            tagId,
+                            communityId,
+                            "A new discussion").
+                            orderBy(orderBy);
+                } else {
+                    p = new Paginator(Tables.DiscussionNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
+                            "and private is false and deleted is false and title != ?",
+                            tagId, "A new discussion").
+                            orderBy(orderBy);
+                }
+
             } else {
-                p = new Paginator(Tables.DiscussionNoTextView.class, limit, "private is false and deleted is false and title != ?",
-                        "A new discussion").
-                        orderBy(orderBy);
+                if (communityId != null) {
+                    p = new Paginator(Tables.DiscussionNoTextView.class, limit,
+                            "community_id = ? " +
+                            "and private is false and deleted is false and title != ?",
+                            communityId,
+                            "A new discussion").
+                            orderBy(orderBy);
+                } else {
+                    p = new Paginator(Tables.DiscussionNoTextView.class, limit, "private is false and deleted is false and title != ?",
+                            "A new discussion").
+                            orderBy(orderBy);
+                }
             }
 
 
@@ -252,6 +275,9 @@ public class Endpoints {
 
             // Get the list of discussions
             Set<Long> ids = dntvs.collectDistinct("id");
+
+            // Get a list of the communities
+            Set<Long> communityIds = dntvs.collectDistinct("community_id");
 
             // Get your votes for those discussions:
             LazyList<Tables.DiscussionRank> drs = Tables.DiscussionRank.where(
@@ -266,8 +292,12 @@ public class Endpoints {
             LazyList<Tables.DiscussionUserView> users = Tables.DiscussionUserView.where(
                     "discussion_id in " + Tools.convertListToInQuery(ids));
 
+            // Get the communities for those discussions
+            LazyList<Tables.CommunityNoTextView> communities = Tables.CommunityNoTextView.where(
+                    "id in " + Tools.convertListToInQuery(communityIds));
+
             // Build discussion objects
-            Discussions discussions = Discussions.create(dntvs, tags, users, drs, p.getCount());
+            Discussions discussions = Discussions.create(dntvs, communities, tags, users, drs, p.getCount());
 
             return discussions.json();
 
@@ -282,7 +312,7 @@ public class Endpoints {
             LazyList<Tables.DiscussionNoTextView> discussionsRows =
                     Tables.DiscussionNoTextView.find(queryStr.toString()).limit(5);
 
-            Discussions discussions = Discussions.create(discussionsRows, null, null, null, Long.valueOf(discussionsRows.size()));
+            Discussions discussions = Discussions.create(discussionsRows, null, null, null, null, Long.valueOf(discussionsRows.size()));
 
             return discussions.json();
 
@@ -343,7 +373,7 @@ public class Endpoints {
                 LazyList<Tables.DiscussionNoTextView> dntv = Tables.DiscussionNoTextView.where(
                         "id in " + Tools.convertListToInQuery(favDiscussionIds));
 
-                Discussions d = Discussions.create(dntv, null, null, null, Long.valueOf(dntv.size()));
+                Discussions d = Discussions.create(dntv, null, null, null, null, Long.valueOf(dntv.size()));
 
                 log.info(d.json());
 

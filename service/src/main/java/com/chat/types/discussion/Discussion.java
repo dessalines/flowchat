@@ -3,6 +3,7 @@ package com.chat.types.discussion;
 import com.chat.db.Tables;
 import com.chat.tools.Tools;
 import com.chat.types.JSONWriter;
+import com.chat.types.community.Community;
 import com.chat.types.tag.Tag;
 import com.chat.types.user.User;
 import org.javalite.activejdbc.Model;
@@ -20,6 +21,7 @@ public class Discussion implements JSONWriter {
     private String title, link, text;
     private Boolean private_, deleted;
     private Integer avgRank, userRank, numberOfVotes;
+    private Community community;
     private List<Tag> tags;
     private List<User> privateUsers, blockedUsers;
     private Timestamp created, modified;
@@ -39,6 +41,7 @@ public class Discussion implements JSONWriter {
                       List<User> privateUsers,
                       List<User> blockedUsers,
                       Boolean deleted,
+                      Community community,
                       Timestamp created,
                       Timestamp modified) {
         this.id = id;
@@ -55,6 +58,7 @@ public class Discussion implements JSONWriter {
         this.privateUsers = privateUsers;
         this.blockedUsers = blockedUsers;
         this.deleted = deleted;
+        this.community = community;
         this.created = created;
         this.modified = modified;
 
@@ -77,6 +81,7 @@ public class Discussion implements JSONWriter {
     }
 
     public static Discussion create(Model d,
+                                    Tables.CommunityNoTextView cntv,
                                     List<Tables.DiscussionTagView> discussionTags,
                                     List<Tables.DiscussionUserView> discussionUsers,
                                     Integer vote) {
@@ -115,6 +120,9 @@ public class Discussion implements JSONWriter {
             }
         }
 
+        // Create the community
+        Community community = (cntv != null) ? Community.create(cntv, null, null, null) : null;
+
         return new Discussion(d.getLongId(),
                 d.getString("title"),
                 d.getString("link"),
@@ -128,6 +136,7 @@ public class Discussion implements JSONWriter {
                 privateUsers,
                 blockedUsers,
                 d.getBoolean("deleted"),
+                community,
                 d.getTimestamp("created"),
                 d.getTimestamp("modified"));
     }

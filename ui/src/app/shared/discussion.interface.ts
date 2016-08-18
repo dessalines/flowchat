@@ -1,5 +1,6 @@
-import {Tag} from './tag.interface.ts';
-import {User} from './user.interface.ts';
+import {Tag} from './tag.interface';
+import {User} from './user.interface';
+import {Community} from './community.interface';
 
 export interface Discussion {
   id: number;
