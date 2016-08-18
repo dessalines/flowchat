@@ -1,7 +1,9 @@
-package com.chat.types;
+package com.chat.types.comment;
 
 
 import com.chat.tools.Tools;
+import com.chat.types.JSONWriter;
+import com.chat.types.RankingConstants;
 import com.chat.webservice.ConstantsService;
 import org.javalite.activejdbc.Model;
 
@@ -14,35 +16,35 @@ import java.util.List;
 /**
  * Created by tyler on 6/7/16.
  */
-public class CommentObj implements JSONWriter {
+public class Comment implements JSONWriter {
     private Long id, userId, discussionId, discussionOwnerId, parentId, topParentId, parentUserId,
             pathLength, numOfParents, numOfChildren;
     private String userName, text;
     private Timestamp created, modified;
-    private List<CommentObj> embedded;
+    private List<Comment> embedded;
     private List<Long> breadcrumbs;
     private Integer avgRank, userRank, numberOfVotes;
     private Boolean deleted, read;
 
-    public CommentObj(Long id,
-                      Long userId,
-                      String userName,
-                      Long discussionId,
-                      Long discussionOwnerId,
-                      String text,
-                      Long pathLength,
-                      Long topParentId,
-                      Long parentUserId,
-                      String breadcrumbs,
-                      Long numOfParents,
-                      Long numOfChildren,
-                      Integer avgRank,
-                      Integer userRank,
-                      Integer numberOfVotes,
-                      Boolean deleted,
-                      Boolean read,
-                      Timestamp created,
-                      Timestamp modified
+    public Comment(Long id,
+                   Long userId,
+                   String userName,
+                   Long discussionId,
+                   Long discussionOwnerId,
+                   String text,
+                   Long pathLength,
+                   Long topParentId,
+                   Long parentUserId,
+                   String breadcrumbs,
+                   Long numOfParents,
+                   Long numOfChildren,
+                   Integer avgRank,
+                   Integer userRank,
+                   Integer numberOfVotes,
+                   Boolean deleted,
+                   Boolean read,
+                   Timestamp created,
+                   Timestamp modified
     ) {
         this.id = id;
         this.userId = userId;
@@ -70,8 +72,8 @@ public class CommentObj implements JSONWriter {
 
     }
 
-    public static CommentObj create(Model cv, Integer vote) {
-        return new CommentObj(cv.getLong("id"),
+    public static Comment create(Model cv, Integer vote) {
+        return new Comment(cv.getLong("id"),
                 cv.getLong("user_id"),
                 cv.getString("user_name"),
                 cv.getLong("discussion_id"),
@@ -111,10 +113,10 @@ public class CommentObj implements JSONWriter {
     }
 
 
-    public static CommentObj findInEmbeddedById(List<CommentObj> cos, CommentObj co) {
+    public static Comment findInEmbeddedById(List<Comment> cos, Comment co) {
         Long id = co.getParentId();
 
-        for (CommentObj c : cos) {
+        for (Comment c : cos) {
             if (c.getId() == id) {
                 return c;
             }
@@ -124,10 +126,10 @@ public class CommentObj implements JSONWriter {
 
     }
 
-    public static class CommentObjComparator implements Comparator<CommentObj> {
+    public static class CommentObjComparator implements Comparator<Comment> {
 
         @Override
-        public int compare(CommentObj o1, CommentObj o2) {
+        public int compare(Comment o1, Comment o2) {
 
             Double o1R = getRank(o1);
             Double o2R = getRank(o2);
@@ -136,9 +138,9 @@ public class CommentObj implements JSONWriter {
         }
 
 
-        private static Double getRank(CommentObj co) {
+        private static Double getRank(Comment co) {
 
-            RankingConstantsObj rco = ConstantsService.INSTANCE.getRankingConstants();
+            RankingConstants rco = ConstantsService.INSTANCE.getRankingConstants();
 
             Double timeDifference= (new Date().getTime()-co.getCreated().getTime())*0.001;
             Double timeRank = rco.getCreatedWeight()/timeDifference;
@@ -154,10 +156,10 @@ public class CommentObj implements JSONWriter {
 
     }
 
-    public static class CommentObjComparatorOld implements Comparator<CommentObj> {
+    public static class CommentObjComparatorOld implements Comparator<Comment> {
 
         @Override
-        public int compare(CommentObj o1, CommentObj o2) {
+        public int compare(Comment o1, Comment o2) {
             Integer o1R = (o1.getAvgRank() != null) ? o1.getAvgRank() : 50;
             Integer o2R = (o2.getAvgRank() != null) ? o2.getAvgRank() : 50;
 
@@ -171,7 +173,7 @@ public class CommentObj implements JSONWriter {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CommentObj that = (CommentObj) o;
+        Comment that = (Comment) o;
 
         if (!id.equals(that.id)) return false;
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
@@ -245,7 +247,7 @@ public class CommentObj implements JSONWriter {
         return modified;
     }
 
-    public List<CommentObj> getEmbedded() {
+    public List<Comment> getEmbedded() {
         return embedded;
     }
 

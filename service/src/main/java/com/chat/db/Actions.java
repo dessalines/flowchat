@@ -8,8 +8,9 @@ import ch.qos.logback.classic.Logger;
 import com.chat.DataSources;
 import com.chat.db.Tables.*;
 import com.chat.tools.Tools;
-import com.chat.types.*;
-import com.chat.types.DiscussionRole;
+import com.chat.types.discussion.Discussion;
+import com.chat.types.tag.Tag;
+import com.chat.types.user.User;
 import org.javalite.activejdbc.LazyList;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -85,31 +86,31 @@ public class Actions {
         return c;
     }
 
-    public static UserObj getOrCreateUserObj(Long id, String auth) {
+    public static User getOrCreateUserObj(Long id, String auth) {
 
         log.info("getOrCreateUser id = " + id + " auth = " + auth);
 
-        UserObj userObj;
+        User userObj;
         if (id != null) {
 
             if (auth == null || auth.equals("undefined")) {
-                User dbUser = User.findFirst("id = ?" , id);
-                userObj = UserObj.create(dbUser.getLongId(), dbUser.getString("name"));
+                Tables.User dbUser = Tables.User.findFirst("id = ?" , id);
+                userObj = User.create(dbUser.getLongId(), dbUser.getString("name"));
             } else {
                 UserLoginView uv = UserLoginView.findFirst("auth = ?" , auth);
-                userObj = UserObj.create(uv.getLongId(), uv.getString("name"));
+                userObj = User.create(uv.getLongId(), uv.getString("name"));
             }
 
         } else {
-            User dbUser = Actions.createUser();
-            userObj = UserObj.create(dbUser.getLongId(), dbUser.getString("name"));
+            Tables.User dbUser = Actions.createUser();
+            userObj = User.create(dbUser.getLongId(), dbUser.getString("name"));
         }
 
         return userObj;
     }
 
     //  TODO make this more generic, don't require creating login rows for the anonymous users
-    public static UserObj getOrCreateUserObj(Request req, Response res) {
+    public static User getOrCreateUserObj(Request req, Response res) {
 
         log.info(req.headers("user"));
 
@@ -125,28 +126,28 @@ public class Actions {
 
     }
 
-    public static DiscussionObj createDiscussion(Long userId) {
+    public static Discussion createDiscussion(Long userId) {
 
         log.info("Creating discussion");
         String title = "A new discussion";
 
-        Discussion d = Discussion.createIt("title", title);
+        Tables.Discussion d = Tables.Discussion.createIt("title", title);
 
         DiscussionUser.createIt("user_id", userId,
                 "discussion_id", d.getLong("id"),
-                "discussion_role_id", com.chat.types.DiscussionRole.CREATOR.getVal());
+                "discussion_role_id", com.chat.types.discussion.DiscussionRole.CREATOR.getVal());
 
         DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", d.getLongId());
         List<DiscussionUserView> udv = DiscussionUserView.where("discussion_id = ?", d.getLongId());
 
-        return DiscussionObj.create(dfv, null, udv, null);
+        return Discussion.create(dfv, null, udv, null);
     }
 
-    public static DiscussionObj saveDiscussion(DiscussionObj do_) {
+    public static Discussion saveDiscussion(Discussion do_) {
 
         Timestamp cTime = new Timestamp(new Date().getTime());
 
-        Discussion d = Discussion.findFirst("id = ?" , do_.getId());
+        Tables.Discussion d = Tables.Discussion.findFirst("id = ?" , do_.getId());
         LazyList<DiscussionUserView> udv = DiscussionUserView.where("discussion_id = ?", do_.getId());
 
         log.info(udv.toJson(true));
@@ -165,62 +166,33 @@ public class Actions {
         if (do_.getTags() != null) {
             DiscussionTag.delete("discussion_id = ?", do_.getId());
 
-            for (TagObj tag : do_.getTags()) {
+            for (Tag tag : do_.getTags()) {
                 DiscussionTag.createIt("discussion_id", do_.getId(),
                         "tag_id", tag.getId());
             }
         }
 
         if (do_.getPrivateUsers() != null) {
-            // Get the user ids that are currently private
-            List<Long> privateUserIds = udv.collect("user_id", "discussion_role_id", DiscussionRole.USER.getVal());
 
+            DiscussionUser.delete("discussion_id = ? and discussion_role_id = ?", do_.getId(), com.chat.types.discussion.DiscussionRole.USER.getVal());
 
-            DiscussionUser.delete("discussion_id = ? and discussion_role_id = ?", do_.getId(), DiscussionRole.USER.getVal());
-
-            for (UserObj userObj : do_.getPrivateUsers()) {
+            for (User userObj : do_.getPrivateUsers()) {
                 DiscussionUser.createIt("discussion_id", do_.getId(),
                         "user_id", userObj.getId(),
-                        "discussion_role_id", DiscussionRole.USER.getVal());
-
-                // If a user wasn't already a member, create an audit row
-                if (!privateUserIds.contains(userObj.getId())) {
-                    UserDiscussionLog.createIt("discussion_id", do_.getId(),
-                            "user_id", do_.getCreator().getId(),
-                            "target_user_id", userObj.getId(),
-                            "log_action_id", LogAction.BLOCKED.getVal());
-                }
-
+                        "discussion_role_id", com.chat.types.discussion.DiscussionRole.USER.getVal());
             }
 
         }
 
         if (do_.getBlockedUsers() != null) {
 
-            // Get the user ids that are currently blocked
-            List<Long> blockedUserIds = udv.collect("user_id", "discussion_role_id", DiscussionRole.BLOCKED.getVal());
+            DiscussionUser.delete("discussion_id = ? and discussion_role_id = ?", do_.getId(), com.chat.types.discussion.DiscussionRole.BLOCKED.getVal());
 
-            DiscussionUser.delete("discussion_id = ? and discussion_role_id = ?", do_.getId(), DiscussionRole.BLOCKED.getVal());
-
-            for (UserObj userObj : do_.getBlockedUsers()) {
+            for (User userObj : do_.getBlockedUsers()) {
                 DiscussionUser.createIt("discussion_id", do_.getId(),
                         "user_id", userObj.getId(),
-                        "discussion_role_id", DiscussionRole.BLOCKED.getVal());
-
-
-                // If a user wasn't already blocked, create an audit row
-                if (!blockedUserIds.contains(userObj.getId())) {
-                    UserDiscussionLog.createIt("discussion_id", do_.getId(),
-                            "user_id", do_.getCreator().getId(),
-                            "target_user_id", userObj.getId(),
-                            "log_action_id", LogAction.BLOCKED.getVal());
-                }
-
+                        "discussion_role_id", com.chat.types.discussion.DiscussionRole.BLOCKED.getVal());
             }
-
-            // If a user was blocked, and now they are missing
-            // TODO figure out a good way to add a log UNBLOCKED
-
         }
 
 
@@ -230,19 +202,19 @@ public class Actions {
         List<DiscussionTagView> dtv = DiscussionTagView.where("discussion_id = ?", do_.getId());
         List<DiscussionUserView> ud = DiscussionUserView.where("discussion_id = ?", do_.getId());
 
-        DiscussionObj doOut = DiscussionObj.create(dfv, dtv, ud, null);
+        Discussion doOut = Discussion.create(dfv, dtv, ud, null);
 
         return doOut;
     }
 
-    public static TagObj createTag(String name) {
+    public static Tag createTag(String name) {
 
-        Tag t = Tag.createIt("name", name);
+        Tables.Tag t = Tables.Tag.createIt("name", name);
 
-        return TagObj.create(t);
+        return Tag.create(t);
     }
 
-    public static DiscussionObj saveFavoriteDiscussion(Long userId, Long discussionId) {
+    public static Discussion saveFavoriteDiscussion(Long userId, Long discussionId) {
 
 
         FavoriteDiscussionUser fdu = FavoriteDiscussionUser.findFirst(
@@ -254,7 +226,7 @@ public class Actions {
 
             DiscussionNoTextView dntv = DiscussionNoTextView.findFirst("id = ?", discussionId);
 
-            return DiscussionObj.create(dntv, null, null, null);
+            return Discussion.create(dntv, null, null, null);
         } else {
             return null;
         }
@@ -356,8 +328,8 @@ public class Actions {
         }
     }
 
-    public static User createUser() {
-        User user = User.createIt(
+    public static Tables.User createUser() {
+        Tables.User user = Tables.User.createIt(
                 "name" , Tools.generateSecureRandom());
         user.set("name" , "user_" + user.getLongId()).saveIt();
 
@@ -412,7 +384,7 @@ public class Actions {
         if (uv == null) {
 
             // Create the user and full user
-            User user = User.createIt(
+            Tables.User user = Tables.User.createIt(
                     "name" , userName);
 
             log.info("encrypting the user password");
@@ -498,7 +470,7 @@ public class Actions {
     }
 
 
-    public static String setCookiesForLogin(User user, String auth, Response res) {
+    public static String setCookiesForLogin(Tables.User user, String auth, Response res) {
         Boolean secure = DataSources.SSL;
 
         res.cookie("auth" , auth, DataSources.EXPIRE_SECONDS, secure);

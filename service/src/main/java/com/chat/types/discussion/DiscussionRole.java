@@ -1,4 +1,4 @@
-package com.chat.types;
+package com.chat.types.discussion;
 
 /**
  * Created by tyler on 8/17/16.

@@ -1,28 +1,28 @@
-package com.chat.types;
+package com.chat.types.tag;
 
-import com.chat.db.Tables.Tag;
+import com.chat.types.JSONWriter;
 
 /**
  * Created by tyler on 6/19/16.
  */
-public class TagObj implements JSONWriter {
+public class Tag implements JSONWriter {
     private Long id;
     private String name;
 
-    private TagObj(Long id, String name) {
+    private Tag(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public TagObj() {}
+    public Tag() {}
 
-    public static TagObj create(Tag tag) {
-        return new TagObj(tag.getLongId(),
+    public static Tag create(com.chat.db.Tables.Tag tag) {
+        return new Tag(tag.getLongId(),
                 tag.getString("name"));
     }
 
-    public static TagObj create(Long id, String name) {
-        return new TagObj(id, name);
+    public static Tag create(Long id, String name) {
+        return new Tag(id, name);
     }
 
     public Long getId() {
@@ -39,7 +39,7 @@ public class TagObj implements JSONWriter {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TagObj tagObj = (TagObj) o;
+        Tag tagObj = (Tag) o;
 
         if (id != null ? !id.equals(tagObj.id) : tagObj.id != null) return false;
         return name != null ? name.equals(tagObj.name) : tagObj.name == null;

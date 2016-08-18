@@ -1,49 +1,50 @@
-package com.chat.types;
+package com.chat.types.discussion;
 
 import com.chat.db.Tables;
 import com.chat.tools.Tools;
+import com.chat.types.JSONWriter;
+import com.chat.types.tag.Tag;
+import com.chat.types.user.User;
 import org.javalite.activejdbc.Model;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
- * Created by tyler on 8/18/16.
+ * Created by tyler on 6/19/16.
  */
-public class CommunityObj implements JSONWriter {
-
+public class Discussion implements JSONWriter {
     private Long id;
-    private UserObj creator;
-    private String name, text;
+    private User creator;
+    private String title, link, text;
     private Boolean private_, deleted;
     private Integer avgRank, userRank, numberOfVotes;
-    private List<TagObj> tags;
-    private List<UserObj> privateUsers, blockedUsers;
+    private List<Tag> tags;
+    private List<User> privateUsers, blockedUsers;
     private Timestamp created, modified;
 
-    public CommunityObj() {}
+    public Discussion() {}
 
-    public CommunityObj(Long id,
-                         String name,
-                         String text,
-                         Boolean private_,
-                         Integer avgRank,
-                         Integer userRank,
-                         Integer numberOfVotes,
-                         List<TagObj> tags,
-                         UserObj creator,
-                         List<UserObj> privateUsers,
-                         List<UserObj> blockedUsers,
-                         Boolean deleted,
-                         Timestamp created,
-                         Timestamp modified) {
+    public Discussion(Long id,
+                      String title,
+                      String link,
+                      String text,
+                      Boolean private_,
+                      Integer avgRank,
+                      Integer userRank,
+                      Integer numberOfVotes,
+                      List<Tag> tags,
+                      User creator,
+                      List<User> privateUsers,
+                      List<User> blockedUsers,
+                      Boolean deleted,
+                      Timestamp created,
+                      Timestamp modified) {
         this.id = id;
         this.creator = creator;
-        this.name = name;
+        this.title = title;
+        this.link = link;
         this.text = text;
         this.private_ = private_;
         this.avgRank = avgRank;
@@ -60,45 +61,45 @@ public class CommunityObj implements JSONWriter {
 
     }
 
-    public void checkPrivate(UserObj userObj) {
+    public void checkPrivate(User userObj) {
         if (getPrivate_().equals(true)) {
             if (!getPrivateUsers().contains(userObj)) {
-                throw new NoSuchElementException("Private community, not allowed to view");
+                throw new NoSuchElementException("Private discussion, not allowed to view");
             }
         }
     }
 
-    public void checkBlocked(UserObj userObj) {
+    public void checkBlocked(User userObj) {
         System.out.println(Arrays.toString(getBlockedUsers().toArray()));
         if (getBlockedUsers().contains(userObj)) {
-            throw new NoSuchElementException("You have been blocked from this community");
+            throw new NoSuchElementException("You have been blocked from this discussion");
         }
     }
 
-    public static CommunityObj create(Model c,
-                                       List<Tables.CommunityTagView> communityTags,
-                                       List<Tables.CommunityUserView> userCommunity,
-                                       Integer vote) {
+    public static Discussion create(Model d,
+                                    List<Tables.DiscussionTagView> discussionTags,
+                                    List<Tables.DiscussionUserView> discussionUsers,
+                                    Integer vote) {
         // convert the tags
-        List<TagObj> tags = null;
+        List<Tag> tags = null;
         if (discussionTags != null) {
             tags = new ArrayList<>();
             for (Tables.DiscussionTagView dtv : discussionTags) {
-                tags.add(TagObj.create(dtv.getLong("tag_id"), dtv.getString("name")));
+                tags.add(Tag.create(dtv.getLong("tag_id"), dtv.getString("name")));
             }
         }
 
         // convert the user discussion roles
-        UserObj creator = null;
-        List<UserObj> privateUsers = new ArrayList<>();
-        List<UserObj> blockedUsers = new ArrayList<>();
+        User creator = null;
+        List<User> privateUsers = new ArrayList<>();
+        List<User> blockedUsers = new ArrayList<>();
 
-        if (userDiscussions != null) {
-            for (Tables.DiscussionUserView udv : userDiscussions) {
+        if (discussionUsers != null) {
+            for (Tables.DiscussionUserView udv : discussionUsers) {
 
                 DiscussionRole role = DiscussionRole.values()[udv.getLong("discussion_role_id").intValue() - 1];
 
-                UserObj userObj = UserObj.create(udv.getLong("user_id"), udv.getString("name"));
+                User userObj = User.create(udv.getLong("user_id"), udv.getString("name"));
 
                 switch (role) {
                     case BLOCKED:
@@ -114,7 +115,7 @@ public class CommunityObj implements JSONWriter {
             }
         }
 
-        return new DiscussionObj(d.getLongId(),
+        return new Discussion(d.getLongId(),
                 d.getString("title"),
                 d.getString("link"),
                 d.getString("text_"),
@@ -131,10 +132,10 @@ public class CommunityObj implements JSONWriter {
                 d.getTimestamp("modified"));
     }
 
-    public static DiscussionObj fromJson(String dataStr) {
+    public static Discussion fromJson(String dataStr) {
 
         try {
-            return Tools.JACKSON.readValue(dataStr, DiscussionObj.class);
+            return Tools.JACKSON.readValue(dataStr, Discussion.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -174,15 +175,15 @@ public class CommunityObj implements JSONWriter {
         return numberOfVotes;
     }
 
-    public List<TagObj> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 
-    public List<UserObj> getPrivateUsers() {
+    public List<User> getPrivateUsers() {
         return privateUsers;
     }
 
-    public List<UserObj> getBlockedUsers() {
+    public List<User> getBlockedUsers() {
         return blockedUsers;
     }
 
@@ -198,5 +199,5 @@ public class CommunityObj implements JSONWriter {
         return deleted;
     }
 
-    public UserObj getCreator() {return creator;}
+    public User getCreator() {return creator;}
 }

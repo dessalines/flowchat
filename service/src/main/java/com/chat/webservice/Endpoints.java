@@ -5,7 +5,14 @@ import com.chat.DataSources;
 import com.chat.db.Actions;
 import com.chat.db.Tables;
 import com.chat.tools.Tools;
-import com.chat.types.*;
+import com.chat.types.comment.Comments;
+import com.chat.types.community.Community;
+import com.chat.types.discussion.Discussion;
+import com.chat.types.discussion.Discussions;
+import com.chat.types.tag.Tag;
+import com.chat.types.tag.Tags;
+import com.chat.types.user.User;
+import com.chat.types.user.Users;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Paginator;
@@ -48,7 +55,7 @@ public class Endpoints {
 
         get("/user", (req, res) -> {
 
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
             return userObj.json();
 
@@ -120,7 +127,7 @@ public class Endpoints {
 
             Tables.Tag t = Tables.Tag.findFirst("id = ?", id);
 
-            TagObj to = TagObj.create(t);
+            Tag to = Tag.create(t);
 
             return to.json();
 
@@ -146,7 +153,7 @@ public class Endpoints {
 
             String name = Tools.createMapFromReqBody(req.body()).get("name");
 
-            TagObj to = Actions.createTag(name);
+            Tag to = Actions.createTag(name);
 
             res.status(HttpStatus.CREATED_201);
 
@@ -181,7 +188,7 @@ public class Endpoints {
             Long id = Long.valueOf(req.params(":id"));
             log.info("got to discussion " + id);
 
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
             Tables.DiscussionFullView dfv = Tables.DiscussionFullView.findFirst("id = ?", id);
 
@@ -197,7 +204,7 @@ public class Endpoints {
             // Get the users for those discussions
             LazyList<Tables.DiscussionUserView> users = Tables.DiscussionUserView.where("discussion_id = ?", id);
 
-            DiscussionObj df = DiscussionObj.create(dfv, tags, users, vote);
+            Discussion df = Discussion.create(dfv, tags, users, vote);
 
             // check to make sure user is entitled to view it
             df.checkPrivate(userObj);
@@ -219,10 +226,10 @@ public class Endpoints {
             Long tagId = (!req.params(":tagId").equals("all")) ? Long.valueOf(req.params(":tagId")) : null;
             Integer limit = (req.params(":limit") != null) ? Integer.valueOf(req.params(":limit")) : 10;
             Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
-            String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-3600";
+            String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-" + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight();
 
             orderBy = Tools.constructOrderByCustom(orderBy);
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
             Paginator p;
 
@@ -281,7 +288,7 @@ public class Endpoints {
 
         post("/discussion_rank/:id/:rank", (req, res) -> {
 
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
 
             Long discussionId = Long.valueOf(req.params(":id"));
@@ -297,9 +304,9 @@ public class Endpoints {
 
         post("/discussion", (req, res) -> {
 
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
-            DiscussionObj do_ = Actions.createDiscussion(userObj.getId());
+            Discussion do_ = Actions.createDiscussion(userObj.getId());
 
             res.status(HttpStatus.CREATED_201);
 
@@ -309,11 +316,11 @@ public class Endpoints {
 
         put("/discussion", (req, res) -> {
 
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
-            DiscussionObj doIn = DiscussionObj.fromJson(req.body());
+            Discussion doIn = Discussion.fromJson(req.body());
 
-            DiscussionObj do_ = Actions.saveDiscussion(doIn);
+            Discussion do_ = Actions.saveDiscussion(doIn);
 
             res.status(HttpStatus.OK_200);
 
@@ -323,7 +330,7 @@ public class Endpoints {
 
         get("/favorite_discussions", (req, res) -> {
 
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
             LazyList<Tables.FavoriteDiscussionUser> favs = Tables.FavoriteDiscussionUser.where("user_id = ?", userObj.getId());
 
@@ -351,7 +358,7 @@ public class Endpoints {
 
         delete("/favorite_discussion/:id", (req, res) -> {
 
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
             Long discussionId = Long.valueOf(req.params(":id"));
 
@@ -368,7 +375,7 @@ public class Endpoints {
 
         get("/unread_replies", (req, res) -> {
 
-                UserObj userObj = Actions.getOrCreateUserObj(req, res);
+                User userObj = Actions.getOrCreateUserObj(req, res);
 
                 // Fetch your unread replies
                 LazyList<Tables.CommentBreadcrumbsView> cbv = Tables.CommentBreadcrumbsView.where(
@@ -385,7 +392,7 @@ public class Endpoints {
 
         post("/mark_reply_as_read/:id", (req, res) -> {
 
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
             Long commentId = Long.valueOf(req.params(":id"));
 
@@ -400,7 +407,7 @@ public class Endpoints {
 
         post("/mark_all_replies_as_read", (req, res) -> {
 
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
             // Mark the reply as read
             Actions.markAllRepliesAsRead(userObj.getId());
@@ -418,9 +425,9 @@ public class Endpoints {
 
             Long id = Long.valueOf(req.params(":id"));
 
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
-            Tables.CommunityView dfv = Tables.CommunityView.findFirst("id = ?", id);
+            Tables.CommunityView cv = Tables.CommunityView.findFirst("id = ?", id);
 
             // Get your vote for the community:
             Tables.CommunityRank cr = Tables.CommunityRank.findFirst(
@@ -429,12 +436,12 @@ public class Endpoints {
             Integer vote = (cr != null) ? cr.getInteger("rank") : null;
 
             // Get the tags for that community:
-            LazyList<Tables.CommunityTagView> tags = Tables.CommunityTagView.where("discussion_id = ?", id);
+            LazyList<Tables.CommunityTagView> tags = Tables.CommunityTagView.where("community_id = ?", id);
 
             // Get the users for that community
-            LazyList<Tables.CommunityUserView> users = Tables.CommunityUserView.where("discussion_id = ?", id);
+            LazyList<Tables.CommunityUserView> users = Tables.CommunityUserView.where("community_id = ?", id);
 
-            CommunityObj co = CommunityObj.create(dfv, tags, users, vote);
+            Community co = Community.create(cv, tags, users, vote);
 
             // check to make sure user is entitled to view it
             co.checkPrivate(userObj);
@@ -449,28 +456,29 @@ public class Endpoints {
         });
 
         // Get the user id
-        get("/discussions/:tagId/:limit/:page/:orderBy", (req, res) -> {
-
+        get("/communities/:tagId/:limit/:page/:orderBy", (req, res) -> {
 
             Long tagId = (!req.params(":tagId").equals("all")) ? Long.valueOf(req.params(":tagId")) : null;
             Integer limit = (req.params(":limit") != null) ? Integer.valueOf(req.params(":limit")) : 10;
             Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
-            String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-3600";
+
+            String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-" + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight();;
 
             orderBy = Tools.constructOrderByCustom(orderBy);
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
             Paginator p;
 
             // TODO for now don't show where private is false
             if (tagId != null) {
-                p = new Paginator(Tables.DiscussionNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
-                        "and private is false and deleted is false and title != ?",
-                        tagId, "A new discussion").
+                // fetch the tags
+                p = new Paginator(Tables.CommunityView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
+                        "and private is false and deleted is false and title not like ?",
+                        tagId, "new_community%").
                         orderBy(orderBy);
             } else {
-                p = new Paginator(Tables.DiscussionNoTextView.class, limit, "private is false and deleted is false and title != ?",
-                        "A new discussion").
+                p = new Paginator(Tables.CommunityView.class, limit, "private is false and deleted is false and title not like ?",
+                        "new_community%").
                         orderBy(orderBy);
             }
 
@@ -517,7 +525,7 @@ public class Endpoints {
 
         post("/discussion_rank/:id/:rank", (req, res) -> {
 
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
 
             Long discussionId = Long.valueOf(req.params(":id"));
@@ -533,9 +541,9 @@ public class Endpoints {
 
         post("/discussion", (req, res) -> {
 
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
-            DiscussionObj do_ = Actions.createDiscussion(userObj.getId());
+            Discussion do_ = Actions.createDiscussion(userObj.getId());
 
             res.status(HttpStatus.CREATED_201);
 
@@ -545,11 +553,11 @@ public class Endpoints {
 
         put("/discussion", (req, res) -> {
 
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
-            DiscussionObj doIn = DiscussionObj.fromJson(req.body());
+            Discussion doIn = Discussion.fromJson(req.body());
 
-            DiscussionObj do_ = Actions.saveDiscussion(doIn);
+            Discussion do_ = Actions.saveDiscussion(doIn);
 
             res.status(HttpStatus.OK_200);
 
@@ -559,7 +567,7 @@ public class Endpoints {
 
         get("/favorite_discussions", (req, res) -> {
 
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
             LazyList<Tables.FavoriteDiscussionUser> favs = Tables.FavoriteDiscussionUser.where("user_id = ?", userObj.getId());
 
@@ -587,7 +595,7 @@ public class Endpoints {
 
         delete("/favorite_discussion/:id", (req, res) -> {
 
-            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req, res);
 
             Long discussionId = Long.valueOf(req.params(":id"));
 
