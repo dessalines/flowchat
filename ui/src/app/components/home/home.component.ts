@@ -64,7 +64,7 @@ export class HomeComponent implements OnInit {
   }
 
   getDiscussions(page: number, orderBy: string) {
-    this.discussionService.getDiscussions(page, undefined, undefined, orderBy).subscribe(
+    this.discussionService.getDiscussions(page, undefined, undefined, undefined, orderBy).subscribe(
       d => {
         // Append them
         this.discussions.push(...d.discussions);

@@ -22,6 +22,7 @@ public class Discussions implements JSONWriter {
     }
 
     public static Discussions create(List<? extends Model> discussions,
+                                     List<Tables.CommunityNoTextView> communities,
                                      List<Tables.DiscussionTagView> discussionTags,
                                      List<Tables.DiscussionUserView> discussionUsers,
                                      List<Tables.DiscussionRank> discussionRanks,
@@ -37,6 +38,10 @@ public class Discussions implements JSONWriter {
         Map<Long, List<Tables.DiscussionUserView>> userMap = (discussionUsers != null) ?
                 Transformations.convertRowsToMap(discussionUsers, "discussion_id") : null;
 
+
+
+
+
         // Convert to a list of discussion objects
         List<Discussion> dos = new ArrayList<>();
 
@@ -45,7 +50,17 @@ public class Discussions implements JSONWriter {
             Integer vote = (votes != null && votes.get(id) != null) ? votes.get(id) : null;
             List<Tables.DiscussionTagView> tags = (tagMap != null && tagMap.get(id) != null) ? tagMap.get(id) : null;
             List<Tables.DiscussionUserView> users = (userMap != null && userMap.get(id) != null) ? userMap.get(id) : null;
-            Discussion df = Discussion.create(view, tags, users, vote);
+            Tables.CommunityNoTextView community = null;
+            if (communities != null) {
+                for (Tables.CommunityNoTextView cntv : communities) {
+                    if (view.getLong("community_id").equals(cntv.getLongId())) {
+                        community = cntv;
+                        break;
+                    }
+                }
+            }
+
+            Discussion df = Discussion.create(view, community, tags, users, vote);
             dos.add(df);
         }
 

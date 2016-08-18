@@ -114,18 +114,18 @@ export class UserService {
       .catch(this.handleError);
   }
 
-  private fetchFavoriteDiscussionsObs() {
-    return this.http.get(this.fetchFavoriteDiscussionsUrl, this.getOptions())
-      .map(this.extractData)
-      .catch(this.handleError);
-  }
-
   fetchFavoriteDiscussions() {
     this.fetchFavoriteDiscussionsObs().subscribe(d => {
       this.favoriteDiscussions = d.discussions;
       console.log(this.favoriteDiscussions);
     },
       error => console.log(error));
+  }
+
+  private fetchFavoriteDiscussionsObs() {
+    return this.http.get(this.fetchFavoriteDiscussionsUrl, this.getOptions())
+      .map(this.extractData)
+      .catch(this.handleError);
   }
 
   removeFavoriteDiscussion(discussionId: number) {
@@ -146,10 +146,6 @@ export class UserService {
       .catch(this.handleError);
   }
 
-  getFavoriteDiscussions(): Array<Discussion> {
-    return this.favoriteDiscussions;
-  }
-
   // This is different, because it doesn't actually do an http fetch
   pushToFavoriteDiscussions(discussion: Discussion) {
 
@@ -159,17 +155,52 @@ export class UserService {
 
     this.favoriteDiscussions.push(discussion);
     console.log(this.favoriteDiscussions);
-    // // Find it
-    // discussion = this.favoriteDiscussions.filter(discussion => discussion.id == discussionId)[0];
 
-    // console.log("discussion is");
-    // console.log(discussion);
+  }
 
 
-    // if (discussion === undefined) {
-    //   // then you have to refetch(for the name anyway)
-    //   this.fetchFavoriteDiscussions();
-    // }
+  fetchFavoriteCommunities() {
+    this.fetchFavoriteCommunitiesObs().subscribe(d => {
+      this.favoriteCommunities = d.communities;
+      console.log(this.favoriteCommunities);
+    },
+      error => console.log(error));
+  }
+
+  private fetchFavoriteCommunitiesObs() {
+    return this.http.get(this.fetchFavoriteCommunitiesUrl, this.getOptions())
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  removeFavoriteCommunity(communityId: number) {
+    // Remove it from the list
+    let community = this.favoriteCommunities.filter(community => community.id == communityId)[0];
+    let index = this.favoriteCommunities.indexOf(community);
+
+    this.favoriteCommunities.splice(index, 1);
+
+    this.removeFavoriteCommunityObjs(communityId).subscribe(null,
+      error => console.log(error));
+
+  }
+
+  private removeFavoriteCommunityObjs(communityId: number) {
+    return this.http.post(this.removeFavoriteCommunityUrl + '/' + communityId, null, this.getOptions())
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  // This is different, because it doesn't actually do an http fetch
+  pushToFavoriteCommunities(community: Community) {
+
+    if (this.favoriteCommunities === undefined) {
+      this.favoriteCommunities = [];
+    }
+
+    this.favoriteCommunities.push(community);
+    console.log(this.favoriteCommunities);
+
   }
 
   private handleError(error: any) {

@@ -4,7 +4,7 @@
       <h2 *ngIf="tag">#{{tag.name}}</h2>
     </div>
     <div class="col-xs-12 col-md-2">
-      <select [ngModel]="discussionSorting" (ngModelChange)="resort($event)"
+      <select [ngModel]="sorting" (ngModelChange)="resort($event)"
         class="form-control">
         <option disabled>Sorting</option>
         <option disabled>──────────</option>
