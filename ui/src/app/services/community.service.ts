@@ -19,9 +19,9 @@ export class CommunityService {
   private saveCommunityUrl: string = environment.endpoint + 'community';
 
 
-  private getCommunitiesUrl(page: number, limit: number,
+  private getCommunitiesUrl(page: number, limit: number, tagId: string,
     orderBy: string): string {
-    return environment.endpoint + 'communities/' +
+    return environment.endpoint + 'communities/' + tagId + '/' +
       limit + '/' + page + '/' + orderBy;
   }
 
@@ -35,9 +35,9 @@ export class CommunityService {
       .catch(this.handleError);
   }
 
-  getCommunities(page: number = 1, limit: number = 12,
+  getCommunities(page: number = 1, limit: number = 12, tagId: string = 'all',
     orderBy: string = 'time-86400') {
-    return this.http.get(this.getCommunitiesUrl(page, limit, orderBy), this.userService.getOptions())
+    return this.http.get(this.getCommunitiesUrl(page, limit, tagId, orderBy), this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }

@@ -1,7 +1,8 @@
-package com.chat.types;
+package com.chat.types.discussion;
 
 import com.chat.db.Tables;
 import com.chat.db.Transformations;
+import com.chat.types.JSONWriter;
 import org.javalite.activejdbc.Model;
 
 import java.util.ArrayList;
@@ -12,10 +13,10 @@ import java.util.Map;
  * Created by tyler on 6/22/16.
  */
 public class Discussions implements JSONWriter {
-    private List<DiscussionObj> discussions;
+    private List<Discussion> discussions;
     private Long count;
 
-    private Discussions(List<DiscussionObj> discussions, Long count) {
+    private Discussions(List<Discussion> discussions, Long count) {
         this.count = count;
         this.discussions = discussions;
     }
@@ -36,14 +37,14 @@ public class Discussions implements JSONWriter {
                 Transformations.convertDiscussionRowsToMap(userDiscussions) : null;
 
         // Convert to a list of discussion objects
-        List<DiscussionObj> dos = new ArrayList<>();
+        List<Discussion> dos = new ArrayList<>();
 
         for (Model view : discussions) {
             Long id = view.getLongId();
             Integer vote = (votes != null && votes.get(id) != null) ? votes.get(id) : null;
             List<Tables.DiscussionTagView> tags = (tagMap != null && tagMap.get(id) != null) ? tagMap.get(id) : null;
             List<Tables.DiscussionUserView> users = (userMap != null && userMap.get(id) != null) ? userMap.get(id) : null;
-            DiscussionObj df = DiscussionObj.create(view, tags, users, vote);
+            Discussion df = Discussion.create(view, tags, users, vote);
             dos.add(df);
         }
 
@@ -54,7 +55,7 @@ public class Discussions implements JSONWriter {
         return count;
     }
 
-    public List<DiscussionObj> getDiscussions() {
+    public List<Discussion> getDiscussions() {
         return discussions;
     }
 }

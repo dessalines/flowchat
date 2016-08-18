@@ -38,7 +38,7 @@ create table community_role (
 
 -- Create the community roles
 insert into community_role (role)
-    values ('Creator'),('Mod'),('User'),('Blocked');
+    values ('Creator'),('Moderator'),('User'),('Blocked');
 
 --rollback drop table community_role cascade;
 
@@ -189,11 +189,13 @@ select d.id,
     d.deleted,
     avg(dr.rank) as avg_rank,
     count(distinct dr.id) as number_of_votes,
+    array_agg(dt.tag_id) as tag_ids
     d.created,
-    d.modified
+    d.modified,
 from discussion as d
+left join discussion_tag as dt on dt.discussion_id = d.id
 left join discussion_rank as dr on dr.discussion_id = d.id
-group by d.id, d.title, d.link, d.text_, d.private, d.deleted, d.created, d.modified
+group by d.id, d.title, d.link, d.text_, d.private, d.deleted, d.created, d.modified, dt.discussion_id
 order by d.id;
 
 -- The verbose old view
@@ -208,6 +210,7 @@ select id,
     deleted,
     avg_rank,
     number_of_votes,
+    tag_ids,
     created,
     modified
 from discussion_full_view;
@@ -306,9 +309,11 @@ select c.id,
     c.deleted,
     avg(cr.rank) as avg_rank,
     count(distinct cr.id) as number_of_votes,
+    array_agg(dt.tag_id) as tag_ids,
     c.created,
     c.modified
 from community as c
+left join community_tag as ct on ct.community_id = c.id
 left join community_rank as cr on cr.community_id = c.id
 group by c.id, c.name, c.text_, c.private, c.deleted, c.created, c.modified
 order by c.id;
