@@ -23,18 +23,19 @@ public class Discussions implements JSONWriter {
 
     public static Discussions create(List<? extends Model> discussions,
                                      List<Tables.DiscussionTagView> discussionTags,
-                                     List<Tables.DiscussionUserView> userDiscussions,
-                                     List<Tables.DiscussionRank> discussionRanks, Long count) {
+                                     List<Tables.DiscussionUserView> discussionUsers,
+                                     List<Tables.DiscussionRank> discussionRanks,
+                                     Long count) {
 
         // Build maps keyed by discussion_id of the votes, tags, and users
         Map<Long, Integer> votes = (discussionRanks != null) ?
-                Transformations.convertDiscussionRankToMap(discussionRanks) : null;
+                Transformations.convertRankToMap(discussionRanks, "discussion_id") : null;
 
         Map<Long, List<Tables.DiscussionTagView>> tagMap = (discussionTags != null) ?
-                Transformations.convertDiscussionRowsToMap(discussionTags) : null;
+                Transformations.convertRowsToMap(discussionTags, "discussion_id") : null;
 
-        Map<Long, List<Tables.DiscussionUserView>> userMap = (userDiscussions != null) ?
-                Transformations.convertDiscussionRowsToMap(userDiscussions) : null;
+        Map<Long, List<Tables.DiscussionUserView>> userMap = (discussionUsers != null) ?
+                Transformations.convertRowsToMap(discussionUsers, "discussion_id") : null;
 
         // Convert to a list of discussion objects
         List<Discussion> dos = new ArrayList<>();

@@ -83,6 +83,9 @@ public class Tables {
     @Table("community_view")
     public static class CommunityView extends Model {}
 
+    @Table("community_notext_view")
+    public static class CommunityNoTextView extends Model {}
+
     @Table("community_role")
     public static class CommunityRole extends Model {}
 

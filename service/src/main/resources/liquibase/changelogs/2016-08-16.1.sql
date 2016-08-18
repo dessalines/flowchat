@@ -318,6 +318,18 @@ left join community_rank as cr on cr.community_id = c.id
 group by c.id, c.name, c.text_, c.private, c.deleted, c.created, c.modified
 order by c.id;
 
+create view community_notext_view as
+select c.id,
+    c.name,
+    c.private,
+    c.deleted,
+    avg_rank,
+    number_of_votes,
+    array_agg(dt.tag_id) as tag_ids,
+    c.created,
+    c.modified
+from community_view;
+
 create view community_tag_view as
 select dt.community_id, dt.tag_id, t.name
 from community_tag as dt
