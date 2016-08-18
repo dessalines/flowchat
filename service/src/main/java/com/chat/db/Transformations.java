@@ -100,30 +100,30 @@ public class Transformations {
 
 
 
-    public static Map<Long, Integer> convertDiscussionRankToMap(List<DiscussionRank> drs) {
+    public static <T extends Model> Map<Long, Integer> convertRankToMap(List<T> drs, String idColumnName) {
 
         // Convert those votes to a map from id to rank
-        Map<Long, Integer> discussionRankMap = new HashMap<>();
-        for (DiscussionRank dr : drs) {
-            discussionRankMap.put(dr.getLong("discussion_id"), dr.getInteger("rank"));
+        Map<Long, Integer> rankMap = new HashMap<>();
+        for (T dr : drs) {
+            rankMap.put(dr.getLong(idColumnName), dr.getInteger("rank"));
         }
 
         try {
-            log.info(Tools.JACKSON.writeValueAsString(discussionRankMap));
+            log.info(Tools.JACKSON.writeValueAsString(rankMap));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
-        return discussionRankMap;
+        return rankMap;
     }
 
 
-    public static <T extends Model> Map<Long,List<T>> convertDiscussionRowsToMap(List<T> discussionTags) {
+    public static <T extends Model> Map<Long,List<T>> convertRowsToMap(List<T> tags, String idColumnName) {
 
         Map<Long,List<T>> map = new HashMap<>();
 
-        for (T dtv : discussionTags) {
-            Long id = dtv.getLong("discussion_id");
+        for (T dtv : tags) {
+            Long id = dtv.getLong(idColumnName);
             List<T> arr = map.get(id);
 
             if (arr == null) {

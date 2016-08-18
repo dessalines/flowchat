@@ -6,7 +6,9 @@ import com.chat.db.Actions;
 import com.chat.db.Tables;
 import com.chat.tools.Tools;
 import com.chat.types.comment.Comments;
+import com.chat.types.community.Communities;
 import com.chat.types.community.Community;
+import com.chat.types.community.CommunityRole;
 import com.chat.types.discussion.Discussion;
 import com.chat.types.discussion.Discussions;
 import com.chat.types.tag.Tag;
@@ -472,66 +474,65 @@ public class Endpoints {
             // TODO for now don't show where private is false
             if (tagId != null) {
                 // fetch the tags
-                p = new Paginator(Tables.CommunityView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
+                p = new Paginator(Tables.CommunityNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
                         "and private is false and deleted is false and title not like ?",
                         tagId, "new_community%").
                         orderBy(orderBy);
             } else {
-                p = new Paginator(Tables.CommunityView.class, limit, "private is false and deleted is false and title not like ?",
+                p = new Paginator(Tables.CommunityNoTextView.class, limit, "private is false and deleted is false and title not like ?",
                         "new_community%").
                         orderBy(orderBy);
             }
 
 
-            LazyList<Tables.DiscussionNoTextView> dntvs = p.getPage(page);
+            LazyList<Tables.CommunityNoTextView> cv = p.getPage(page);
 
-            // Get the list of discussions
-            Set<Long> ids = dntvs.collectDistinct("id");
+            // Get the list of communities
+            Set<Long> ids = cv.collectDistinct("id");
 
-            // Get your votes for those discussions:
-            LazyList<Tables.DiscussionRank> drs = Tables.DiscussionRank.where(
-                    "discussion_id in " + Tools.convertListToInQuery(ids) + " and user_id = ?",
+            // Get your votes for those communities:
+            LazyList<Tables.CommunityRank> votes = Tables.CommunityRank.where(
+                    "community_id in " + Tools.convertListToInQuery(ids) + " and user_id = ?",
                     userObj.getId());
 
-            // Get the tags for those discussions:
-            LazyList<Tables.DiscussionTagView> tags = Tables.DiscussionTagView.where(
-                    "discussion_id in " + Tools.convertListToInQuery(ids));
+            // Get the tags for those communities:
+            LazyList<Tables.CommunityTagView> tags = Tables.CommunityTagView.where(
+                    "community_id in " + Tools.convertListToInQuery(ids));
 
-            // Get the users for those discussions
-            LazyList<Tables.DiscussionUserView> users = Tables.DiscussionUserView.where(
-                    "discussion_id in " + Tools.convertListToInQuery(ids));
+            // Get the users for those communities
+            LazyList<Tables.CommunityUserView> users = Tables.CommunityUserView.where(
+                    "community_id in " + Tools.convertListToInQuery(ids));
 
-            // Build discussion objects
-            Discussions discussions = Discussions.create(dntvs, tags, users, drs, p.getCount());
+            // Build community objects
+            Communities communities = Communities.create(cv, tags, users, votes, p.getCount());
 
-            return discussions.json();
+            return communities.json();
 
         });
 
-        get("/discussion_search/:query", (req, res) -> {
+        get("/community_search/:query", (req, res) -> {
 
             String query = req.params(":query");
 
-            String queryStr = Tools.constructQueryString(query, "title");
+            String queryStr = Tools.constructQueryString(query, "name");
 
-            LazyList<Tables.DiscussionNoTextView> discussionsRows =
-                    Tables.DiscussionNoTextView.find(queryStr.toString()).limit(5);
+            LazyList<Tables.CommunityNoTextView> communityRows =
+                    Tables.CommunityNoTextView.find(queryStr.toString()).limit(5);
 
-            Discussions discussions = Discussions.create(discussionsRows, null, null, null, Long.valueOf(discussionsRows.size()));
+            Communities communities = Communities.create(communityRows, null, null, null, Long.valueOf(communityRows.size()));
 
-            return discussions.json();
+            return communities.json();
 
         });
 
-        post("/discussion_rank/:id/:rank", (req, res) -> {
+        post("/community_rank/:id/:rank", (req, res) -> {
 
             User userObj = Actions.getOrCreateUserObj(req, res);
 
-
-            Long discussionId = Long.valueOf(req.params(":id"));
+            Long id = Long.valueOf(req.params(":id"));
             Integer rank = Integer.valueOf(req.params(":rank"));
 
-            Actions.saveDiscussionVote(userObj.getId(), discussionId, rank);
+            Actions.saveCommunityVote(userObj.getId(), id, rank);
 
             res.status(HttpStatus.OK_200);
 
@@ -539,52 +540,53 @@ public class Endpoints {
 
         });
 
-        post("/discussion", (req, res) -> {
+        post("/community", (req, res) -> {
 
             User userObj = Actions.getOrCreateUserObj(req, res);
 
-            Discussion do_ = Actions.createDiscussion(userObj.getId());
+            Community co_ = Actions.createCommunity(userObj.getId());
 
             res.status(HttpStatus.CREATED_201);
 
-            return do_.json();
+            return co_.json();
 
         });
 
-        put("/discussion", (req, res) -> {
+        put("/community", (req, res) -> {
 
             User userObj = Actions.getOrCreateUserObj(req, res);
 
-            Discussion doIn = Discussion.fromJson(req.body());
+            Community coIn = Community.fromJson(req.body());
 
-            Discussion do_ = Actions.saveDiscussion(doIn);
+            Community co_ = Actions.saveCommunity(coIn);
 
             res.status(HttpStatus.OK_200);
 
-            return do_.json();
+            return co_.json();
 
         });
 
-        get("/favorite_discussions", (req, res) -> {
+        get("/favorite_communities", (req, res) -> {
 
             User userObj = Actions.getOrCreateUserObj(req, res);
 
-            LazyList<Tables.FavoriteDiscussionUser> favs = Tables.FavoriteDiscussionUser.where("user_id = ?", userObj.getId());
+            LazyList<Tables.CommunityUser> favs = Tables.CommunityUser.where("user_id = ?",
+                    userObj.getId());
 
-            Set<Long> favDiscussionIds = favs.collectDistinct("discussion_id");
+            Set<Long> favCommunityIds = favs.collectDistinct("community_id");
 
             String json = "";
-            if (favDiscussionIds.size() > 0) {
-                LazyList<Tables.DiscussionNoTextView> dntv = Tables.DiscussionNoTextView.where(
-                        "id in " + Tools.convertListToInQuery(favDiscussionIds));
+            if (favCommunityIds.size() > 0) {
+                LazyList<Tables.CommunityNoTextView> dntv = Tables.CommunityNoTextView.where(
+                        "id in " + Tools.convertListToInQuery(favCommunityIds));
 
-                Discussions d = Discussions.create(dntv, null, null, null, Long.valueOf(dntv.size()));
+                Communities d = Communities.create(dntv, null, null, null, Long.valueOf(dntv.size()));
 
                 log.info(d.json());
 
                 json = d.json();
             } else {
-                json = "{\"Discussions\": []}";
+                json = "{\"Communities\": []}";
             }
 
             log.info(json);
@@ -593,13 +595,27 @@ public class Endpoints {
 
         });
 
-        delete("/favorite_discussion/:id", (req, res) -> {
+        post("/favorite_community/:id", (req, res) -> {
+
+            User userObj = Actions.getOrCreateUserObj(req, res);
+
+            Long communityId = Long.valueOf(req.params(":id"));
+
+            Actions.saveFavoriteCommunity(userObj.getId(), communityId);
+
+            res.status(HttpStatus.OK_200);
+
+            return "";
+
+        });
+
+        delete("/favorite_community/:id", (req, res) -> {
 
             User userObj = Actions.getOrCreateUserObj(req, res);
 
             Long discussionId = Long.valueOf(req.params(":id"));
 
-            Actions.deleteFavoriteDiscussion(userObj.getId(), discussionId);
+            Actions.deleteFavoriteCommunity(userObj.getId(), discussionId);
 
             res.status(HttpStatus.OK_200);
 

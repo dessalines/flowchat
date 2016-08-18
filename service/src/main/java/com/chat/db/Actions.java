@@ -7,7 +7,10 @@ import java.util.*;
 import ch.qos.logback.classic.Logger;
 import com.chat.DataSources;
 import com.chat.db.Tables.*;
+import com.chat.db.Tables.Community;
 import com.chat.tools.Tools;
+import com.chat.types.community.*;
+import com.chat.types.community.CommunityRole;
 import com.chat.types.discussion.Discussion;
 import com.chat.types.tag.Tag;
 import com.chat.types.user.User;
@@ -216,7 +219,6 @@ public class Actions {
 
     public static Discussion saveFavoriteDiscussion(Long userId, Long discussionId) {
 
-
         FavoriteDiscussionUser fdu = FavoriteDiscussionUser.findFirst(
                 "user_id = ? and discussion_id = ?", userId, discussionId);
 
@@ -230,8 +232,6 @@ public class Actions {
         } else {
             return null;
         }
-
-
 
     }
 
@@ -468,6 +468,148 @@ public class Actions {
         }
 
     }
+
+    public static void saveCommunityVote(Long userId, Long communityId, Integer rank) {
+
+        // fetch the vote if it exists
+        CommunityRank cr = CommunityRank.findFirst("user_id = ? and community_id = ?" ,
+                userId, communityId);
+
+        if (rank != null) {
+            if (cr == null) {
+                CommunityRank.createIt(
+                        "community_id", communityId,
+                        "user_id", userId,
+                        "rank", rank);
+            } else {
+                cr.set("rank", rank).saveIt();
+            }
+        }
+        // If the rank is null, then delete the ballot
+        else {
+            cr.delete();
+        }
+
+    }
+
+    public static com.chat.types.community.Community createCommunity(Long userId) {
+
+        log.info("Creating community");
+        String name = "new_community_" + UUID.randomUUID().toString().substring(0, 8);
+
+        Tables.Community c = Tables.Community.createIt("name", name);
+
+        CommunityUser.createIt("user_id", userId,
+                "community_id", c.getLong("id"),
+                "community_role_id", com.chat.types.community.CommunityRole.CREATOR.getVal());
+
+        CommunityView dfv = CommunityView.findFirst("id = ?", c.getLongId());
+        List<CommunityUserView> udv = CommunityUserView.where("community_id = ?", c.getLongId());
+
+        return com.chat.types.community.Community.create(dfv, null, udv, null);
+    }
+
+    public static com.chat.types.community.Community saveCommunity(com.chat.types.community.Community co_) {
+
+        Timestamp cTime = new Timestamp(new Date().getTime());
+
+        Tables.Community c = Tables.Community.findFirst("id = ?" , co_.getId());
+        LazyList<CommunityUserView> cuv = CommunityUserView.where("community_id = ?", co_.getId());
+
+        log.info(cuv.toJson(true));
+        log.info(co_.json());
+
+        if (co_.getName() != null) c.set("name" , co_.getName());
+        if (co_.getText() != null) c.set("text_" , co_.getText());
+        if (co_.getPrivate_() != null) c.set("private" , co_.getPrivate_());
+        if (co_.getDeleted() != null) c.set("deleted", co_.getDeleted());
+
+        c.set("modified" , cTime);
+        c.saveIt();
+
+        // Add the community tags
+        if (co_.getTags() != null) {
+            CommunityTag.delete("community_id = ?", co_.getId());
+
+            for (Tag tag : co_.getTags()) {
+                CommunityTag.createIt("community_id", co_.getId(),
+                        "tag_id", tag.getId());
+            }
+        }
+
+        if (co_.getPrivateUsers() != null) {
+
+            CommunityUser.delete("community_id = ? and community_role_id = ?", co_.getId(), CommunityRole.USER.getVal());
+
+            for (User userObj : co_.getPrivateUsers()) {
+                CommunityUser.createIt("community_id", co_.getId(),
+                        "user_id", userObj.getId(),
+                        "discussion_role_id", com.chat.types.community.CommunityRole.USER.getVal());
+            }
+
+        }
+
+        if (co_.getBlockedUsers() != null) {
+
+            CommunityUser.delete("community_id = ? and discussion_role_id = ?", co_.getId(), CommunityRole.BLOCKED.getVal());
+
+            for (User userObj : co_.getBlockedUsers()) {
+                CommunityUser.createIt("community_id", co_.getId(),
+                        "user_id", userObj.getId(),
+                        "discussion_role_id", com.chat.types.discussion.DiscussionRole.BLOCKED.getVal());
+            }
+        }
+
+        if (co_.getModerators() != null) {
+
+            CommunityUser.delete("community_id = ? and community_role_id = ?", co_.getId(), CommunityRole.MODERATOR.getVal());
+
+            for (User userObj : co_.getBlockedUsers()) {
+                CommunityUser.createIt("community_id", co_.getId(),
+                        "user_id", userObj.getId(),
+                        "discussion_role_id", CommunityRole.MODERATOR.getVal());
+            }
+        }
+
+
+
+        // Fetch the full view
+        CommunityView cv = CommunityView.findFirst("id = ?", co_.getId());
+        List<CommunityTagView> ctv = CommunityTagView.where("community_id = ?", co_.getId());
+        List<CommunityUserView> cuvO = CommunityUserView.where("community_id = ?", co_.getId());
+
+        com.chat.types.community.Community coOut = com.chat.types.community.Community.create(cv, ctv, cuvO, null);
+
+        return coOut;
+    }
+
+    public static com.chat.types.community.Community saveFavoriteCommunity(Long userId, Long communityId) {
+
+        CommunityUser cu = CommunityUser.findFirst(
+                "user_id = ? and community_id = ?", userId, communityId);
+
+        if (cu == null) {
+            CommunityUser.createIt("user_id", userId,
+                    "community_id", communityId);
+
+            CommunityNoTextView cntv = CommunityNoTextView.findFirst("id = ?", communityId);
+
+            return com.chat.types.community.Community.create(cntv, null, null, null);
+        } else {
+            return null;
+        }
+    }
+
+
+    public static void deleteFavoriteCommunity(Long userId, Long communityId) {
+
+        CommunityUser cu = CommunityUser.findFirst(
+                "user_id = ? and community_id = ?", userId, communityId);
+
+        cu.delete();
+
+    }
+
 
 
     public static String setCookiesForLogin(Tables.User user, String auth, Response res) {
