@@ -2,7 +2,6 @@ package com.chat.types;
 
 import com.chat.db.Tables;
 import com.chat.db.Transformations;
-import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class Discussions implements JSONWriter {
 
     public static Discussions create(List<? extends Model> discussions,
                                      List<Tables.DiscussionTagView> discussionTags,
-                                     List<Tables.UserDiscussionView> userDiscussions,
+                                     List<Tables.DiscussionUserView> userDiscussions,
                                      List<Tables.DiscussionRank> discussionRanks, Long count) {
 
         // Build maps keyed by discussion_id of the votes, tags, and users
@@ -33,7 +32,7 @@ public class Discussions implements JSONWriter {
         Map<Long, List<Tables.DiscussionTagView>> tagMap = (discussionTags != null) ?
                 Transformations.convertDiscussionRowsToMap(discussionTags) : null;
 
-        Map<Long, List<Tables.UserDiscussionView>> userMap = (userDiscussions != null) ?
+        Map<Long, List<Tables.DiscussionUserView>> userMap = (userDiscussions != null) ?
                 Transformations.convertDiscussionRowsToMap(userDiscussions) : null;
 
         // Convert to a list of discussion objects
@@ -43,7 +42,7 @@ public class Discussions implements JSONWriter {
             Long id = view.getLongId();
             Integer vote = (votes != null && votes.get(id) != null) ? votes.get(id) : null;
             List<Tables.DiscussionTagView> tags = (tagMap != null && tagMap.get(id) != null) ? tagMap.get(id) : null;
-            List<Tables.UserDiscussionView> users = (userMap != null && userMap.get(id) != null) ? userMap.get(id) : null;
+            List<Tables.DiscussionUserView> users = (userMap != null && userMap.get(id) != null) ? userMap.get(id) : null;
             DiscussionObj df = DiscussionObj.create(view, tags, users, vote);
             dos.add(df);
         }

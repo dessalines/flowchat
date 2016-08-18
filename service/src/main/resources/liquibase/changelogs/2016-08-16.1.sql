@@ -36,129 +36,66 @@ create table community_role (
     constraint fk1_community_role_unique_1 unique(role)
 );
 
-
 -- Create the community roles
 insert into community_role (role)
     values ('Creator'),('Mod'),('User'),('Blocked');
 
 --rollback drop table community_role cascade;
 
-create table user_community (
+create table community_tag (
+    id bigserial primary key,
+    community_id bigint not null,
+    tag_id bigint not null,
+    created timestamp default current_timestamp,
+    constraint fk1_community_tag_community foreign key (community_id)
+        references community (id)
+        on update cascade on delete cascade,
+    constraint fk2_community_tag_tag foreign key (tag_id)
+        references tag (id)
+        on update cascade on delete cascade,
+    constraint fk3_community_tag_unique_1 unique(community_id, tag_id)
+);
+
+--rollback drop table community_tag cascade;
+
+create table community_rank (
+    id bigserial primary key,
+    community_id bigint not null,
+    user_id bigint not null,
+    rank smallint,
+    created timestamp default current_timestamp,
+    constraint fk1_community_rank_community foreign key (community_id)
+        references community (id)
+        on update cascade on delete cascade,
+    constraint fk2_community_rank_user foreign key (user_id)
+        references user_ (id)
+        on update cascade on delete cascade,
+    constraint fk3_community_rank_unique_1 unique (community_id, user_id)
+);
+
+--rollback drop table community_rank cascade;
+
+
+create table community_user (
     id bigserial primary key,
     user_id bigint not null,
     community_id bigint not null,
     community_role_id bigint not null,
     created timestamp default current_timestamp,
-    constraint fk1_user_community_user foreign key (user_id)
+    constraint fk1_community_user_user foreign key (user_id)
         references user_ (id)
         on update cascade on delete cascade,
-    constraint fk2_user_community_community foreign key (community_id)
+    constraint fk2_community_user_community foreign key (community_id)
         references community (id)
         on update cascade on delete cascade,
-    constraint fk3_user_community_community_role foreign key (community_role_id)
+    constraint fk3_community_user_community_role foreign key (community_role_id)
         references community_role (id)
         on update cascade on delete cascade,
-    constraint fk4_user_community_unique_1 unique(user_id, community_id)
+    constraint fk4_community_user_unique_1 unique(user_id, community_id)
 );
 
---rollback drop table user_community cascade;
+--rollback drop table community_user cascade;
 
--- The delete/restore log tables
-
-create table log_action (
-    id bigserial primary key,
-    action_ varchar(140) not null,
-    constraint fk1_log_action_unique_1 unique(action_)
-);
-
-insert into log_action (action_)
-    values ('Deleted'),('Restored'),('Blocked'),('Unblocked'),('Favorited'),('Unfavorited');
-
---rollback drop table log_action cascade;
-
-create table comment_log (
-    id bigserial primary key,
-    user_id bigint not null,
-    comment_id bigint not null,
-    log_action_id bigint not null,
-    created timestamp default current_timestamp,
-    constraint fk1_comment_log_user foreign key (user_id)
-        references user_ (id)
-        on update cascade on delete cascade,
-    constraint fk2_comment_log_comment foreign key (comment_id)
-        references comment (id)
-        on update cascade on delete cascade,
-    constraint fk3_comment_log_log_action foreign key (log_action_id)
-        references log_action (id)
-        on update cascade on delete cascade
-);
-
---rollback drop table comment_log;
-
-create table discussion_log (
-    id bigserial primary key,
-    user_id bigint not null,
-    discussion_id bigint not null,
-    log_action_id bigint not null,
-    created timestamp default current_timestamp,
-    constraint fk1_discussion_log_user foreign key (user_id)
-        references user_ (id)
-        on update cascade on delete cascade,
-    constraint fk2_discussion_log_discussion foreign key (discussion_id)
-        references discussion (id)
-        on update cascade on delete cascade,
-    constraint fk3_discussion_log_log_action foreign key (log_action_id)
-        references log_action (id)
-        on update cascade on delete cascade
-);
-
---rollback drop table discussion_log;
-
-create table user_discussion_log (
-    id bigserial primary key,
-    user_id bigint not null,
-    discussion_id bigint not null,
-    target_user_id bigint not null,
-    log_action_id bigint not null,
-    created timestamp default current_timestamp,
-    constraint fk1_user_discussion_log_user foreign key (user_id)
-        references user_ (id)
-        on update cascade on delete cascade,
-    constraint fk2_user_discussion_log_discussion foreign key (discussion_id)
-        references discussion (id)
-        on update cascade on delete cascade,
-    constraint fk3_user_discussion_log_target_user foreign key (target_user_id)
-        references user_ (id)
-        on update cascade on delete cascade,
-    constraint fk4_user_discussion_log_log_action foreign key (log_action_id)
-        references log_action (id)
-        on update cascade on delete cascade
-);
-
---rollback drop table user_discussion_log;
-
-create table user_community_log (
-    id bigserial primary key,
-    user_id bigint not null,
-    community_id bigint not null,
-    target_user_id bigint not null,
-    log_action_id bigint not null,
-    created timestamp default current_timestamp,
-    constraint fk1_user_community_log_user foreign key (user_id)
-        references user_ (id)
-        on update cascade on delete cascade,
-    constraint fk2_user_community_log_community foreign key (community_id)
-        references community (id)
-        on update cascade on delete cascade,
-    constraint fk3_user_community_log_target_user foreign key (target_user_id)
-        references user_ (id)
-        on update cascade on delete cascade,
-    constraint fk4_user_community_log_log_action foreign key (log_action_id)
-        references log_action (id)
-        on update cascade on delete cascade
-);
-
---rollback drop table user_community_log;
 
 create table discussion_role (
     id bigserial primary key,
@@ -173,43 +110,54 @@ insert into discussion_role (role)
 
 --rollback drop table discussion_role cascade;
 
-create table user_discussion (
+create table discussion_user (
     id bigserial primary key,
     user_id bigint not null,
     discussion_id bigint not null,
     discussion_role_id bigint not null,
     created timestamp default current_timestamp,
-    constraint fk1_user_discussion_user foreign key (user_id)
+    constraint fk1_discussion_user_user foreign key (user_id)
         references user_ (id)
         on update cascade on delete cascade,
-    constraint fk2_user_discussion_discussion foreign key (discussion_id)
+    constraint fk2_discussion_user_discussion foreign key (discussion_id)
         references discussion (id)
         on update cascade on delete cascade,
-    constraint fk3_user_discussion_discussion_role foreign key (discussion_role_id)
+    constraint fk3_discussion_user_discussion_role foreign key (discussion_role_id)
         references discussion_role (id)
         on update cascade on delete cascade,
-    constraint fk4_user_discussion_unique_1 unique(user_id, discussion_id)
+    constraint fk4_discussion_user_unique_1 unique(user_id, discussion_id)
 );
 
 -- copying the old data into the new tables
 
-insert into user_discussion(user_id, discussion_id, discussion_role_id)
+insert into discussion_user(user_id, discussion_id, discussion_role_id)
     select user_id, id as discussion_id, 1 as discussion_role_id
     from discussion;
 
-insert into user_discussion(user_id, discussion_id, discussion_role_id)
+insert into discussion_user(user_id, discussion_id, discussion_role_id)
     select private_discussion_user.user_id, private_discussion_user.discussion_id, 2 as discussion_role_id
     from private_discussion_user
     inner join discussion
     on private_discussion_user.discussion_id = discussion.id
     where discussion.user_id != private_discussion_user.user_id;
 
-insert into user_discussion(user_id, discussion_id, discussion_role_id)
+insert into discussion_user(user_id, discussion_id, discussion_role_id)
     select user_id, discussion_id, 3 as discussion_role_id
     from blocked_discussion_user;
 
 
---rollback drop table user_discussion cascade;
+--rollback drop table discussion_user cascade;
+
+-- Adding a default community called vanilla
+insert into community (id, name) values (1, 'vanilla');
+
+alter table discussion add column community_id bigint not null default 1;
+alter table discussion add constraint fk4_discussion_community foreign key (community_id)
+        references community (id)
+        on update cascade on delete cascade;
+
+--rollback alter table discussion drop column community_id;
+
 
 -- Removing the column from discussion
 -- A backup table for the old discussion data
@@ -224,8 +172,8 @@ select * into deprecated_private_discussion_user from private_discussion_user;
 select * into deprecated_blocked_discussion_user from blocked_discussion_user;
 drop table private_discussion_user;
 drop table blocked_discussion_user;
---rollback create table private_discussion_user (     id bigserial primary key,     discussion_id bigint not null,     user_id bigint not null,     created timestamp default current_timestamp,     constraint fk1_private_discussion_user_discussion foreign key (discussion_id)         references discussion (id)         on update cascade on delete cascade,     constraint fk2_private_discussion_user foreign key (user_id)         references user_ (id)         on update cascade on delete cascade,     constraint fk3_private_discussion_unique_1 unique(discussion_id, user_id) );
---rollback create table blocked_discussion_user (     id bigserial primary key,     discussion_id bigint not null,     user_id bigint not null,     created timestamp default current_timestamp,     constraint fk1_blocked_discussion_user_discussion foreign key (discussion_id)         references discussion (id)         on update cascade on delete cascade,     constraint fk2_blocked_discussion_user foreign key (user_id)         references user_ (id)         on update cascade on delete cascade,     constraint fk3_blocked_discussion_unique_1 unique(discussion_id, user_id) );
+--rollback create table private_discussion_user (     id bigserial primary key,     discussion_id bigint not null,     user_id bigint not null,     created timestamp default current_timestamp,     constraint fk1_private_discussion_discussion_user foreign key (discussion_id)         references discussion (id)         on update cascade on delete cascade,     constraint fk2_private_discussion_user foreign key (user_id)         references user_ (id)         on update cascade on delete cascade,     constraint fk3_private_discussion_unique_1 unique(discussion_id, user_id) );
+--rollback create table blocked_discussion_user (     id bigserial primary key,     discussion_id bigint not null,     user_id bigint not null,     created timestamp default current_timestamp,     constraint fk1_blocked_discussion_discussion_user foreign key (discussion_id)         references discussion (id)         on update cascade on delete cascade,     constraint fk2_blocked_discussion_user foreign key (user_id)         references user_ (id)         on update cascade on delete cascade,     constraint fk3_blocked_discussion_unique_1 unique(discussion_id, user_id) );
 --rollback insert into private_discussion_user select * from deprecated_private_discussion_user;
 --rollback insert into blocked_discussion_user select * from deprecated_blocked_discussion_user;
 --rollback drop table deprecated_private_discussion_user;
@@ -338,17 +286,41 @@ inner join tag as t on t.id = dt.tag_id;
 
 --rollback drop view discussion_tag_view;
 
-create view user_discussion_view as
+create view discussion_user_view as
 select ud.user_id, ud.discussion_id, u.name, ud.discussion_role_id
-from user_discussion as ud
+from discussion_user as ud
 inner join discussion as d on d.id = ud.discussion_id
 inner join user_ as u on u.id = ud.user_id;
 
-create view user_community_view as
+create view community_user_view as
 select uc.user_id, uc.community_id, u.name, uc.community_role_id
-from user_community as uc
+from community_user as uc
 inner join discussion as d on d.id = uc.community_id
 inner join user_ as u on u.id = uc.user_id;
+
+create view community_view as
+select c.id,
+    c.name,
+    c.text_,
+    c.private,
+    c.deleted,
+    avg(cr.rank) as avg_rank,
+    count(distinct cr.id) as number_of_votes,
+    c.created,
+    c.modified
+from community as c
+left join community_rank as cr on cr.community_id = c.id
+group by c.id, c.name, c.text_, c.private, c.deleted, c.created, c.modified
+order by c.id;
+
+create view community_tag_view as
+select dt.community_id, dt.tag_id, t.name
+from community_tag as dt
+inner join community as d on d.id = dt.community_id
+inner join tag as t on t.id = dt.tag_id;
+
+--rollback drop view community_tag_view;
+
 
 
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {User, Discussion, Tools} from '../shared';
+import {User, Discussion, Tools, Community} from '../shared';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -15,6 +15,7 @@ export class UserService {
   private user: User;
 
   private favoriteDiscussions: Array<Discussion> = [];
+  private favoriteCommunities: Array<Community> = [];
 
   private userSource = new BehaviorSubject<User>(this.user);
 
@@ -25,10 +26,15 @@ export class UserService {
   private fetchFavoriteDiscussionsUrl: string = environment.endpoint + 'favorite_discussions';
   private removeFavoriteDiscussionUrl: string = environment.endpoint + 'favorite_discussion/';
 
+  private saveFavoriteCommunity: string = environment.endpoint + 'favorite_community/';
+  private fetchFavoriteCommunitiesUrl: string = environment.endpoint + 'favorite_communities';
+  private removeFavoriteCommunityUrl: string = environment.endpoint + 'favorite_community/';
+
 
   constructor(private http: Http) {
     this.setUserFromCookie();
     this.fetchFavoriteDiscussions();
+    this.fetchFavoriteCommunities();
   }
 
   public getUser(): User {
@@ -49,6 +55,7 @@ export class UserService {
     this.user = user;
     this.setCookies(this.user);
     this.fetchFavoriteDiscussions();
+    this.fetchFavoriteCommunities();
   }
 
   setUserFromCookie() {

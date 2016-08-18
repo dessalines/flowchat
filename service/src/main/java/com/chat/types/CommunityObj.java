@@ -6,26 +6,29 @@ import org.javalite.activejdbc.Model;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
- * Created by tyler on 6/19/16.
+ * Created by tyler on 8/18/16.
  */
-public class DiscussionObj implements JSONWriter {
+public class CommunityObj implements JSONWriter {
+
     private Long id;
     private UserObj creator;
-    private String title, link, text;
+    private String name, text;
     private Boolean private_, deleted;
     private Integer avgRank, userRank, numberOfVotes;
     private List<TagObj> tags;
     private List<UserObj> privateUsers, blockedUsers;
     private Timestamp created, modified;
 
-    public DiscussionObj() {}
+    public CommunityObj() {}
 
-    public DiscussionObj(Long id,
-                         String title,
-                         String link,
+    public CommunityObj(Long id,
+                         String name,
                          String text,
                          Boolean private_,
                          Integer avgRank,
@@ -40,8 +43,7 @@ public class DiscussionObj implements JSONWriter {
                          Timestamp modified) {
         this.id = id;
         this.creator = creator;
-        this.title = title;
-        this.link = link;
+        this.name = name;
         this.text = text;
         this.private_ = private_;
         this.avgRank = avgRank;
@@ -61,7 +63,7 @@ public class DiscussionObj implements JSONWriter {
     public void checkPrivate(UserObj userObj) {
         if (getPrivate_().equals(true)) {
             if (!getPrivateUsers().contains(userObj)) {
-                throw new NoSuchElementException("Private discussion, not allowed to view");
+                throw new NoSuchElementException("Private community, not allowed to view");
             }
         }
     }
@@ -69,13 +71,13 @@ public class DiscussionObj implements JSONWriter {
     public void checkBlocked(UserObj userObj) {
         System.out.println(Arrays.toString(getBlockedUsers().toArray()));
         if (getBlockedUsers().contains(userObj)) {
-            throw new NoSuchElementException("You have been blocked from this discussion");
+            throw new NoSuchElementException("You have been blocked from this community");
         }
     }
 
-    public static DiscussionObj create(Model d,
-                                       List<Tables.DiscussionTagView> discussionTags,
-                                       List<Tables.DiscussionUserView> userDiscussions,
+    public static CommunityObj create(Model c,
+                                       List<Tables.CommunityTagView> communityTags,
+                                       List<Tables.CommunityUserView> userCommunity,
                                        Integer vote) {
         // convert the tags
         List<TagObj> tags = null;

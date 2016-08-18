@@ -4,12 +4,10 @@ import ch.qos.logback.classic.Logger;
 import com.chat.DataSources;
 import com.chat.db.Actions;
 import com.chat.db.Tables;
-import com.chat.db.Transformations;
 import com.chat.tools.Tools;
 import com.chat.types.*;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javalite.activejdbc.LazyList;
-import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.Paginator;
 import org.slf4j.LoggerFactory;
 
@@ -177,7 +175,6 @@ public class Endpoints {
 
     public static void discussion() {
 
-
         get("/discussion/:id", (req, res) -> {
 
 
@@ -198,7 +195,7 @@ public class Endpoints {
             LazyList<Tables.DiscussionTagView> tags = Tables.DiscussionTagView.where("discussion_id = ?", id);
 
             // Get the users for those discussions
-            LazyList<Tables.UserDiscussionView> users = Tables.UserDiscussionView.where("discussion_id = ?", id);
+            LazyList<Tables.DiscussionUserView> users = Tables.DiscussionUserView.where("discussion_id = ?", id);
 
             DiscussionObj df = DiscussionObj.create(dfv, tags, users, vote);
 
@@ -257,7 +254,7 @@ public class Endpoints {
                     "discussion_id in " + Tools.convertListToInQuery(ids));
 
             // Get the users for those discussions
-            LazyList<Tables.UserDiscussionView> users = Tables.UserDiscussionView.where(
+            LazyList<Tables.DiscussionUserView> users = Tables.DiscussionUserView.where(
                     "discussion_id in " + Tools.convertListToInQuery(ids));
 
             // Build discussion objects
@@ -352,7 +349,7 @@ public class Endpoints {
 
         });
 
-        post("/favorite_discussion/:id", (req, res) -> {
+        delete("/favorite_discussion/:id", (req, res) -> {
 
             UserObj userObj = Actions.getOrCreateUserObj(req, res);
 
@@ -413,6 +410,195 @@ public class Endpoints {
             return "";
 
         });
+    }
+
+    public static void community() {
+
+        get("/community/:id", (req, res) -> {
+
+            Long id = Long.valueOf(req.params(":id"));
+
+            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
+            Tables.CommunityView dfv = Tables.CommunityView.findFirst("id = ?", id);
+
+            // Get your vote for the community:
+            Tables.CommunityRank cr = Tables.CommunityRank.findFirst(
+                    "community_id = ? and user_id = ?", id, userObj.getId());
+
+            Integer vote = (cr != null) ? cr.getInteger("rank") : null;
+
+            // Get the tags for that community:
+            LazyList<Tables.CommunityTagView> tags = Tables.CommunityTagView.where("discussion_id = ?", id);
+
+            // Get the users for that community
+            LazyList<Tables.CommunityUserView> users = Tables.CommunityUserView.where("discussion_id = ?", id);
+
+            CommunityObj co = CommunityObj.create(dfv, tags, users, vote);
+
+            // check to make sure user is entitled to view it
+            co.checkPrivate(userObj);
+
+            // Check to make sure user isn't blocked
+            co.checkBlocked(userObj);
+
+            log.info(co.json());
+
+            return co.json();
+
+        });
+
+        // Get the user id
+        get("/discussions/:tagId/:limit/:page/:orderBy", (req, res) -> {
+
+
+            Long tagId = (!req.params(":tagId").equals("all")) ? Long.valueOf(req.params(":tagId")) : null;
+            Integer limit = (req.params(":limit") != null) ? Integer.valueOf(req.params(":limit")) : 10;
+            Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
+            String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-3600";
+
+            orderBy = Tools.constructOrderByCustom(orderBy);
+            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
+            Paginator p;
+
+            // TODO for now don't show where private is false
+            if (tagId != null) {
+                p = new Paginator(Tables.DiscussionNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
+                        "and private is false and deleted is false and title != ?",
+                        tagId, "A new discussion").
+                        orderBy(orderBy);
+            } else {
+                p = new Paginator(Tables.DiscussionNoTextView.class, limit, "private is false and deleted is false and title != ?",
+                        "A new discussion").
+                        orderBy(orderBy);
+            }
+
+
+            LazyList<Tables.DiscussionNoTextView> dntvs = p.getPage(page);
+
+            // Get the list of discussions
+            Set<Long> ids = dntvs.collectDistinct("id");
+
+            // Get your votes for those discussions:
+            LazyList<Tables.DiscussionRank> drs = Tables.DiscussionRank.where(
+                    "discussion_id in " + Tools.convertListToInQuery(ids) + " and user_id = ?",
+                    userObj.getId());
+
+            // Get the tags for those discussions:
+            LazyList<Tables.DiscussionTagView> tags = Tables.DiscussionTagView.where(
+                    "discussion_id in " + Tools.convertListToInQuery(ids));
+
+            // Get the users for those discussions
+            LazyList<Tables.DiscussionUserView> users = Tables.DiscussionUserView.where(
+                    "discussion_id in " + Tools.convertListToInQuery(ids));
+
+            // Build discussion objects
+            Discussions discussions = Discussions.create(dntvs, tags, users, drs, p.getCount());
+
+            return discussions.json();
+
+        });
+
+        get("/discussion_search/:query", (req, res) -> {
+
+            String query = req.params(":query");
+
+            String queryStr = Tools.constructQueryString(query, "title");
+
+            LazyList<Tables.DiscussionNoTextView> discussionsRows =
+                    Tables.DiscussionNoTextView.find(queryStr.toString()).limit(5);
+
+            Discussions discussions = Discussions.create(discussionsRows, null, null, null, Long.valueOf(discussionsRows.size()));
+
+            return discussions.json();
+
+        });
+
+        post("/discussion_rank/:id/:rank", (req, res) -> {
+
+            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
+
+            Long discussionId = Long.valueOf(req.params(":id"));
+            Integer rank = Integer.valueOf(req.params(":rank"));
+
+            Actions.saveDiscussionVote(userObj.getId(), discussionId, rank);
+
+            res.status(HttpStatus.OK_200);
+
+            return "";
+
+        });
+
+        post("/discussion", (req, res) -> {
+
+            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
+            DiscussionObj do_ = Actions.createDiscussion(userObj.getId());
+
+            res.status(HttpStatus.CREATED_201);
+
+            return do_.json();
+
+        });
+
+        put("/discussion", (req, res) -> {
+
+            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
+            DiscussionObj doIn = DiscussionObj.fromJson(req.body());
+
+            DiscussionObj do_ = Actions.saveDiscussion(doIn);
+
+            res.status(HttpStatus.OK_200);
+
+            return do_.json();
+
+        });
+
+        get("/favorite_discussions", (req, res) -> {
+
+            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
+            LazyList<Tables.FavoriteDiscussionUser> favs = Tables.FavoriteDiscussionUser.where("user_id = ?", userObj.getId());
+
+            Set<Long> favDiscussionIds = favs.collectDistinct("discussion_id");
+
+            String json = "";
+            if (favDiscussionIds.size() > 0) {
+                LazyList<Tables.DiscussionNoTextView> dntv = Tables.DiscussionNoTextView.where(
+                        "id in " + Tools.convertListToInQuery(favDiscussionIds));
+
+                Discussions d = Discussions.create(dntv, null, null, null, Long.valueOf(dntv.size()));
+
+                log.info(d.json());
+
+                json = d.json();
+            } else {
+                json = "{\"Discussions\": []}";
+            }
+
+            log.info(json);
+
+            return json;
+
+        });
+
+        delete("/favorite_discussion/:id", (req, res) -> {
+
+            UserObj userObj = Actions.getOrCreateUserObj(req, res);
+
+            Long discussionId = Long.valueOf(req.params(":id"));
+
+            Actions.deleteFavoriteDiscussion(userObj.getId(), discussionId);
+
+            res.status(HttpStatus.OK_200);
+
+            return "";
+
+        });
+
     }
 
 }

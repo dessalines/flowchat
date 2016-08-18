@@ -10,6 +10,14 @@
           </li>
         </ul>
       </small>
+      <small>
+        <ul *ngIf="popularCommunities" class="list-inline">trending communities:
+          <li class="tag tag-default list-inline-item"
+          *ngFor="let community of popularCommunities">
+            <a class="link-unstyled" [routerLink]="['/community', community.id]">{{removeQuotes(community.name)}}</a>
+          </li>
+        </ul>
+      </small>
     </div>
     <div class="col-xs-12 col-md-2">
       <select [ngModel]="sorting" (ngModelChange)="resort($event)"
