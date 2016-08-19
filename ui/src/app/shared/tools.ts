@@ -61,4 +61,6 @@ export class Tools {
       return false;
     }
   }
+
+  static rgex = new RegExp("[a-zA-Z0-9_-]+");
 }

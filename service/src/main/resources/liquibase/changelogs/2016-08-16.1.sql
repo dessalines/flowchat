@@ -150,13 +150,14 @@ insert into discussion_user(user_id, discussion_id, discussion_role_id)
 
 -- Adding a default community called vanilla
 insert into community (name) values ('vanilla');
+insert into community_user (community_id, user_id, community_role_id) values (1, 1, 1);
 
 alter table discussion add column community_id bigint not null default 1;
 alter table discussion add constraint fk4_discussion_community foreign key (community_id)
         references community (id)
         on update cascade on delete cascade;
 
---rollback alter table discussion drop column community_id;
+--rollback alter table discussion drop column community_id cascade;
 
 
 -- Removing the column from discussion
@@ -200,7 +201,6 @@ group by d.id, d.title, d.link, d.text_, d.private, d.deleted, d.created, d.modi
 order by d.id;
 
 -- The verbose old view
---rollback drop view discussion_full_view cascade;
 --rollback create view discussion_full_view as select d.id, d.user_id, u.name as user_name, d.title, d.link, d.text_, d.private, d.deleted, avg(dr.rank) as avg_rank, count(distinct dr.id) as number_of_votes, array_agg(t.id order by t.id asc) as tag_ids, array_agg(t.name order by t.id asc) as tag_names, array_agg(u2.id order by u2.id asc) as private_user_ids, array_agg(u2.name order by u2.id asc) as private_user_names, array_agg(u3.id order by u3.id asc) as blocked_user_ids, array_agg(u3.name order by u3.id asc) as blocked_user_names, d.created, d.modified from discussion as d left join discussion_rank as dr on dr.discussion_id = d.id left join discussion_tag as dt on dt.discussion_id = d.id left join tag as t on dt.tag_id = t.id left join user_ as u on d.user_id = u.id left join private_discussion_user as pdu on pdu.discussion_id = d.id left join user_ as u2 on pdu.user_id = u2.id left join blocked_discussion_user as bdu on bdu.discussion_id = d.id left join user_ as u3 on bdu.user_id = u3.id group by d.id, d.user_id, u.name, d.title, d.link, d.text_, d.private, dt.discussion_id, dr.discussion_id order by d.id;
 
 create view discussion_notext_view as

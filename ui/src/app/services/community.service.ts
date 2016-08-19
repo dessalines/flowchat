@@ -14,7 +14,8 @@ import {environment} from '../environment';
 export class CommunityService {
 
   private getCommunityUrl: string = environment.endpoint + 'community/';
-  private queryCommunityUrl: string = environment.endpoint + 'community_search/';  
+  private queryCommunityUrl: string = environment.endpoint + 'community_search/';
+  private saveRankUrl: string = environment.endpoint + 'community_rank/';
   private createCommunityUrl: string = environment.endpoint + 'community';
   private saveCommunityUrl: string = environment.endpoint + 'community';
 
@@ -44,6 +45,12 @@ export class CommunityService {
 
   searchCommunities(query: string) {
     return this.http.get(this.queryCommunityUrl + query)
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  saveRank(id: number, rank: number) {
+    return this.http.post(this.saveRankUrl + id + '/' + rank, null, this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }

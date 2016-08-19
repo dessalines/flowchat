@@ -5,6 +5,7 @@ import {CommunityService} from '../../services/community.service';
 import {Discussion} from '../../shared/discussion.interface';
 import {Tag} from '../../shared/tag.interface';
 import {Community} from '../../shared/community.interface';
+import {CommunityCardComponent} from '../community-card/index';
 import {DiscussionCardComponent} from '../discussion-card/index';
 import {FooterComponent} from '../footer/index';
 
@@ -12,7 +13,9 @@ import {FooterComponent} from '../footer/index';
   moduleId: module.id,
   selector: 'app-community',
   templateUrl: 'community.component.html',
-  styleUrls: ['community.component.css']
+  styleUrls: ['community.component.css'],
+  directives: [CommunityCardComponent, DiscussionCardComponent, FooterComponent, ROUTER_DIRECTIVES],
+  providers: []
 })
 export class CommunityComponent implements OnInit {
 
@@ -73,6 +76,10 @@ export class CommunityComponent implements OnInit {
         setTimeout(() => this.scrollDebounce = 0, 1000);
       }
     }
+  }
+
+  editMode(): Boolean {
+    return Boolean(this.route.snapshot.params["editMode"]);
   }
 
   resort($event) {

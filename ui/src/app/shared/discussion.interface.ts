@@ -16,6 +16,7 @@ export interface Discussion {
   privateUsers?: Array<User>;
   blockedUsers?: Array<User>;
   deleted?: boolean;
+  community?: Community;
   created: number;
   modified?: number;
 }
