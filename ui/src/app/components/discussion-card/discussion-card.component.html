@@ -15,7 +15,10 @@
         <p *ngIf="discussion?.text" class="card-text"
           [innerHTML]="discussion.text | markdown"></p>
         <small>
-        <ul *ngIf="discussion?.tags" class="list-inline">tags:
+        <ul class="list-inline">
+          <li *ngIf="discussion?.community" class="tag tag-primary list-inline-item">
+            <a class="link-unstyled" [routerLink]="['/community', discussion.community.id]">{{removeQuotes(discussion.community.name)}}</a>
+          </li>
           <li class="tag tag-default list-inline-item" *ngFor="let tag of discussion?.tags">
             <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
           </li>

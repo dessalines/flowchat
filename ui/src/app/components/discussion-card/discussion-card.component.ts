@@ -59,7 +59,7 @@ export class DiscussionCardComponent implements OnInit {
   private blockedUserTypeaheadLoading: boolean = false;
   private blockedUserTypeaheadNoResults: boolean = false;
 
-  private rgex = new RegExp("[a-zA-Z0-9_-]+");
+  private rgex = Tools.rgex;
 
   constructor(private userService: UserService,
     private discussionService: DiscussionService,
@@ -75,6 +75,8 @@ export class DiscussionCardComponent implements OnInit {
 
   ngAfterViewInit() {
   }
+
+
 
 
   isCreator(): boolean {

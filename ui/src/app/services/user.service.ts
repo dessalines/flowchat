@@ -41,6 +41,14 @@ export class UserService {
     return this.user;
   }
 
+  public getFavoriteDiscussions(): Array<Discussion> {
+    return this.favoriteDiscussions;
+  }
+
+  public getFavoriteCommunities(): Array<Community> {
+    return this.favoriteCommunities;
+  }
+
   public isAnonymousUser(): boolean {
     return this.user != null &&
       (this.user.auth === undefined || this.user.auth == 'undefined');
@@ -117,7 +125,6 @@ export class UserService {
   fetchFavoriteDiscussions() {
     this.fetchFavoriteDiscussionsObs().subscribe(d => {
       this.favoriteDiscussions = d.discussions;
-      console.log(this.favoriteDiscussions);
     },
       error => console.log(error));
   }
@@ -154,15 +161,12 @@ export class UserService {
     }
 
     this.favoriteDiscussions.push(discussion);
-    console.log(this.favoriteDiscussions);
-
   }
 
 
   fetchFavoriteCommunities() {
     this.fetchFavoriteCommunitiesObs().subscribe(d => {
       this.favoriteCommunities = d.communities;
-      console.log(this.favoriteCommunities);
     },
       error => console.log(error));
   }
@@ -199,7 +203,6 @@ export class UserService {
     }
 
     this.favoriteCommunities.push(community);
-    console.log(this.favoriteCommunities);
 
   }
 

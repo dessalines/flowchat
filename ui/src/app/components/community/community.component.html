@@ -1,3 +1,28 @@
-<p>
-  community works!
-</p>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-md-10">
+      <app-community-card [community]="community" [editMode]="editMode()"></app-community-card>
+    </div>
+    <div class="col-xs-12 col-md-2">
+      <select [ngModel]="sorting" (ngModelChange)="resort($event)"
+        class="form-control">
+        <option disabled>Sorting</option>
+        <option disabled>──────────</option>
+        <option value="modified__desc">New</option>
+        <option value="time-3600">Hour</option>
+        <option value="time-86400">Day</option>
+        <option value="time-604800">Week</option>
+        <option value="time-2628000">Month</option>
+        <option value="time-31540000">Year</option>
+        <option value="avg_rank__desc">All-Time</option>
+      </select>
+    </div>
+  </div>
+  <div class="card-deck-wrapper">
+    <div (window:scroll)="onScroll($event)" class="card-deck">
+      <app-discussion-card class="col-md-4" *ngFor="let discussion of discussions"
+        [discussion]="discussion"></app-discussion-card>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

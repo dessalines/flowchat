@@ -273,31 +273,38 @@ public class Endpoints {
 
             LazyList<Tables.DiscussionNoTextView> dntvs = p.getPage(page);
 
-            // Get the list of discussions
-            Set<Long> ids = dntvs.collectDistinct("id");
+            Discussions discussions = null;
+            if (!dntvs.isEmpty()) {
 
-            // Get a list of the communities
-            Set<Long> communityIds = dntvs.collectDistinct("community_id");
+                // Get the list of discussions
+                Set<Long> ids = dntvs.collectDistinct("id");
 
-            // Get your votes for those discussions:
-            LazyList<Tables.DiscussionRank> drs = Tables.DiscussionRank.where(
-                    "discussion_id in " + Tools.convertListToInQuery(ids) + " and user_id = ?",
-                    userObj.getId());
+                // Get a list of the communities
+                Set<Long> communityIds = dntvs.collectDistinct("community_id");
 
-            // Get the tags for those discussions:
-            LazyList<Tables.DiscussionTagView> tags = Tables.DiscussionTagView.where(
-                    "discussion_id in " + Tools.convertListToInQuery(ids));
+                // Get your votes for those discussions:
+                LazyList<Tables.DiscussionRank> votes = Tables.DiscussionRank.where(
+                        "discussion_id in " + Tools.convertListToInQuery(ids) + " and user_id = ?",
+                        userObj.getId());
 
-            // Get the users for those discussions
-            LazyList<Tables.DiscussionUserView> users = Tables.DiscussionUserView.where(
-                    "discussion_id in " + Tools.convertListToInQuery(ids));
+                // Get the tags for those discussions:
+                LazyList<Tables.DiscussionTagView> tags = Tables.DiscussionTagView.where(
+                        "discussion_id in " + Tools.convertListToInQuery(ids));
 
-            // Get the communities for those discussions
-            LazyList<Tables.CommunityNoTextView> communities = Tables.CommunityNoTextView.where(
-                    "id in " + Tools.convertListToInQuery(communityIds));
+                // Get the users for those discussions
+                LazyList<Tables.DiscussionUserView> users = Tables.DiscussionUserView.where(
+                        "discussion_id in " + Tools.convertListToInQuery(ids));
 
-            // Build discussion objects
-            Discussions discussions = Discussions.create(dntvs, communities, tags, users, drs, p.getCount());
+                // Get the communities for those discussions
+                LazyList<Tables.CommunityNoTextView> communities = Tables.CommunityNoTextView.where(
+                        "id in " + Tools.convertListToInQuery(communityIds));
+
+                // Build discussion objects
+                discussions = Discussions.create(dntvs, communities, tags, users, votes, p.getCount());
+
+            } else {
+                discussions = Discussions.create(dntvs, null, null, null, null, p.getCount());
+            }
 
             return discussions.json();
 

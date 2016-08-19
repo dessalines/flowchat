@@ -209,4 +209,8 @@ public class Discussion implements JSONWriter {
     }
 
     public User getCreator() {return creator;}
+
+    public Community getCommunity() {
+        return community;
+    }
 }
