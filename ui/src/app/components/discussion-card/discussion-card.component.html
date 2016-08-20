@@ -65,18 +65,18 @@
       </div>
     </div>
     <div *ngIf="editMode && discussion?.title">
-      <div class="card-block">
+      <form #discussionForm="ngForm" class="card-block">
         <div class="form-group row">
-          <label class="col-sm-1 form-control-label">Title</label>
-          <div class="col-sm-11">
+          <label class="col-sm-2 form-control-label">Title</label>
+          <div class="col-sm-10">
             <input [(ngModel)]="discussion.title" class="form-control"
               maxlength="140" name="discussion_title"
             />
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-sm-1 form-control-label">Link</label>
-          <div class="col-sm-11">
+          <label class="col-sm-2 form-control-label">Link</label>
+          <div class="col-sm-10">
             <input [(ngModel)]="discussion.link" #discussionLink="ngModel"
               placeholder="optional" class="form-control"
               pattern="[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?"
@@ -84,6 +84,32 @@
             <div *ngIf="discussionLink.dirty" class="row col-sm-12 help-block text-danger">
               <small *ngIf="discussionLink.errors?.pattern">Invalid URL</small>
             </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 form-control-label">Community</label>
+          <div class="col-sm-4">
+            <input [(ngModel)]="communitySearchSelected"
+              [typeahead]="communitySearchResultsObservable"
+              (typeaheadOnSelect)="communityTypeaheadOnSelect($event.item)"
+              [typeaheadOptionField]="'name'"
+              (typeaheadLoading)="communityChangeTypeaheadLoading($event)"
+              (typeaheadNoResults)="communityChangeTypeaheadNoResults($event)"
+              [typeaheadWaitMs]="200" class="form-control"
+              name="community_search">
+            <div *ngIf="communityTypeaheadLoading===true">
+              <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+            </div>
+          </div>
+          <ul class="col-md-6 list-inline form-control-label">
+            <li class="tag tag-primary list-inline-item">
+              <span>{{discussion?.community.name}}</span>
+            </li>
+          </ul>
+          <div *ngIf="communityTypeaheadNoResults===true"
+            class="">
+            <i class="fa fa-fw fa-remove"></i>No
+            Results Found
           </div>
         </div>
         <div class="checkbox">
@@ -97,17 +123,17 @@
           (textEvent)="setEditText($event)"></app-markdown-edit>
         <br>
         <div class="form-group row">
-          <label class="col-sm-1 form-control-label">Tags</label>
-          <div class="col-md-5 input-group">
-            <input [(ngModel)]="tagSearchSelected"
-              [typeahead]="tagSearchResultsObservable"
+          <label class="col-sm-2 form-control-label">Tags</label>
+          <div class="col-sm-4 input-group">
+            <input [(ngModel)]="tagSearchSelected" [typeahead]="tagSearchResultsObservable"
               (typeaheadOnSelect)="tagTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'name'"
               (typeaheadLoading)="tagChangeTypeaheadLoading($event)"
               (typeaheadNoResults)="tagChangeTypeaheadNoResults($event)"
               [typeaheadWaitMs]="200" class="form-control"
               minlength="5" maxlength="20"
-              pattern="[a-zA-Z0-9_-]+" name="tag_search" #tagTerm="ngModel">
+              pattern="[a-zA-Z0-9_-]+" name="tag_search"
+              #tagTerm="ngModel">
             <button [disabled]="tagSearchSelected.length < 5 || tagSearchSelected.length > 20 || rgex.test(tagSearchSelected) == false"
               (click)="createTag()" class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
           </div>
@@ -137,10 +163,9 @@
           </div>
         </div>
         <div *ngIf="discussion?.private_" class="form-group row">
-          <label class="col-sm-1 form-control-label">Invite Users</label>
-          <div class="col-md-5">
-            <input [(ngModel)]="userSearchSelected"
-              [typeahead]="userSearchResultsObservable"
+          <label class="col-sm-2 form-control-label">Invite Users</label>
+          <div class="col-sm-4">
+            <input [(ngModel)]="userSearchSelected" [typeahead]="userSearchResultsObservable"
               (typeaheadOnSelect)="userTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'name'"
               (typeaheadLoading)="userChangeTypeaheadLoading($event)"
@@ -165,8 +190,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-sm-1 form-control-label">Block Users</label>
-          <div class="col-md-5">
+          <label class="col-sm-2 form-control-label">Block Users</label>
+          <div class="col-sm-4">
             <input [(ngModel)]="blockedUserSearchSelected"
               [typeahead]="blockedUserSearchResultsObservable"
               (typeaheadOnSelect)="blockedUserTypeaheadOnSelect($event.item)"
@@ -194,11 +219,12 @@
         </div>
         <br>
         <div class="btn-group" role="group">
-          <button (click)="saveDiscussion()" class="btn btn-primary">Save</button>
-          <button (click)="toggleEditMode()" class="btn btn-warning">Cancel</button>
-          <button (click)="deleteDiscussion()" class="btn btn-danger">Delete</button>
+          <button [disabled]="!discussionForm.form.valid"
+            (click)="saveDiscussion()" class="btn btn-primary">Save</button>
+          <button type="button" (click)="toggleEditMode()" class="btn btn-warning">Cancel</button>
+          <button type="button" (click)="deleteDiscussion()" class="btn btn-danger">Delete</button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
   <div *ngIf="discussion?.deleted">

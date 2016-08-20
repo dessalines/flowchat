@@ -1,4 +1,4 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl} from '@angular/forms';
 import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
 import {Community} from '../../shared/community.interface';
@@ -38,6 +38,8 @@ export class CommunityCardComponent implements OnInit {
 
   @Input() editMode: boolean = false;
 
+  @Output() editing = new EventEmitter();
+
   // tag searching
   private tagSearchResultsObservable: Observable<any>;
   private tagSearchSelected: string = '';
@@ -58,6 +60,12 @@ export class CommunityCardComponent implements OnInit {
   private blockedUserTypeaheadLoading: boolean = false;
   private blockedUserTypeaheadNoResults: boolean = false;
 
+  // Moderators
+  private moderatorSearchResultsObservable: Observable<any>;
+  private moderatorSearchSelected: string = '';
+  private moderatorTypeaheadLoading: boolean = false;
+  private moderatorTypeaheadNoResults: boolean = false;
+
   private rgex = Tools.rgex;
 
   constructor(private userService: UserService,
@@ -70,6 +78,7 @@ export class CommunityCardComponent implements OnInit {
     this.setupTagSearch();
     this.setupUserSearch();
     this.setupBlockedUserSearch();
+    this.setupModeratorSearch();
   }
 
   ngAfterViewInit() {
@@ -77,7 +86,6 @@ export class CommunityCardComponent implements OnInit {
 
 
   isCreator(): boolean {
-    console.log(this.community);
     if (this.userService.getUser() != null) {
       return this.userService.getUser().id == this.community.creator.id;
     } else {
@@ -87,6 +95,7 @@ export class CommunityCardComponent implements OnInit {
 
   toggleEditMode() {
     this.editMode = !this.editMode;
+    this.editing.next(this.editMode);
   }
 
   setEditText($event) {
@@ -98,6 +107,10 @@ export class CommunityCardComponent implements OnInit {
       c => {
         this.community = c;
         this.editMode = false;
+        this.editing.next(this.editMode);
+      },
+      error => {
+        this.toasterService.pop("error", "Error", error);
       });
   }
 
@@ -255,6 +268,42 @@ export class CommunityCardComponent implements OnInit {
   removeBlockedUser(user: User) {
     let index = this.community.blockedUsers.indexOf(user);
     this.community.blockedUsers.splice(index, 1);
+  }
+
+  // moderator methods
+  setupModeratorSearch() {
+    this.moderatorSearchResultsObservable = Observable.create((observer: any) => {
+      this.userService.searchUsers(this.moderatorSearchSelected)
+        .subscribe((result: any) => {
+          observer.next(result.users);
+        });
+    });
+  }
+
+  moderatorTypeaheadOnSelect(user: User) {
+
+    // Create the array if necessary
+    if (this.community.moderators == null) {
+      this.community.moderators = [];
+    }
+
+    // add it to the list
+    this.community.moderators.push(user);
+    this.moderatorSearchSelected = '';
+
+  }
+
+  moderatorChangeTypeaheadLoading(e: boolean): void {
+    this.moderatorTypeaheadLoading = e;
+  }
+
+  moderatorChangeTypeaheadNoResults(e: boolean): void {
+    this.moderatorTypeaheadNoResults = e;
+  }
+
+  removeModerator(user: User) {
+    let index = this.community.moderators.indexOf(user);
+    this.community.moderators.splice(index, 1);
   }
 
   removeQuotes(text: string) {

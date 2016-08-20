@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {Router, ActivatedRoute, ROUTER_DIRECTIVES} from '@angular/router';
 import {DiscussionService} from '../../services/discussion.service';
+import {CommunityService} from '../../services/community.service';
 import {TagService} from '../../services/tag.service';
 import {Discussion} from '../../shared/discussion.interface';
+import {Community} from '../../shared/community.interface';
 import {Tag} from '../../shared/tag.interface';
+import {Tools} from '../../shared/tools';
 import {DiscussionCardComponent} from '../discussion-card/index';
 import {FooterComponent} from '../footer/index';
 
@@ -18,6 +21,8 @@ import {FooterComponent} from '../footer/index';
 export class TagComponent implements OnInit {
 
   private discussions: Array<Discussion> = [];
+  private communities: Array<Community>;
+
   private sorting: string = "time-86400";
 
   private tag: Tag;
@@ -30,6 +35,7 @@ export class TagComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private router: Router,
     private discussionService: DiscussionService,
+    private communityService: CommunityService,
     private tagService: TagService) {
   }
 
@@ -42,6 +48,7 @@ export class TagComponent implements OnInit {
       this.scrollDebounce = 0;
       this.getTag(tagId);
       this.getDiscussions(tagId, this.currentPageNum, this.sorting);
+      this.getCommunities(tagId, this.sorting);
     });
 
   }
@@ -64,6 +71,13 @@ export class TagComponent implements OnInit {
       });
   }
 
+  getCommunities(tagId: number, orderBy: string) {
+    this.communityService.getCommunities(undefined, undefined, tagId.toString()).subscribe(
+    c => {
+        this.communities = c.communities;
+      });
+  }
+
   onScroll(event) {
     if (this.tag != null && (window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
       if (this.scrollDebounce == 0) {
@@ -83,6 +97,10 @@ export class TagComponent implements OnInit {
     this.currentPageNum = 1;
     this.scrollDebounce = 0;
     this.getDiscussions(this.tag.id, this.currentPageNum, this.sorting);
+  }
+
+  removeQuotes(text: string) {
+    return Tools.removeQuotes(text);
   }
 
 }

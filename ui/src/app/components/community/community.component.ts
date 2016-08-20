@@ -62,7 +62,6 @@ export class CommunityComponent implements OnInit {
     this.discussionService.getDiscussions(page, undefined, undefined, communityId.toString(), orderBy).subscribe(
       d => {
         this.discussions.push(...d.discussions);
-        console.log(d.discussions);
       });
   }
 
@@ -80,6 +79,10 @@ export class CommunityComponent implements OnInit {
 
   editMode(): Boolean {
     return Boolean(this.route.snapshot.params["editMode"]);
+  }
+
+  editing($event) {
+    this.route.snapshot.params["editMode"] = $event;
   }
 
   resort($event) {

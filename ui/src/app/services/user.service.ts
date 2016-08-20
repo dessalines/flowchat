@@ -26,7 +26,7 @@ export class UserService {
   private fetchFavoriteDiscussionsUrl: string = environment.endpoint + 'favorite_discussions';
   private removeFavoriteDiscussionUrl: string = environment.endpoint + 'favorite_discussion/';
 
-  private saveFavoriteCommunity: string = environment.endpoint + 'favorite_community/';
+  private saveFavoriteCommunityUrl: string = environment.endpoint + 'favorite_community/';
   private fetchFavoriteCommunitiesUrl: string = environment.endpoint + 'favorite_communities';
   private removeFavoriteCommunityUrl: string = environment.endpoint + 'favorite_community/';
 
@@ -148,7 +148,7 @@ export class UserService {
   }
 
   private removeFavoriteDiscussionObjs(discussionId: number) {
-    return this.http.post(this.removeFavoriteDiscussionUrl + '/' + discussionId, null, this.getOptions())
+    return this.http.delete(this.removeFavoriteDiscussionUrl + discussionId, this.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
@@ -190,20 +190,30 @@ export class UserService {
   }
 
   private removeFavoriteCommunityObjs(communityId: number) {
-    return this.http.post(this.removeFavoriteCommunityUrl + '/' + communityId, null, this.getOptions())
+    return this.http.delete(this.removeFavoriteCommunityUrl + communityId, this.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
 
-  // This is different, because it doesn't actually do an http fetch
-  pushToFavoriteCommunities(community: Community) {
-
+  saveFavoriteCommunity(community: Community) {
     if (this.favoriteCommunities === undefined) {
       this.favoriteCommunities = [];
     }
 
     this.favoriteCommunities.push(community);
+    this.saveFavoriteCommunityObjs(community.id).subscribe(null,
+      error => console.log(error));
+  }
 
+  private saveFavoriteCommunityObjs(communityId: number) {
+    return this.http.post(this.saveFavoriteCommunityUrl + communityId, null, this.getOptions())
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  hasFavoriteCommunity(community: Community): boolean {
+    return (this.favoriteCommunities !== undefined && 
+      this.favoriteCommunities.filter(c => community.id == c.id)[0] !== undefined);
   }
 
   private handleError(error: any) {

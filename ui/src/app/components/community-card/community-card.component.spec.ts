@@ -14,7 +14,7 @@ import { CommunityCardComponent } from './community-card.component';
 
 describe('Component: CommunityCard', () => {
   it('should create an instance', () => {
-    let component = new CommunityCardComponent();
+    let component = new CommunityCardComponent(null, null, null, null, null);
     expect(component).toBeTruthy();
   });
 });
