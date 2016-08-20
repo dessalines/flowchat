@@ -317,7 +317,7 @@ public class Endpoints {
             String queryStr = Tools.constructQueryString(query, "title");
 
             LazyList<Tables.DiscussionNoTextView> discussionsRows =
-                    Tables.DiscussionNoTextView.find(queryStr.toString()).limit(5);
+                    Tables.DiscussionNoTextView.find("deleted is false and " + queryStr.toString()).limit(5);
 
             Discussions discussions = Discussions.create(discussionsRows, null, null, null, null, Long.valueOf(discussionsRows.size()));
 
@@ -512,11 +512,11 @@ public class Endpoints {
             if (tagId != null) {
                 // fetch the tags
                 p = new Paginator(Tables.CommunityNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
-                        "and private is false and deleted is false and title not like ?",
+                        "and private is false and deleted is false and name not like ?",
                         tagId, "new_community%").
                         orderBy(orderBy);
             } else {
-                p = new Paginator(Tables.CommunityNoTextView.class, limit, "private is false and deleted is false and title not like ?",
+                p = new Paginator(Tables.CommunityNoTextView.class, limit, "private is false and deleted is false and name not like ?",
                         "new_community%").
                         orderBy(orderBy);
             }
@@ -524,24 +524,31 @@ public class Endpoints {
 
             LazyList<Tables.CommunityNoTextView> cv = p.getPage(page);
 
-            // Get the list of communities
-            Set<Long> ids = cv.collectDistinct("id");
+            Communities communities;
+            if (!cv.isEmpty()) {
+                // Get the list of communities
+                Set<Long> ids = cv.collectDistinct("id");
 
-            // Get your votes for those communities:
-            LazyList<Tables.CommunityRank> votes = Tables.CommunityRank.where(
-                    "community_id in " + Tools.convertListToInQuery(ids) + " and user_id = ?",
-                    userObj.getId());
+                // Get your votes for those communities:
+                LazyList<Tables.CommunityRank> votes = Tables.CommunityRank.where(
+                        "community_id in " + Tools.convertListToInQuery(ids) + " and user_id = ?",
+                        userObj.getId());
 
-            // Get the tags for those communities:
-            LazyList<Tables.CommunityTagView> tags = Tables.CommunityTagView.where(
-                    "community_id in " + Tools.convertListToInQuery(ids));
+                // Get the tags for those communities:
+                LazyList<Tables.CommunityTagView> tags = Tables.CommunityTagView.where(
+                        "community_id in " + Tools.convertListToInQuery(ids));
 
-            // Get the users for those communities
-            LazyList<Tables.CommunityUserView> users = Tables.CommunityUserView.where(
-                    "community_id in " + Tools.convertListToInQuery(ids));
+                // Get the users for those communities
+                LazyList<Tables.CommunityUserView> users = Tables.CommunityUserView.where(
+                        "community_id in " + Tools.convertListToInQuery(ids));
 
-            // Build community objects
-            Communities communities = Communities.create(cv, tags, users, votes, p.getCount());
+                // Build community objects
+                communities = Communities.create(cv, tags, users, votes, p.getCount());
+
+            } else {
+                communities = Communities.create(cv, null, null, null, p.getCount());
+            }
+
 
             return communities.json();
 
@@ -554,7 +561,7 @@ public class Endpoints {
             String queryStr = Tools.constructQueryString(query, "name");
 
             LazyList<Tables.CommunityNoTextView> communityRows =
-                    Tables.CommunityNoTextView.find(queryStr.toString()).limit(5);
+                    Tables.CommunityNoTextView.find("deleted is false and " + queryStr.toString()).limit(5);
 
             Communities communities = Communities.create(communityRows, null, null, null, Long.valueOf(communityRows.size()));
 

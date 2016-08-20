@@ -149,7 +149,7 @@ insert into discussion_user(user_id, discussion_id, discussion_role_id)
 --rollback drop table discussion_user cascade;
 
 -- Adding a default community called vanilla
-insert into community (name) values ('vanilla');
+insert into community (name, text_) values ('vanilla', 'Flowchat''s default community.');
 insert into community_user (community_id, user_id, community_role_id) values (1, 1, 1);
 
 alter table discussion add column community_id bigint not null default 1;
@@ -164,7 +164,7 @@ alter table discussion add constraint fk4_discussion_community foreign key (comm
 -- A backup table for the old discussion data
 select * into deprecated_discussion from discussion;
 alter table discussion drop column user_id cascade;
---rollback alter table discussion add column user_id bigint not null default 999;
+--rollback alter table discussion add column user_id bigint not null default 1;
 --rollback update discussion set user_id = deprecated_discussion.user_id from deprecated_discussion where discussion.id = deprecated_discussion.id;
 --rollback drop table deprecated_discussion;
 

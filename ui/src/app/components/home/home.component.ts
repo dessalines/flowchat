@@ -2,8 +2,10 @@ import { Component, OnInit, Input } from '@angular/core';
 import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2-toaster/angular2-toaster';
 import {DiscussionService} from '../../services/discussion.service';
 import {TagService} from '../../services/tag.service';
+import {CommunityService} from '../../services/community.service';
 import {Discussion} from '../../shared/discussion.interface';
 import {Tag} from '../../shared/tag.interface';
+import {Community} from '../../shared/community.interface';
 import {Tools} from '../../shared/tools';
 import {DiscussionCardComponent} from '../discussion-card/index';
 import {FooterComponent} from '../footer/index';
@@ -21,6 +23,7 @@ export class HomeComponent implements OnInit {
 
   private discussions: Array<Discussion> = [];
   private popularTags: Array<Tag>;
+  private popularCommunities: Array<Community>;
   private sorting: string = "time-86400";
 
   private currentPageNum: number = 1;
@@ -29,6 +32,7 @@ export class HomeComponent implements OnInit {
   constructor(private toasterService: ToasterService,
     private discussionService: DiscussionService,
     private tagService: TagService,
+    private communityService: CommunityService,
     private router: Router) { }
 
   popToast() {
@@ -38,6 +42,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.getDiscussions(this.currentPageNum, this.sorting);
     this.getPopularTags(this.sorting);
+    this.getPopularCommunities(this.sorting);
   }
 
   resort($event) {
@@ -75,6 +80,13 @@ export class HomeComponent implements OnInit {
     this.tagService.getPopularTags(undefined, undefined, orderBy).subscribe(
       t => {
         this.popularTags = t
+      });
+  }
+
+  getPopularCommunities(orderBy: string) {
+    this.communityService.getCommunities(undefined, undefined, undefined, orderBy).subscribe(
+      t => {
+        this.popularCommunities = t.communities
       });
   }
 

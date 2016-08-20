@@ -1,6 +1,7 @@
 package com.chat.db;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -15,6 +16,7 @@ import com.chat.types.discussion.Discussion;
 import com.chat.types.tag.Tag;
 import com.chat.types.user.User;
 import org.javalite.activejdbc.LazyList;
+import org.postgresql.util.PSQLException;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
@@ -162,6 +164,7 @@ public class Actions {
         if (do_.getText() != null) d.set("text_" , do_.getText());
         if (do_.getPrivate_() != null) d.set("private" , do_.getPrivate_());
         if (do_.getDeleted() != null) d.set("deleted", do_.getDeleted());
+        if (do_.getCommunity() != null) d.set("community_id", do_.getCommunity().getId());
 
         d.set("modified" , cTime);
         d.saveIt();
@@ -527,7 +530,15 @@ public class Actions {
         if (co_.getDeleted() != null) c.set("deleted", co_.getDeleted());
 
         c.set("modified" , cTime);
-        c.saveIt();
+
+        try {
+            c.saveIt();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (e.getLocalizedMessage().contains("already exists")) {
+                throw new NoSuchElementException("Community already exists");
+            }
+        }
 
         // Add the community tags
         if (co_.getTags() != null) {
@@ -546,19 +557,19 @@ public class Actions {
             for (User userObj : co_.getPrivateUsers()) {
                 CommunityUser.createIt("community_id", co_.getId(),
                         "user_id", userObj.getId(),
-                        "discussion_role_id", com.chat.types.community.CommunityRole.USER.getVal());
+                        "community_role_id", CommunityRole.USER.getVal());
             }
 
         }
 
         if (co_.getBlockedUsers() != null) {
 
-            CommunityUser.delete("community_id = ? and discussion_role_id = ?", co_.getId(), CommunityRole.BLOCKED.getVal());
+            CommunityUser.delete("community_id = ? and community_role_id = ?", co_.getId(), CommunityRole.BLOCKED.getVal());
 
             for (User userObj : co_.getBlockedUsers()) {
                 CommunityUser.createIt("community_id", co_.getId(),
                         "user_id", userObj.getId(),
-                        "discussion_role_id", com.chat.types.discussion.DiscussionRole.BLOCKED.getVal());
+                        "community_role_id", CommunityRole.BLOCKED.getVal());
             }
         }
 
@@ -566,10 +577,10 @@ public class Actions {
 
             CommunityUser.delete("community_id = ? and community_role_id = ?", co_.getId(), CommunityRole.MODERATOR.getVal());
 
-            for (User userObj : co_.getBlockedUsers()) {
+            for (User userObj : co_.getModerators()) {
                 CommunityUser.createIt("community_id", co_.getId(),
                         "user_id", userObj.getId(),
-                        "discussion_role_id", CommunityRole.MODERATOR.getVal());
+                        "community_role_id", CommunityRole.MODERATOR.getVal());
             }
         }
 
@@ -592,7 +603,8 @@ public class Actions {
 
         if (cu == null) {
             CommunityUser.createIt("user_id", userId,
-                    "community_id", communityId);
+                    "community_id", communityId,
+                    "community_role_id", CommunityRole.USER.getVal());
 
             CommunityNoTextView cntv = CommunityNoTextView.findFirst("id = ?", communityId);
 

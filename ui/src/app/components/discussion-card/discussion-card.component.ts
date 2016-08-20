@@ -4,11 +4,13 @@ import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
 import {Discussion} from '../../shared/discussion.interface';
 import {Tag} from '../../shared/tag.interface';
 import {User} from '../../shared/user.interface';
+import {Community} from '../../shared/community.interface';
 import {Tools} from '../../shared/tools';
 import { MomentPipe } from '../../pipes/moment.pipe';
 import {MarkdownPipe} from '../../pipes/markdown.pipe';
 import {UserService} from '../../services/user.service';
 import {DiscussionService} from '../../services/discussion.service';
+import {CommunityService} from '../../services/community.service';
 import {TagService} from '../../services/tag.service';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import {MarkdownEditComponent} from '../markdown-edit/index';
@@ -59,10 +61,18 @@ export class DiscussionCardComponent implements OnInit {
   private blockedUserTypeaheadLoading: boolean = false;
   private blockedUserTypeaheadNoResults: boolean = false;
 
+  // Community
+  private communitySearchResultsObservable: Observable<any>;
+  private communitySearchSelected: string = '';
+  private tooManyCommunitiesError: boolean = false;
+  private communityTypeaheadLoading: boolean = false;
+  private communityTypeaheadNoResults: boolean = false;
+
   private rgex = Tools.rgex;
 
   constructor(private userService: UserService,
     private discussionService: DiscussionService,
+    private communityService: CommunityService,
     private tagService: TagService,
     private toasterService: ToasterService,
     private router: Router) { }
@@ -71,6 +81,7 @@ export class DiscussionCardComponent implements OnInit {
     this.setupTagSearch();
     this.setupUserSearch();
     this.setupBlockedUserSearch();
+    this.setupCommunitySearch();
   }
 
   ngAfterViewInit() {
@@ -257,6 +268,30 @@ export class DiscussionCardComponent implements OnInit {
   removeBlockedUser(user: User) {
     let index = this.discussion.blockedUsers.indexOf(user);
     this.discussion.blockedUsers.splice(index, 1);
+  }
+
+  // User search methods
+  setupCommunitySearch() {
+    this.communitySearchResultsObservable = Observable.create((observer: any) => {
+      this.communityService.searchCommunities(this.communitySearchSelected)
+        .subscribe((result: any) => {
+          observer.next(result.communities);
+        });
+    });
+  }
+
+  communityTypeaheadOnSelect(community: Community) {
+    // replace the community
+    this.discussion.community = community;
+    this.communitySearchSelected = '';
+  }
+
+  communityChangeTypeaheadLoading(e: boolean): void {
+    this.communityTypeaheadLoading = e;
+  }
+
+  communityChangeTypeaheadNoResults(e: boolean): void {
+    this.communityTypeaheadNoResults = e;
   }
 
   removeQuotes(text: string) {

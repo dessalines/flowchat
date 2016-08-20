@@ -18,6 +18,14 @@
       </select>
     </div>
   </div>
+  <small *ngIf="communities?.length > 0">
+    <ul class="list-inline trending-communities">trending communities:
+      <li class="tag tag-primary list-inline-item"
+          *ngFor="let community of communities">
+        <a class="link-unstyled" [routerLink]="['/community', community.id]">{{removeQuotes(community.name)}}</a>
+      </li>
+    </ul>
+  </small>
   <div class="card-deck-wrapper">
     <div (window:scroll)="onScroll($event)" class="card-deck">
       <app-discussion-card class="col-md-4" *ngFor="let discussion of discussions"
