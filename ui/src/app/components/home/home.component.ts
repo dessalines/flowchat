@@ -3,6 +3,7 @@ import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2
 import {DiscussionService} from '../../services/discussion.service';
 import {TagService} from '../../services/tag.service';
 import {CommunityService} from '../../services/community.service';
+import {UserService} from '../../services/user.service';
 import {Discussion} from '../../shared/discussion.interface';
 import {Tag} from '../../shared/tag.interface';
 import {Community} from '../../shared/community.interface';
@@ -32,6 +33,7 @@ export class HomeComponent implements OnInit {
   private communityId: string;
 
   constructor(private toasterService: ToasterService,
+    private userService: UserService,
     private discussionService: DiscussionService,
     private tagService: TagService,
     private communityService: CommunityService,
@@ -43,12 +45,17 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.route.snapshot.url);
-
+    console.log(this.route.snapshot.url.toString());
+    console.log(this.userService.getFavoriteCommunities());
     this.communityId = this.route.snapshot.url.toString();
-    if (this.communityId == "") {
+
+    if (this.userService.getFavoriteCommunities().length == 0) {
+      this.communityId = "all";
+    } else if (this.communityId == "") {
       this.communityId = "favorites";
     }
+
+    console.log(this.communityId);
 
     this.getDiscussions(this.communityId, this.currentPageNum, this.sorting);
 

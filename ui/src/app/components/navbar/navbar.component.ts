@@ -145,6 +145,7 @@ export class NavbarComponent implements OnInit {
   createCommunity() {
     this.communityService.createCommunity().subscribe(d => {
       console.log(d);
+      this.userService.fetchFavoriteCommunities();
       this.router.navigate(['/community', d.id, { editMode: true }]);
     },
       error => console.log(error));
