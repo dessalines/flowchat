@@ -12,11 +12,21 @@ import {UserService} from '../../services/user.service';
 })
 export class SidebarComponent implements OnInit {
 
+  discussionCollapsed: boolean = false;
+  communityCollapsed: boolean = false;
+
   constructor(private router: Router,
     private userService: UserService) {}
 
   ngOnInit() {
-	
+  }
+
+  toggleDiscussionCollapse() {
+    this.discussionCollapsed = !this.discussionCollapsed;
+  }
+
+  toggleCommunityCollapse() {
+    this.communityCollapsed = !this.communityCollapsed;
   }
 
 }
