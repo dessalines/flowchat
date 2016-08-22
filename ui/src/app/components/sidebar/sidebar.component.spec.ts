@@ -9,25 +9,25 @@ import {
 import { ComponentFixture, TestComponentBuilder } from '@angular/compiler/testing';
 import { Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { ChatComponent } from './chat.component';
+import { SidebarComponent } from './sidebar.component';
 
-describe('Component: Chat', () => {
+describe('Component: Sidebar', () => {
   let builder: TestComponentBuilder;
 
-  beforeEachProviders(() => [ChatComponent]);
+  beforeEachProviders(() => [SidebarComponent]);
   beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {
     builder = tcb;
   }));
 
-  it('should inject the component', inject([ChatComponent],
-      (component: ChatComponent) => {
+  it('should inject the component', inject([SidebarComponent],
+      (component: SidebarComponent) => {
     expect(component).toBeTruthy();
   }));
 
   it('should create the component', inject([], () => {
-    return builder.createAsync(ChatComponentTestController)
+    return builder.createAsync(SidebarComponentTestController)
       .then((fixture: ComponentFixture<any>) => {
-        let query = fixture.debugElement.query(By.directive(ChatComponent));
+        let query = fixture.debugElement.query(By.directive(SidebarComponent));
         expect(query).toBeTruthy();
         expect(query.componentInstance).toBeTruthy();
       });
@@ -37,10 +37,10 @@ describe('Component: Chat', () => {
 @Component({
   selector: 'test',
   template: `
-    <app-chat></app-chat>
+    <app-discussion-list></app-discussion-list>
   `,
-  directives: [ChatComponent]
+  directives: [SidebarComponent]
 })
-class ChatComponentTestController {
+class SidebarComponentTestController {
 }
 

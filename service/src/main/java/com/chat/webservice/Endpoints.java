@@ -19,7 +19,9 @@ import org.eclipse.jetty.http.HttpStatus;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Paginator;
 import org.slf4j.LoggerFactory;
+import spark.Request;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -228,7 +230,6 @@ public class Endpoints {
 
 
             Long tagId = (!req.params(":tagId").equals("all")) ? Long.valueOf(req.params(":tagId")) : null;
-            Long communityId = (!req.params(":communityId").equals("all")) ? Long.valueOf(req.params(":communityId")) : null;
             Integer limit = (req.params(":limit") != null) ? Integer.valueOf(req.params(":limit")) : 10;
             Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
             String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-" + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight();
@@ -236,16 +237,16 @@ public class Endpoints {
             orderBy = Tools.constructOrderByCustom(orderBy);
             User userObj = Actions.getOrCreateUserObj(req, res);
 
-            Paginator p;
+            Set<Long> communityIds = Tools.fetchCommunitiesFromParams(req.params(":communityId"), userObj);
 
+            Paginator p;
             // TODO for now don't show where private is false
             if (tagId != null) {
-                if (communityId != null) {
+                if (communityIds != null) {
                     p = new Paginator(Tables.DiscussionNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
-                            "and community_id = ? " +
+                            "and community_id in " + Tools.convertListToInQuery(communityIds) + " " +
                             "and private is false and deleted is false and title != ?",
                             tagId,
-                            communityId,
                             "A new discussion").
                             orderBy(orderBy);
                 } else {
@@ -256,11 +257,10 @@ public class Endpoints {
                 }
 
             } else {
-                if (communityId != null) {
+                if (communityIds != null) {
                     p = new Paginator(Tables.DiscussionNoTextView.class, limit,
-                            "community_id = ? " +
+                            "community_id in " + Tools.convertListToInQuery(communityIds) + " " +
                             "and private is false and deleted is false and title != ?",
-                            communityId,
                             "A new discussion").
                             orderBy(orderBy);
                 } else {
@@ -280,7 +280,7 @@ public class Endpoints {
                 Set<Long> ids = dntvs.collectDistinct("id");
 
                 // Get a list of the communities
-                Set<Long> communityIds = dntvs.collectDistinct("community_id");
+                communityIds = dntvs.collectDistinct("community_id");
 
                 // Get your votes for those discussions:
                 LazyList<Tables.DiscussionRank> votes = Tables.DiscussionRank.where(
@@ -409,6 +409,7 @@ public class Endpoints {
 
         });
     }
+
 
     public static void reply() {
 

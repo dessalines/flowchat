@@ -3,6 +3,8 @@ package com.chat.tools;
 import ch.qos.logback.classic.Logger;
 import com.chat.DataSources;
 import com.chat.db.Actions;
+import com.chat.db.Tables;
+import com.chat.types.user.User;
 import com.chat.webservice.ConstantsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
@@ -226,6 +228,22 @@ public class Tools {
         }
 
         return orderByOut;
+    }
+
+    public static Set<Long> fetchCommunitiesFromParams(String communityParam, User userObj) {
+        Set<Long> communityIds = new HashSet<>();
+        if (communityParam.equals("all")) {
+            communityIds = null;
+        } else if (communityParam.equals("favorites")) {
+            // Fetch the user's favorite communities
+            LazyList<Tables.CommunityUser> favoriteCommunities =
+                    Tables.CommunityUser.where("user_id = ?", userObj.getId());
+            communityIds = favoriteCommunities.collectDistinct("community_id");
+        } else {
+            communityIds.add(Long.valueOf(communityParam));
+        }
+
+        return communityIds;
     }
 
 }

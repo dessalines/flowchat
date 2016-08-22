@@ -1,9 +1,11 @@
-<div class="container">
+<div class="col-lg-11 col-xs-12">
   <div class="row">
     <div class="col-xs-12" [class.col-md-10]="!editMode() && discussions.length > 0">
-      <app-community-card [community]="community" [editMode]="editMode()" (editing)="editing($event)"></app-community-card>
+      <app-community-card [community]="community"
+        [editMode]="editMode()" (editing)="editing($event)"></app-community-card>
     </div>
-    <div *ngIf="!editMode() && discussions.length > 0" class="col-xs-12 col-md-2">
+    <div *ngIf="!editMode() && discussions.length > 0"
+      class="col-xs-12 col-md-2">
       <select [ngModel]="sorting" (ngModelChange)="resort($event)"
         class="form-control">
         <option disabled>Sorting</option>
@@ -24,5 +26,5 @@
         [discussion]="discussion"></app-discussion-card>
     </div>
   </div>
+  <app-footer></app-footer>
 </div>
-<app-footer></app-footer>

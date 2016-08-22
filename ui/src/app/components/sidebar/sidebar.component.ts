@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import {Router, ROUTER_DIRECTIVES } from '@angular/router';
-import {ChatComponent} from '../chat/index';
+import {DiscussionComponent} from '../discussion/index';
 import {UserService} from '../../services/user.service';
 
 @Component({
   moduleId: module.id,
-  selector: 'app-chat-list',
-  templateUrl: 'chat-list.component.html',
-  styleUrls: ['chat-list.component.css'],
+  selector: 'app-sidebar',
+  templateUrl: 'sidebar.component.html',
+  styleUrls: ['sidebar.component.css'],
   directives: [ROUTER_DIRECTIVES]
 })
-export class ChatListComponent implements OnInit {
+export class SidebarComponent implements OnInit {
 
   constructor(private router: Router,
     private userService: UserService) {}
