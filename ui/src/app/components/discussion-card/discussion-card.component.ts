@@ -111,6 +111,7 @@ export class DiscussionCardComponent implements OnInit {
       d => {
         this.discussion = d;
         this.editMode = false;
+        this.userService.fetchFavoriteDiscussions();
       });
   }
 
