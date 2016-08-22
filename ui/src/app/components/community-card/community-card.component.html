@@ -3,12 +3,12 @@
     <div *ngIf="!editMode">
       <div class="card-block card-block-no-bottom">
         <h4 class="card-title">
-          <a [routerLink]="['/community', community.id]" class="link-unstyled">{{community?.name}} </a>
+          <span role="button" class="link-unstyled" (click)="toggleCollapseText()" tooltipPlacement="bottom" tooltip="Show/Hide Text">{{community?.name}}</span>
           <small *ngIf="community && isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
         </h4>
       </div>
       <div class="card-block card-block-no-top">
-        <p *ngIf="community?.text" class="card-text"
+        <p *ngIf="community.text && !textCollapsed" class="card-text"
           [innerHTML]="community.text | markdown"></p>
         <small>
         <ul class="list-inline">
@@ -74,7 +74,7 @@
               name="community_private" /> Private
           </label>
         </div>
-        <app-markdown-edit [focus]="false" [inputText]="community.text"
+        <app-markdown-edit *ngIf="refresh" [focus]="false" [inputText]="community.text"
           (textEvent)="setEditText($event)"></app-markdown-edit>
         <br>
         <div class="form-group row">

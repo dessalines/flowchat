@@ -49,7 +49,7 @@ export class HomeComponent implements OnInit {
     console.log(this.userService.getFavoriteCommunities());
     this.communityId = this.route.snapshot.url.toString();
 
-    if (this.userService.getFavoriteCommunities().length == 0) {
+    if (this.userService.getFavoriteCommunities() === undefined || this.userService.getFavoriteCommunities().length == 0) {
       this.communityId = "all";
     } else if (this.communityId == "") {
       this.communityId = "favorites";

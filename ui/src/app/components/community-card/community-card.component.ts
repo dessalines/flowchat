@@ -68,6 +68,9 @@ export class CommunityCardComponent implements OnInit {
 
   private rgex = Tools.rgex;
 
+  private textCollapsed: boolean = false;
+  private refresh: boolean = true;
+
   constructor(private userService: UserService,
     private communityService: CommunityService,
     private tagService: TagService,
@@ -82,8 +85,13 @@ export class CommunityCardComponent implements OnInit {
   }
 
   ngAfterViewInit() {
+    
   }
 
+  ngOnChanges() {
+    this.refresh = false;
+    setTimeout(() => this.refresh = true,0);
+  }
 
   isCreator(): boolean {
     if (this.userService.getUser() != null) {
@@ -305,6 +313,10 @@ export class CommunityCardComponent implements OnInit {
   removeModerator(user: User) {
     let index = this.community.moderators.indexOf(user);
     this.community.moderators.splice(index, 1);
+  }
+
+  toggleCollapseText() {
+    this.textCollapsed = !this.textCollapsed;
   }
 
   removeQuotes(text: string) {
