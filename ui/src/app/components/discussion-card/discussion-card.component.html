@@ -64,14 +64,19 @@
         </div>
       </div>
     </div>
-    <div *ngIf="editMode && discussion?.title">
+    <div *ngIf="editMode">
       <form #discussionForm="ngForm" class="card-block">
         <div class="form-group row">
           <label class="col-sm-2 form-control-label">Title</label>
           <div class="col-sm-10">
             <input [(ngModel)]="discussion.title" class="form-control"
-              maxlength="140" name="discussion_title"
-            />
+              required minlength="3" maxlength="140"
+              name="discussion_title" #discussionTitle="ngModel"/>
+            <div *ngIf="discussionTitle.dirty" class="help-block text-danger">
+              <small *ngIf="discussionTitle.errors?.pattern">Invalid title</small>
+              <small *ngIf="discussionTitle.errors?.required">A title is required</small>
+              <small *ngIf="discussionTitle.errors?.minlength">The title must be more than 3 characters</small>
+            </div>
           </div>
         </div>
         <div class="form-group row">
@@ -221,8 +226,10 @@
         <div class="btn-group" role="group">
           <button [disabled]="!discussionForm.form.valid"
             (click)="saveDiscussion()" class="btn btn-primary">Save</button>
-          <button type="button" (click)="toggleEditMode()" class="btn btn-warning">Cancel</button>
-          <button type="button" (click)="deleteDiscussion()" class="btn btn-danger">Delete</button>
+          <button type="button" (click)="toggleEditMode()"
+            class="btn btn-warning">Cancel</button>
+          <button type="button" (click)="deleteDiscussion()"
+            class="btn btn-danger">Delete</button>
         </div>
       </form>
     </div>

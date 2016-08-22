@@ -16,7 +16,7 @@
     </li>
   </ul>
 </div>
-<div *ngIf="userService?.getFavoriteDiscussions()"
+<div *ngIf="userService?.getFavoriteDiscussions().length > 0"
   class="card">
   <div role="button" class="card-header" (click)="toggleDiscussionCollapse()">
     <i class="fa fa-fw fa-comments"></i>    Discussions

@@ -84,10 +84,6 @@ export class CommunityCardComponent implements OnInit {
     this.setupModeratorSearch();
   }
 
-  ngAfterViewInit() {
-    
-  }
-
   ngOnChanges() {
     this.refresh = false;
     setTimeout(() => this.refresh = true,0);

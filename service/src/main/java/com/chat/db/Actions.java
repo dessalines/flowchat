@@ -142,6 +142,9 @@ public class Actions {
                 "discussion_id", d.getLong("id"),
                 "discussion_role_id", com.chat.types.discussion.DiscussionRole.CREATOR.getVal());
 
+        FavoriteDiscussionUser.createIt("user_id", userId,
+                "discussion_id", d.getLong("id"));
+
         DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", d.getLongId());
         List<DiscussionUserView> udv = DiscussionUserView.where("discussion_id = ?", d.getLongId());
         CommunityNoTextView cntv = CommunityNoTextView.findFirst("id = ?", dfv.getLong("community_id"));

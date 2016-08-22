@@ -8,8 +8,8 @@
         </h4>
       </div>
       <div class="card-block card-block-no-top">
-        <p *ngIf="community.text && !textCollapsed" class="card-text"
-          [innerHTML]="community.text | markdown"></p>
+        <p *ngIf="community.text && !textCollapsed"
+          class="card-text" [innerHTML]="community.text | markdown"></p>
         <small>
         <ul class="list-inline">
           <li class="tag tag-default list-inline-item" *ngFor="let tag of community?.tags">
@@ -54,17 +54,19 @@
         </div>
       </div>
     </div>
-    <div *ngIf="editMode && community?.name">
+    <div *ngIf="editMode">
       <form #communityForm="ngForm" class="card-block">
         <div class="form-group row">
           <label class="col-sm-1 form-control-label">Name</label>
           <div class="col-sm-11">
-            <input [(ngModel)]="community.name" class="form-control"
-              minlength="5" maxlength="50"
+            <input [(ngModel)]="community.name" class="form-control" required
+              minlength="3" maxlength="50"
               pattern="[a-zA-Z0-9_-]+" #communityName="ngModel"
               name="community_name" />
             <div *ngIf="communityName.dirty" class="help-block text-danger">
               <small *ngIf="communityName.errors?.pattern">Invalid name</small>
+              <small *ngIf="communityName.errors?.required">A name is required</small>
+              <small *ngIf="communityName.errors?.minlength">The name must be more than 3 characters</small>
             </div>
           </div>
         </div>
@@ -74,8 +76,8 @@
               name="community_private" /> Private
           </label>
         </div>
-        <app-markdown-edit *ngIf="refresh" [focus]="false" [inputText]="community.text"
-          (textEvent)="setEditText($event)"></app-markdown-edit>
+        <app-markdown-edit *ngIf="refresh" [focus]="false"
+          [inputText]="community.text" (textEvent)="setEditText($event)"></app-markdown-edit>
         <br>
         <div class="form-group row">
           <label class="col-sm-1 form-control-label">Tags</label>

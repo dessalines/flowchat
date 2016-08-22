@@ -292,16 +292,24 @@ inner join tag as t on t.id = dt.tag_id;
 --rollback drop view discussion_tag_view;
 
 create view discussion_user_view as
-select ud.user_id, ud.discussion_id, u.name, ud.discussion_role_id
+select ud.user_id, ud.discussion_id, u.name, ud.discussion_role_id, d.deleted
 from discussion_user as ud
 inner join discussion as d on d.id = ud.discussion_id
 inner join user_ as u on u.id = ud.user_id;
 
 create view community_user_view as
-select uc.user_id, uc.community_id, u.name, uc.community_role_id
+select uc.user_id, uc.community_id, u.name, uc.community_role_id, c.deleted
 from community_user as uc
-inner join discussion as d on d.id = uc.community_id
+inner join community as c on c.id = uc.community_id
 inner join user_ as u on u.id = uc.user_id;
+
+create view favorite_discussion_user_view as
+select ud.user_id, ud.discussion_id, u.name, d.deleted
+from favorite_discussion_user as ud
+inner join discussion as d on d.id = ud.discussion_id
+inner join user_ as u on u.id = ud.user_id;
+
+--rollback drop view favorite_discussion_user_view;
 
 create view community_view as
 select c.id,

@@ -371,7 +371,10 @@ public class Endpoints {
 
             User userObj = Actions.getOrCreateUserObj(req, res);
 
-            LazyList<Tables.FavoriteDiscussionUser> favs = Tables.FavoriteDiscussionUser.where("user_id = ?", userObj.getId());
+            LazyList<Tables.FavoriteDiscussionUserView> favs = Tables.FavoriteDiscussionUserView.where(
+                    "user_id = ? and deleted = ?",
+                    userObj.getId(),
+                    false);
 
             Set<Long> favDiscussionIds = favs.collectDistinct("discussion_id");
 
@@ -615,8 +618,9 @@ public class Endpoints {
 
             User userObj = Actions.getOrCreateUserObj(req, res);
 
-            LazyList<Tables.CommunityUser> favs = Tables.CommunityUser.where("user_id = ?",
-                    userObj.getId());
+            LazyList<Tables.CommunityUserView> favs = Tables.CommunityUserView.where("user_id = ? and deleted = ?",
+                    userObj.getId(),
+                    false);
 
             Set<Long> favCommunityIds = favs.collectDistinct("community_id");
 
