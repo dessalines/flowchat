@@ -84,6 +84,7 @@ public class Discussion implements JSONWriter {
                                     Tables.CommunityNoTextView cntv,
                                     List<Tables.DiscussionTagView> discussionTags,
                                     List<Tables.DiscussionUserView> discussionUsers,
+                                    List<Tables.CommunityUserView> communityUsers,
                                     Integer vote) {
         // convert the tags
         List<Tag> tags = null;
@@ -121,7 +122,7 @@ public class Discussion implements JSONWriter {
         }
 
         // Create the community
-        Community community = (cntv != null) ? Community.create(cntv, null, null, null) : null;
+        Community community = (cntv != null) ? Community.create(cntv, null, communityUsers, null) : null;
 
         return new Discussion(d.getLongId(),
                 d.getString("title"),

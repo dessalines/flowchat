@@ -210,13 +210,22 @@ public class Endpoints {
 
             Tables.CommunityNoTextView community = Tables.CommunityNoTextView.findFirst("id = ?", dfv.getLong("community_id"));
 
-            Discussion df = Discussion.create(dfv, community, tags, users, vote);
+            // Get the users for that community
+            LazyList<Tables.CommunityUserView> communityUsers = Tables.CommunityUserView.where("community_id = ?", community.getLong("id"));
+
+            Discussion df = Discussion.create(dfv, community, tags, users, communityUsers, vote);
 
             // check to make sure user is entitled to view it
             df.checkPrivate(userObj);
 
             // Check to make sure user isn't blocked
             df.checkBlocked(userObj);
+
+            // check to make sure user is entitled to view the community
+            df.getCommunity().checkPrivate(userObj);
+
+            // Check to make sure user is isn't blocked from the community
+            df.getCommunity().checkBlocked(userObj);
 
             log.info(df.json());
 
