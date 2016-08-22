@@ -38,10 +38,6 @@ public class Discussions implements JSONWriter {
         Map<Long, List<Tables.DiscussionUserView>> userMap = (discussionUsers != null) ?
                 Transformations.convertRowsToMap(discussionUsers, "discussion_id") : null;
 
-
-
-
-
         // Convert to a list of discussion objects
         List<Discussion> dos = new ArrayList<>();
 
@@ -60,7 +56,8 @@ public class Discussions implements JSONWriter {
                 }
             }
 
-            Discussion df = Discussion.create(view, community, tags, users, vote);
+            // TODO should the list of discussions also filter for blocked communities?
+            Discussion df = Discussion.create(view, community, tags, users, null, vote);
             dos.add(df);
         }
 

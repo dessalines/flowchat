@@ -149,7 +149,7 @@ public class Actions {
         List<DiscussionUserView> udv = DiscussionUserView.where("discussion_id = ?", d.getLongId());
         CommunityNoTextView cntv = CommunityNoTextView.findFirst("id = ?", dfv.getLong("community_id"));
 
-        return Discussion.create(dfv, cntv, null, udv, null);
+        return Discussion.create(dfv, cntv, null, udv, null, null);
     }
 
     public static Discussion saveDiscussion(Discussion do_) {
@@ -213,7 +213,7 @@ public class Actions {
         List<DiscussionUserView> ud = DiscussionUserView.where("discussion_id = ?", do_.getId());
         CommunityNoTextView cntv = CommunityNoTextView.findFirst("id = ?", dfv.getLong("community_id"));
 
-        Discussion doOut = Discussion.create(dfv, cntv, dtv, ud, null);
+        Discussion doOut = Discussion.create(dfv, cntv, dtv, ud, null, null);
 
         return doOut;
     }
@@ -236,7 +236,7 @@ public class Actions {
 
             DiscussionNoTextView dntv = DiscussionNoTextView.findFirst("id = ?", discussionId);
 
-            return Discussion.create(dntv, null, null, null, null);
+            return Discussion.create(dntv, null, null, null, null, null);
         } else {
             return null;
         }

@@ -16,6 +16,13 @@
             <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
+        <ul class="list-inline">
+          <li class="list-inline-item"> creator: <span class="text-success">{{community.creator.name}}</span></li>
+          <li *ngIf="community?.moderators"> moderators: </li>
+          <li class="list-inline-item" *ngFor="let moderator of community?.moderators">
+            <span class="text-primary">{{moderator.name}}</span>
+          </li>
+        </ul>
       </small>
         <small class="text-muted">
         <span *ngIf="!community?.modified">created {{community?.created | moment}}</span>
@@ -59,8 +66,8 @@
         <div class="form-group row">
           <label class="col-sm-1 form-control-label">Name</label>
           <div class="col-sm-11">
-            <input [(ngModel)]="community.name" class="form-control" required
-              minlength="3" maxlength="50"
+            <input [(ngModel)]="community.name" class="form-control"
+              required minlength="3" maxlength="50"
               pattern="[a-zA-Z0-9_-]+" #communityName="ngModel"
               name="community_name" />
             <div *ngIf="communityName.dirty" class="help-block text-danger">
