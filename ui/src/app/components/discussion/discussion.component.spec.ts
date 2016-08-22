@@ -9,25 +9,25 @@ import {
 import { ComponentFixture, TestComponentBuilder } from '@angular/compiler/testing';
 import { Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { ChatListComponent } from './chat-list.component';
+import { DiscussionComponent } from './discussion.component';
 
-describe('Component: ChatList', () => {
+describe('Component: Chat', () => {
   let builder: TestComponentBuilder;
 
-  beforeEachProviders(() => [ChatListComponent]);
+  beforeEachProviders(() => [DiscussionComponent]);
   beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {
     builder = tcb;
   }));
 
-  it('should inject the component', inject([ChatListComponent],
-      (component: ChatListComponent) => {
+  it('should inject the component', inject([DiscussionComponent],
+      (component: DiscussionComponent) => {
     expect(component).toBeTruthy();
   }));
 
   it('should create the component', inject([], () => {
-    return builder.createAsync(ChatListComponentTestController)
+    return builder.createAsync(DiscussionComponentTestController)
       .then((fixture: ComponentFixture<any>) => {
-        let query = fixture.debugElement.query(By.directive(ChatListComponent));
+        let query = fixture.debugElement.query(By.directive(DiscussionComponent));
         expect(query).toBeTruthy();
         expect(query.componentInstance).toBeTruthy();
       });
@@ -37,10 +37,10 @@ describe('Component: ChatList', () => {
 @Component({
   selector: 'test',
   template: `
-    <app-chat-list></app-chat-list>
+    <app-discussion></app-discussion>
   `,
-  directives: [ChatListComponent]
+  directives: [DiscussionComponent]
 })
-class ChatListComponentTestController {
+class DiscussionComponentTestController {
 }
 

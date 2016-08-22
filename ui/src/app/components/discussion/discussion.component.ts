@@ -15,14 +15,14 @@ import {MODAL_DIRECTIVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
 
 @Component({
   moduleId: module.id,
-  selector: 'app-chat',
-  templateUrl: 'chat.component.html',
-  styleUrls: ['chat.component.css'],
+  selector: 'app-discussion',
+  templateUrl: 'discussion.component.html',
+  styleUrls: ['discussion.component.css'],
   providers: [HTTP_PROVIDERS, ThreadedChatService],
   directives: [CommentComponent, MarkdownEditComponent, DiscussionCardComponent, MODAL_DIRECTIVES],
   viewProviders: [BS_VIEW_PROVIDERS]
 })
-export class ChatComponent implements OnInit {
+export class DiscussionComponent implements OnInit {
 
   private comments: Array<Comment>;
   private scrollDebounce: number = 0;

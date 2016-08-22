@@ -9,7 +9,7 @@ import {CommunityService} from '../../services/community.service';
 import {NotificationsService} from '../../services/notifications.service';
 import {User, Discussion, Comment, Tools} from '../../shared';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
-import {ChatComponent} from '../chat';
+import {DiscussionComponent} from '../discussion';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import {TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';

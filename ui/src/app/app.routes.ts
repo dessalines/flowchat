@@ -2,12 +2,16 @@ import { provideRouter, RouterConfig } from '@angular/router';
 import {HomeComponent} from './components/home/index';
 import {TagComponent} from './components/tag/index';
 import {CommunityComponent} from './components/community/index';
-import {ChatListComponent} from './components/chat-list/index';
-import {ChatComponent} from './components/chat/index';
+import {SidebarComponent} from './components/sidebar/index';
+import {DiscussionComponent} from './components/discussion/index';
 
 const routes: RouterConfig = [
   {
     path: '',
+    component: HomeComponent
+  },
+  {
+    path: 'all',
     component: HomeComponent
   },
   {
@@ -19,18 +23,12 @@ const routes: RouterConfig = [
     component: CommunityComponent
   },
   {
-    path: 'discussion',
-    component: ChatListComponent,
-    children: [
-      {
-        path: ':discussionId', 
-        component: ChatComponent
-      },
-      {
-        path: ':discussionId/comment/:commentId',
-        component: ChatComponent
-      }
-    ]
+    path: 'discussion/:discussionId',
+    component: DiscussionComponent,
+  },
+  {
+    path: 'discussion/:discussionId/comment/:commentId',
+    component: DiscussionComponent
   }
 ];
 

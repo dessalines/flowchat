@@ -9,7 +9,7 @@ import {Community} from '../../shared/community.interface';
 import {Tools} from '../../shared/tools';
 import {DiscussionCardComponent} from '../discussion-card/index';
 import {FooterComponent} from '../footer/index';
-import { Router, ROUTER_DIRECTIVES } from '@angular/router';
+import { Router, ROUTER_DIRECTIVES, ActivatedRoute } from '@angular/router';
 
 @Component({
   moduleId: module.id,
@@ -29,18 +29,29 @@ export class HomeComponent implements OnInit {
   private currentPageNum: number = 1;
   private scrollDebounce: number = 0;
 
+  private communityId: string;
+
   constructor(private toasterService: ToasterService,
     private discussionService: DiscussionService,
     private tagService: TagService,
     private communityService: CommunityService,
-    private router: Router) { }
+    private router: Router,
+    private route: ActivatedRoute) { }
 
   popToast() {
     this.toasterService.pop('info', 'Args Title', 'Args Body');
   }
 
   ngOnInit() {
-    this.getDiscussions(this.currentPageNum, this.sorting);
+    console.log(this.route.snapshot.url);
+
+    this.communityId = this.route.snapshot.url.toString();
+    if (this.communityId == "") {
+      this.communityId = "favorites";
+    }
+
+    this.getDiscussions(this.communityId, this.currentPageNum, this.sorting);
+
     this.getPopularTags(this.sorting);
     this.getPopularCommunities(this.sorting);
   }
@@ -51,8 +62,7 @@ export class HomeComponent implements OnInit {
     this.discussions = [];
     this.currentPageNum = 1;
     this.scrollDebounce = 0;
-    this.getDiscussions(this.currentPageNum, this.sorting);
-    this.getPopularTags(this.sorting);
+    this.ngOnInit();
   }
 
   onScroll(event) {
@@ -62,14 +72,14 @@ export class HomeComponent implements OnInit {
         this.scrollDebounce = 1;
         // you're at the bottom of the page
         this.currentPageNum += 1;
-        this.getDiscussions(this.currentPageNum, this.sorting);
+        this.getDiscussions(this.communityId, this.currentPageNum, this.sorting);
         setTimeout(() => this.scrollDebounce = 0, 1000);
       }
     }
   }
 
-  getDiscussions(page: number, orderBy: string) {
-    this.discussionService.getDiscussions(page, undefined, undefined, undefined, orderBy).subscribe(
+  getDiscussions(communityId: string, page: number, orderBy: string) {
+    this.discussionService.getDiscussions(page, undefined, undefined, communityId, orderBy).subscribe(
       d => {
         // Append them
         this.discussions.push(...d.discussions);
