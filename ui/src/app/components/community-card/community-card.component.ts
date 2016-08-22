@@ -108,6 +108,7 @@ export class CommunityCardComponent implements OnInit {
         this.community = c;
         this.editMode = false;
         this.editing.next(this.editMode);
+        this.userService.fetchFavoriteCommunities();
       },
       error => {
         this.toasterService.pop("error", "Error", error);
