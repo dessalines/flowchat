@@ -42,8 +42,8 @@
   </div>
   <div class="row">
     <div class="col-xs-12">
-      <i *ngIf="!discussions" class="fa fa-circle-o-notch fa-spin fa-3x text-xs-center block"></i>
-      <h4 *ngIf="discussions?.length == 0">No Discussions</h4>
+      <i *ngIf="!discussions" class="fa fa-circle-o-notch fa-spin fa-5x text-xs-center block"></i>
+      <h4 *ngIf="discussions?.length == 0">Subscribe to some communities such as <a class="link-unstyled tag tag-primary" [routerLink]="['/community', 1]">vanilla</a> to see discussions</h4>
     </div>
   </div>
   <app-footer></app-footer>
