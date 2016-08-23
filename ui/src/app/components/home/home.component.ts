@@ -22,7 +22,7 @@ import { Router, ROUTER_DIRECTIVES, ActivatedRoute } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
-  private discussions: Array<Discussion> = [];
+  private discussions: Array<Discussion>;
   private popularTags: Array<Tag>;
   private popularCommunities: Array<Community>;
   private sorting: string = "time-86400";
@@ -89,6 +89,10 @@ export class HomeComponent implements OnInit {
     this.discussionService.getDiscussions(page, undefined, undefined, communityId, orderBy).subscribe(
       d => {
         // Append them
+        if (this.discussions === undefined) {
+          this.discussions = [];
+        }
+        
         this.discussions.push(...d.discussions);
       });
   }

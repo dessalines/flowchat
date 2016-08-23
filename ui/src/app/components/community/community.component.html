@@ -1,7 +1,7 @@
 <div class="col-lg-11 col-xs-12">
   <div class="row">
     <div class="col-xs-12" [class.col-md-10]="!editMode() && discussions.length > 0">
-      <app-community-card [community]="community"
+      <app-community-card *ngIf="community" [community]="community"
         [editMode]="editMode()" (editing)="editing($event)"></app-community-card>
     </div>
     <div *ngIf="!editMode() && discussions.length > 0"
@@ -24,6 +24,12 @@
     <div (window:scroll)="onScroll($event)" class="card-deck">
       <app-discussion-card class="col-md-4" *ngFor="let discussion of discussions"
         [discussion]="discussion"></app-discussion-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <i *ngIf="!discussions" class="fa fa-circle-o-notch fa-spin fa-3x text-xs-center block"></i>
+      <h4 *ngIf="discussions?.length == 0">No Discussions</h4>
     </div>
   </div>
   <app-footer></app-footer>

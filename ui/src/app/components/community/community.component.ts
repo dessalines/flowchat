@@ -19,7 +19,7 @@ import {FooterComponent} from '../footer/index';
 })
 export class CommunityComponent implements OnInit {
 
-  private discussions: Array<Discussion> = [];
+  private discussions: Array<Discussion>;
   private sorting: string = "time-86400";
 
   private community: Community;
@@ -61,6 +61,9 @@ export class CommunityComponent implements OnInit {
   getDiscussions(communityId: number, page: number, orderBy: string) {
     this.discussionService.getDiscussions(page, undefined, undefined, communityId.toString(), orderBy).subscribe(
       d => {
+        if (this.discussions === undefined) {
+          this.discussions = [];
+        }
         this.discussions.push(...d.discussions);
       });
   }
