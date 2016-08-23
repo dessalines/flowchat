@@ -71,6 +71,9 @@ export class CommunityCardComponent implements OnInit {
   private textCollapsed: boolean = false;
   private refresh: boolean = true;
 
+  private isModerator: boolean = false;
+  private isCreator: boolean = false;
+
   constructor(private userService: UserService,
     private communityService: CommunityService,
     private tagService: TagService,
@@ -82,6 +85,7 @@ export class CommunityCardComponent implements OnInit {
     this.setupUserSearch();
     this.setupBlockedUserSearch();
     this.setupModeratorSearch();
+    this.setPermissions();
   }
 
   ngOnChanges() {
@@ -89,12 +93,19 @@ export class CommunityCardComponent implements OnInit {
     setTimeout(() => this.refresh = true,0);
   }
 
-  isCreator(): boolean {
-    if (this.userService.getUser() != null) {
-      return this.userService.getUser().id == this.community.creator.id;
-    } else {
-      return false;
-    }
+  setPermissions() {
+      if (this.userService.getUser().id == this.community.creator.id) {
+        // Creators also have mod abilities
+        this.isCreator = true;
+        this.isModerator = true;
+
+      } else {
+        let m = this.community.moderators.filter(m => m.id == this.userService.getUser().id)[0];
+        console.log(m);
+        if (m !== undefined) {
+          this.isModerator = true;
+        }
+      }
   }
 
   toggleEditMode() {

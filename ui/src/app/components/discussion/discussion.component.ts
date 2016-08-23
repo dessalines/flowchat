@@ -89,9 +89,6 @@ export class DiscussionComponent implements OnInit {
       this.subscribeToDiscussion();
     });
 
-
-
-
   }
 
   editMode(): Boolean {

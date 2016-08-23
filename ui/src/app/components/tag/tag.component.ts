@@ -20,7 +20,7 @@ import {FooterComponent} from '../footer/index';
 })
 export class TagComponent implements OnInit {
 
-  private discussions: Array<Discussion> = [];
+  private discussions: Array<Discussion>;
   private communities: Array<Community>;
 
   private sorting: string = "time-86400";
@@ -66,6 +66,9 @@ export class TagComponent implements OnInit {
   getDiscussions(tagId: number, page: number, orderBy: string) {
     this.discussionService.getDiscussions(page, undefined, tagId.toString(), undefined, orderBy).subscribe(
       d => {
+        if (this.discussions === undefined) {
+          this.discussions = [];
+        }
         this.discussions.push(...d.discussions);
         console.log(d.discussions);
       });
@@ -73,7 +76,7 @@ export class TagComponent implements OnInit {
 
   getCommunities(tagId: number, orderBy: string) {
     this.communityService.getCommunities(undefined, undefined, tagId.toString()).subscribe(
-    c => {
+      c => {
         this.communities = c.communities;
       });
   }

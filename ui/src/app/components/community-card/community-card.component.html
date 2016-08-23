@@ -1,10 +1,10 @@
 <div class="card">
-  <div *ngIf="community && !community?.deleted">
+  <div *ngIf="!community.deleted">
     <div *ngIf="!editMode">
       <div class="card-block card-block-no-bottom">
         <h4 class="card-title">
-          <span role="button" class="link-unstyled" (click)="toggleCollapseText()" tooltipPlacement="bottom" tooltip="Show/Hide Text">{{community?.name}}</span>
-          <small *ngIf="community && isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
+          <span role="button" class="link-unstyled" (click)="toggleCollapseText()" tooltipPlacement="bottom" tooltip="Show/Hide Text">{{community.name}}</span>
+          <small *ngIf="isCreator"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
         </h4>
       </div>
       <div class="card-block card-block-no-top">
@@ -12,51 +12,51 @@
           class="card-text" [innerHTML]="community.text | markdown"></p>
         <small>
         <ul class="list-inline">
-          <li class="tag tag-default list-inline-item" *ngFor="let tag of community?.tags">
+          <li class="tag tag-default list-inline-item" *ngFor="let tag of community.tags">
             <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
         <ul class="list-inline">
           <li class="list-inline-item"> creator: <span class="text-success">{{community.creator.name}}</span></li>
-          <li *ngIf="community?.moderators"> moderators: </li>
-          <li class="list-inline-item" *ngFor="let moderator of community?.moderators">
+          <li *ngIf="community.moderators"> moderators: </li>
+          <li class="list-inline-item" *ngFor="let moderator of community.moderators">
             <span class="text-primary">{{moderator.name}}</span>
           </li>
         </ul>
       </small>
         <small class="text-muted">
-        <span *ngIf="!community?.modified">created {{community?.created | moment}}</span>
-        <span *ngIf="community?.modified"><i>modified {{community?.modified | moment}}</i></span>
-          by {{community?.creator.name}}
+        <span *ngIf="!community.modified">created {{community.created | moment}}</span>
+        <span *ngIf="community.modified"><i>modified {{community.modified | moment}}</i></span>
+          by {{community.creator.name}}
       </small>
         <ul class="list-inline">
-          <li *ngIf="community?.private_" class="tag tag-danger list-inline-item">Private</li>
-          <li *ngIf="community && !isCreator() && !userService.hasFavoriteCommunity(community)"
+          <li *ngIf="community.private_" class="tag tag-danger list-inline-item">Private</li>
+          <li *ngIf="isCreator && !userService.hasFavoriteCommunity(community)"
             role="button" class="list-inline-item"
             (click)="userService.saveFavoriteCommunity(community)"
             tooltipPlacement="bottom" tooltip="Save to Favorites"><i class="fa fa-fw fa-heart-o"></i></li>
-          <li *ngIf="community && !isCreator() && userService.hasFavoriteCommunity(community)"
+          <li *ngIf="!isCreator && userService.hasFavoriteCommunity(community)"
             role="button" class="list-inline-item"
             (click)="userService.removeFavoriteCommunity(community.id)"
             tooltipPlacement="bottom" tooltip="Remove from Favorites"><i class="fa fa-fw fa-heart text-danger"></i></li>
-          <li *ngIf="community && !isCreator()" role="button"
+          <li *ngIf="!isCreator" role="button"
             class="list-inline-item" (click)="toggleShowVoteSlider()"
             tooltipPlacement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
-          <li *ngIf="community?.avgRank" class="tag tag-pill tag-default list-inline-item"
+          <li *ngIf="community.avgRank" class="tag tag-pill tag-default list-inline-item"
             tooltipPlacement="bottom" tooltip="Average Score">
-            {{community?.avgRank}}</li>
-          <li *ngIf="community?.userRank" class="tag tag-pill tag-info list-inline-item"
+            {{community.avgRank}}</li>
+          <li *ngIf="community.userRank" class="tag tag-pill tag-info list-inline-item"
             tooltipPlacement="bottom" tooltip="Your Vote">
-            {{community?.userRank}}</li>
-          <li *ngIf="community?.numberOfVotes" class="text-muted list-inline-item">
-            <small> {{community?.numberOfVotes}} votes</small></li>
+            {{community.userRank}}</li>
+          <li *ngIf="community.numberOfVotes" class="text-muted list-inline-item">
+            <small> {{community.numberOfVotes}} votes</small></li>
         </ul>
         <div *ngIf="showVoteSlider">
-          <input [value]="community?.userRank" (mouseup)="saveCommunityRank($event.target.value)"
+          <input [value]="community.userRank" (mouseup)="saveCommunityRank($event.target.value)"
             (touchend)="saveCommunityRank($event.target.value)"
             (input)="updateCommunityRank($event.target.value)"
             type="range" min="0" max="100"
-            step="1" (value)="community?.userRank"
+            step="1" (value)="community.userRank"
             name="community_rank" />
         </div>
       </div>
@@ -101,10 +101,10 @@
             <button [disabled]="tagSearchSelected.length < 5 || tagSearchSelected.length > 20 || rgex.test(tagSearchSelected) == false"
               (click)="createTag()" class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
           </div>
-          <ul *ngIf="community?.tags" class="col-md-6 list-inline form-control-label">
+          <ul *ngIf="community.tags" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeTag(tag)"
               class="tag tag-default list-inline-item"
-              *ngFor="let tag of community?.tags">
+              *ngFor="let tag of community.tags">
               <span>{{removeQuotes(tag.name)}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
           </ul>
@@ -141,7 +141,7 @@
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
             </div>
           </div>
-          <ul *ngIf="community?.moderators" class="col-md-6 list-inline form-control-label">
+          <ul *ngIf="community.moderators" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeModerator(moderator)"
               class="tag tag-default list-inline-item"
               *ngFor="let moderator of community.moderators">
@@ -154,7 +154,7 @@
             Results Found
           </div>
         </div>
-        <div *ngIf="community?.private_" class="form-group row">
+        <div *ngIf="community.private_" class="form-group row">
           <label class="col-sm-1 form-control-label">Invite Users</label>
           <div class="col-md-5">
             <input [(ngModel)]="userSearchSelected" [typeahead]="userSearchResultsObservable"
@@ -168,7 +168,7 @@
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
             </div>
           </div>
-          <ul *ngIf="community?.privateUsers" class="col-md-6 list-inline form-control-label">
+          <ul *ngIf="community.privateUsers" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removePrivateUser(privateUser)"
               class="tag tag-default list-inline-item"
               *ngFor="let privateUser of privateUsersWithoutYou()">
@@ -196,7 +196,7 @@
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
             </div>
           </div>
-          <ul *ngIf="community?.blockedUsers" class="col-md-6 list-inline form-control-label">
+          <ul *ngIf="community.blockedUsers" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeBlockedUser(blockedUser)"
               class="tag tag-default list-inline-item"
               *ngFor="let blockedUser of community.blockedUsers">
@@ -221,7 +221,7 @@
       </form>
     </div>
   </div>
-  <div *ngIf="community?.deleted">
-    <i>deleted {{community?.modified | moment}}</i>    by {{community?.creator.name}}
+  <div *ngIf="community.deleted">
+    <i>deleted {{community.modified | moment}}</i>    by {{community.creator.name}}
   </div>
 </div>

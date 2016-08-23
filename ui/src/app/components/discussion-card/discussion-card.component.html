@@ -1,65 +1,65 @@
 <div class="card">
-  <div *ngIf="discussion && !discussion?.deleted">
+  <div *ngIf="!discussion.deleted">
     <div *ngIf="!editMode">
       <div class="card-block card-block-no-bottom">
         <h4 class="card-title">
-          <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">{{discussion?.title}} </a>
-          <small *ngIf="discussion && isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
+          <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">{{discussion.title}} </a>
+          <small *ngIf="isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
         </h4>
       </div>
-      <a *ngIf="discussion?.link && isImageType(discussion?.link)"
-        href="{{discussion?.link}}" target="_blank">
+      <a *ngIf="discussion.link && isImageType(discussion.link)"
+        href="{{discussion.link}}" target="_blank">
         <div [innerHTML]="discussion.link | markdown"></div>
       </a>
       <div class="card-block card-block-no-top">
-        <p *ngIf="discussion?.text" class="card-text"
+        <p *ngIf="discussion.text" class="card-text"
           [innerHTML]="discussion.text | markdown"></p>
         <small>
         <ul class="list-inline">
-          <li *ngIf="discussion?.community" class="tag tag-primary list-inline-item">
+          <li *ngIf="discussion.community" class="tag tag-primary list-inline-item">
             <a class="link-unstyled" [routerLink]="['/community', discussion.community.id]">{{removeQuotes(discussion.community.name)}}</a>
           </li>
-          <li class="tag tag-default list-inline-item" *ngFor="let tag of discussion?.tags">
+          <li class="tag tag-default list-inline-item" *ngFor="let tag of discussion.tags">
             <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
       </small>
         <small class="text-muted">
-        <span *ngIf="!discussion?.modified">created {{discussion?.created | moment}}</span>
-        <span *ngIf="discussion?.modified"><i>modified {{discussion?.modified | moment}}</i></span>
-          by {{discussion?.creator.name}}
+        <span *ngIf="!discussion.modified">created {{discussion.created | moment}}</span>
+        <span *ngIf="discussion.modified"><i>modified {{discussion.modified | moment}}</i></span>
+          by {{discussion.creator.name}}
       </small>
         <ul class="list-inline">
-          <li *ngIf="discussion?.private_" class="tag tag-danger list-inline-item">Private</li>
-          <li *ngIf="discussion && !isCreator()" role="button"
+          <li *ngIf="discussion.private_" class="tag tag-danger list-inline-item">Private</li>
+          <li *ngIf="!isCreator()" role="button"
             class="list-inline-item" (click)="toggleShowVoteSlider()"
             tooltipPlacement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
-          <li *ngIf="discussion?.avgRank" class="tag tag-pill tag-default list-inline-item"
+          <li *ngIf="discussion.avgRank" class="tag tag-pill tag-default list-inline-item"
             tooltipPlacement="bottom" tooltip="Average Score">
-            {{discussion?.avgRank}}</li>
-          <li *ngIf="discussion?.userRank" class="tag tag-pill tag-info list-inline-item"
+            {{discussion.avgRank}}</li>
+          <li *ngIf="discussion.userRank" class="tag tag-pill tag-info list-inline-item"
             tooltipPlacement="bottom" tooltip="Your Vote">
-            {{discussion?.userRank}}</li>
-          <li *ngIf="discussion?.numberOfVotes" class="text-muted list-inline-item">
-            <small> {{discussion?.numberOfVotes}} votes</small></li>
-          <li *ngIf="discussion?.link" class="list-inline-item">
-            <a class="link-unstyled" href="{{discussion?.link}}"
+            {{discussion.userRank}}</li>
+          <li *ngIf="discussion.numberOfVotes" class="text-muted list-inline-item">
+            <small> {{discussion.numberOfVotes}} votes</small></li>
+          <li *ngIf="discussion.link" class="list-inline-item">
+            <a class="link-unstyled" href="{{discussion.link}}"
               target="_blank"><i class="fa fa-external-link"
               aria-hidden="true" tooltipPlacement="bottom" tooltip="Link"></i></a>
           </li>
           <li class="list-inline-item" role="button">
-            <a [routerLink]="['/discussion', discussion?.id]"
+            <a [routerLink]="['/discussion', discussion.id]"
               class="link-unstyled">
               <i class="fa fa-fw fa-comments-o" tooltipPlacement="bottom"
                 tooltip="Comments"></i></a>
           </li>
         </ul>
         <div *ngIf="showVoteSlider">
-          <input [value]="discussion?.userRank" (mouseup)="saveDiscussionRank($event.target.value)"
+          <input [value]="discussion.userRank" (mouseup)="saveDiscussionRank($event.target.value)"
             (touchend)="saveDiscussionRank($event.target.value)"
             (input)="updateDiscussionRank($event.target.value)"
             type="range" min="0" max="100"
-            step="1" (value)="discussion?.userRank"
+            step="1" (value)="discussion.userRank"
             name="discussion_rank" />
         </div>
       </div>
@@ -108,7 +108,7 @@
           </div>
           <ul class="col-md-6 list-inline form-control-label">
             <li class="tag tag-primary list-inline-item">
-              <span>{{discussion?.community.name}}</span>
+              <span>{{discussion.community.name}}</span>
             </li>
           </ul>
           <div *ngIf="communityTypeaheadNoResults===true"
@@ -142,10 +142,10 @@
             <button [disabled]="tagSearchSelected.length < 5 || tagSearchSelected.length > 20 || rgex.test(tagSearchSelected) == false"
               (click)="createTag()" class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
           </div>
-          <ul *ngIf="discussion?.tags" class="col-md-6 list-inline form-control-label">
+          <ul *ngIf="discussion.tags" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeTag(tag)"
               class="tag tag-default list-inline-item"
-              *ngFor="let tag of discussion?.tags">
+              *ngFor="let tag of discussion.tags">
               <span>{{removeQuotes(tag.name)}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
           </ul>
@@ -167,7 +167,7 @@
             <small>Already added that tag</small>
           </div>
         </div>
-        <div *ngIf="discussion?.private_" class="form-group row">
+        <div *ngIf="discussion.private_" class="form-group row">
           <label class="col-sm-2 form-control-label">Invite Users</label>
           <div class="col-sm-4">
             <input [(ngModel)]="userSearchSelected" [typeahead]="userSearchResultsObservable"
@@ -181,7 +181,7 @@
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
             </div>
           </div>
-          <ul *ngIf="discussion?.privateUsers" class="col-md-6 list-inline form-control-label">
+          <ul *ngIf="discussion.privateUsers" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removePrivateUser(privateUser)"
               class="tag tag-default list-inline-item"
               *ngFor="let privateUser of privateUsersWithoutYou()">
@@ -209,7 +209,7 @@
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
             </div>
           </div>
-          <ul *ngIf="discussion?.blockedUsers" class="col-md-6 list-inline form-control-label">
+          <ul *ngIf="discussion.blockedUsers" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeBlockedUser(blockedUser)"
               class="tag tag-default list-inline-item"
               *ngFor="let blockedUser of discussion.blockedUsers">
@@ -234,7 +234,7 @@
       </form>
     </div>
   </div>
-  <div *ngIf="discussion?.deleted">
-    <i>deleted {{discussion?.modified | moment}}</i>    by {{discussion?.creator.name}}
+  <div *ngIf="discussion.deleted">
+    <i>deleted {{discussion.modified | moment}}</i>    by {{discussion.creator.name}}
   </div>
 </div>
