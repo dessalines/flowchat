@@ -66,7 +66,7 @@ export class HomeComponent implements OnInit {
   resort($event) {
     console.log('resorting' + $event);
     this.sorting = $event;
-    this.discussions = [];
+    this.discussions = undefined;
     this.currentPageNum = 1;
     this.scrollDebounce = 0;
     this.ngOnInit();

@@ -39,7 +39,6 @@ export class CommunityComponent implements OnInit {
 
     this.sub = this.route.params.subscribe(params => {
       let communityId: number = +params['communityId'];
-      this.discussions = [];
       this.currentPageNum = 1;
       this.scrollDebounce = 0;
       this.getCommunity(communityId);
@@ -91,7 +90,7 @@ export class CommunityComponent implements OnInit {
   resort($event) {
     console.log('resorting' + $event);
     this.sorting = $event;
-    this.discussions = [];
+    this.discussions = undefined;
     this.currentPageNum = 1;
     this.scrollDebounce = 0;
     this.getDiscussions(this.community.id, this.currentPageNum, this.sorting);
