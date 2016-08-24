@@ -16,7 +16,7 @@
             <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
-        <ul class="list-inline">
+        <ul *ngIf="!textCollapsed" class="list-inline">
           <li class="list-inline-item"> creator: <span class="text-success">{{community.creator.name}}</span></li>
           <li *ngIf="community.moderators"> moderators: </li>
           <li class="list-inline-item" *ngFor="let moderator of community.moderators">
@@ -31,7 +31,7 @@
       </small>
         <ul class="list-inline">
           <li *ngIf="community.private_" class="tag tag-danger list-inline-item">Private</li>
-          <li *ngIf="isCreator && !userService.hasFavoriteCommunity(community)"
+          <li *ngIf="!isCreator && !userService.hasFavoriteCommunity(community)"
             role="button" class="list-inline-item"
             (click)="userService.saveFavoriteCommunity(community)"
             tooltipPlacement="bottom" tooltip="Save to Favorites"><i class="fa fa-fw fa-heart-o"></i></li>
