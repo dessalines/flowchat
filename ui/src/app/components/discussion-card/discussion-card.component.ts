@@ -70,6 +70,8 @@ export class DiscussionCardComponent implements OnInit {
 
   private rgex = Tools.rgex;
 
+  private isSaving: boolean = false;
+
   constructor(private userService: UserService,
     private discussionService: DiscussionService,
     private communityService: CommunityService,
@@ -107,11 +109,17 @@ export class DiscussionCardComponent implements OnInit {
   }
 
   saveDiscussion() {
+    this.isSaving = true;
     this.discussionService.saveDiscussion(this.discussion).subscribe(
       d => {
         this.discussion = d;
         this.editMode = false;
         this.userService.fetchFavoriteDiscussions();
+        this.isSaving = false;
+      },
+      error => {
+        this.toasterService.pop("error", "Error", error);
+        this.isSaving = false;
       });
   }
 
