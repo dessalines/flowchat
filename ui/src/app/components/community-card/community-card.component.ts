@@ -74,6 +74,8 @@ export class CommunityCardComponent implements OnInit {
   private isModerator: boolean = false;
   private isCreator: boolean = false;
 
+  private isSaving: boolean = false;
+
   constructor(private userService: UserService,
     private communityService: CommunityService,
     private tagService: TagService,
@@ -118,15 +120,18 @@ export class CommunityCardComponent implements OnInit {
   }
 
   saveCommunity() {
+    this.isSaving = true;
     this.communityService.saveCommunity(this.community).subscribe(
       c => {
         this.community = c;
         this.editMode = false;
         this.editing.next(this.editMode);
         this.userService.fetchFavoriteCommunities();
+        this.isSaving = false;
       },
       error => {
         this.toasterService.pop("error", "Error", error);
+        this.isSaving = false;
       });
   }
 
