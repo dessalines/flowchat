@@ -150,7 +150,8 @@ insert into discussion_user(user_id, discussion_id, discussion_role_id)
 
 -- Adding a default community called vanilla
 insert into community (name, text_) values ('vanilla', 'Flowchat''s default community.');
-insert into community_user (community_id, user_id, community_role_id) values (1, 1, 1);
+-- make cardinal a moderator
+insert into community_user (community_id, user_id, community_role_id) values (1, 1, 1), (1, 4, 2);
 
 alter table discussion add column community_id bigint not null default 1;
 alter table discussion add constraint fk4_discussion_community foreign key (community_id)
