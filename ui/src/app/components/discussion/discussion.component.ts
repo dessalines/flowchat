@@ -56,6 +56,8 @@ export class DiscussionComponent implements OnInit {
 
   private isModerator: boolean = false;
 
+  private usersCollapsed: boolean = false;
+
   @ViewChild('reconnectModal') reconnectModal;
 
   constructor(private threadedChatService: ThreadedChatService,
@@ -350,6 +352,10 @@ export class DiscussionComponent implements OnInit {
     } else {
       this.isModerator = false;
     }
+  }
+
+  toggleUsersCollapsed() {
+    this.usersCollapsed = !this.usersCollapsed;
   }
 
 }

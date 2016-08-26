@@ -10,14 +10,16 @@
   </div>
   <div class="col-xs-12 col-lg-2">
     <div class="card">
-      <div class="card-header"><i class="fa fa-fw fa-user"></i>Users</div>
-      <ul class="list-group">
+      <div role="button" class="card-header" (click)="toggleUsersCollapsed()">
+        <i class="fa fa-fw fa-user"></i>Users
+      </div>
+      <ul *ngIf="!usersCollapsed" class="list-group">
         <li *ngFor="let user of users" class="list-group-item">{{user.name}}</li>
       </ul>
     </div>
   </div>
 </div>
-<nav *ngIf="!topParentId && !clearTopReply && !isReplying"
+<nav *ngIf="!topParentId && !clearTopReply && !isReplying && !discussion?.deleted"
   class="navbar navbar-fixed-bottom navbar-light bg-faded">
   <app-markdown-edit (textEvent)="setTopReply($event)"
     [rows]="1"></app-markdown-edit>
