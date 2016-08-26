@@ -93,11 +93,15 @@ export class CommunityCardComponent implements OnInit {
   ngOnChanges() {
     this.refresh = false;
     setTimeout(() => this.refresh = true,0);
+    this.setPermissions();
   }
 
   setPermissions() {
+      this.isModerator = false;
+      this.isCreator = false;
       if (this.userService.getUser().id == this.community.creator.id) {
         // Creators also have mod abilities
+
         this.isCreator = true;
         this.isModerator = true;
 

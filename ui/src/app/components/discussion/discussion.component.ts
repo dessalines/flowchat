@@ -54,6 +54,8 @@ export class DiscussionComponent implements OnInit {
 
   private sub: any;
 
+  private isModerator: boolean = false;
+
   @ViewChild('reconnectModal') reconnectModal;
 
   constructor(private threadedChatService: ThreadedChatService,
@@ -90,6 +92,7 @@ export class DiscussionComponent implements OnInit {
     });
 
   }
+
 
   editMode(): Boolean {
     return Boolean(this.route.snapshot.params["editMode"]);
@@ -138,11 +141,12 @@ export class DiscussionComponent implements OnInit {
     this.discussionSubscription = this.discussionService.getDiscussion(this.discussionId).
       subscribe(d => {
         this.discussion = d;
+        this.setIsModerator();
       },
       error => {
         this.toasterService.pop("error", "Error", error);
         this.router.navigate(['/']);
-      })
+      });
   }
 
   websocketCloseWatcher() {
@@ -338,6 +342,15 @@ export class DiscussionComponent implements OnInit {
     this.isReplying = $event;
   }
 
+  setIsModerator() {
+    let m = this.discussion.community.moderators.filter(m => m.id == this.userService.getUser().id)[0];
+    console.log(m);
+    if (m !== undefined) {
+      this.isModerator = true;
+    } else {
+      this.isModerator = false;
+    }
+  }
 
 }
 

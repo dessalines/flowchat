@@ -4,7 +4,7 @@
       <div class="card-block card-block-no-bottom">
         <h4 class="card-title">
           <span role="button" class="link-unstyled" (click)="toggleCollapseText()" tooltipPlacement="bottom" tooltip="Show/Hide Text">{{community.name}}</span>
-          <small *ngIf="isCreator"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
+          <small *ngIf="isModerator"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
         </h4>
       </div>
       <div class="card-block card-block-no-top">
@@ -18,10 +18,8 @@
         </ul>
         <ul *ngIf="!textCollapsed" class="list-inline">
           <li class="list-inline-item"> creator: <span class="text-success">{{community.creator.name}}</span></li>
-          <li *ngIf="community.moderators"> moderators: </li>
-          <li class="list-inline-item" *ngFor="let moderator of community.moderators">
-            <span class="text-primary">{{moderator.name}}</span>
-          </li>
+          <li class="list-inline-item" *ngIf="community.moderators.length > 0"> moderators: </li>
+          <li class="list-inline-item text-primary" *ngFor="let moderator of community.moderators">{{moderator.name}}</li>
         </ul>
       </small>
         <small class="text-muted">
@@ -31,14 +29,18 @@
       </small>
         <ul class="list-inline">
           <li *ngIf="community.private_" class="tag tag-danger list-inline-item">Private</li>
-          <li *ngIf="!isCreator && !userService.hasFavoriteCommunity(community)"
+          <li *ngIf="!isCreator && !isModerator && !userService.hasFavoriteCommunity(community)"
             role="button" class="list-inline-item"
             (click)="userService.saveFavoriteCommunity(community)"
             tooltipPlacement="bottom" tooltip="Save to Favorites"><i class="fa fa-fw fa-heart-o"></i></li>
-          <li *ngIf="!isCreator && userService.hasFavoriteCommunity(community)"
+          <li *ngIf="!isCreator &&!isModerator && userService.hasFavoriteCommunity(community)"
             role="button" class="list-inline-item"
             (click)="userService.removeFavoriteCommunity(community.id)"
             tooltipPlacement="bottom" tooltip="Remove from Favorites"><i class="fa fa-fw fa-heart text-danger"></i></li>
+          <li *ngIf="isModerator && !isCreator"
+            role="button" class="list-inline-item"
+            (click)="userService.removeFavoriteCommunity(community.id)"
+            tooltipPlacement="bottom" tooltip="Stop being a moderator"><i class="fa fa-fw fa-shield"></i></li>
           <li *ngIf="!isCreator" role="button"
             class="list-inline-item" (click)="toggleShowVoteSlider()"
             tooltipPlacement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
@@ -63,7 +65,7 @@
     </div>
     <div *ngIf="editMode">
       <form #communityForm="ngForm" class="card-block">
-        <div class="form-group row">
+        <div *ngIf="isCreator" class="form-group row">
           <label class="col-sm-1 form-control-label">Name</label>
           <div class="col-sm-11">
             <input [(ngModel)]="community.name" class="form-control"
@@ -77,16 +79,17 @@
             </div>
           </div>
         </div>
-        <div class="checkbox">
+        <div *ngIf="isCreator" class="checkbox">
           <label>
             <input [(ngModel)]="community.private_" type="checkbox"
               name="community_private" /> Private
           </label>
         </div>
-        <app-markdown-edit *ngIf="refresh" [focus]="false"
-          [inputText]="community.text" (textEvent)="setEditText($event)"></app-markdown-edit>
+        <app-markdown-edit *ngIf="refresh && isCreator" [focus]="false"
+          [inputText]="community.text" (textEvent)="setEditText($event)">
+        </app-markdown-edit>
         <br>
-        <div class="form-group row">
+        <div *ngIf="isCreator" class="form-group row">
           <label class="col-sm-1 form-control-label">Tags</label>
           <div class="col-md-5 input-group">
             <input [(ngModel)]="tagSearchSelected" [typeahead]="tagSearchResultsObservable"
@@ -126,7 +129,7 @@
             <small>Already added that tag</small>
           </div>
         </div>
-        <div class="form-group row">
+        <div *ngIf="isCreator" class="form-group row">
           <label class="col-sm-1 form-control-label">Moderators</label>
           <div class="col-md-5">
             <input [(ngModel)]="moderatorSearchSelected"
@@ -154,7 +157,7 @@
             Results Found
           </div>
         </div>
-        <div *ngIf="community.private_" class="form-group row">
+        <div *ngIf="community.private_ && isModerator" class="form-group row">
           <label class="col-sm-1 form-control-label">Invite Users</label>
           <div class="col-md-5">
             <input [(ngModel)]="userSearchSelected" [typeahead]="userSearchResultsObservable"
@@ -181,7 +184,7 @@
             Results Found
           </div>
         </div>
-        <div class="form-group row">
+        <div *ngIf="isModerator" class="form-group row">
           <label class="col-sm-1 form-control-label">Block Users</label>
           <div class="col-md-5">
             <input [(ngModel)]="blockedUserSearchSelected"
@@ -218,7 +221,7 @@
           </button>
           <button type="button" (click)="toggleEditMode()"
             class="btn btn-warning">Cancel</button>
-          <button type="button" (click)="deleteCommunity()"
+          <button *ngIf="isCreator" type="button" (click)="deleteCommunity()"
             class="btn btn-danger">Delete</button>
         </div>
       </form>

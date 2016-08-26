@@ -8,6 +8,7 @@ import {Community} from '../../shared/community.interface';
 import {CommunityCardComponent} from '../community-card/index';
 import {DiscussionCardComponent} from '../discussion-card/index';
 import {FooterComponent} from '../footer/index';
+import {ToasterService} from 'angular2-toaster/angular2-toaster';
 
 @Component({
   moduleId: module.id,
@@ -32,7 +33,8 @@ export class CommunityComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private router: Router,
     private discussionService: DiscussionService,
-    private communityService: CommunityService) {
+    private communityService: CommunityService,
+    private toasterService: ToasterService) {
   }
 
   ngOnInit() {
@@ -54,6 +56,10 @@ export class CommunityComponent implements OnInit {
   getCommunity(communityId: number) {
     this.communityService.getCommunity(communityId).subscribe(c => {
       this.community = c;
+    },
+    error => {
+      this.toasterService.pop("error", "Error", error);
+       this.router.navigate(['/']);
     });
   }
 

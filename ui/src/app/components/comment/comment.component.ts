@@ -24,6 +24,8 @@ export class CommentComponent implements OnInit {
 
   @Input() comment: any; // Couldn't get strict typing of this to work for recursive templates
 
+  @Input() isModerator: boolean;
+
   // This emits an event to the higher level chat component, because you only
   // want to focus on new comments when not replying
   @Output() replyingEvent = new EventEmitter();
@@ -38,11 +40,11 @@ export class CommentComponent implements OnInit {
 
   private collapsed: boolean = false;
 
-  private editable: boolean = false;
-
   private showVoteSlider: boolean = false;
 
   private rank: number;
+
+  private isCreator: boolean = false;
 
   constructor(private threadedChatService: ThreadedChatService,
     private userService: UserService) { }
@@ -76,7 +78,7 @@ export class CommentComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setEditable();
+    this.setIsCreator();
     this.setRank();
   }
 
@@ -162,20 +164,13 @@ export class CommentComponent implements OnInit {
     this.editText = $event;
   }
 
-  setEditable() {
+  setIsCreator() {
     if (this.userService.getUser() != null &&
       this.comment.userId == this.userService.getUser().id) {
-      this.editable = true;
+      this.isCreator = true;
     }
   }
 
-  isDiscussionOwner() {
-    if (this.userService.getUser() != null) {
-      return this.comment.discussionOwnerId == this.userService.getUser().id ;
-    } else {
-      return false;
-    }
-  }
 }
 
 interface ReplyData {

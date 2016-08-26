@@ -249,7 +249,7 @@ public class Endpoints {
             Set<Long> communityIds = Tools.fetchCommunitiesFromParams(req.params(":communityId"), userObj);
 
             Paginator p;
-            // TODO for now don't show where private is false
+            // TODO refactor this to a communitiesQueryBuilder, same with discussion(don't use parameterized anymore)
             if (tagId != null) {
                 if (communityIds != null) {
                     p = new Paginator(Tables.DiscussionNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
@@ -627,9 +627,10 @@ public class Endpoints {
 
             User userObj = Actions.getOrCreateUserObj(req, res);
 
-            LazyList<Tables.CommunityUserView> favs = Tables.CommunityUserView.where("user_id = ? and deleted = ?",
+            LazyList<Tables.CommunityUserView> favs = Tables.CommunityUserView.where("user_id = ? and deleted = ? and community_role_id != ?",
                     userObj.getId(),
-                    false);
+                    false,
+                    CommunityRole.BLOCKED.getVal());
 
             Set<Long> favCommunityIds = favs.collectDistinct("community_id");
 
