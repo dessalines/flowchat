@@ -1,16 +1,16 @@
 <div class="row bottom-margin">
-  <div class="col-xs-12 col-lg-10" (window:scroll)="onScroll($event)">
-    <app-discussion-card *ngIf="discussion" [discussion]="discussion"
+  <div *ngIf="discussion" class="col-xs-12 col-lg-10" (window:scroll)="onScroll($event)">
+    <app-discussion-card [discussion]="discussion"
       [editMode]="editMode()"></app-discussion-card>
     <div *ngFor="let comment of comments" class="card">
-      <app-comment [comment]="comment" (replyingEvent)="setIsReplying($event)"></app-comment>
+      <app-comment [comment]="comment" [isModerator]="isModerator" (replyingEvent)="setIsReplying($event)"></app-comment>
     </div>
     <i *ngIf="!comments" class="fa fa-circle-o-notch fa-spin fa-5x text-xs-center block"></i>
     <h4 *ngIf="comments?.length == 0">No Comments</h4>
   </div>
   <div class="col-xs-12 col-lg-2">
     <div class="card">
-      <div class="card-header">Users</div>
+      <div class="card-header"><i class="fa fa-fw fa-user"></i>Users</div>
       <ul class="list-group">
         <li *ngFor="let user of users" class="list-group-item">{{user.name}}</li>
       </ul>

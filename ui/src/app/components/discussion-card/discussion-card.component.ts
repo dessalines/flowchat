@@ -41,6 +41,9 @@ export class DiscussionCardComponent implements OnInit {
 
   @Input() editMode: boolean = false;
 
+  private isCreator: boolean = false;
+  private isModerator: boolean = false;
+
   // tag searching
   private tagSearchResultsObservable: Observable<any>;
   private tagSearchSelected: string = '';
@@ -84,21 +87,39 @@ export class DiscussionCardComponent implements OnInit {
     this.setupUserSearch();
     this.setupBlockedUserSearch();
     this.setupCommunitySearch();
+    this.setPermissions();
   }
 
   ngAfterViewInit() {
   }
 
+  ngOnChanges() {
+    this.setPermissions();
+  }
 
+  setPermissions() {
+    this.isModerator = false;
+    this.isCreator = false;
+    let userId: number = this.userService.getUser().id;
+    console.log(this.discussion);
 
+    // The multi-discussion fetch doesnt grab each communities creators, so check for this
+    if (this.discussion.community.creator != null) {
+      if (userId == this.discussion.creator.id || userId == this.discussion.community.creator.id) {
+        // Creators also have mod abilities
+        this.isCreator = true;
+        this.isModerator = true;
 
-  isCreator(): boolean {
-    if (this.userService.getUser() != null) {
-      return this.userService.getUser().id == this.discussion.creator.id;
-    } else {
-      return false;
+      } else {
+        let m = this.discussion.community.moderators.filter(m => m.id == userId)[0];
+        console.log(m);
+        if (m !== undefined) {
+          this.isModerator = true;
+        }
+      }
     }
   }
+
 
   toggleEditMode() {
     this.editMode = !this.editMode;

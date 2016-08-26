@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Logger;
 import com.chat.DataSources;
 import com.chat.db.Actions;
 import com.chat.db.Tables;
+import com.chat.types.community.CommunityRole;
 import com.chat.types.user.User;
 import com.chat.webservice.ConstantsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -231,16 +232,24 @@ public class Tools {
     }
 
     public static Set<Long> fetchCommunitiesFromParams(String communityParam, User userObj) {
+
+        log.info("community param = " + communityParam);
         Set<Long> communityIds = new HashSet<>();
         if (communityParam.equals("all")) {
-            communityIds = null;
+            return null;
         } else if (communityParam.equals("favorites")) {
             // Fetch the user's favorite communities
             LazyList<Tables.CommunityUser> favoriteCommunities =
-                    Tables.CommunityUser.where("user_id = ?", userObj.getId());
+                    Tables.CommunityUser.where("user_id = ? and community_role_id != ?",
+                            userObj.getId(),
+                            CommunityRole.BLOCKED.getVal());
             communityIds = favoriteCommunities.collectDistinct("community_id");
         } else {
             communityIds.add(Long.valueOf(communityParam));
+        }
+
+        if (communityIds.isEmpty()) {
+            communityIds = null;
         }
 
         return communityIds;
