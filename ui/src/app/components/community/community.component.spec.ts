@@ -14,7 +14,7 @@ import { CommunityComponent } from './community.component';
 
 describe('Component: Community', () => {
   it('should create an instance', () => {
-    let component = new CommunityComponent(null, null, null, null);
+    let component = new CommunityComponent(null, null, null, null, null);
     expect(component).toBeTruthy();
   });
 });

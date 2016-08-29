@@ -260,10 +260,6 @@ export class DiscussionCardComponent implements OnInit {
     this.discussion.privateUsers.splice(index, 1);
   }
 
-  privateUsersWithoutYou() {
-    return this.discussion.privateUsers.slice(1);
-  }
-
   // Blocked user methods
   setupBlockedUserSearch() {
     this.blockedUserSearchResultsObservable = Observable.create((observer: any) => {

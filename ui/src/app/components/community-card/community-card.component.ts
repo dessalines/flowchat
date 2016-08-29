@@ -255,10 +255,6 @@ export class CommunityCardComponent implements OnInit {
     this.community.privateUsers.splice(index, 1);
   }
 
-  privateUsersWithoutYou() {
-    return this.community.privateUsers.slice(1);
-  }
-
   // Blocked user methods
   setupBlockedUserSearch() {
     this.blockedUserSearchResultsObservable = Observable.create((observer: any) => {
