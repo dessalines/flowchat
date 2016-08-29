@@ -2,7 +2,8 @@
   <ul class="list-inline">
     <li class="text-muted list-inline-item" role="button"
       (click)="collapsed = !collapsed">{{collapseText()}}</li>
-    <li class="text-primary list-inline-item">{{comment.userName}}</li>
+    <li class="list-inline-item"
+      [ngClass]="{'tag-success':isCommunityCreator(), 'tag-warning': isCommunityModerator(), 'tag-primary': isDiscussionCreator(), 'tag': !isDiscussionUser(), 'text-primary': isDiscussionUser()}">{{comment.userName}}</li>
     <li *ngIf="comment.avgRank" class="tag tag-pill tag-default list-inline-item"
       tooltipPlacement="bottom" tooltip="Average Score">{{comment.avgRank}}</li>
     <li *ngIf="rank" class="tag tag-pill tag-info list-inline-item"
@@ -39,10 +40,10 @@
       <li role="button" class="list-inline-item" (click)="toggleShowReply()">
         <i class="fa fa-fw fa-reply" tooltipPlacement="bottom" tooltip="Reply"></i>
       </li>
-      <li role="button" *ngIf="isCreator" (click)="toggleShowEdit()" class="list-inline-item">
+      <li role="button" *ngIf="editable" (click)="toggleShowEdit()" class="list-inline-item">
         <i class="fa fa-fw fa-edit" tooltipPlacement="bottom" tooltip="Edit"></i>
       </li>
-      <li role="button" *ngIf="isCreator || isModerator" (click)="deleteComment()" class="list-inline-item">
+      <li role="button" *ngIf="editable || deleteable" (click)="deleteComment()" class="list-inline-item">
         <i class="fa fa-fw fa-remove" tooltipPlacement="bottom" tooltip="Delete"></i>
       </li>
       </span>
@@ -73,6 +74,6 @@
     </div>
   </fieldset>
   <div class="card" *ngFor="let emb of comment.embedded">
-    <app-comment [isModerator]="isModerator" [comment]="emb" (replyingEvent)="setIsReplying($event)"></app-comment>
+    <app-comment [comment]="emb" [discussion]="discussion" (replyingEvent)="setIsReplying($event)"></app-comment>
   </div>
 </div>

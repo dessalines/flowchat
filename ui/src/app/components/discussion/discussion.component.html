@@ -3,7 +3,7 @@
     <app-discussion-card [discussion]="discussion"
       [editMode]="editMode()"></app-discussion-card>
     <div *ngFor="let comment of comments" class="card">
-      <app-comment [comment]="comment" [isModerator]="isModerator" (replyingEvent)="setIsReplying($event)"></app-comment>
+      <app-comment [comment]="comment" [discussion]="discussion" (replyingEvent)="setIsReplying($event)"></app-comment>
     </div>
     <i *ngIf="!comments" class="fa fa-circle-o-notch fa-spin fa-5x text-xs-center block"></i>
     <h4 *ngIf="comments?.length == 0">No Comments</h4>

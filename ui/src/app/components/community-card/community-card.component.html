@@ -19,7 +19,7 @@
         <ul *ngIf="!textCollapsed" class="list-inline">
           <li class="list-inline-item"> creator: <span class="text-success">{{community.creator.name}}</span></li>
           <li class="list-inline-item" *ngIf="community.moderators.length > 0"> moderators: </li>
-          <li class="list-inline-item text-primary" *ngFor="let moderator of community.moderators">{{moderator.name}}</li>
+          <li class="list-inline-item text-warning" *ngFor="let moderator of community.moderators">{{moderator.name}}</li>
         </ul>
       </small>
         <small class="text-muted">

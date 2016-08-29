@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
 import {Comment} from '../../shared/comment.interface';
+import {CommentRole} from '../../shared/comment-role.enum';
+import {Discussion} from '../../shared/discussion.interface';
 import {ThreadedChatService} from '../../services/threaded-chat.service';
 import {UserService} from '../../services/user.service';
 import { MomentPipe } from '../../pipes/moment.pipe';
@@ -24,7 +26,8 @@ export class CommentComponent implements OnInit {
 
   @Input() comment: any; // Couldn't get strict typing of this to work for recursive templates
 
-  @Input() isModerator: boolean;
+  // Have to pass in the discussion to get the moderators and comment roles
+  @Input() discussion: Discussion;
 
   // This emits an event to the higher level chat component, because you only
   // want to focus on new comments when not replying
@@ -44,7 +47,11 @@ export class CommentComponent implements OnInit {
 
   private rank: number;
 
-  private isCreator: boolean = false;
+  private editable: boolean = false;
+
+  private deleteable: boolean = false;
+
+  private commentRole: CommentRole;
 
   constructor(private threadedChatService: ThreadedChatService,
     private userService: UserService) { }
@@ -78,7 +85,9 @@ export class CommentComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setIsCreator();
+    this.setEditable();
+    this.setDeleteable();
+    this.setCommentRole();
     this.setRank();
   }
 
@@ -164,11 +173,48 @@ export class CommentComponent implements OnInit {
     this.editText = $event;
   }
 
-  setIsCreator() {
+  setEditable() {
     if (this.userService.getUser() != null &&
       this.comment.userId == this.userService.getUser().id) {
-      this.isCreator = true;
+      this.editable = true;
     }
+  }
+
+  setDeleteable() {
+    let m = this.discussion.community.moderators.filter(m => m.id == this.userService.getUser().id)[0];
+    if (m !== undefined) {
+      this.deleteable = true;
+    } else {
+      this.deleteable = false;
+    }
+  }
+
+  setCommentRole() {
+    if (this.comment.userId == this.discussion.creator.id) {
+      this.commentRole = CommentRole.DiscussionCreator;
+    } else if (this.comment.userId == this.discussion.community.creator.id) {
+      this.commentRole = CommentRole.CommunityCreator;
+    } else if (this.discussion.community.moderators.filter(m => m.id == this.comment.userId)[0] !== undefined) {
+      this.commentRole = CommentRole.CommunityModerator;
+    } else {
+      this.commentRole = CommentRole.User;
+    }
+  }
+
+  isCommunityCreator() {
+    return this.commentRole == CommentRole.CommunityCreator;
+  }
+
+  isCommunityModerator() {
+    return this.commentRole == CommentRole.CommunityModerator;
+  }
+
+  isDiscussionCreator() {
+    return this.commentRole == CommentRole.DiscussionCreator;
+  }
+
+  isDiscussionUser() {
+    return this.commentRole == CommentRole.User;
   }
 
 }

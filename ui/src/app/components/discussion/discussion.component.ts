@@ -1,7 +1,7 @@
 import {Component, Input, provide, OnInit, ViewChild} from '@angular/core';
 import { HTTP_PROVIDERS }    from '@angular/http';
 import {ThreadedChatService} from '../../services/threaded-chat.service';
-import {Comment, User, Discussion, Tag} from '../../shared';
+import {Comment, User, Discussion, Tag, CommentRole} from '../../shared';
 import {CommentComponent} from '../comment/index';
 import {DiscussionCardComponent} from '../discussion-card/index';
 import {UserService} from '../../services/user.service';
@@ -356,6 +356,19 @@ export class DiscussionComponent implements OnInit {
 
   toggleUsersCollapsed() {
     this.usersCollapsed = !this.usersCollapsed;
+  }
+
+  getCommentRole(commentUserId: number): CommentRole {
+
+    if (commentUserId == this.discussion.creator.id) {
+      return CommentRole.DiscussionCreator;
+    } else if (commentUserId == this.discussion.community.creator.id) {
+      return CommentRole.CommunityCreator;
+    } else if (this.discussion.community.moderators.filter(m => m.id == commentUserId)[0] !== undefined) {
+      return CommentRole.CommunityModerator;
+    } else {
+      return CommentRole.User;
+    }
   }
 
 }
