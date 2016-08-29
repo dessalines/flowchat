@@ -190,7 +190,7 @@
           <ul *ngIf="discussion.privateUsers" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removePrivateUser(privateUser)"
               class="tag tag-default list-inline-item"
-              *ngFor="let privateUser of privateUsersWithoutYou()">
+              *ngFor="let privateUser of discussion.privateUsers">
               <span>{{privateUser.name}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
           </ul>

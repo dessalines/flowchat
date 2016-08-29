@@ -68,14 +68,15 @@ public class Community implements JSONWriter {
 
     public void checkPrivate(User userObj) {
         if (getPrivate_().equals(true)) {
-            if (!getPrivateUsers().contains(userObj)) {
+            if (!getCreator().equals(userObj) &&
+                    !getModerators().contains(userObj) &&
+                    !getPrivateUsers().contains(userObj)) {
                 throw new NoSuchElementException("Private community, not allowed to view");
             }
         }
     }
 
     public void checkBlocked(User userObj) {
-        System.out.println(Arrays.toString(getBlockedUsers().toArray()));
         if (getBlockedUsers().contains(userObj)) {
             throw new NoSuchElementException("You have been blocked from this community");
         }
@@ -110,6 +111,9 @@ public class Community implements JSONWriter {
                 User userObj = User.create(udv.getLong("user_id"), udv.getString("name"));
 
                 switch (role) {
+                    case CREATOR:
+                        creator = userObj;
+                        break;
                     case MODERATOR:
                         moderators.add(userObj);
                         break;
@@ -118,9 +122,6 @@ public class Community implements JSONWriter {
                         break;
                     case USER:
                         privateUsers.add(userObj);
-                        break;
-                    case CREATOR:
-                        creator = userObj;
                         break;
                 }
             }
