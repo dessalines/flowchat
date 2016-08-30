@@ -59,6 +59,7 @@ const barrels: string[] = [
   'app/footer',
   'app/community-card',
   'app/community',
+  'app/community-modlog',
   /** @cli-barrel */
 ];
 

@@ -6,9 +6,10 @@ CREATE schema audit;
 REVOKE CREATE ON schema audit FROM public;
 
 CREATE TABLE audit.logged_actions (
+    id bigint not null,
     schema_name text NOT NULL,
     TABLE_NAME text NOT NULL,
-    user_name text,
+    p_user_name text,
     action_tstamp TIMESTAMP WITH TIME zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     action TEXT NOT NULL CHECK (action IN ('I','D','U')),
     original_data text,
@@ -44,18 +45,18 @@ BEGIN
     IF (TG_OP = 'UPDATE') THEN
         v_old_data := ROW(OLD.*);
         v_new_data := ROW(NEW.*);
-        INSERT INTO audit.logged_actions (schema_name,table_name,user_name,action,original_data,new_data,query)
-        VALUES (TG_TABLE_SCHEMA::TEXT,TG_TABLE_NAME::TEXT,session_user::TEXT,substring(TG_OP,1,1),v_old_data,v_new_data, current_query());
+        INSERT INTO audit.logged_actions (id, schema_name,table_name,p_user_name,action,original_data,new_data,query)
+        VALUES (NEW.id, TG_TABLE_SCHEMA::TEXT,TG_TABLE_NAME::TEXT,session_user::TEXT,substring(TG_OP,1,1),v_old_data,v_new_data, current_query());
         RETURN NEW;
     ELSIF (TG_OP = 'DELETE') THEN
         v_old_data := ROW(OLD.*);
-        INSERT INTO audit.logged_actions (schema_name,table_name,user_name,action,original_data,query)
-        VALUES (TG_TABLE_SCHEMA::TEXT,TG_TABLE_NAME::TEXT,session_user::TEXT,substring(TG_OP,1,1),v_old_data, current_query());
+        INSERT INTO audit.logged_actions (id, schema_name,table_name,p_user_name,action,original_data,query)
+        VALUES (NEW.id, TG_TABLE_SCHEMA::TEXT,TG_TABLE_NAME::TEXT,session_user::TEXT,substring(TG_OP,1,1),v_old_data, current_query());
         RETURN OLD;
     ELSIF (TG_OP = 'INSERT') THEN
         v_new_data := ROW(NEW.*);
-        INSERT INTO audit.logged_actions (schema_name,table_name,user_name,action,new_data,query)
-        VALUES (TG_TABLE_SCHEMA::TEXT,TG_TABLE_NAME::TEXT,session_user::TEXT,substring(TG_OP,1,1),v_new_data, current_query());
+        INSERT INTO audit.logged_actions (id, schema_name,table_name,p_user_name,action,new_data,query)
+        VALUES (NEW.id, TG_TABLE_SCHEMA::TEXT,TG_TABLE_NAME::TEXT,session_user::TEXT,substring(TG_OP,1,1),v_new_data, current_query());
         RETURN NEW;
     ELSE
         RAISE WARNING '[AUDIT.IF_MODIFIED_FUNC] - Other action occurred: %, at %',TG_OP,now();
@@ -125,6 +126,39 @@ FOR EACH ROW EXECUTE PROCEDURE audit.if_modified_func();
 CREATE TRIGGER discussion_user_audit
 AFTER INSERT OR UPDATE OR DELETE ON discussion_user
 FOR EACH ROW EXECUTE PROCEDURE audit.if_modified_func();
+
+create view community_audit_view as
+select audit.logged_actions.*,
+discussion.id as discussion_id,
+discussion.community_id,
+comment.user_id,
+user_.name as user_name
+from audit.logged_actions
+inner join comment on comment.id = audit.logged_actions.id
+inner join discussion on comment.discussion_id = discussion.id
+inner join user_ on comment.user_id = user_.id
+where audit.logged_actions.table_name = 'comment'
+union
+select audit.logged_actions.*,
+discussion.id as discussion_id,
+discussion.community_id,
+null as user_id,
+null as user_name
+from audit.logged_actions
+inner join discussion on discussion.id = audit.logged_actions.id
+where audit.logged_actions.table_name = 'discussion'
+union
+select audit.logged_actions.*,
+null as discussion_id,
+community_user.community_id,
+community_user.user_id,
+user_.name as user_name
+from audit.logged_actions
+inner join community_user on community_user.id = audit.logged_actions.id
+inner join user_ on community_user.user_id = user_.id
+where audit.logged_actions.table_name = 'community_user'
+order by action_tstamp desc;
+
 
 
 

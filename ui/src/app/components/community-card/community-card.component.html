@@ -40,7 +40,9 @@
           <li *ngIf="isModerator && !isCreator"
             role="button" class="list-inline-item"
             (click)="userService.removeFavoriteCommunity(community.id)"
-            tooltipPlacement="bottom" tooltip="Stop being a moderator"><i class="fa fa-fw fa-shield"></i></li>
+            tooltipPlacement="bottom" tooltip="Stop being a moderator"><i class="fa fa-fw fa-shield text-danger"></i></li>
+          <li role="button" class="list-inline-item">
+            <a class="link-unstyled" [routerLink]="['modlog']"><i class="fa fa-fw fa-shield" tooltipPlacement="bottom" tooltip="View Moderator Log (modlog)"></i></a></li>
           <li *ngIf="!isCreator" role="button"
             class="list-inline-item" (click)="toggleShowVoteSlider()"
             tooltipPlacement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
