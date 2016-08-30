@@ -17,6 +17,7 @@ import com.chat.types.user.User;
 import com.chat.types.user.Users;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.Paginator;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -672,13 +673,25 @@ public class Endpoints {
 
             User userObj = Actions.getOrCreateUserObj(req, res);
 
-            Long discussionId = Long.valueOf(req.params(":id"));
+            Long communityId = Long.valueOf(req.params(":id"));
 
-            Actions.deleteFavoriteCommunity(userObj.getId(), discussionId);
+            Actions.deleteFavoriteCommunity(userObj.getId(), communityId);
 
             res.status(HttpStatus.OK_200);
 
             return "";
+
+        });
+
+        get("/community_modlog/:id", (req, res) -> {
+
+            User userObj = Actions.getOrCreateUserObj(req, res);
+
+            Long id = Long.valueOf(req.params(":id"));
+
+            LazyList<Tables.CommunityAuditView> auditRows = Tables.CommunityAuditView.find("community_id = ?", id);
+
+            return auditRows.toJson(false);
 
         });
 

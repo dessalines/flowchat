@@ -18,6 +18,7 @@ export class CommunityService {
   private saveRankUrl: string = environment.endpoint + 'community_rank/';
   private createCommunityUrl: string = environment.endpoint + 'community';
   private saveCommunityUrl: string = environment.endpoint + 'community';
+  private getCommunityModlogUrl: string = environment.endpoint + 'community_modlog/';
 
 
   private getCommunitiesUrl(page: number, limit: number, tagId: string,
@@ -63,6 +64,12 @@ export class CommunityService {
 
   saveCommunity(community: Community) {
     return this.http.put(this.saveCommunityUrl, community, this.userService.getOptions())
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  getCommunityModlog(id: number) {
+    return this.http.get(this.getCommunityModlogUrl + id, this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }

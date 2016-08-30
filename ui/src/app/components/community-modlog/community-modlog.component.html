@@ -1,0 +1,24 @@
+<div class="modRow">
+  <div class="col-xs-12">
+    <div *ngFor="let modRow of modlog">
+      <span class="text-muted">{{modRow.action_tstamp | moment}}</span>
+      <span [ngSwitch]="modRow.action">
+      	<span *ngSwitchCase="'I'">added</span>
+      	<span *ngSwitchCase="'U'">altered</span>
+      	<span *ngSwitchCase="'D'">deleted</span>
+      </span>
+      <span [ngSwitch]="modRow.table_name">
+        <span *ngSwitchCase="'discussion'">
+          a <a [routerLink]="['/discussion', modRow.discussion_id]">{{modRow.table_name}}</a>
+        </span>
+        <span *ngSwitchCase="'comment'">
+          <span class="text-primary">{{modRow.user_name}}'s</span>
+          <a [routerLink]="['/discussion', modRow.discussion_id, 'comment', modRow.id]">{{modRow.table_name}}</a>
+        </span>
+        <span *ngSwitchCase="'community_user'">
+          <span class="text-primary">{{modRow.user_name}}</span>        to the community
+        </span>
+      </span>
+    </div>
+  </div>
+</div>

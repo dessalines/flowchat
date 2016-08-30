@@ -107,4 +107,7 @@ public class Tables {
     @Table("community_user_view")
     public static class CommunityUserView extends Model {}
 
+    @Table("community_audit_view")
+    public static class CommunityAuditView extends Model {}
+
 }
