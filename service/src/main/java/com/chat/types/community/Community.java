@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 public class Community implements JSONWriter {
 
     private Long id;
-    private User creator;
+    private User creator, modifiedByUser;
     private String name, text;
     private Boolean private_, deleted;
     private Integer avgRank, userRank, numberOfVotes;
@@ -39,6 +39,7 @@ public class Community implements JSONWriter {
                      Integer numberOfVotes,
                      List<Tag> tags,
                      User creator,
+                     User modifiedByUser,
                      List<User> moderators,
                      List<User> privateUsers,
                      List<User> blockedUsers,
@@ -47,6 +48,7 @@ public class Community implements JSONWriter {
                      Timestamp modified) {
         this.id = id;
         this.creator = creator;
+        this.modifiedByUser = modifiedByUser;
         this.name = name;
         this.text = text;
         this.private_ = private_;
@@ -127,6 +129,9 @@ public class Community implements JSONWriter {
             }
         }
 
+        // Create the modified by user
+        User modifiedByUser = User.create(c.getLong("modified_by_user_id"), c.getString("modified_by_user_name"));
+
         return new Community(c.getLongId(),
                 c.getString("name"),
                 c.getString("text_"),
@@ -136,6 +141,7 @@ public class Community implements JSONWriter {
                 c.getInteger("number_of_votes"),
                 tags,
                 creator,
+                modifiedByUser,
                 moderators,
                 privateUsers,
                 blockedUsers,
@@ -208,4 +214,8 @@ public class Community implements JSONWriter {
     }
 
     public User getCreator() {return creator;}
+
+    public User getModifiedByUser() {
+        return modifiedByUser;
+    }
 }

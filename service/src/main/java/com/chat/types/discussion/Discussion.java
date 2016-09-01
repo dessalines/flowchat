@@ -17,7 +17,7 @@ import java.util.*;
  */
 public class Discussion implements JSONWriter {
     private Long id;
-    private User creator;
+    private User creator, modifiedByUser;
     private String title, link, text;
     private Boolean private_, deleted;
     private Integer avgRank, userRank, numberOfVotes;
@@ -26,7 +26,8 @@ public class Discussion implements JSONWriter {
     private List<User> privateUsers, blockedUsers;
     private Timestamp created, modified;
 
-    public Discussion() {}
+    public Discussion() {
+    }
 
     public Discussion(Long id,
                       String title,
@@ -38,6 +39,7 @@ public class Discussion implements JSONWriter {
                       Integer numberOfVotes,
                       List<Tag> tags,
                       User creator,
+                      User modifiedByUser,
                       List<User> privateUsers,
                       List<User> blockedUsers,
                       Boolean deleted,
@@ -46,6 +48,7 @@ public class Discussion implements JSONWriter {
                       Timestamp modified) {
         this.id = id;
         this.creator = creator;
+        this.modifiedByUser = modifiedByUser;
         this.title = title;
         this.link = link;
         this.text = text;
@@ -124,6 +127,9 @@ public class Discussion implements JSONWriter {
         // Create the community
         Community community = (cntv != null) ? Community.create(cntv, null, communityUsers, null) : null;
 
+        // Create the modified by user
+        User modifiedByUser = User.create(d.getLong("modified_by_user_id"), d.getString("modified_by_user_name"));
+
         return new Discussion(d.getLongId(),
                 d.getString("title"),
                 d.getString("link"),
@@ -134,6 +140,7 @@ public class Discussion implements JSONWriter {
                 d.getInteger("number_of_votes"),
                 tags,
                 creator,
+                modifiedByUser,
                 privateUsers,
                 blockedUsers,
                 d.getBoolean("deleted"),
@@ -209,9 +216,15 @@ public class Discussion implements JSONWriter {
         return deleted;
     }
 
-    public User getCreator() {return creator;}
+    public User getCreator() {
+        return creator;
+    }
 
     public Community getCommunity() {
         return community;
+    }
+
+    public User getModifiedByUser() {
+        return modifiedByUser;
     }
 }
