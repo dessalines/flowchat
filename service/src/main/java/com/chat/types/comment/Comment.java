@@ -4,6 +4,7 @@ package com.chat.types.comment;
 import com.chat.tools.Tools;
 import com.chat.types.JSONWriter;
 import com.chat.types.RankingConstants;
+import com.chat.types.user.User;
 import com.chat.webservice.ConstantsService;
 import org.javalite.activejdbc.Model;
 
@@ -17,18 +18,20 @@ import java.util.List;
  * Created by tyler on 6/7/16.
  */
 public class Comment implements JSONWriter {
-    private Long id, userId, discussionId, discussionOwnerId, parentId, topParentId, parentUserId,
+    private Long id, discussionId, discussionOwnerId, parentId, topParentId, parentUserId,
             pathLength, numOfParents, numOfChildren;
-    private String userName, text;
+    private String text;
     private Timestamp created, modified;
     private List<Comment> embedded;
     private List<Long> breadcrumbs;
     private Integer avgRank, userRank, numberOfVotes;
     private Boolean deleted, read;
 
+    private User user, modifiedByUser;
+
     public Comment(Long id,
-                   Long userId,
-                   String userName,
+                   User user,
+                   User modifiedByUser,
                    Long discussionId,
                    Long discussionOwnerId,
                    String text,
@@ -47,8 +50,8 @@ public class Comment implements JSONWriter {
                    Timestamp modified
     ) {
         this.id = id;
-        this.userId = userId;
-        this.userName = userName;
+        this.user = user;
+        this.modifiedByUser = modifiedByUser;
         this.topParentId = topParentId;
         this.parentUserId = parentUserId;
         this.text = text;
@@ -73,9 +76,14 @@ public class Comment implements JSONWriter {
     }
 
     public static Comment create(Model cv, Integer vote) {
+
+        User user = User.create(cv.getLong("user_id"), cv.getString("user_name"));
+        User modifiedByUser = User.create(cv.getLong("modified_by_user_id"), cv.getString("modified_by_user_name"));
+
+
         return new Comment(cv.getLong("id"),
-                cv.getLong("user_id"),
-                cv.getString("user_name"),
+                user,
+                modifiedByUser,
                 cv.getLong("discussion_id"),
                 cv.getLong("discussion_owner_id"),
                 cv.getString("text_"),
@@ -176,7 +184,7 @@ public class Comment implements JSONWriter {
         Comment that = (Comment) o;
 
         if (!id.equals(that.id)) return false;
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
+        if (user.getId() != null ? !user.getId().equals(that.user.getId()) : that.user.getId() != null) return false;
         if (discussionId != null ? !discussionId.equals(that.discussionId) : that.discussionId != null) return false;
 
         return read != null ? read.equals(that.read) : that.read == null;
@@ -186,7 +194,7 @@ public class Comment implements JSONWriter {
     @Override
     public int hashCode() {
         int result = id.hashCode();
-        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (user.getId() != null ? user.getId().hashCode() : 0);
         result = 31 * result + (discussionId != null ? discussionId.hashCode() : 0);
         return result;
     }
@@ -255,13 +263,19 @@ public class Comment implements JSONWriter {
         return breadcrumbs;
     }
 
-    public Long getUserId() { return userId; }
-
-    public String getUserName() { return userName;}
-
     public Boolean getDeleted() {return deleted;}
 
     public Long getParentUserId() {return parentUserId;}
 
     public Boolean getRead() {return read;}
+
+    public User getUser() {
+        return user;
+    }
+
+    public User getModifiedByUser() {
+        return modifiedByUser;
+    }
+
+    
 }
