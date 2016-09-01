@@ -175,7 +175,7 @@ export class CommentComponent implements OnInit {
 
   setEditable() {
     if (this.userService.getUser() != null &&
-      this.comment.userId == this.userService.getUser().id) {
+      this.comment.user.id == this.userService.getUser().id) {
       this.editable = true;
     }
   }
@@ -190,11 +190,11 @@ export class CommentComponent implements OnInit {
   }
 
   setCommentRole() {
-    if (this.comment.userId == this.discussion.creator.id) {
+    if (this.comment.user.id == this.discussion.creator.id) {
       this.commentRole = CommentRole.DiscussionCreator;
-    } else if (this.comment.userId == this.discussion.community.creator.id) {
+    } else if (this.comment.user.id == this.discussion.community.creator.id) {
       this.commentRole = CommentRole.CommunityCreator;
-    } else if (this.discussion.community.moderators.filter(m => m.id == this.comment.userId)[0] !== undefined) {
+    } else if (this.discussion.community.moderators.filter(m => m.id == this.comment.user.id)[0] !== undefined) {
       this.commentRole = CommentRole.CommunityModerator;
     } else {
       this.commentRole = CommentRole.User;

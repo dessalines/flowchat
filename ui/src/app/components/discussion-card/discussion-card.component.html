@@ -244,6 +244,6 @@
     </div>
   </div>
   <div *ngIf="discussion.deleted">
-    <i>deleted {{discussion.modified | moment}}</i>    by {{discussion.creator.name}}
+    <i>deleted {{discussion.modified | moment}}</i>    by {{discussion.modifiedByUser.name}}
   </div>
 </div>
