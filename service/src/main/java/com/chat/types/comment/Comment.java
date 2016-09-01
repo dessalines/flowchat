@@ -277,5 +277,5 @@ public class Comment implements JSONWriter {
         return modifiedByUser;
     }
 
-    
+
 }

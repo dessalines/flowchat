@@ -7,6 +7,7 @@ export interface Community {
   text?: string;
   private_?: boolean;
   creator: User;
+  modifiedByUser: User;
   moderators?: Array<User>;
   privateUsers?: Array<User>;
   blockedUsers?: Array<User>;
