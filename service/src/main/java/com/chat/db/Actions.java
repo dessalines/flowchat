@@ -28,7 +28,6 @@ public class Actions {
 
     public static Logger log = (Logger) LoggerFactory.getLogger(Actions.class);
 
-
     public static Comment createComment(Long userId, Long discussionId,
                                         List<Long> parentBreadCrumbs, String text) {
 
@@ -39,7 +38,8 @@ public class Actions {
         // find the candidate
         Comment c = Comment.createIt("discussion_id" , discussionId,
                 "text_" , text,
-                "user_id" , userId);
+                "user_id" , userId,
+                "modified_by_user_id", userId);
 
 
         Long childId = c.getLong("id");
@@ -65,7 +65,7 @@ public class Actions {
 
     }
 
-    public static Comment editComment(Long commentId, String text) {
+    public static Comment editComment(Long userId, Long commentId, String text) {
 
         // Find the comment
         Comment c = Comment.findFirst("id = ?" , commentId);
@@ -73,20 +73,24 @@ public class Actions {
         Timestamp cTime = new Timestamp(new Date().getTime());
 
         // Create with add modified date
-        c.set("text_" , text, "modified" , cTime).saveIt();
+        c.set("text_" , text,
+                "modified" , cTime,
+                "modified_by_user_id", userId).saveIt();
 
         return c;
 
     }
 
-    public static Comment deleteComment(Long commentId) {
+    public static Comment deleteComment(Long userId, Long commentId) {
         // Find the comment
         Comment c = Comment.findFirst("id = ?" , commentId);
 
         Timestamp cTime = new Timestamp(new Date().getTime());
 
         // Create with add modified date
-        c.set("deleted" , true, "modified" , cTime).saveIt();
+        c.set("deleted" , true,
+                "modified" , cTime,
+                "modified_by_user_id", userId).saveIt();
 
         return c;
     }
@@ -136,7 +140,8 @@ public class Actions {
         log.info("Creating discussion");
         String title = "A new discussion";
 
-        Tables.Discussion d = Tables.Discussion.createIt("title", title);
+        Tables.Discussion d = Tables.Discussion.createIt("title", title,
+                "modified_by_user_id", userId);
 
         DiscussionUser.createIt("user_id", userId,
                 "discussion_id", d.getLong("id"),
@@ -152,7 +157,7 @@ public class Actions {
         return Discussion.create(dfv, cntv, null, udv, null, null);
     }
 
-    public static Discussion saveDiscussion(Discussion do_) {
+    public static Discussion saveDiscussion(Long userId, Discussion do_) {
 
         Timestamp cTime = new Timestamp(new Date().getTime());
 
@@ -169,6 +174,7 @@ public class Actions {
         if (do_.getDeleted() != null) d.set("deleted", do_.getDeleted());
         if (do_.getCommunity() != null) d.set("community_id", do_.getCommunity().getId());
 
+        d.set("modified_by_user_id", userId);
         d.set("modified" , cTime);
         d.saveIt();
 
@@ -506,7 +512,8 @@ public class Actions {
         log.info("Creating community");
         String name = "new_community_" + UUID.randomUUID().toString().substring(0, 8);
 
-        Tables.Community c = Tables.Community.createIt("name", name);
+        Tables.Community c = Tables.Community.createIt("name", name,
+                "modified_by_user_id", userId);
 
         CommunityUser.createIt("user_id", userId,
                 "community_id", c.getLong("id"),
@@ -518,7 +525,7 @@ public class Actions {
         return com.chat.types.community.Community.create(dfv, null, udv, null);
     }
 
-    public static com.chat.types.community.Community saveCommunity(com.chat.types.community.Community co_) {
+    public static com.chat.types.community.Community saveCommunity(Long userId, com.chat.types.community.Community co_) {
 
         Timestamp cTime = new Timestamp(new Date().getTime());
 
@@ -533,6 +540,7 @@ public class Actions {
         if (co_.getPrivate_() != null) c.set("private" , co_.getPrivate_());
         if (co_.getDeleted() != null) c.set("deleted", co_.getDeleted());
 
+        c.set("modified_by_user_id", userId);
         c.set("modified" , cTime);
 
         try {

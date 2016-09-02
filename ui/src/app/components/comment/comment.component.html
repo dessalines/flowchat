@@ -3,7 +3,7 @@
     <li class="text-muted list-inline-item" role="button"
       (click)="collapsed = !collapsed">{{collapseText()}}</li>
     <li class="list-inline-item"
-      [ngClass]="{'tag-success':isCommunityCreator(), 'tag-warning': isCommunityModerator(), 'tag-primary': isDiscussionCreator(), 'tag': !isDiscussionUser(), 'text-primary': isDiscussionUser()}">{{comment.user.name}}</li>
+      [ngClass]="{'tag-primary':isCommunityCreator(), 'tag-warning': isCommunityModerator(), 'tag-success': isDiscussionCreator(), 'tag': !isDiscussionUser(), 'text-primary': isDiscussionUser()}">{{comment.user.name}}</li>
     <li *ngIf="comment.avgRank" class="tag tag-pill tag-default list-inline-item"
       tooltipPlacement="bottom" tooltip="Average Score">{{comment.avgRank}}</li>
     <li *ngIf="rank" class="tag tag-pill tag-info list-inline-item"

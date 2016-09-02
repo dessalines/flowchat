@@ -369,7 +369,7 @@ public class Endpoints {
 
             Discussion doIn = Discussion.fromJson(req.body());
 
-            Discussion do_ = Actions.saveDiscussion(doIn);
+            Discussion do_ = Actions.saveDiscussion(userObj.getId(), doIn);
 
             res.status(HttpStatus.OK_200);
 
@@ -616,7 +616,7 @@ public class Endpoints {
 
             Community coIn = Community.fromJson(req.body());
 
-            Community co_ = Actions.saveCommunity(coIn);
+            Community co_ = Actions.saveCommunity(userObj.getId(), coIn);
 
             res.status(HttpStatus.OK_200);
 

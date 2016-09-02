@@ -92,9 +92,9 @@ export class CommentComponent implements OnInit {
   }
 
   sendMessage() {
-    
+
     this.threadedChatService.send(this.replyData());
-  
+
     this.showReply = false;
     this.replyingEvent.emit(this.showReply);
     this.replyText = "";
@@ -181,11 +181,15 @@ export class CommentComponent implements OnInit {
   }
 
   setDeleteable() {
-    let m = this.discussion.community.moderators.filter(m => m.id == this.userService.getUser().id)[0];
-    if (m !== undefined) {
+    if (this.discussion.community.creator.id === this.userService.getUser().id) {
       this.deleteable = true;
     } else {
-      this.deleteable = false;
+      let m = this.discussion.community.moderators.filter(m => m.id == this.userService.getUser().id)[0];
+      if (m !== undefined) {
+        this.deleteable = true;
+      } else {
+        this.deleteable = false;
+      }
     }
   }
 
