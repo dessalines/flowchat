@@ -1,11 +1,10 @@
 <div class="col-lg-11 col-xs-12">
   <div class="row">
-    <div class="col-xs-12" [class.col-md-10]="!editMode()">
+    <div class="col-xs-12" [class.col-md-10]="!editing">
       <app-community-card *ngIf="community" [community]="community"
-        [editMode]="editMode()" (editing)="editing($event)"></app-community-card>
+        [(editing)]="editing"></app-community-card>
     </div>
-    <div *ngIf="!editMode()"
-      class="col-xs-12 col-md-2">
+    <div *ngIf="!editing" class="col-xs-12 col-md-2">
       <select [ngModel]="sorting" (ngModelChange)="resort($event)"
         class="form-control">
         <option disabled>Sorting</option>
@@ -20,16 +19,18 @@
       </select>
     </div>
   </div>
-  <div class="card-deck-wrapper">
-    <div (window:scroll)="onScroll($event)" class="card-deck">
-      <app-discussion-card class="col-md-4" *ngFor="let discussion of discussions"
-        [discussion]="discussion"></app-discussion-card>
+  <div *ngIf="!editing">
+    <div class="card-deck-wrapper">
+      <div (window:scroll)="onScroll($event)" class="card-deck">
+        <app-discussion-card class="col-md-4" *ngFor="let discussion of discussions"
+          [discussion]="discussion"></app-discussion-card>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
-      <i *ngIf="!discussions" class="fa fa-circle-o-notch fa-spin fa-5x text-xs-center block"></i>
-      <h4 *ngIf="discussions?.length == 0">No Discussions</h4>
+    <div class="row">
+      <div class="col-xs-12">
+        <i *ngIf="!discussions" class="fa fa-circle-o-notch fa-spin fa-5x text-xs-center block"></i>
+        <h4 *ngIf="discussions?.length == 0">No Discussions</h4>
+      </div>
     </div>
   </div>
   <app-footer></app-footer>

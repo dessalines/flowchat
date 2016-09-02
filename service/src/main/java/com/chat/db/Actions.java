@@ -212,8 +212,9 @@ public class Actions {
         List<DiscussionTagView> dtv = DiscussionTagView.where("discussion_id = ?", do_.getId());
         List<DiscussionUserView> ud = DiscussionUserView.where("discussion_id = ?", do_.getId());
         CommunityNoTextView cntv = CommunityNoTextView.findFirst("id = ?", dfv.getLong("community_id"));
+        List<Tables.CommunityUserView> communityUsers = Tables.CommunityUserView.where("community_id = ?", cntv.getLong("id"));
 
-        Discussion doOut = Discussion.create(dfv, cntv, dtv, ud, null, null);
+        Discussion doOut = Discussion.create(dfv, cntv, dtv, ud, communityUsers, null);
 
         return doOut;
     }

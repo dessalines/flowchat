@@ -1,4 +1,4 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl} from '@angular/forms';
 import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
 import {Discussion} from '../../shared/discussion.interface';
@@ -39,7 +39,8 @@ export class DiscussionCardComponent implements OnInit {
 
   private showVoteSlider: boolean = false;
 
-  @Input() editMode: boolean = false;
+  @Input() editing: boolean = false;
+  @Output() editingChange = new EventEmitter();
 
   private isCreator: boolean = false;
   private isModerator: boolean = false;
@@ -104,25 +105,25 @@ export class DiscussionCardComponent implements OnInit {
     console.log(this.discussion);
 
     // The multi-discussion fetch doesnt grab each communities creators, so check for this
-    if (this.discussion.community.creator != null) {
-      if (userId == this.discussion.creator.id || userId == this.discussion.community.creator.id) {
-        // Creators also have mod abilities
-        this.isCreator = true;
-        this.isModerator = true;
+    if (userId == this.discussion.creator.id || userId == this.discussion.community.creator.id) {
+      // Creators also have mod abilities
+      this.isCreator = true;
+      this.isModerator = true;
 
-      } else {
-        let m = this.discussion.community.moderators.filter(m => m.id == userId)[0];
-        console.log(m);
-        if (m !== undefined) {
-          this.isModerator = true;
-        }
+    } else {
+      let m = this.discussion.community.moderators.filter(m => m.id == userId)[0];
+      console.log(m);
+      if (m !== undefined) {
+        this.isModerator = true;
       }
+
     }
   }
 
 
-  toggleEditMode() {
-    this.editMode = !this.editMode;
+  toggleEditing() {
+    this.editing = !this.editing;
+    this.editingChange.next(this.editing);
   }
 
   setEditText($event) {
@@ -134,7 +135,8 @@ export class DiscussionCardComponent implements OnInit {
     this.discussionService.saveDiscussion(this.discussion).subscribe(
       d => {
         this.discussion = d;
-        this.editMode = false;
+        this.editing = false;
+        this.editingChange.next(this.editing);
         this.userService.fetchFavoriteDiscussions();
         this.isSaving = false;
       },

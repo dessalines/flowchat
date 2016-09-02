@@ -30,6 +30,8 @@ export class CommunityComponent implements OnInit {
 
   private sub: any;
 
+  private editing: Boolean = false;
+
   constructor(private route: ActivatedRoute,
     private router: Router,
     private discussionService: DiscussionService,
@@ -45,6 +47,7 @@ export class CommunityComponent implements OnInit {
       this.scrollDebounce = 0;
       this.getCommunity(communityId);
       this.getDiscussions(communityId, this.currentPageNum, this.sorting);
+      this.editing = Boolean(this.route.snapshot.params["editMode"]);
     });
 
   }
@@ -85,13 +88,10 @@ export class CommunityComponent implements OnInit {
     }
   }
 
-  editMode(): Boolean {
-    return Boolean(this.route.snapshot.params["editMode"]);
-  }
 
-  editing($event) {
-    this.route.snapshot.params["editMode"] = $event;
-  }
+  // editing($event) {
+  //   this.route.snapshot.params["editMode"] = $event;
+  // }
 
   resort($event) {
     console.log('resorting' + $event);
