@@ -58,6 +58,8 @@ export class DiscussionComponent implements OnInit {
 
   private usersCollapsed: boolean = false;
 
+  private editing: boolean = false;
+
   @ViewChild('reconnectModal') reconnectModal;
 
   constructor(private threadedChatService: ThreadedChatService,
@@ -74,7 +76,8 @@ export class DiscussionComponent implements OnInit {
 
     this.sub = this.route.params.subscribe(params => {
       this.discussionId = +params["discussionId"];
-
+      this.editing = Boolean(this.route.snapshot.params["editMode"]);
+      
       if (+params["commentId"] != null) {
         this.topParentId = +params["commentId"];
       }
@@ -91,13 +94,10 @@ export class DiscussionComponent implements OnInit {
       this.websocketCloseWatcher();
 
       this.subscribeToDiscussion();
+
+
     });
 
-  }
-
-
-  editMode(): Boolean {
-    return Boolean(this.route.snapshot.params["editMode"]);
   }
 
   ngOnDestroy() {

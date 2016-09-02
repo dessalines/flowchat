@@ -36,9 +36,8 @@ export class CommunityCardComponent implements OnInit {
 
   private showVoteSlider: boolean = false;
 
-  @Input() editMode: boolean = false;
-
-  @Output() editing = new EventEmitter();
+  @Input() editing: boolean = false;
+  @Output() editingChange = new EventEmitter();
 
   // tag searching
   private tagSearchResultsObservable: Observable<any>;
@@ -114,9 +113,9 @@ export class CommunityCardComponent implements OnInit {
       }
   }
 
-  toggleEditMode() {
-    this.editMode = !this.editMode;
-    this.editing.next(this.editMode);
+  toggleEditing() {
+    this.editing = !this.editing;
+    this.editingChange.next(this.editing);
   }
 
   setEditText($event) {
@@ -128,8 +127,8 @@ export class CommunityCardComponent implements OnInit {
     this.communityService.saveCommunity(this.community).subscribe(
       c => {
         this.community = c;
-        this.editMode = false;
-        this.editing.next(this.editMode);
+        this.editing = false;
+        this.editingChange.next(this.editing);
         this.userService.fetchFavoriteCommunities();
         this.isSaving = false;
       },
