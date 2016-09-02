@@ -19,7 +19,6 @@ public class SessionScope {
 
     public static Logger log = (Logger) LoggerFactory.getLogger(SessionScope.class);
 
-
     private final Session session;
     private final User userObj;
     private Long discussionId;

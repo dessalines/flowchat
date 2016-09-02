@@ -40,6 +40,7 @@ drop view community_audit_view;
 create view community_audit_view as
 select audit.logged_actions.*,
 d.id as discussion_id,
+d.title as discussion_title,
 d.community_id,
 c.user_id,
 u1.name as user_name,
@@ -54,6 +55,7 @@ where audit.logged_actions.table_name = 'comment'
 union
 select audit.logged_actions.*,
 d.id as discussion_id,
+d.title as discussion_title,
 d.community_id,
 null as user_id,
 null as user_name,
@@ -66,6 +68,7 @@ where audit.logged_actions.table_name = 'discussion'
 union
 select audit.logged_actions.*,
 null as discussion_id,
+null as discussion_title,
 cu.community_id,
 cu.user_id,
 u1.name as user_name,

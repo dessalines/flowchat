@@ -105,7 +105,8 @@ export class DiscussionCardComponent implements OnInit {
     console.log(this.discussion);
 
     // The multi-discussion fetch doesnt grab each communities creators, so check for this
-    if (userId == this.discussion.creator.id || userId == this.discussion.community.creator.id) {
+    if (userId == this.discussion.creator.id || 
+      (this.discussion.community.creator != null && userId == this.discussion.community.creator.id)) {
       // Creators also have mod abilities
       this.isCreator = true;
       this.isModerator = true;

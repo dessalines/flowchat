@@ -46,7 +46,6 @@ public class ThreadedChatWebSocket {
     @OnWebSocketConnect
     public void onConnect(Session session) throws Exception {
 
-
         Tools.dbInit();
 
         // Get or create the session scope
@@ -219,9 +218,11 @@ public class ThreadedChatWebSocket {
 
     public void messageEdit(Session session, String editDataStr) {
 
+        SessionScope ss = SessionScope.findBySession(sessionScopes, session);
+
         EditData editData = EditData.fromJson(editDataStr);
 
-        com.chat.db.Tables.Comment c = Actions.editComment(editData.getId(), editData.getEdit());
+        com.chat.db.Tables.Comment c = Actions.editComment(ss.getUserObj().getId(), editData.getId(), editData.getEdit());
 
         CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", c.getLongId());
 
@@ -237,9 +238,11 @@ public class ThreadedChatWebSocket {
 
     public void messageDelete(Session session, String deleteDataStr) {
 
+        SessionScope ss = SessionScope.findBySession(sessionScopes, session);
+
         DeleteData deleteData = DeleteData.fromJson(deleteDataStr);
 
-        com.chat.db.Tables.Comment c = Actions.deleteComment(deleteData.getDeleteId());
+        com.chat.db.Tables.Comment c = Actions.deleteComment(ss.getUserObj().getId(), deleteData.getDeleteId());
 
         CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", c.getLongId());
 

@@ -4,13 +4,14 @@ import {CommunityService} from '../../services/community.service';
 import {Community} from '../../shared/community.interface';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
 import { MomentPipe } from '../../pipes/moment.pipe';
+import {FooterComponent} from '../footer/index';
 
 @Component({
   moduleId: module.id,
   selector: 'app-community-modlog',
   templateUrl: 'community-modlog.component.html',
   styleUrls: ['community-modlog.component.css'],
-  directives: [ROUTER_DIRECTIVES],
+  directives: [ROUTER_DIRECTIVES, FooterComponent],
   pipes: [MomentPipe]
 })
 export class CommunityModlogComponent implements OnInit {
