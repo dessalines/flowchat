@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import ch.qos.logback.classic.Logger;
 import com.chat.DataSources;
@@ -36,9 +37,9 @@ public class Actions {
 
 
         // find the candidate
-        Comment c = Comment.createIt("discussion_id" , discussionId,
-                "text_" , text,
-                "user_id" , userId,
+        Comment c = Comment.createIt("discussion_id", discussionId,
+                "text_", text,
+                "user_id", userId,
                 "modified_by_user_id", userId);
 
 
@@ -56,9 +57,9 @@ public class Actions {
             Long parentId = pbs.get(i);
 
             // i is the path length
-            CommentTree.createIt("parent_id" , parentId,
-                    "child_id" , childId,
-                    "path_length" , i);
+            CommentTree.createIt("parent_id", parentId,
+                    "child_id", childId,
+                    "path_length", i);
         }
 
         return c;
@@ -68,13 +69,13 @@ public class Actions {
     public static Comment editComment(Long userId, Long commentId, String text) {
 
         // Find the comment
-        Comment c = Comment.findFirst("id = ?" , commentId);
+        Comment c = Comment.findFirst("id = ?", commentId);
 
         Timestamp cTime = new Timestamp(new Date().getTime());
 
         // Create with add modified date
-        c.set("text_" , text,
-                "modified" , cTime,
+        c.set("text_", text,
+                "modified", cTime,
                 "modified_by_user_id", userId).saveIt();
 
         return c;
@@ -83,13 +84,13 @@ public class Actions {
 
     public static Comment deleteComment(Long userId, Long commentId) {
         // Find the comment
-        Comment c = Comment.findFirst("id = ?" , commentId);
+        Comment c = Comment.findFirst("id = ?", commentId);
 
         Timestamp cTime = new Timestamp(new Date().getTime());
 
         // Create with add modified date
-        c.set("deleted" , true,
-                "modified" , cTime,
+        c.set("deleted", true,
+                "modified", cTime,
                 "modified_by_user_id", userId).saveIt();
 
         return c;
@@ -103,10 +104,10 @@ public class Actions {
         if (id != null) {
 
             if (auth == null || auth.equals("undefined")) {
-                Tables.User dbUser = Tables.User.findFirst("id = ?" , id);
+                Tables.User dbUser = Tables.User.findFirst("id = ?", id);
                 userObj = User.create(dbUser.getLongId(), dbUser.getString("name"));
             } else {
-                UserLoginView uv = UserLoginView.findFirst("auth = ?" , auth);
+                UserLoginView uv = UserLoginView.findFirst("auth = ?", auth);
                 userObj = User.create(uv.getLongId(), uv.getString("name"));
             }
 
@@ -161,21 +162,21 @@ public class Actions {
 
         Timestamp cTime = new Timestamp(new Date().getTime());
 
-        Tables.Discussion d = Tables.Discussion.findFirst("id = ?" , do_.getId());
+        Tables.Discussion d = Tables.Discussion.findFirst("id = ?", do_.getId());
         LazyList<DiscussionUserView> udv = DiscussionUserView.where("discussion_id = ?", do_.getId());
 
         log.info(udv.toJson(true));
         log.info(do_.json());
 
-        if (do_.getTitle() != null) d.set("title" , do_.getTitle());
-        if (do_.getLink() != null) d.set("link" , do_.getLink());
-        if (do_.getText() != null) d.set("text_" , do_.getText());
-        if (do_.getPrivate_() != null) d.set("private" , do_.getPrivate_());
+        if (do_.getTitle() != null) d.set("title", do_.getTitle());
+        if (do_.getLink() != null) d.set("link", do_.getLink());
+        if (do_.getText() != null) d.set("text_", do_.getText());
+        if (do_.getPrivate_() != null) d.set("private", do_.getPrivate_());
         if (do_.getDeleted() != null) d.set("deleted", do_.getDeleted());
         if (do_.getCommunity() != null) d.set("community_id", do_.getCommunity().getId());
 
         d.set("modified_by_user_id", userId);
-        d.set("modified" , cTime);
+        d.set("modified", cTime);
         d.saveIt();
 
         // Add the discussion tags
@@ -210,7 +211,6 @@ public class Actions {
                         "discussion_role_id", com.chat.types.discussion.DiscussionRole.BLOCKED.getVal());
             }
         }
-
 
 
         // Fetch the full view
@@ -345,8 +345,8 @@ public class Actions {
 
     public static Tables.User createUser() {
         Tables.User user = Tables.User.createIt(
-                "name" , Tools.generateSecureRandom());
-        user.set("name" , "user_" + user.getLongId()).saveIt();
+                "name", Tools.generateSecureRandom());
+        user.set("name", "user_" + user.getLongId()).saveIt();
 
         return user;
     }
@@ -355,13 +355,13 @@ public class Actions {
 
         // Find the user, then create a login for them
 
-        UserView uv = UserView.findFirst("name = ? or email = ?" , userOrEmail, userOrEmail);
+        UserView uv = UserView.findFirst("name = ? or email = ?", userOrEmail, userOrEmail);
 
         Login login;
         if (uv == null) {
             throw new NoSuchElementException("Incorrect user/email");
         } else {
-            FullUser fu = FullUser.findFirst("user_id = ?" , uv.getLongId());
+            FullUser fu = FullUser.findFirst("user_id = ?", uv.getLongId());
 
             String encryptedPassword = fu.getString("password_encrypted");
 
@@ -370,9 +370,9 @@ public class Actions {
             if (correctPass) {
 
                 String auth = Tools.generateSecureRandom();
-                login = Login.createIt("user_id" , fu.getInteger("user_id"),
-                        "auth" , auth,
-                        "expire_time" , Tools.newExpireTimestamp());
+                login = Login.createIt("user_id", fu.getInteger("user_id"),
+                        "auth", auth,
+                        "expire_time", Tools.newExpireTimestamp());
 
                 Actions.setCookiesForLogin(fu, auth, res);
 
@@ -381,7 +381,7 @@ public class Actions {
             }
         }
 
-        UserLoginView ulv = UserLoginView.findFirst("login_id = ?" , login.getLongId());
+        UserLoginView ulv = UserLoginView.findFirst("login_id = ?", login.getLongId());
 
         return ulv;
 
@@ -392,7 +392,7 @@ public class Actions {
 
         // Find the user, then create a login for them
 
-        UserView uv = UserView.findFirst("name = ? or email = ?" , userName, email);
+        UserView uv = UserView.findFirst("name = ? or email = ?", userName, email);
 
         Login login;
 
@@ -400,20 +400,20 @@ public class Actions {
 
             // Create the user and full user
             Tables.User user = Tables.User.createIt(
-                    "name" , userName);
+                    "name", userName);
 
             log.info("encrypting the user password");
             String encryptedPassword = Tools.PASS_ENCRYPT.encryptPassword(password);
 
-            FullUser fu = FullUser.createIt("user_id" , user.getId(),
-                    "email" , email,
-                    "password_encrypted" , encryptedPassword);
+            FullUser fu = FullUser.createIt("user_id", user.getId(),
+                    "email", email,
+                    "password_encrypted", encryptedPassword);
 
             // now login that user
             String auth = Tools.generateSecureRandom();
-            login = Login.createIt("user_id" , user.getId(),
-                    "auth" , auth,
-                    "expire_time" , Tools.newExpireTimestamp());
+            login = Login.createIt("user_id", user.getId(),
+                    "auth", auth,
+                    "expire_time", Tools.newExpireTimestamp());
 
             Actions.setCookiesForLogin(fu, auth, res);
 
@@ -421,7 +421,7 @@ public class Actions {
             throw new NoSuchElementException("Username/email already exists");
         }
 
-        UserLoginView ulv = UserLoginView.findFirst("login_id = ?" , login.getLongId());
+        UserLoginView ulv = UserLoginView.findFirst("login_id = ?", login.getLongId());
 
         return ulv;
 
@@ -431,23 +431,23 @@ public class Actions {
 
         String message = null;
         // fetch the vote if it exists
-        CommentRank c = CommentRank.findFirst("user_id = ? and comment_id = ?" ,
+        CommentRank c = CommentRank.findFirst("user_id = ? and comment_id = ?",
                 userId, commentId);
 
 
         if (c == null) {
             if (rank != null) {
                 CommentRank.createIt(
-                        "comment_id" , commentId,
-                        "user_id" , userId,
-                        "rank" , rank);
+                        "comment_id", commentId,
+                        "user_id", userId,
+                        "rank", rank);
                 message = "Comment Vote Created";
             } else {
                 message = "Comment Vote not created";
             }
         } else {
             if (rank != null) {
-                c.set("rank" , rank).saveIt();
+                c.set("rank", rank).saveIt();
                 message = "Comment Vote updated";
             }
             // If the rank is null, then delete the ballot
@@ -464,7 +464,7 @@ public class Actions {
     public static void saveDiscussionVote(Long userId, Long discussionId, Integer rank) {
 
         // fetch the vote if it exists
-        DiscussionRank d = DiscussionRank.findFirst("user_id = ? and discussion_id = ?" ,
+        DiscussionRank d = DiscussionRank.findFirst("user_id = ? and discussion_id = ?",
                 userId, discussionId);
 
         if (rank != null) {
@@ -487,7 +487,7 @@ public class Actions {
     public static void saveCommunityVote(Long userId, Long communityId, Integer rank) {
 
         // fetch the vote if it exists
-        CommunityRank cr = CommunityRank.findFirst("user_id = ? and community_id = ?" ,
+        CommunityRank cr = CommunityRank.findFirst("user_id = ? and community_id = ?",
                 userId, communityId);
 
         if (rank != null) {
@@ -529,19 +529,19 @@ public class Actions {
 
         Timestamp cTime = new Timestamp(new Date().getTime());
 
-        Tables.Community c = Tables.Community.findFirst("id = ?" , co_.getId());
+        Tables.Community c = Tables.Community.findFirst("id = ?", co_.getId());
         LazyList<CommunityUserView> cuv = CommunityUserView.where("community_id = ?", co_.getId());
 
         log.info(cuv.toJson(true));
         log.info(co_.json());
 
-        if (co_.getName() != null) c.set("name" , co_.getName());
-        if (co_.getText() != null) c.set("text_" , co_.getText());
-        if (co_.getPrivate_() != null) c.set("private" , co_.getPrivate_());
+        if (co_.getName() != null) c.set("name", co_.getName());
+        if (co_.getText() != null) c.set("text_", co_.getText());
+        if (co_.getPrivate_() != null) c.set("private", co_.getPrivate_());
         if (co_.getDeleted() != null) c.set("deleted", co_.getDeleted());
 
         c.set("modified_by_user_id", userId);
-        c.set("modified" , cTime);
+        c.set("modified", cTime);
 
         try {
             c.saveIt();
@@ -554,12 +554,29 @@ public class Actions {
 
         // Add the community tags
         if (co_.getTags() != null) {
-            CommunityTag.delete("community_id = ?", co_.getId());
 
-            for (Tag tag : co_.getTags()) {
+            // Fetch the existing community tags from the DB
+            Set<Long> dbTagIds = CommunityTag.where("community_id = ?", co_.getId()).collectDistinct("tag_id");
+
+            Set<Long> postIds = co_.getTags().stream()
+                    .map(tag -> tag.getId())
+                    .collect(Collectors.toSet());
+
+            postIds.removeAll(dbTagIds);
+            dbTagIds.removeAll(postIds);
+
+            log.info("New posted: " + Arrays.toString(postIds.toArray()));
+            log.info("New deleted: " + Arrays.toString((dbTagIds.toArray())));
+            // Delete everything in the DB, that's not posted.
+            CommunityTag.delete("community_id = ? and tag_id in ", co_.getId(), Tools.convertListToInQuery(dbTagIds));
+
+            // Add everything posted, thats not in the db
+            for (Long tagId : postIds) {
                 CommunityTag.createIt("community_id", co_.getId(),
-                        "tag_id", tag.getId());
+                        "tag_id", tagId);
             }
+
+
         }
 
         if (co_.getPrivateUsers() != null) {
@@ -595,7 +612,6 @@ public class Actions {
                         "community_role_id", CommunityRole.MODERATOR.getVal());
             }
         }
-
 
 
         // Fetch the full view
@@ -637,13 +653,12 @@ public class Actions {
     }
 
 
-
     public static String setCookiesForLogin(Tables.User user, String auth, Response res) {
         Boolean secure = DataSources.SSL;
 
-        res.cookie("auth" , auth, DataSources.EXPIRE_SECONDS, secure);
-        res.cookie("id" , user.getId().toString(), DataSources.EXPIRE_SECONDS, secure);
-        res.cookie("name" , user.getString("name"), DataSources.EXPIRE_SECONDS, secure);
+        res.cookie("auth", auth, DataSources.EXPIRE_SECONDS, secure);
+        res.cookie("id", user.getId().toString(), DataSources.EXPIRE_SECONDS, secure);
+        res.cookie("name", user.getString("name"), DataSources.EXPIRE_SECONDS, secure);
 
         return "Logged in";
     }
@@ -651,9 +666,9 @@ public class Actions {
     public static String setCookiesForLogin(FullUser fu, String auth, Response res) {
         Boolean secure = DataSources.SSL;
 
-        res.cookie("auth" , auth, DataSources.EXPIRE_SECONDS, secure);
-        res.cookie("id" , fu.getString("user_id"), DataSources.EXPIRE_SECONDS, secure);
-        res.cookie("username" , fu.getString("name"), DataSources.EXPIRE_SECONDS, secure);
+        res.cookie("auth", auth, DataSources.EXPIRE_SECONDS, secure);
+        res.cookie("id", fu.getString("user_id"), DataSources.EXPIRE_SECONDS, secure);
+        res.cookie("username", fu.getString("name"), DataSources.EXPIRE_SECONDS, secure);
 
         return "Logged in";
     }
