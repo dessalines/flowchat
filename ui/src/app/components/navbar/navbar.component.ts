@@ -20,10 +20,10 @@ import {ToasterService} from 'angular2-toaster/angular2-toaster';
 declare var Favico: any;
 
 @Component({
-  moduleId: module.id,
+
   selector: 'app-navbar',
   templateUrl: 'navbar.component.html',
-  styleUrls: ['navbar.component.css'],
+  styleUrls: ['navbar.component.scss'],
   directives: [MODAL_DIRECTIVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES,
     TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES, ROUTER_DIRECTIVES,
     FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
@@ -197,16 +197,22 @@ export class NavbarComponent implements OnInit {
   gotoMessage(message: Comment) {
 
     // Mark the message as read
-    this.notificationsService.markMessageAsRead(message.id).subscribe(t => {
+    this.notificationsService.markMessageAsRead(message.id).subscribe(() => {
+
       // Remove it from the array
       let index = this.unreadMessages.indexOf(message);
       this.unreadMessages.splice(index, 1);
       this.changeFaviconBasedOnMessages();
 
+
       // Navigate to the parent message (IE, your message)
       this.router.navigate(['/discussion', message.discussionId,
         'comment', message.parentId]);
 
+    }, 
+    error => {
+      console.log(error);
+      this.toasterService.pop("error", "Error", error);
     });
   }
 

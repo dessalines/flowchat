@@ -1,4 +1,5 @@
-import { provideRouter, RouterConfig } from '@angular/router';
+import { Routes, RouterModule }   from '@angular/router';
+import { ModuleWithProviders } from '@angular/core';
 import {HomeComponent} from './components/home/index';
 import {TagComponent} from './components/tag/index';
 import {CommunityComponent} from './components/community/index';
@@ -6,7 +7,7 @@ import {CommunityModlogComponent} from './components/community-modlog/index';
 import {SidebarComponent} from './components/sidebar/index';
 import {DiscussionComponent} from './components/discussion/index';
 
-const routes: RouterConfig = [
+const appRoutes: Routes = [
   {
     path: '',
     component: HomeComponent
@@ -37,6 +38,8 @@ const routes: RouterConfig = [
   }
 ];
 
-export const appRouterProviders = [
-  provideRouter(routes)
+export const appRoutingProviders: any[] = [
+
 ];
+
+export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes,{ useHash: true });

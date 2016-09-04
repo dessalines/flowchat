@@ -22,10 +22,10 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
 
 @Component({
-  moduleId: module.id,
+
   selector: 'app-community-card',
   templateUrl: 'community-card.component.html',
-  styleUrls: ['community-card.component.css'],
+  styleUrls: ['community-card.component.scss'],
   directives: [MarkdownEditComponent, TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES,
     ROUTER_DIRECTIVES, FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
   pipes: [MomentPipe, MarkdownPipe]

@@ -1,0 +1,8 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import './app/styles/custom';
+@import './app/styles/extras';
+@import '../node_modules/bootstrap/scss/bootstrap-flex';
+@import '../node_modules/angular2-toaster/lib/toaster';
+@import './app/styles/card-columns';
+@import './app/styles/slider';

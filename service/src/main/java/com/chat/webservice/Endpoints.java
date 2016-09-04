@@ -347,7 +347,7 @@ public class Endpoints {
 
             res.status(HttpStatus.OK_200);
 
-            return "";
+            return "{}";
 
         });
 
@@ -418,7 +418,7 @@ public class Endpoints {
 
             res.status(HttpStatus.OK_200);
 
-            return "";
+            return "{}";
 
         });
     }
@@ -454,7 +454,7 @@ public class Endpoints {
 
             res.status(HttpStatus.OK_200);
 
-            return "";
+            return "{}";
 
         });
 
@@ -467,7 +467,7 @@ public class Endpoints {
 
             res.status(HttpStatus.OK_200);
 
-            return "";
+            return "{}";
 
         });
     }
@@ -594,7 +594,7 @@ public class Endpoints {
 
             res.status(HttpStatus.OK_200);
 
-            return "";
+            return "{}";
 
         });
 
@@ -665,7 +665,7 @@ public class Endpoints {
 
             res.status(HttpStatus.OK_200);
 
-            return "";
+            return "{}";
 
         });
 
@@ -679,7 +679,7 @@ public class Endpoints {
 
             res.status(HttpStatus.OK_200);
 
-            return "";
+            return "{}";
 
         });
 
