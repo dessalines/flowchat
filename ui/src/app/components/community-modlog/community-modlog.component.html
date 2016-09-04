@@ -20,7 +20,10 @@
           <a [routerLink]="['/discussion', modRow.discussion_id]">{{modRow.discussion_title}}</a>
         </span>
         <span *ngSwitchCase="'community_user'">
-          <span class="text-primary">{{modRow.user_name}}</span>        to the community
+          <span class="text-primary">{{modRow.user_name}}</span> 
+          as a 
+          <span class="text-warning">{{getRole(modRow.role_id)}}</span>
+                 to the community
         </span>
       </span>
     </div>

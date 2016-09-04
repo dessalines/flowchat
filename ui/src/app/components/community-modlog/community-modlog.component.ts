@@ -5,6 +5,7 @@ import {Community} from '../../shared/community.interface';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
 import { MomentPipe } from '../../pipes/moment.pipe';
 import {FooterComponent} from '../footer/index';
+import {CommunityRole} from '../../shared/community-role.enum';
 
 @Component({
   moduleId: module.id,
@@ -31,7 +32,6 @@ export class CommunityModlogComponent implements OnInit {
       this.getCommunityModlog(communityId);
     });
 
-
   }
 
   ngOnDestroy() {
@@ -49,20 +49,8 @@ export class CommunityModlogComponent implements OnInit {
       });
   }
 
-  translateAction(action: string): string {
-    let result: string = "";
-    switch (action) {
-      case "I":
-        result = "inserted";
-        break;
-      case "U":
-        result = "updated";
-        break;
-      case "D":
-        result = "deleted";
-        break;
-    }
-    return result;
+  getRole(id: number): string {
+    return CommunityRole[id];
   }
 
 }
