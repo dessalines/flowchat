@@ -51,7 +51,7 @@ BEGIN
     ELSIF (TG_OP = 'DELETE') THEN
         v_old_data := ROW(OLD.*);
         INSERT INTO audit.logged_actions (id, schema_name,table_name,p_user_name,action,original_data,query)
-        VALUES (NEW.id, TG_TABLE_SCHEMA::TEXT,TG_TABLE_NAME::TEXT,session_user::TEXT,substring(TG_OP,1,1),v_old_data, current_query());
+        VALUES (OLD.id, TG_TABLE_SCHEMA::TEXT,TG_TABLE_NAME::TEXT,session_user::TEXT,substring(TG_OP,1,1),v_old_data, current_query());
         RETURN OLD;
     ELSIF (TG_OP = 'INSERT') THEN
         v_new_data := ROW(NEW.*);

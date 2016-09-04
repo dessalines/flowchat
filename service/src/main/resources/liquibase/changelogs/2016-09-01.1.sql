@@ -42,41 +42,44 @@ select audit.logged_actions.*,
 d.id as discussion_id,
 d.title as discussion_title,
 d.community_id,
+0 as role_id,
 c.user_id,
 u1.name as user_name,
 c.modified_by_user_id,
 u2.name as modified_by_user_name
 from audit.logged_actions
-inner join comment as c on c.id = audit.logged_actions.id
-inner join discussion as d on c.discussion_id = d.id
-inner join user_ as u1 on c.user_id = u1.id
-inner join user_ as u2 on c.modified_by_user_id = u2.id
+left join comment as c on c.id = audit.logged_actions.id
+left join discussion as d on c.discussion_id = d.id
+left join user_ as u1 on c.user_id = u1.id
+left join user_ as u2 on c.modified_by_user_id = u2.id
 where audit.logged_actions.table_name = 'comment'
 union
 select audit.logged_actions.*,
 d.id as discussion_id,
 d.title as discussion_title,
 d.community_id,
+0 as role_id,
 null as user_id,
 null as user_name,
 d.modified_by_user_id,
 u.name as modified_by_user_name
 from audit.logged_actions
-inner join discussion as d on d.id = audit.logged_actions.id
-inner join user_ as u on d.modified_by_user_id = u.id
+left join discussion as d on d.id = audit.logged_actions.id
+left join user_ as u on d.modified_by_user_id = u.id
 where audit.logged_actions.table_name = 'discussion'
 union
 select audit.logged_actions.*,
 null as discussion_id,
 null as discussion_title,
-cu.community_id,
-cu.user_id,
+cast(split_part(coalesce(original_data, new_data), ',', 3) as bigint) as community_id,
+cast(split_part(coalesce(original_data, new_data), ',', 4) as bigint) as role_id,
+cast(split_part(coalesce(original_data, new_data), ',', 2) as bigint) as user_id,
 u1.name as user_name,
 null as modified_by_user_id,
 null as modified_by_user_name
 from audit.logged_actions
-inner join community_user as cu on cu.id = audit.logged_actions.id
-inner join user_ as u1 on cu.user_id = u1.id
+left join community_user as cu on cu.id = audit.logged_actions.id
+left join user_ as u1 on cast(split_part(coalesce(original_data, new_data), ',', 2) as bigint) = u1.id
 where audit.logged_actions.table_name = 'community_user'
 order by action_tstamp desc;
 
