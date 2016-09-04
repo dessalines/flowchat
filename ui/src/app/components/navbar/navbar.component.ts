@@ -197,16 +197,22 @@ export class NavbarComponent implements OnInit {
   gotoMessage(message: Comment) {
 
     // Mark the message as read
-    this.notificationsService.markMessageAsRead(message.id).subscribe(t => {
+    this.notificationsService.markMessageAsRead(message.id).subscribe(() => {
+
       // Remove it from the array
       let index = this.unreadMessages.indexOf(message);
       this.unreadMessages.splice(index, 1);
       this.changeFaviconBasedOnMessages();
 
+
       // Navigate to the parent message (IE, your message)
       this.router.navigate(['/discussion', message.discussionId,
         'comment', message.parentId]);
 
+    }, 
+    error => {
+      console.log(error);
+      this.toasterService.pop("error", "Error", error);
     });
   }
 

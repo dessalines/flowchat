@@ -102,7 +102,6 @@ export class DiscussionCardComponent implements OnInit {
     this.isModerator = false;
     this.isCreator = false;
     let userId: number = this.userService.getUser().id;
-    console.log(this.discussion);
 
     // The multi-discussion fetch doesnt grab each communities creators, so check for this
     if (userId == this.discussion.creator.id || 
@@ -113,7 +112,6 @@ export class DiscussionCardComponent implements OnInit {
 
     } else {
       let m = this.discussion.community.moderators.filter(m => m.id == userId)[0];
-      console.log(m);
       if (m !== undefined) {
         this.isModerator = true;
       }
