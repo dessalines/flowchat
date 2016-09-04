@@ -13,7 +13,6 @@ import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import {TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 
 @Component({
-
   selector: 'app-comment',
   templateUrl: 'comment.component.html',
   styleUrls: ['comment.component.scss'],

@@ -11,7 +11,6 @@ import {FooterComponent} from '../footer/index';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
 
 @Component({
-
   selector: 'app-community',
   templateUrl: 'community.component.html',
   styleUrls: ['community.component.scss'],
