@@ -13,10 +13,10 @@ import {FooterComponent} from '../footer/index';
 import { Router, ROUTER_DIRECTIVES, ActivatedRoute } from '@angular/router';
 
 @Component({
-  moduleId: module.id,
+
   selector: 'app-home',
   templateUrl: 'home.component.html',
-  styleUrls: ['home.component.css'],
+  styleUrls: ['home.component.scss'],
   directives: [DiscussionCardComponent, FooterComponent, ROUTER_DIRECTIVES],
   providers: []
 })
