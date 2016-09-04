@@ -13,11 +13,11 @@ import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import {TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 
 @Component({
-  moduleId: module.id,
+
   selector: 'app-comment',
   templateUrl: 'comment.component.html',
-  styleUrls: ['comment.component.css'],
-  styles: [':host >>> p { margin-bottom: .2rem; }'],
+  styleUrls: ['comment.component.scss'],
+  // styles: [':host >>> p { margin-bottom: .2rem; }'], TODO
   directives: [CommentComponent, MarkdownEditComponent, ROUTER_DIRECTIVES, TOOLTIP_DIRECTIVES],
   pipes: [MomentPipe, MarkdownPipe]
 })

@@ -20,10 +20,10 @@ import {ToasterService} from 'angular2-toaster/angular2-toaster';
 declare var Favico: any;
 
 @Component({
-  moduleId: module.id,
+
   selector: 'app-navbar',
   templateUrl: 'navbar.component.html',
-  styleUrls: ['navbar.component.css'],
+  styleUrls: ['navbar.component.scss'],
   directives: [MODAL_DIRECTIVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES,
     TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES, ROUTER_DIRECTIVES,
     FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],

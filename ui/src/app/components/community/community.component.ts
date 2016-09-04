@@ -11,10 +11,10 @@ import {FooterComponent} from '../footer/index';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
 
 @Component({
-  moduleId: module.id,
+
   selector: 'app-community',
   templateUrl: 'community.component.html',
-  styleUrls: ['community.component.css'],
+  styleUrls: ['community.component.scss'],
   directives: [CommunityCardComponent, DiscussionCardComponent, FooterComponent, ROUTER_DIRECTIVES],
   providers: []
 })

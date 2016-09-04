@@ -1,24 +1,15 @@
-import { bootstrap } from '@angular/platform-browser-dynamic';
-import { Title } from '@angular/platform-browser';
+import "./polyfills.ts";
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { enableProdMode } from '@angular/core';
-import { AppComponent, environment } from './app/';
-import { appRouterProviders } from './app/app.routes';
+import { AppComponent } from './app/';
 import {HTTP_PROVIDERS} from '@angular/http';
-import {Location,LocationStrategy,HashLocationStrategy} from '@angular/common';
-import {SeoService} from './app/services/seo.service';
 import {disableDeprecatedForms, provideForms} from '@angular/forms';
+import { environment } from './environments/environment';
+import { AppModule } from './app/';
 
 if (environment.production) {
   enableProdMode();
 }
 
-bootstrap(AppComponent, [
-  appRouterProviders,
-  HTTP_PROVIDERS,
-  disableDeprecatedForms(),
-  provideForms(),
-  {provide: LocationStrategy, useClass: HashLocationStrategy},
-  Title,
-  SeoService
-]);
+platformBrowserDynamic().bootstrapModule(AppModule);
 

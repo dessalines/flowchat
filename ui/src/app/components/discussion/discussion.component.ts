@@ -14,10 +14,10 @@ import {MODAL_DIRECTIVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
 
 
 @Component({
-  moduleId: module.id,
+
   selector: 'app-discussion',
   templateUrl: 'discussion.component.html',
-  styleUrls: ['discussion.component.css'],
+  styleUrls: ['discussion.component.scss'],
   providers: [HTTP_PROVIDERS, ThreadedChatService],
   directives: [CommentComponent, MarkdownEditComponent, DiscussionCardComponent, MODAL_DIRECTIVES],
   viewProviders: [BS_VIEW_PROVIDERS]

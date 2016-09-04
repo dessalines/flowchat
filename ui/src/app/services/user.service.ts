@@ -113,7 +113,7 @@ export class UserService {
         'Content-Type': 'application/json',
         'user': JSON.stringify(this.getUser())
       });
-    return new RequestOptions({ headers: headers });
+    return new RequestOptions({ headers: headers,  body: ''  });
   }
 
   searchUsers(query: string) {

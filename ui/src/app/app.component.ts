@@ -15,7 +15,6 @@ import {NotificationsService} from './services/notifications.service';
 import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2-toaster/angular2-toaster';
 
 @Component({
-  moduleId: module.id,
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
@@ -39,7 +38,8 @@ export class AppComponent {
   public constructor(viewContainerRef: ViewContainerRef,
     private router: Router,
     private toasterService: ToasterService,
-    private seoService: SeoService) {
+    private seoService: SeoService
+    ) {
     // You need this small hack in order to catch application root view container ref
     this.viewContainerRef = viewContainerRef;
 

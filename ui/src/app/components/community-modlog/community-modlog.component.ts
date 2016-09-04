@@ -8,7 +8,7 @@ import {FooterComponent} from '../footer/index';
 import {CommunityRole} from '../../shared/community-role.enum';
 
 @Component({
-  moduleId: module.id,
+
   selector: 'app-community-modlog',
   templateUrl: 'community-modlog.component.html',
   styleUrls: ['community-modlog.component.css'],

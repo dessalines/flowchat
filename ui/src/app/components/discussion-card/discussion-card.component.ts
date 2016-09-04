@@ -25,10 +25,10 @@ import 'rxjs/add/operator/switchMap';
 
 
 @Component({
-  moduleId: module.id,
+
   selector: 'app-discussion-card',
   templateUrl: 'discussion-card.component.html',
-  styleUrls: ['discussion-card.component.css'],
+  styleUrls: ['discussion-card.component.scss'],
   directives: [MarkdownEditComponent, TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES,
     ROUTER_DIRECTIVES, FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
   pipes: [MomentPipe, MarkdownPipe]
