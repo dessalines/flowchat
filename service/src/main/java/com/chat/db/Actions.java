@@ -188,7 +188,7 @@ public class Actions {
         }
 
         if (do_.getBlockedUsers() != null) {
-            diffCreateOrDeleteDiscussionUsers(do_.getId(), do_.getPrivateUsers(), DiscussionRole.BLOCKED);
+            diffCreateOrDeleteDiscussionUsers(do_.getId(), do_.getBlockedUsers(), DiscussionRole.BLOCKED);
         }
 
 
