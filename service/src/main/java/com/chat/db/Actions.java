@@ -1,7 +1,6 @@
 package com.chat.db;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -9,15 +8,15 @@ import java.util.stream.Collectors;
 import ch.qos.logback.classic.Logger;
 import com.chat.DataSources;
 import com.chat.db.Tables.*;
-import com.chat.db.Tables.Community;
 import com.chat.tools.Tools;
-import com.chat.types.community.*;
+import com.chat.types.community.Community;
 import com.chat.types.community.CommunityRole;
 import com.chat.types.discussion.Discussion;
+import com.chat.types.discussion.DiscussionRole;
 import com.chat.types.tag.Tag;
 import com.chat.types.user.User;
 import org.javalite.activejdbc.LazyList;
-import org.postgresql.util.PSQLException;
+
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
@@ -146,7 +145,7 @@ public class Actions {
 
         DiscussionUser.createIt("user_id", userId,
                 "discussion_id", d.getLong("id"),
-                "discussion_role_id", com.chat.types.discussion.DiscussionRole.CREATOR.getVal());
+                "discussion_role_id", DiscussionRole.CREATOR.getVal());
 
         FavoriteDiscussionUser.createIt("user_id", userId,
                 "discussion_id", d.getLong("id"));
@@ -181,35 +180,15 @@ public class Actions {
 
         // Add the discussion tags
         if (do_.getTags() != null) {
-            DiscussionTag.delete("discussion_id = ?", do_.getId());
-
-            for (Tag tag : do_.getTags()) {
-                DiscussionTag.createIt("discussion_id", do_.getId(),
-                        "tag_id", tag.getId());
-            }
+            diffCreateOrDeleteDiscussionTags(do_);
         }
 
         if (do_.getPrivateUsers() != null) {
-
-            DiscussionUser.delete("discussion_id = ? and discussion_role_id = ?", do_.getId(), com.chat.types.discussion.DiscussionRole.USER.getVal());
-
-            for (User userObj : do_.getPrivateUsers()) {
-                DiscussionUser.createIt("discussion_id", do_.getId(),
-                        "user_id", userObj.getId(),
-                        "discussion_role_id", com.chat.types.discussion.DiscussionRole.USER.getVal());
-            }
-
+            diffCreateOrDeleteDiscussionUsers(do_.getId(), do_.getPrivateUsers(), DiscussionRole.USER);
         }
 
         if (do_.getBlockedUsers() != null) {
-
-            DiscussionUser.delete("discussion_id = ? and discussion_role_id = ?", do_.getId(), com.chat.types.discussion.DiscussionRole.BLOCKED.getVal());
-
-            for (User userObj : do_.getBlockedUsers()) {
-                DiscussionUser.createIt("discussion_id", do_.getId(),
-                        "user_id", userObj.getId(),
-                        "discussion_role_id", com.chat.types.discussion.DiscussionRole.BLOCKED.getVal());
-            }
+            diffCreateOrDeleteDiscussionUsers(do_.getId(), do_.getPrivateUsers(), DiscussionRole.BLOCKED);
         }
 
 
@@ -223,6 +202,61 @@ public class Actions {
         Discussion doOut = Discussion.create(dfv, cntv, dtv, ud, communityUsers, null);
 
         return doOut;
+    }
+
+    private static void diffCreateOrDeleteDiscussionUsers(Long discussionId, List<User> users, DiscussionRole role) {
+        Set<Long> postUserIds = users.stream()
+                .map(user -> user.getId())
+                .collect(Collectors.toSet());
+
+        Set<Long> dbUserIds = DiscussionUser.where("discussion_id = ? and discussion_role_id = ?",
+                discussionId, role.getVal()).collectDistinct("user_id");
+
+        Set<Long> diffPostUserIds = new LinkedHashSet<>(postUserIds);
+        Set<Long> diffDbTagIds = new LinkedHashSet<>(dbUserIds);
+
+        diffPostUserIds.removeAll(dbUserIds);
+        diffDbTagIds.removeAll(postUserIds);
+
+        // Delete everything in the DB, that's not posted.
+        if (!diffDbTagIds.isEmpty()) {
+            DiscussionUser.delete("discussion_id = ? and discussion_role_id = ? and user_id in " +
+                            Tools.convertListToInQuery(diffDbTagIds),
+                    discussionId,
+                    role.getVal());
+        }
+
+        for (Long uId : diffPostUserIds) {
+            DiscussionUser.createIt("discussion_id", discussionId,
+                    "user_id", uId,
+                    "discussion_role_id", role.getVal());
+        }
+    }
+
+    private static void diffCreateOrDeleteDiscussionTags(Discussion do_) {
+        Set<Long> postTagIds = do_.getTags().stream()
+                .map(tag -> tag.getId())
+                .collect(Collectors.toSet());
+
+        // Fetch the existing community tags from the DB
+        Set<Long> dbTagIds = DiscussionTag.where("discussion_id = ?", do_.getId()).collectDistinct("tag_id");
+
+        Set<Long> diffPostTagIds = new LinkedHashSet<>(postTagIds);
+        Set<Long> diffDbTagIds = new LinkedHashSet<>(dbTagIds);
+
+        diffPostTagIds.removeAll(dbTagIds);
+        diffDbTagIds.removeAll(postTagIds);
+
+        // Delete everything in the DB, that's not posted.
+        if (!diffDbTagIds.isEmpty()) {
+            DiscussionTag.delete("discussion_id = ? and tag_id in " + Tools.convertListToInQuery(diffDbTagIds), do_.getId());
+        }
+
+        // Add everything posted, thats not in the db
+        for (Long tagId : diffPostTagIds) {
+            DiscussionTag.createIt("discussion_id", do_.getId(),
+                    "tag_id", tagId);
+        }
     }
 
     public static Tag createTag(String name) {
@@ -507,7 +541,7 @@ public class Actions {
 
     }
 
-    public static com.chat.types.community.Community createCommunity(Long userId) {
+    public static Community createCommunity(Long userId) {
 
         log.info("Creating community");
         String name = "new_community_" + UUID.randomUUID().toString().substring(0, 8);
@@ -517,15 +551,15 @@ public class Actions {
 
         CommunityUser.createIt("user_id", userId,
                 "community_id", c.getLong("id"),
-                "community_role_id", com.chat.types.community.CommunityRole.CREATOR.getVal());
+                "community_role_id", CommunityRole.CREATOR.getVal());
 
         CommunityView dfv = CommunityView.findFirst("id = ?", c.getLongId());
         List<CommunityUserView> udv = CommunityUserView.where("community_id = ?", c.getLongId());
 
-        return com.chat.types.community.Community.create(dfv, null, udv, null);
+        return Community.create(dfv, null, udv, null);
     }
 
-    public static com.chat.types.community.Community saveCommunity(Long userId, com.chat.types.community.Community co_) {
+    public static Community saveCommunity(Long userId, Community co_) {
 
         Timestamp cTime = new Timestamp(new Date().getTime());
 
@@ -554,63 +588,19 @@ public class Actions {
 
         // Add the community tags
         if (co_.getTags() != null) {
-
-            // Fetch the existing community tags from the DB
-            Set<Long> dbTagIds = CommunityTag.where("community_id = ?", co_.getId()).collectDistinct("tag_id");
-
-            Set<Long> postIds = co_.getTags().stream()
-                    .map(tag -> tag.getId())
-                    .collect(Collectors.toSet());
-
-            postIds.removeAll(dbTagIds);
-            dbTagIds.removeAll(postIds);
-
-            log.info("New posted: " + Arrays.toString(postIds.toArray()));
-            log.info("New deleted: " + Arrays.toString((dbTagIds.toArray())));
-            // Delete everything in the DB, that's not posted.
-            CommunityTag.delete("community_id = ? and tag_id in ", co_.getId(), Tools.convertListToInQuery(dbTagIds));
-
-            // Add everything posted, thats not in the db
-            for (Long tagId : postIds) {
-                CommunityTag.createIt("community_id", co_.getId(),
-                        "tag_id", tagId);
-            }
-
-
+            diffCreateOrDeleteCommunityTags(co_);
         }
 
         if (co_.getPrivateUsers() != null) {
-
-            CommunityUser.delete("community_id = ? and community_role_id = ?", co_.getId(), CommunityRole.USER.getVal());
-
-            for (User userObj : co_.getPrivateUsers()) {
-                CommunityUser.createIt("community_id", co_.getId(),
-                        "user_id", userObj.getId(),
-                        "community_role_id", CommunityRole.USER.getVal());
-            }
-
+            diffCreateOrDeleteCommunityUsers(co_.getId(), co_.getPrivateUsers(), CommunityRole.USER);
         }
 
         if (co_.getBlockedUsers() != null) {
-
-            CommunityUser.delete("community_id = ? and community_role_id = ?", co_.getId(), CommunityRole.BLOCKED.getVal());
-
-            for (User userObj : co_.getBlockedUsers()) {
-                CommunityUser.createIt("community_id", co_.getId(),
-                        "user_id", userObj.getId(),
-                        "community_role_id", CommunityRole.BLOCKED.getVal());
-            }
+            diffCreateOrDeleteCommunityUsers(co_.getId(), co_.getBlockedUsers(), CommunityRole.BLOCKED);
         }
 
         if (co_.getModerators() != null) {
-
-            CommunityUser.delete("community_id = ? and community_role_id = ?", co_.getId(), CommunityRole.MODERATOR.getVal());
-
-            for (User userObj : co_.getModerators()) {
-                CommunityUser.createIt("community_id", co_.getId(),
-                        "user_id", userObj.getId(),
-                        "community_role_id", CommunityRole.MODERATOR.getVal());
-            }
+            diffCreateOrDeleteCommunityUsers(co_.getId(), co_.getModerators(), CommunityRole.MODERATOR);
         }
 
 
@@ -619,12 +609,67 @@ public class Actions {
         List<CommunityTagView> ctv = CommunityTagView.where("community_id = ?", co_.getId());
         List<CommunityUserView> cuvO = CommunityUserView.where("community_id = ?", co_.getId());
 
-        com.chat.types.community.Community coOut = com.chat.types.community.Community.create(cv, ctv, cuvO, null);
+        Community coOut = Community.create(cv, ctv, cuvO, null);
 
         return coOut;
     }
 
-    public static com.chat.types.community.Community saveFavoriteCommunity(Long userId, Long communityId) {
+    private static void diffCreateOrDeleteCommunityUsers(Long communityId, List<User> users, CommunityRole role) {
+        Set<Long> postUserIds = users.stream()
+                .map(user -> user.getId())
+                .collect(Collectors.toSet());
+
+        Set<Long> dbUserIds = CommunityUser.where("community_id = ? and community_role_id = ?",
+                communityId, role.getVal()).collectDistinct("user_id");
+
+        Set<Long> diffPostUserIds = new LinkedHashSet<>(postUserIds);
+        Set<Long> diffDbTagIds = new LinkedHashSet<>(dbUserIds);
+
+        diffPostUserIds.removeAll(dbUserIds);
+        diffDbTagIds.removeAll(postUserIds);
+
+        // Delete everything in the DB, that's not posted.
+        if (!diffDbTagIds.isEmpty()) {
+            CommunityUser.delete("community_id = ? and community_role_id = ? and user_id in " +
+                    Tools.convertListToInQuery(diffDbTagIds),
+                    communityId,
+                    role.getVal());
+        }
+
+        for (Long uId : diffPostUserIds) {
+            CommunityUser.createIt("community_id", communityId,
+                    "user_id", uId,
+                    "community_role_id", role.getVal());
+        }
+    }
+
+    private static void diffCreateOrDeleteCommunityTags(Community co_) {
+        Set<Long> postTagIds = co_.getTags().stream()
+                .map(tag -> tag.getId())
+                .collect(Collectors.toSet());
+
+        // Fetch the existing community tags from the DB
+        Set<Long> dbTagIds = CommunityTag.where("community_id = ?", co_.getId()).collectDistinct("tag_id");
+
+        Set<Long> diffPostTagIds = new LinkedHashSet<>(postTagIds);
+        Set<Long> diffDbTagIds = new LinkedHashSet<>(dbTagIds);
+
+        diffPostTagIds.removeAll(dbTagIds);
+        diffDbTagIds.removeAll(postTagIds);
+
+        // Delete everything in the DB, that's not posted.
+        if (!diffDbTagIds.isEmpty()) {
+            CommunityTag.delete("community_id = ? and tag_id in " + Tools.convertListToInQuery(diffDbTagIds), co_.getId());
+        }
+
+        // Add everything posted, thats not in the db
+        for (Long tagId : diffPostTagIds) {
+            CommunityTag.createIt("community_id", co_.getId(),
+                    "tag_id", tagId);
+        }
+    }
+
+    public static Community saveFavoriteCommunity(Long userId, Long communityId) {
 
         CommunityUser cu = CommunityUser.findFirst(
                 "user_id = ? and community_id = ?", userId, communityId);
@@ -636,7 +681,7 @@ public class Actions {
 
             CommunityNoTextView cntv = CommunityNoTextView.findFirst("id = ?", communityId);
 
-            return com.chat.types.community.Community.create(cntv, null, null, null);
+            return Community.create(cntv, null, null, null);
         } else {
             return null;
         }
