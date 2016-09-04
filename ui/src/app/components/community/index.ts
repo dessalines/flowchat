@@ -1,1 +1,1 @@
-export * from './community.component';
+export {CommunityComponent} from './community.component';

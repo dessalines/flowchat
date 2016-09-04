@@ -11,10 +11,10 @@ import {DiscussionCardComponent} from '../discussion-card/index';
 import {FooterComponent} from '../footer/index';
 
 @Component({
-  moduleId: module.id,
+
   selector: 'app-tag',
   templateUrl: 'tag.component.html',
-  styleUrls: ['tag.component.css'],
+  styleUrls: ['tag.component.scss'],
   directives: [DiscussionCardComponent, FooterComponent, ROUTER_DIRECTIVES],
   providers: []
 })

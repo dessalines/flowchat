@@ -4,10 +4,10 @@ import {DiscussionComponent} from '../discussion/index';
 import {UserService} from '../../services/user.service';
 
 @Component({
-  moduleId: module.id,
+
   selector: 'app-sidebar',
   templateUrl: 'sidebar.component.html',
-  styleUrls: ['sidebar.component.css'],
+  styleUrls: ['sidebar.component.scss'],
   directives: [ROUTER_DIRECTIVES]
 })
 export class SidebarComponent implements OnInit {
