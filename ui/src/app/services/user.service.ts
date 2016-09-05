@@ -110,10 +110,10 @@ export class UserService {
   getOptions(): RequestOptions {
     let headers = new Headers(
       {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         'user': JSON.stringify(this.getUser())
       });
-    return new RequestOptions({ headers: headers,  body: ''  });
+    return new RequestOptions({ headers: headers});
   }
 
   searchUsers(query: string) {
