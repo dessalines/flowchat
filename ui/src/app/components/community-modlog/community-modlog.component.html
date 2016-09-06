@@ -1,5 +1,6 @@
 <div class="modRow">
   <div class="col-xs-12">
+    <i *ngIf="!modlog" class="fa fa-circle-o-notch fa-spin fa-5x text-xs-center block"></i>
     <div *ngFor="let modRow of modlog">
       <span class="text-muted">{{modRow.action_tstamp | moment}} &mdash;</span>
       <span class="text-primary">{{modRow.modified_by_user_name}}</span>
