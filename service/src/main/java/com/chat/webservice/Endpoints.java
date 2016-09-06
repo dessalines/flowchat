@@ -691,7 +691,12 @@ public class Endpoints {
 
             LazyList<Tables.CommunityAuditView> auditRows = Tables.CommunityAuditView.find("community_id = ?", id);
 
-            return auditRows.toJson(false);
+            String json = auditRows.toJson(false, "action", "action_tstamp",
+                    "community_id", "discussion_id", "discussion_title", "id",
+                    "modified_by_user_id", "modified_by_user_name",
+                    "table_name", "user_id", "user_name", "role_id");
+
+            return json;
 
         });
 
