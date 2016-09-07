@@ -1,5 +1,11 @@
 # FlowChat
 
+# [Release 0.4.0](https://github.com/tchoulihan/flowchat/milestone/3)
+- Communities! [#27](https://github.com/tchoulihan/flowchat/issues/27)
+- User pages [#29](https://github.com/tchoulihan/flowchat/issues/29)
+- Community and user modlog pages.
+- Loading indicators. [#44](https://github.com/tchoulihan/flowchat/issues/44)
+
 # Release 0.3.0
 - Custom discussion sorting. [#9](https://github.com/tchoulihan/flowchat/issues/9).
 - Added emoji support. [#8](https://github.com/tchoulihan/flowchat/issues/8).
