@@ -421,12 +421,23 @@ public class Actions {
 
     }
 
-    public static UserLoginView signup(String userName, String password, String email, Request req, Response res) {
+    public static UserLoginView signup(String userName, String password, String verifyPassword, String email, Request req, Response res) {
 
+        if (email != null && email.equals("")) {
+            email = null;
+        }
+
+        if (!password.equals(verifyPassword)) {
+            throw new NoSuchElementException("Passwords are different");
+        }
 
         // Find the user, then create a login for them
-
-        UserView uv = UserView.findFirst("name = ? or email = ?", userName, email);
+        UserView uv;
+        if (email != null) {
+            uv = UserView.findFirst("name = ? or email = ?", userName, email);
+        } else {
+            uv = UserView.findFirst("name = ?", userName);
+        }
 
         Login login;
 

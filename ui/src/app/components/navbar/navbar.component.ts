@@ -92,6 +92,7 @@ export class NavbarComponent implements OnInit {
   signupSubmit() {
     this.loginService.signup(this.signup.username,
       this.signup.password,
+      this.signup.verifyPassword,
       this.signup.email).subscribe(
       user => {
         this.setupUser(user);
