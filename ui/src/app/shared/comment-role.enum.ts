@@ -1,6 +1,6 @@
 export enum CommentRole {
-  CommunityModerator,
-  CommunityCreator,
-  DiscussionCreator,
-  User
+  CommunityModerator = 1,
+  CommunityCreator = 2,
+  DiscussionCreator = 3,
+  User = 4
 }

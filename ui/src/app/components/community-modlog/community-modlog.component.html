@@ -3,7 +3,7 @@
     <i *ngIf="!modlog" class="fa fa-circle-o-notch fa-spin fa-5x text-xs-center block"></i>
     <div *ngFor="let modRow of modlog">
       <span class="text-muted">{{modRow.action_tstamp | moment}} &mdash;</span>
-      <span class="text-primary">{{modRow.modified_by_user_name}}</span>
+      <a *ngIf="modRow.modified_by_user_id" [routerLink]="['/user', modRow.modified_by_user_id]">{{modRow.modified_by_user_name}}</a>
       <span [ngSwitch]="modRow.action">
       	<span *ngSwitchCase="'I'">added</span>
       	<span *ngSwitchCase="'U'">altered</span>
@@ -21,7 +21,7 @@
           <a [routerLink]="['/discussion', modRow.discussion_id]">{{modRow.discussion_title}}</a>
         </span>
         <span *ngSwitchCase="'community_user'">
-          <span class="text-primary">{{modRow.user_name}}</span> 
+          <a [routerLink]="['/user',modRow.user_id]">{{modRow.user_name}}</a> 
           as a 
           <span class="text-warning">{{getRole(modRow.role_id)}}</span>
         </span>

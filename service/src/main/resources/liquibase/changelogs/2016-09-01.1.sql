@@ -85,9 +85,90 @@ order by action_tstamp desc;
 
 --rollback create view community_audit_view as select audit.logged_actions.*, discussion.id as discussion_id, discussion.community_id, comment.user_id, user_.name as user_name from audit.logged_actions inner join comment on comment.id = audit.logged_actions.id inner join discussion on comment.discussion_id = discussion.id inner join user_ on comment.user_id = user_.id where audit.logged_actions.table_name = 'comment' union select audit.logged_actions.*, discussion.id as discussion_id, discussion.community_id, null as user_id, null as user_name from audit.logged_actions inner join discussion on discussion.id = audit.logged_actions.id where audit.logged_actions.table_name = 'discussion' union select audit.logged_actions.*, null as discussion_id, community_user.community_id, community_user.user_id, user_.name as user_name from audit.logged_actions inner join community_user on community_user.id = audit.logged_actions.id inner join user_ on community_user.user_id = user_.id where audit.logged_actions.table_name = 'community_user' order by action_tstamp desc;
 
+create view user_audit_view as
+select audit.logged_actions.*,
+c.text_ as comment_text,
+d.id as discussion_id,
+d.title as discussion_title,
+d.community_id,
+co.name as community_name,
+0 as role_id,
+c.user_id,
+u1.name as user_name,
+c.modified_by_user_id,
+u2.name as modified_by_user_name
+from audit.logged_actions
+left join comment as c on c.id = audit.logged_actions.id
+left join discussion as d on c.discussion_id = d.id
+left join user_ as u1 on c.user_id = u1.id
+left join user_ as u2 on c.modified_by_user_id = u2.id
+left join community as co on d.community_id = co.id
+where audit.logged_actions.table_name = 'comment'
+union
+-- This second union is because the comment_audit only records updates or deletes, and so check where modified=null from the comment table
+select c.id,
+null as schema_name,
+'comment' as table_name,
+null as p_user_name,
+c.created as action_tstamp,
+'I' as action,
+null as original_data,
+null as new_data,
+null as query,
+c.text_ as comment_text,
+d.id as discussion_id,
+d.title as discussion_title,
+d.community_id,
+co.name as community_name,
+0 as role_id,
+c.user_id,
+u1.name as user_name,
+c.modified_by_user_id,
+u2.name as modified_by_user_name
+from comment as c
+left join discussion as d on c.discussion_id = d.id
+left join user_ as u1 on c.user_id = u1.id
+left join user_ as u2 on c.modified_by_user_id = u2.id
+left join community as co on d.community_id = co.id
+where c.modified is null
+union
+select audit.logged_actions.*,
+null as comment_text,
+null as discussion_id,
+null as discussion_title,
+cast(split_part(coalesce(original_data, new_data), ',', 3) as bigint) as community_id,
+co.name as community_name,
+cast(split_part(coalesce(original_data, new_data), ',', 4) as bigint) as role_id,
+cast(split_part(coalesce(original_data, new_data), ',', 2) as bigint) as user_id,
+u1.name as user_name,
+null as modified_by_user_id,
+null as modified_by_user_name
+from audit.logged_actions
+left join community_user as cu on cu.id = audit.logged_actions.id
+left join user_ as u1 on cast(split_part(coalesce(original_data, new_data), ',', 2) as bigint) = u1.id
+left join community as co on cast(split_part(coalesce(original_data, new_data), ',', 3) as bigint) = co.id
+where audit.logged_actions.table_name = 'community_user'
+union
+select audit.logged_actions.*,
+null as comment_text,
+cast(split_part(coalesce(original_data, new_data), ',', 3) as bigint) as discussion_id,
+d.title as discussion_title,
+null as community_id,
+null as community_name,
+cast(split_part(coalesce(original_data, new_data), ',', 4) as bigint) as role_id,
+cast(split_part(coalesce(original_data, new_data), ',', 2) as bigint) as user_id,
+u1.name as user_name,
+null as modified_by_user_id,
+null as modified_by_user_name
+from audit.logged_actions
+left join discussion_user as du on du.id = audit.logged_actions.id
+left join discussion as d on cast(split_part(coalesce(original_data, new_data), ',', 3) as bigint) = d.id
+left join user_ as u1 on cast(split_part(coalesce(original_data, new_data), ',', 2) as bigint) = u1.id
+where audit.logged_actions.table_name = 'discussion_user'
+order by action_tstamp desc;
+
 -- Clear out the audit logging table
 delete from audit.logged_actions;
-
 
 drop view discussion_full_view cascade;
 

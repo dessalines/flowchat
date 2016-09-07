@@ -30,6 +30,7 @@ export class UserService {
   private fetchFavoriteCommunitiesUrl: string = environment.endpoint + 'favorite_communities';
   private removeFavoriteCommunityUrl: string = environment.endpoint + 'favorite_community/';
 
+  private getUserLogUrl: string = environment.endpoint + 'user_log/';
 
   constructor(private http: Http) {
     this.setUserFromCookie();
@@ -215,6 +216,13 @@ export class UserService {
     return (this.favoriteCommunities !== undefined && 
       this.favoriteCommunities.filter(c => community.id == c.id)[0] !== undefined);
   }
+
+  getUserLog(id: number) {
+    return this.http.get(this.getUserLogUrl + id, this.getOptions())
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
 
   private handleError(error: any) {
     // We'd also dig deeper into the error to get a better message
