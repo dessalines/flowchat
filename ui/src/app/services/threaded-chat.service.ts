@@ -1,6 +1,6 @@
 import {Injectable}    from '@angular/core';
 import {$WebSocket, WebSocketConfig}    from './ng2-websocket';
-import {environment} from '../environment';
+import {environment} from '../../environments/environment';
 
 @Injectable()
 export class ThreadedChatService {

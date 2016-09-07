@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import { Http, Response } from '@angular/http';
-import {environment} from '../environment';
+import {environment} from '../../environments/environment';
 
 @Injectable()
 export class UserService {

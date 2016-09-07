@@ -7,7 +7,7 @@ import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
 import {UserService} from './user.service';
 import {Community} from '../shared/community.interface';
-import {environment} from '../environment';
+import {environment} from '../../environments/environment';
 
 
 @Injectable()
