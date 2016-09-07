@@ -34,8 +34,8 @@ export class LoginService {
       .catch(this.handleError);
   }
 
-  signup(username: string, password: string, email: string): Observable<User> {
-    let reqBody: string = JSON.stringify({ username, password, email });
+  signup(username: string, password: string, verifyPassword: string, email: string): Observable<User> {
+    let reqBody: string = JSON.stringify({ username, password, verifyPassword, email });
     return this.http.post(this.signupUrl, reqBody)
       .map(this.extractData)
       .catch(this.handleError);

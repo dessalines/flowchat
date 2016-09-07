@@ -90,9 +90,10 @@ public class Endpoints {
 
             String userName = vars.get("username");
             String password = vars.get("password");
+            String verifyPassword = vars.get("verifyPassword");
             String email = vars.get("email");
 
-            Tables.UserLoginView ulv = Actions.signup(userName, password, email, req, res);
+            Tables.UserLoginView ulv = Actions.signup(userName, password, verifyPassword, email, req, res);
 
             res.status(HttpStatus.CREATED_201);
 
