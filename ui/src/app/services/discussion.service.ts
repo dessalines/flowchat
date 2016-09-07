@@ -18,10 +18,12 @@ export class DiscussionService {
   private createDiscussionUrl: string = environment.endpoint + 'discussion';
   private saveDiscussionUrl: string = environment.endpoint + 'discussion';
 
-  private getDiscussionsUrl(page: number, limit: number, tagId: string,
+  private getDiscussionsUrl(page: number, 
+    limit: number,
+    tagId: string,
+    communityId: string,
     orderBy: string): string {
-    return environment.endpoint + 'discussions/' + tagId + '/' +
-      limit + '/' + page + '/' + orderBy;
+    return environment.endpoint + 'discussions/' + tagId + '/' + communityId + '/' + limit + '/' + page + '/' + orderBy;
   }
 
   constructor(private http: Http,
@@ -34,9 +36,12 @@ export class DiscussionService {
       .catch(this.handleError);
   }
 
-  getDiscussions(page: number = 1, limit: number = 12, tagId: string = 'all',
+  getDiscussions(page: number = 1, 
+    limit: number = 12, 
+    tagId: string = 'all',
+    communityId: string = 'all',
     orderBy: string = 'time-86400') {
-    return this.http.get(this.getDiscussionsUrl(page, limit, tagId, orderBy), this.userService.getOptions())
+    return this.http.get(this.getDiscussionsUrl(page, limit, tagId, communityId, orderBy), this.userService.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
@@ -74,6 +79,7 @@ export class DiscussionService {
 
   private extractData(res: Response) {
     let body = res.json();
+    console.log(body);
     return body || {};
   }
 

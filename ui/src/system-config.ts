@@ -1,3 +1,5 @@
+"use strict";
+
 // SystemJS configuration file, see links for more information
 // https://github.com/systemjs/systemjs
 // https://github.com/systemjs/systemjs/blob/master/docs/config-api.md
@@ -57,6 +59,9 @@ const barrels: string[] = [
   'app/discussion-card',
   'app/tag',
   'app/footer',
+  'app/community-card',
+  'app/community',
+  'app/community-modlog',
   /** @cli-barrel */
 ];
 

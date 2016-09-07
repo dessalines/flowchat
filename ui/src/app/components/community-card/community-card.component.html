@@ -1,0 +1,241 @@
+<div class="card">
+  <div *ngIf="!community.deleted">
+    <div *ngIf="!editing">
+      <div class="card-block card-block-no-bottom">
+        <h4 class="card-title">
+          <span role="button" class="link-unstyled" (click)="toggleCollapseText()" tooltipPlacement="bottom" tooltip="Show/Hide Text">{{community.name}}</span>
+          <small *ngIf="isModerator"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditing()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
+        </h4>
+      </div>
+      <div class="card-block card-block-no-top">
+        <p *ngIf="community.text && !textCollapsed"
+          class="card-text" [innerHTML]="community.text | markdown"></p>
+        <small>
+        <ul class="list-inline">
+          <li class="tag tag-default list-inline-item" *ngFor="let tag of community.tags">
+            <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
+          </li>
+        </ul>
+        <ul *ngIf="!textCollapsed" class="list-inline">
+          <li class="list-inline-item"> creator: 
+            <a [routerLink]="['/user',community.creator.id]" class="tag tag-success">{{community.creator.name}}</a>
+          </li>
+          <li class="list-inline-item" *ngIf="community.moderators.length > 0"> moderators: </li>
+          <li class="list-inline-item" *ngFor="let moderator of community.moderators">
+            <a [routerLink]="['/user',moderator.id]" class="tag tag-warning">{{moderator.name}}</a>
+          </li>
+        </ul>
+      </small>
+        <small class="text-muted">
+        <span *ngIf="!community.modified">created {{community.created | moment}}</span>
+        <span *ngIf="community.modified"><i>modified {{community.modified | moment}}</i></span>
+          by 
+          <a [routerLink]="['/user',community.creator.id]" class="link-unstyled">{{community.creator.name}}</a>
+      </small>
+        <ul class="list-inline">
+          <li *ngIf="community.private_" class="tag tag-danger list-inline-item">Private</li>
+          <li *ngIf="!isCreator && !isModerator && !userService.hasFavoriteCommunity(community)"
+            role="button" class="list-inline-item"
+            (click)="userService.saveFavoriteCommunity(community)"
+            tooltipPlacement="bottom" tooltip="Save to Favorites"><i class="fa fa-fw fa-heart-o"></i></li>
+          <li *ngIf="!isCreator &&!isModerator && userService.hasFavoriteCommunity(community)"
+            role="button" class="list-inline-item"
+            (click)="userService.removeFavoriteCommunity(community.id)"
+            tooltipPlacement="bottom" tooltip="Remove from Favorites"><i class="fa fa-fw fa-heart text-danger"></i></li>
+          <li *ngIf="isModerator && !isCreator"
+            role="button" class="list-inline-item"
+            (click)="userService.removeFavoriteCommunity(community.id)"
+            tooltipPlacement="bottom" tooltip="Stop being a moderator"><i class="fa fa-fw fa-shield text-danger"></i></li>
+          <li role="button" class="list-inline-item">
+            <a class="link-unstyled" [routerLink]="['modlog']"><i class="fa fa-fw fa-shield" tooltipPlacement="bottom" tooltip="View Moderator Log (modlog)"></i></a></li>
+          <li *ngIf="!isCreator" role="button"
+            class="list-inline-item" (click)="toggleShowVoteSlider()"
+            tooltipPlacement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
+          <li *ngIf="community.avgRank" class="tag tag-pill tag-default list-inline-item"
+            tooltipPlacement="bottom" tooltip="Average Score">
+            {{community.avgRank}}</li>
+          <li *ngIf="community.userRank" class="tag tag-pill tag-info list-inline-item"
+            tooltipPlacement="bottom" tooltip="Your Vote">
+            {{community.userRank}}</li>
+          <li *ngIf="community.numberOfVotes" class="text-muted list-inline-item">
+            <small> {{community.numberOfVotes}} votes</small></li>
+        </ul>
+        <div *ngIf="showVoteSlider">
+          <input [value]="community.userRank" (mouseup)="saveCommunityRank($event.target.value)"
+            (touchend)="saveCommunityRank($event.target.value)"
+            (input)="updateCommunityRank($event.target.value)"
+            type="range" min="0" max="100"
+            step="1" (value)="community.userRank"
+            name="community_rank" />
+        </div>
+      </div>
+    </div>
+    <div *ngIf="editing">
+      <form #communityForm="ngForm" class="card-block">
+        <div *ngIf="isCreator" class="form-group row">
+          <label class="col-sm-1 form-control-label">Name</label>
+          <div class="col-sm-11">
+            <input [(ngModel)]="community.name" class="form-control"
+              required minlength="3" maxlength="50"
+              pattern="[a-zA-Z0-9_-]+" #communityName="ngModel"
+              name="community_name" />
+            <div *ngIf="communityName.dirty" class="help-block text-danger">
+              <small *ngIf="communityName.errors?.pattern">Invalid name</small>
+              <small *ngIf="communityName.errors?.required">A name is required</small>
+              <small *ngIf="communityName.errors?.minlength">The name must be more than 3 characters</small>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="isCreator" class="checkbox">
+          <label>
+            <input [(ngModel)]="community.private_" type="checkbox"
+              name="community_private" /> Private
+          </label>
+        </div>
+        <app-markdown-edit *ngIf="refresh && isCreator" [focus]="false"
+          [inputText]="community.text" (textEvent)="setEditText($event)">
+        </app-markdown-edit>
+        <br>
+        <div *ngIf="isCreator" class="form-group row">
+          <label class="col-sm-1 form-control-label">Tags</label>
+          <div class="col-md-5 input-group">
+            <input [(ngModel)]="tagSearchSelected" [typeahead]="tagSearchResultsObservable"
+              (typeaheadOnSelect)="tagTypeaheadOnSelect($event.item)"
+              [typeaheadOptionField]="'name'"
+              (typeaheadLoading)="tagChangeTypeaheadLoading($event)"
+              (typeaheadNoResults)="tagChangeTypeaheadNoResults($event)"
+              [typeaheadWaitMs]="200" class="form-control"
+              minlength="5" maxlength="20"
+              pattern="[a-zA-Z0-9_-]+" name="tag_search"
+              #tagTerm="ngModel">
+            <button [disabled]="tagSearchSelected.length < 5 || tagSearchSelected.length > 20 || rgex.test(tagSearchSelected) == false"
+              (click)="createTag()" class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
+          </div>
+          <ul *ngIf="community.tags" class="col-md-6 list-inline form-control-label">
+            <li role="button" (click)="removeTag(tag)"
+              class="tag tag-default list-inline-item"
+              *ngFor="let tag of community.tags">
+              <span>{{removeQuotes(tag.name)}}<i class="fa fa-fw fa-remove"></i></span>
+            </li>
+          </ul>
+          <div *ngIf="tagTypeaheadLoading===true">
+            <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+          </div>
+          <div *ngIf="tagTerm.dirty" class="row col-sm-12 help-block text-danger">
+            <small *ngIf="tagTerm.errors?.pattern">Invalid Tag</small>
+          </div>
+          <div *ngIf="tagTypeaheadNoResults===true"
+            class="">
+            <i class="fa fa-fw fa-remove"></i>No
+            Results Found
+          </div>
+          <div *ngIf="tooManyTagsError" class="row col-sm-12 help-block text-danger">
+            <small>Can't Add more than 3 tags</small>
+          </div>
+          <div *ngIf="alreadyAddedTagError" class="row col-sm-12 help-block text-danger">
+            <small>Already added that tag</small>
+          </div>
+        </div>
+        <div *ngIf="isCreator" class="form-group row">
+          <label class="col-sm-1 form-control-label">Moderators</label>
+          <div class="col-md-5">
+            <input [(ngModel)]="moderatorSearchSelected"
+              [typeahead]="moderatorSearchResultsObservable"
+              (typeaheadOnSelect)="moderatorTypeaheadOnSelect($event.item)"
+              [typeaheadOptionField]="'name'"
+              (typeaheadLoading)="moderatorChangeTypeaheadLoading($event)"
+              (typeaheadNoResults)="moderatorChangeTypeaheadNoResults($event)"
+              [typeaheadWaitMs]="200" class="form-control"
+              name="block_user_search">
+            <div *ngIf="moderatorTypeaheadLoading===true">
+              <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+            </div>
+          </div>
+          <ul *ngIf="community.moderators" class="col-md-6 list-inline form-control-label">
+            <li role="button" (click)="removeModerator(moderator)"
+              class="tag tag-default list-inline-item"
+              *ngFor="let moderator of community.moderators">
+              <span>{{moderator.name}}<i class="fa fa-fw fa-remove"></i></span>
+            </li>
+          </ul>
+          <div *ngIf="blockedUserTypeaheadNoResults===true"
+            class="">
+            <i class="fa fa-fw fa-remove"></i>No
+            Results Found
+          </div>
+        </div>
+        <div *ngIf="community.private_ && isModerator" class="form-group row">
+          <label class="col-sm-1 form-control-label">Invite Users</label>
+          <div class="col-md-5">
+            <input [(ngModel)]="userSearchSelected" [typeahead]="userSearchResultsObservable"
+              (typeaheadOnSelect)="userTypeaheadOnSelect($event.item)"
+              [typeaheadOptionField]="'name'"
+              (typeaheadLoading)="userChangeTypeaheadLoading($event)"
+              (typeaheadNoResults)="userChangeTypeaheadNoResults($event)"
+              [typeaheadWaitMs]="200" class="form-control"
+              name="user_search">
+            <div *ngIf="userTypeaheadLoading===true">
+              <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+            </div>
+          </div>
+          <ul *ngIf="community.privateUsers" class="col-md-6 list-inline form-control-label">
+            <li role="button" (click)="removePrivateUser(privateUser)"
+              class="tag tag-default list-inline-item"
+              *ngFor="let privateUser of community.privateUsers">
+              <span>{{privateUser.name}}<i class="fa fa-fw fa-remove"></i></span>
+            </li>
+          </ul>
+          <div *ngIf="userTypeaheadNoResults===true"
+            class="">
+            <i class="fa fa-fw fa-remove"></i>No
+            Results Found
+          </div>
+        </div>
+        <div *ngIf="isModerator" class="form-group row">
+          <label class="col-sm-1 form-control-label">Block Users</label>
+          <div class="col-md-5">
+            <input [(ngModel)]="blockedUserSearchSelected"
+              [typeahead]="blockedUserSearchResultsObservable"
+              (typeaheadOnSelect)="blockedUserTypeaheadOnSelect($event.item)"
+              [typeaheadOptionField]="'name'"
+              (typeaheadLoading)="blockedUserChangeTypeaheadLoading($event)"
+              (typeaheadNoResults)="blockedUserChangeTypeaheadNoResults($event)"
+              [typeaheadWaitMs]="200" class="form-control"
+              name="block_user_search">
+            <div *ngIf="blockedUserTypeaheadLoading===true">
+              <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+            </div>
+          </div>
+          <ul *ngIf="community.blockedUsers" class="col-md-6 list-inline form-control-label">
+            <li role="button" (click)="removeBlockedUser(blockedUser)"
+              class="tag tag-default list-inline-item"
+              *ngFor="let blockedUser of community.blockedUsers">
+              <span>{{blockedUser.name}}<i class="fa fa-fw fa-remove"></i></span>
+            </li>
+          </ul>
+          <div *ngIf="blockedUserTypeaheadNoResults===true"
+            class="">
+            <i class="fa fa-fw fa-remove"></i>No
+            Results Found
+          </div>
+        </div>
+        <br>
+        <div class="btn-group" role="group">
+          <button [disabled]="!communityForm.form.valid"
+            (click)="saveCommunity()" class="btn btn-primary">
+            <span *ngIf="!isSaving">Save</span>
+            <span *ngIf="isSaving">Saving<i class="fa fa-fw fa-circle-o-notch fa-spin"></i></span>
+          </button>
+          <button type="button" (click)="toggleEditing()"
+            class="btn btn-warning">Cancel</button>
+          <button *ngIf="isCreator" type="button" (click)="deleteCommunity()"
+            class="btn btn-danger">Delete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div *ngIf="community.deleted">
+    <i>deleted {{community.modified | moment}}</i>    by 
+    <a [routerLink]="['/user',community.creator.id]" class="link-unstyled">{{community.creator.name}}</a>
+  </div>
+</div>

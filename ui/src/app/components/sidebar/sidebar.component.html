@@ -1,0 +1,33 @@
+<div class="card">
+  <div role="button" class="card-header" (click)="toggleCommunityCollapse()">
+    <i class="fa fa-fw fa-users"></i> Communities
+  </div>
+  <ul *ngIf="!communityCollapsed" class="list-group">
+    <li class="list-group-item">
+      <a [routerLink]="['/']" class="link-unstyled overflow">Front page</a>
+    </li>
+    <li class="list-group-item">
+      <a [routerLink]="['/all']" class="link-unstyled overflow">All</a>
+    </li>
+    <li *ngFor="let community of userService.getFavoriteCommunities()"
+      class="list-group-item">
+      <a [routerLink]="['/community', community.id]"
+        class="link-unstyled overflow">{{community.name}}</a>
+    </li>
+  </ul>
+</div>
+<div *ngIf="userService?.getFavoriteDiscussions()"
+  class="card">
+  <div role="button" class="card-header" (click)="toggleDiscussionCollapse()">
+    <i class="fa fa-fw fa-comments"></i>    Discussions
+  </div>
+  <ul *ngIf="!discussionCollapsed" class="list-group">
+    <li *ngFor="let discussion of userService.getFavoriteDiscussions()"
+      class="list-group-item overflow">
+      <a [routerLink]="['/discussion', discussion.id]"
+        class="link-unstyled">{{discussion.title}}</a>
+      <span role="button" (click)="userService.removeFavoriteDiscussion(discussion.id)"
+        class="remove-btn fa fa-fw fa-remove pull-xs-right"></span>
+    </li>
+  </ul>
+</div>

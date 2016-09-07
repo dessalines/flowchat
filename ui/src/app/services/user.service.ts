@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {User, Discussion, Tools} from '../shared';
+import {User, Discussion, Tools, Community} from '../shared';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -15,6 +15,7 @@ export class UserService {
   private user: User;
 
   private favoriteDiscussions: Array<Discussion> = [];
+  private favoriteCommunities: Array<Community> = [];
 
   private userSource = new BehaviorSubject<User>(this.user);
 
@@ -25,14 +26,28 @@ export class UserService {
   private fetchFavoriteDiscussionsUrl: string = environment.endpoint + 'favorite_discussions';
   private removeFavoriteDiscussionUrl: string = environment.endpoint + 'favorite_discussion/';
 
+  private saveFavoriteCommunityUrl: string = environment.endpoint + 'favorite_community/';
+  private fetchFavoriteCommunitiesUrl: string = environment.endpoint + 'favorite_communities';
+  private removeFavoriteCommunityUrl: string = environment.endpoint + 'favorite_community/';
+
+  private getUserLogUrl: string = environment.endpoint + 'user_log/';
 
   constructor(private http: Http) {
     this.setUserFromCookie();
     this.fetchFavoriteDiscussions();
+    this.fetchFavoriteCommunities();
   }
 
   public getUser(): User {
     return this.user;
+  }
+
+  public getFavoriteDiscussions(): Array<Discussion> {
+    return this.favoriteDiscussions;
+  }
+
+  public getFavoriteCommunities(): Array<Community> {
+    return this.favoriteCommunities;
   }
 
   public isAnonymousUser(): boolean {
@@ -49,6 +64,7 @@ export class UserService {
     this.user = user;
     this.setCookies(this.user);
     this.fetchFavoriteDiscussions();
+    this.fetchFavoriteCommunities();
   }
 
   setUserFromCookie() {
@@ -95,10 +111,10 @@ export class UserService {
   getOptions(): RequestOptions {
     let headers = new Headers(
       {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         'user': JSON.stringify(this.getUser())
       });
-    return new RequestOptions({ headers: headers });
+    return new RequestOptions({ headers: headers});
   }
 
   searchUsers(query: string) {
@@ -107,18 +123,17 @@ export class UserService {
       .catch(this.handleError);
   }
 
+  fetchFavoriteDiscussions() {
+    this.fetchFavoriteDiscussionsObs().subscribe(d => {
+      this.favoriteDiscussions = d.discussions;
+    },
+      error => console.log(error));
+  }
+
   private fetchFavoriteDiscussionsObs() {
     return this.http.get(this.fetchFavoriteDiscussionsUrl, this.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
-  }
-
-  fetchFavoriteDiscussions() {
-    this.fetchFavoriteDiscussionsObs().subscribe(d => {
-      this.favoriteDiscussions = d.discussions;
-      console.log(this.favoriteDiscussions);
-    },
-      error => console.log(error));
   }
 
   removeFavoriteDiscussion(discussionId: number) {
@@ -134,13 +149,9 @@ export class UserService {
   }
 
   private removeFavoriteDiscussionObjs(discussionId: number) {
-    return this.http.post(this.removeFavoriteDiscussionUrl + '/' + discussionId, null, this.getOptions())
+    return this.http.delete(this.removeFavoriteDiscussionUrl + discussionId, this.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
-  }
-
-  getFavoriteDiscussions(): Array<Discussion> {
-    return this.favoriteDiscussions;
   }
 
   // This is different, because it doesn't actually do an http fetch
@@ -151,19 +162,67 @@ export class UserService {
     }
 
     this.favoriteDiscussions.push(discussion);
-    console.log(this.favoriteDiscussions);
-    // // Find it
-    // discussion = this.favoriteDiscussions.filter(discussion => discussion.id == discussionId)[0];
-
-    // console.log("discussion is");
-    // console.log(discussion);
-
-
-    // if (discussion === undefined) {
-    //   // then you have to refetch(for the name anyway)
-    //   this.fetchFavoriteDiscussions();
-    // }
   }
+
+
+  fetchFavoriteCommunities() {
+    this.fetchFavoriteCommunitiesObs().subscribe(d => {
+      this.favoriteCommunities = d.communities;
+    },
+      error => console.log(error));
+  }
+
+  private fetchFavoriteCommunitiesObs() {
+    return this.http.get(this.fetchFavoriteCommunitiesUrl, this.getOptions())
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  removeFavoriteCommunity(communityId: number) {
+    // Remove it from the list
+    let community = this.favoriteCommunities.filter(community => community.id == communityId)[0];
+    let index = this.favoriteCommunities.indexOf(community);
+
+    this.favoriteCommunities.splice(index, 1);
+
+    this.removeFavoriteCommunityObjs(communityId).subscribe(null,
+      error => console.log(error));
+
+  }
+
+  private removeFavoriteCommunityObjs(communityId: number) {
+    return this.http.delete(this.removeFavoriteCommunityUrl + communityId, this.getOptions())
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  saveFavoriteCommunity(community: Community) {
+    if (this.favoriteCommunities === undefined) {
+      this.favoriteCommunities = [];
+    }
+
+    this.favoriteCommunities.push(community);
+    this.saveFavoriteCommunityObjs(community.id).subscribe(null,
+      error => console.log(error));
+  }
+
+  private saveFavoriteCommunityObjs(communityId: number) {
+    return this.http.post(this.saveFavoriteCommunityUrl + communityId, null, this.getOptions())
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  hasFavoriteCommunity(community: Community): boolean {
+    return (this.favoriteCommunities !== undefined && 
+      this.favoriteCommunities.filter(c => community.id == c.id)[0] !== undefined);
+  }
+
+  getUserLog(id: number) {
+    return this.http.get(this.getUserLogUrl + id, this.getOptions())
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
 
   private handleError(error: any) {
     // We'd also dig deeper into the error to get a better message

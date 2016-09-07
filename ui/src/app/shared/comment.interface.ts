@@ -1,9 +1,10 @@
+import {User} from './user.interface.ts';
+
 export interface Comment {
 	id: number;
-	userId: number;
-	userName: string;
+	user: User;
+	modifiedByUser: User;
 	discussionId: number;
-	discussionOwnerId: number;
 	parentId: number;
 	topParentId: number;
 	text: string;

@@ -5,10 +5,11 @@ import {FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl} from 
 import {LoginService} from '../../services/login.service';
 import {UserService} from '../../services/user.service';
 import {DiscussionService} from '../../services/discussion.service';
+import {CommunityService} from '../../services/community.service';
 import {NotificationsService} from '../../services/notifications.service';
 import {User, Discussion, Comment, Tools} from '../../shared';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
-import {ChatComponent} from '../chat';
+import {DiscussionComponent} from '../discussion';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import {TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
@@ -19,10 +20,10 @@ import {ToasterService} from 'angular2-toaster/angular2-toaster';
 declare var Favico: any;
 
 @Component({
-  moduleId: module.id,
+
   selector: 'app-navbar',
   templateUrl: 'navbar.component.html',
-  styleUrls: ['navbar.component.css'],
+  styleUrls: ['navbar.component.scss'],
   directives: [MODAL_DIRECTIVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES,
     TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES, ROUTER_DIRECTIVES,
     FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
@@ -53,6 +54,7 @@ export class NavbarComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     private discussionService: DiscussionService,
+    private communityService: CommunityService,
     private notificationsService: NotificationsService,
     private toasterService: ToasterService) {
 
@@ -90,6 +92,7 @@ export class NavbarComponent implements OnInit {
   signupSubmit() {
     this.loginService.signup(this.signup.username,
       this.signup.password,
+      this.signup.verifyPassword,
       this.signup.email).subscribe(
       user => {
         this.setupUser(user);
@@ -135,7 +138,17 @@ export class NavbarComponent implements OnInit {
   createDiscussion() {
     this.discussionService.createDiscussion().subscribe(d => {
       console.log(d);
+      this.userService.fetchFavoriteDiscussions();
       this.router.navigate(['/discussion', d.id, { editMode: true }]);
+    },
+      error => console.log(error));
+  }
+
+  createCommunity() {
+    this.communityService.createCommunity().subscribe(d => {
+      console.log(d);
+      this.userService.fetchFavoriteCommunities();
+      this.router.navigate(['/community', d.id, { editMode: true }]);
     },
       error => console.log(error));
   }
@@ -185,16 +198,22 @@ export class NavbarComponent implements OnInit {
   gotoMessage(message: Comment) {
 
     // Mark the message as read
-    this.notificationsService.markMessageAsRead(message.id).subscribe(t => {
+    this.notificationsService.markMessageAsRead(message.id).subscribe(() => {
+
       // Remove it from the array
       let index = this.unreadMessages.indexOf(message);
       this.unreadMessages.splice(index, 1);
       this.changeFaviconBasedOnMessages();
 
+
       // Navigate to the parent message (IE, your message)
       this.router.navigate(['/discussion', message.discussionId,
         'comment', message.parentId]);
 
+    }, 
+    error => {
+      console.log(error);
+      this.toasterService.pop("error", "Error", error);
     });
   }
 

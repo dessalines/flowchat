@@ -1,10 +1,10 @@
-import {Tag} from './tag.interface.ts';
-import {User} from './user.interface.ts';
+import {Tag} from './tag.interface';
+import {User} from './user.interface';
+import {Community} from './community.interface';
 
 export interface Discussion {
   id: number;
-  userId: number;
-  userName: string;
+  creator: User;
   title: string;
   link?: string;
   text?: string;
@@ -16,6 +16,7 @@ export interface Discussion {
   privateUsers?: Array<User>;
   blockedUsers?: Array<User>;
   deleted?: boolean;
+  community?: Community;
   created: number;
   modified?: number;
 }

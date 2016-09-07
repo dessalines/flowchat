@@ -1,79 +1,94 @@
 <div class="card">
-  <div *ngIf="discussion && !discussion?.deleted">
-    <div *ngIf="!editMode">
+  <div *ngIf="!discussion.deleted">
+    <div *ngIf="!editing">
       <div class="card-block card-block-no-bottom">
         <h4 class="card-title">
-          <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">{{discussion?.title}} </a>
-          <small *ngIf="discussion && isCreator()"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditMode()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
+          <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">{{discussion.title}} </a>
+          <small *ngIf="isCreator"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditing()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
         </h4>
       </div>
-      <a *ngIf="discussion?.link && isImageType(discussion?.link)"
-        href="{{discussion?.link}}" target="_blank">
+      <a *ngIf="discussion.link && isImageType(discussion.link)"
+        href="{{discussion.link}}" target="_blank">
         <div [innerHTML]="discussion.link | markdown"></div>
       </a>
       <div class="card-block card-block-no-top">
-        <p *ngIf="discussion?.text" class="card-text"
+        <p *ngIf="discussion.text" class="card-text"
           [innerHTML]="discussion.text | markdown"></p>
         <small>
-        <ul *ngIf="discussion?.tags" class="list-inline">tags:
-          <li class="tag tag-default list-inline-item" *ngFor="let tag of discussion?.tags">
+        <ul class="list-inline">
+          <li *ngIf="discussion.community" class="tag tag-primary list-inline-item">
+            <a class="link-unstyled" [routerLink]="['/community', discussion.community.id]">{{removeQuotes(discussion.community.name)}}</a>
+          </li>
+          <li class="tag tag-default list-inline-item" *ngFor="let tag of discussion.tags">
             <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
       </small>
         <small class="text-muted">
-        <span *ngIf="!discussion?.modified">created {{discussion?.created | moment}}</span>
-        <span *ngIf="discussion?.modified"><i>modified {{discussion?.modified | moment}}</i></span>
-          by {{discussion?.userName}}
+        <span *ngIf="!discussion.modified">created {{discussion.created | moment}}</span>
+        <span *ngIf="discussion.modified"><i>modified {{discussion.modified | moment}}</i></span>
+          by 
+          <a [routerLink]="['/user', discussion.creator.id]" class="link-unstyled" >{{discussion.creator.name}}</a>
       </small>
         <ul class="list-inline">
-          <li *ngIf="discussion?.private_" class="tag tag-danger list-inline-item">Private</li>
-          <li *ngIf="discussion && !isCreator()" role="button"
-            class="list-inline-item" (click)="toggleShowVoteSlider()"
+          <li *ngIf="discussion.private_" class="tag tag-danger list-inline-item">Private</li>
+          <li *ngIf="!isCreator" role="button" class="list-inline-item"
+            (click)="toggleShowVoteSlider()"
             tooltipPlacement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
-          <li *ngIf="discussion?.avgRank" class="tag tag-pill tag-default list-inline-item"
+          <li *ngIf="discussion.avgRank" class="tag tag-pill tag-default list-inline-item"
             tooltipPlacement="bottom" tooltip="Average Score">
-            {{discussion?.avgRank}}</li>
-          <li *ngIf="discussion?.userRank" class="tag tag-pill tag-info list-inline-item"
+            {{discussion.avgRank}}</li>
+          <li *ngIf="discussion.userRank" class="tag tag-pill tag-info list-inline-item"
             tooltipPlacement="bottom" tooltip="Your Vote">
-            {{discussion?.userRank}}</li>
-          <li *ngIf="discussion?.numberOfVotes" class="text-muted list-inline-item">
-            <small> {{discussion?.numberOfVotes}} votes</small></li>
-          <li *ngIf="discussion?.link" class="list-inline-item">
-            <a class="link-unstyled" href="{{discussion?.link}}"
+            {{discussion.userRank}}</li>
+          <li *ngIf="discussion.numberOfVotes" class="text-muted list-inline-item">
+            <small> {{discussion.numberOfVotes}} votes</small></li>
+          <li *ngIf="discussion.link" class="list-inline-item">
+            <a class="link-unstyled" href="{{discussion.link}}"
               target="_blank"><i class="fa fa-external-link"
               aria-hidden="true" tooltipPlacement="bottom" tooltip="Link"></i></a>
           </li>
           <li class="list-inline-item" role="button">
-            <a [routerLink]="['/discussion', discussion?.id]"
+            <a [routerLink]="['/discussion', discussion.id]"
               class="link-unstyled">
               <i class="fa fa-fw fa-comments-o" tooltipPlacement="bottom"
                 tooltip="Comments"></i></a>
           </li>
+          <li role="button" *ngIf="isCreator || isModerator"
+            (click)="deleteDiscussion()" class="list-inline-item">
+            <i class="fa fa-fw fa-remove" tooltipPlacement="bottom"
+              tooltip="Delete"></i>
+          </li>
         </ul>
         <div *ngIf="showVoteSlider">
-          <input [value]="discussion?.userRank" (mouseup)="saveDiscussionRank($event.target.value)"
+          <input [value]="discussion.userRank" (mouseup)="saveDiscussionRank($event.target.value)"
             (touchend)="saveDiscussionRank($event.target.value)"
             (input)="updateDiscussionRank($event.target.value)"
             type="range" min="0" max="100"
-            step="1" (value)="discussion?.userRank"
+            step="1" (value)="discussion.userRank"
             name="discussion_rank" />
         </div>
       </div>
     </div>
-    <div *ngIf="editMode && discussion?.title">
-      <div class="card-block">
+    <div *ngIf="editing">
+      <form #discussionForm="ngForm" class="card-block">
         <div class="form-group row">
-          <label class="col-sm-1 form-control-label">Title</label>
-          <div class="col-sm-11">
+          <label class="col-sm-2 form-control-label">Title</label>
+          <div class="col-sm-10">
             <input [(ngModel)]="discussion.title" class="form-control"
-              maxlength="140" name="discussion_title"
+              required minlength="3" maxlength="140"
+              name="discussion_title" #discussionTitle="ngModel"
             />
+            <div *ngIf="discussionTitle.dirty" class="help-block text-danger">
+              <small *ngIf="discussionTitle.errors?.pattern">Invalid title</small>
+              <small *ngIf="discussionTitle.errors?.required">A title is required</small>
+              <small *ngIf="discussionTitle.errors?.minlength">The title must be more than 3 characters</small>
+            </div>
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-sm-1 form-control-label">Link</label>
-          <div class="col-sm-11">
+          <label class="col-sm-2 form-control-label">Link</label>
+          <div class="col-sm-10">
             <input [(ngModel)]="discussion.link" #discussionLink="ngModel"
               placeholder="optional" class="form-control"
               pattern="[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?"
@@ -81,6 +96,32 @@
             <div *ngIf="discussionLink.dirty" class="row col-sm-12 help-block text-danger">
               <small *ngIf="discussionLink.errors?.pattern">Invalid URL</small>
             </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 form-control-label">Community</label>
+          <div class="col-sm-4">
+            <input [(ngModel)]="communitySearchSelected"
+              [typeahead]="communitySearchResultsObservable"
+              (typeaheadOnSelect)="communityTypeaheadOnSelect($event.item)"
+              [typeaheadOptionField]="'name'"
+              (typeaheadLoading)="communityChangeTypeaheadLoading($event)"
+              (typeaheadNoResults)="communityChangeTypeaheadNoResults($event)"
+              [typeaheadWaitMs]="200" class="form-control"
+              name="community_search">
+            <div *ngIf="communityTypeaheadLoading===true">
+              <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+            </div>
+          </div>
+          <ul class="col-md-6 list-inline form-control-label">
+            <li class="tag tag-primary list-inline-item">
+              <span>{{discussion.community.name}}</span>
+            </li>
+          </ul>
+          <div *ngIf="communityTypeaheadNoResults===true"
+            class="">
+            <i class="fa fa-fw fa-remove"></i>No
+            Results Found
           </div>
         </div>
         <div class="checkbox">
@@ -94,24 +135,24 @@
           (textEvent)="setEditText($event)"></app-markdown-edit>
         <br>
         <div class="form-group row">
-          <label class="col-sm-1 form-control-label">Tags</label>
-          <div class="col-md-5 input-group">
-            <input [(ngModel)]="tagSearchSelected"
-              [typeahead]="tagSearchResultsObservable"
+          <label class="col-sm-2 form-control-label">Tags</label>
+          <div class="col-sm-4 input-group">
+            <input [(ngModel)]="tagSearchSelected" [typeahead]="tagSearchResultsObservable"
               (typeaheadOnSelect)="tagTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'name'"
               (typeaheadLoading)="tagChangeTypeaheadLoading($event)"
               (typeaheadNoResults)="tagChangeTypeaheadNoResults($event)"
               [typeaheadWaitMs]="200" class="form-control"
               minlength="5" maxlength="20"
-              pattern="[a-zA-Z0-9_-]+" name="tag_search" #tagTerm="ngModel">
+              pattern="[a-zA-Z0-9_-]+" name="tag_search"
+              #tagTerm="ngModel">
             <button [disabled]="tagSearchSelected.length < 5 || tagSearchSelected.length > 20 || rgex.test(tagSearchSelected) == false"
               (click)="createTag()" class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
           </div>
-          <ul *ngIf="discussion?.tags" class="col-md-6 list-inline form-control-label">
+          <ul *ngIf="discussion.tags" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeTag(tag)"
               class="tag tag-default list-inline-item"
-              *ngFor="let tag of discussion?.tags">
+              *ngFor="let tag of discussion.tags">
               <span>{{removeQuotes(tag.name)}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
           </ul>
@@ -133,11 +174,10 @@
             <small>Already added that tag</small>
           </div>
         </div>
-        <div *ngIf="discussion?.private_" class="form-group row">
-          <label class="col-sm-1 form-control-label">Invite Users</label>
-          <div class="col-md-5">
-            <input [(ngModel)]="userSearchSelected"
-              [typeahead]="userSearchResultsObservable"
+        <div *ngIf="discussion.private_" class="form-group row">
+          <label class="col-sm-2 form-control-label">Invite Users</label>
+          <div class="col-sm-4">
+            <input [(ngModel)]="userSearchSelected" [typeahead]="userSearchResultsObservable"
               (typeaheadOnSelect)="userTypeaheadOnSelect($event.item)"
               [typeaheadOptionField]="'name'"
               (typeaheadLoading)="userChangeTypeaheadLoading($event)"
@@ -148,10 +188,10 @@
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
             </div>
           </div>
-          <ul *ngIf="discussion?.privateUsers" class="col-md-6 list-inline form-control-label">
+          <ul *ngIf="discussion.privateUsers" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removePrivateUser(privateUser)"
               class="tag tag-default list-inline-item"
-              *ngFor="let privateUser of privateUsersWithoutYou()">
+              *ngFor="let privateUser of discussion.privateUsers">
               <span>{{privateUser.name}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
           </ul>
@@ -162,8 +202,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-sm-1 form-control-label">Block Users</label>
-          <div class="col-md-5">
+          <label class="col-sm-2 form-control-label">Block Users</label>
+          <div class="col-sm-4">
             <input [(ngModel)]="blockedUserSearchSelected"
               [typeahead]="blockedUserSearchResultsObservable"
               (typeaheadOnSelect)="blockedUserTypeaheadOnSelect($event.item)"
@@ -176,7 +216,7 @@
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
             </div>
           </div>
-          <ul *ngIf="discussion?.blockedUsers" class="col-md-6 list-inline form-control-label">
+          <ul *ngIf="discussion.blockedUsers" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeBlockedUser(blockedUser)"
               class="tag tag-default list-inline-item"
               *ngFor="let blockedUser of discussion.blockedUsers">
@@ -191,14 +231,21 @@
         </div>
         <br>
         <div class="btn-group" role="group">
-          <button (click)="saveDiscussion()" class="btn btn-primary">Save</button>
-          <button (click)="toggleEditMode()" class="btn btn-warning">Cancel</button>
-          <button (click)="deleteDiscussion()" class="btn btn-danger">Delete</button>
+          <button [disabled]="!discussionForm.form.valid"
+            (click)="saveDiscussion()" class="btn btn-primary">
+            <span *ngIf="!isSaving">Save</span>
+            <span *ngIf="isSaving">Saving<i class="fa fa-fw fa-circle-o-notch fa-spin"></i></span>
+          </button>
+          <button type="button" (click)="toggleEditing()"
+            class="btn btn-warning">Cancel</button>
+          <button type="button" (click)="deleteDiscussion()"
+            class="btn btn-danger">Delete</button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
-  <div *ngIf="discussion?.deleted">
-    <i>deleted {{discussion?.modified | moment}}</i>    by {{discussion?.userName}}
+  <div *ngIf="discussion.deleted">
+    <i>deleted {{discussion.modified | moment}}</i> by 
+    <a [routerLink]="['/user', discussion.modifiedByUser.id]" class="link-unstyled">{{discussion.modifiedByUser.name}}</a>
   </div>
 </div>

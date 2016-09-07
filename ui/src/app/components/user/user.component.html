@@ -1,0 +1,37 @@
+<div class="logRow">
+  <div class="col-xs-12">
+    <i *ngIf="!userLog" class="fa fa-circle-o-notch fa-spin fa-5x text-xs-center block"></i>
+    <div *ngFor="let logRow of userLog">
+      <span class="text-muted">{{logRow.action_tstamp | moment}} &mdash;</span>
+      <span [ngSwitch]="logRow.action">
+      	<span *ngSwitchCase="'I'">created</span>
+      	<span *ngSwitchCase="'U'">altered</span>
+      	<span *ngSwitchCase="'D'">deleted</span>
+      </span>
+      <span [ngSwitch]="logRow.table_name">
+        <span *ngSwitchCase="'comment'">
+          a
+          <a [routerLink]="['/discussion', logRow.discussion_id, 'comment', logRow.id]">{{logRow.table_name}}</a>
+          in 
+          <a [routerLink]="['/discussion', logRow.discussion_id]">{{logRow.discussion_title}}</a>:
+          <div class="offset-md-1">
+          	<div [innerHTML]="logRow.comment_text | markdown"></div>
+          </div>
+        </span>
+        <span *ngSwitchCase="'discussion_user'">
+          discussion
+          <a [routerLink]="['/discussion', logRow.discussion_id]">{{logRow.discussion_title}}</a>
+          as a 
+          <span class="text-warning">{{getRole(logRow.role_id)}}</span>
+        </span>
+        <span *ngSwitchCase="'community_user'">
+          community
+          <a [routerLink]="['/community', logRow.community_id]">{{logRow.community_name}}</a>
+          as a 
+          <span class="text-warning">{{getRole(logRow.role_id)}}</span>
+        </span>
+      </span>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>

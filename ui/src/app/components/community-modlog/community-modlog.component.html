@@ -1,0 +1,32 @@
+<div class="modRow">
+  <div class="col-xs-12">
+    <i *ngIf="!modlog" class="fa fa-circle-o-notch fa-spin fa-5x text-xs-center block"></i>
+    <div *ngFor="let modRow of modlog">
+      <span class="text-muted">{{modRow.action_tstamp | moment}} &mdash;</span>
+      <a *ngIf="modRow.modified_by_user_id" [routerLink]="['/user', modRow.modified_by_user_id]">{{modRow.modified_by_user_name}}</a>
+      <span [ngSwitch]="modRow.action">
+      	<span *ngSwitchCase="'I'">added</span>
+      	<span *ngSwitchCase="'U'">altered</span>
+      	<span *ngSwitchCase="'D'">deleted</span>
+      </span>
+      <span [ngSwitch]="modRow.table_name">
+        <span *ngSwitchCase="'discussion'">
+          {{modRow.table_name}} 
+          <a [routerLink]="['/discussion', modRow.discussion_id]">{{modRow.discussion_title}}</a>
+        </span>
+        <span *ngSwitchCase="'comment'">
+          <span class="text-primary">{{modRow.user_name}}'s</span>
+          <a [routerLink]="['/discussion', modRow.discussion_id, 'comment', modRow.id]">{{modRow.table_name}}</a>
+          in 
+          <a [routerLink]="['/discussion', modRow.discussion_id]">{{modRow.discussion_title}}</a>
+        </span>
+        <span *ngSwitchCase="'community_user'">
+          <a [routerLink]="['/user',modRow.user_id]">{{modRow.user_name}}</a> 
+          as a 
+          <span class="text-warning">{{getRole(modRow.role_id)}}</span>
+        </span>
+      </span>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>

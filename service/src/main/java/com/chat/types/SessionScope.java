@@ -2,7 +2,7 @@ package com.chat.types;
 
 import ch.qos.logback.classic.Logger;
 import com.chat.tools.Tools;
-import com.chat.webservice.ThreadedChatWebSocket;
+import com.chat.types.user.User;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.LoggerFactory;
 
@@ -19,20 +19,19 @@ public class SessionScope {
 
     public static Logger log = (Logger) LoggerFactory.getLogger(SessionScope.class);
 
-
     private final Session session;
-    private final UserObj userObj;
+    private final User userObj;
     private Long discussionId;
     private Long topParentId;
 
-    public SessionScope(Session session, UserObj userObj, Long discussionId, Long topParentId) {
+    public SessionScope(Session session, User userObj, Long discussionId, Long topParentId) {
         this.session = session;
         this.userObj = userObj;
         this.discussionId = discussionId;
         this.topParentId = topParentId;
     }
 
-    public static Set<UserObj> getUserObjects(Set<SessionScope> scopes) {
+    public static Set<User> getUserObjects(Set<SessionScope> scopes) {
         return scopes.stream().map(SessionScope::getUserObj).collect(Collectors.toSet());
     }
 
@@ -123,7 +122,7 @@ public class SessionScope {
         return session;
     }
 
-    public UserObj getUserObj() {
+    public User getUserObj() {
         return userObj;
     }
 

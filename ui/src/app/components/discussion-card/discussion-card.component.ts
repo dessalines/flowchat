@@ -1,14 +1,16 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl} from '@angular/forms';
 import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
 import {Discussion} from '../../shared/discussion.interface';
 import {Tag} from '../../shared/tag.interface';
 import {User} from '../../shared/user.interface';
+import {Community} from '../../shared/community.interface';
 import {Tools} from '../../shared/tools';
 import { MomentPipe } from '../../pipes/moment.pipe';
 import {MarkdownPipe} from '../../pipes/markdown.pipe';
 import {UserService} from '../../services/user.service';
 import {DiscussionService} from '../../services/discussion.service';
+import {CommunityService} from '../../services/community.service';
 import {TagService} from '../../services/tag.service';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import {MarkdownEditComponent} from '../markdown-edit/index';
@@ -23,10 +25,10 @@ import 'rxjs/add/operator/switchMap';
 
 
 @Component({
-  moduleId: module.id,
+
   selector: 'app-discussion-card',
   templateUrl: 'discussion-card.component.html',
-  styleUrls: ['discussion-card.component.css'],
+  styleUrls: ['discussion-card.component.scss'],
   directives: [MarkdownEditComponent, TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES,
     ROUTER_DIRECTIVES, FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
   pipes: [MomentPipe, MarkdownPipe]
@@ -37,7 +39,11 @@ export class DiscussionCardComponent implements OnInit {
 
   private showVoteSlider: boolean = false;
 
-  @Input() editMode: boolean = false;
+  @Input() editing: boolean = false;
+  @Output() editingChange = new EventEmitter();
+
+  private isCreator: boolean = false;
+  private isModerator: boolean = false;
 
   // tag searching
   private tagSearchResultsObservable: Observable<any>;
@@ -59,10 +65,20 @@ export class DiscussionCardComponent implements OnInit {
   private blockedUserTypeaheadLoading: boolean = false;
   private blockedUserTypeaheadNoResults: boolean = false;
 
-  private rgex = new RegExp("[a-zA-Z0-9_-]+");
+  // Community
+  private communitySearchResultsObservable: Observable<any>;
+  private communitySearchSelected: string = '';
+  private tooManyCommunitiesError: boolean = false;
+  private communityTypeaheadLoading: boolean = false;
+  private communityTypeaheadNoResults: boolean = false;
+
+  private rgex = Tools.rgex;
+
+  private isSaving: boolean = false;
 
   constructor(private userService: UserService,
     private discussionService: DiscussionService,
+    private communityService: CommunityService,
     private tagService: TagService,
     private toasterService: ToasterService,
     private router: Router) { }
@@ -71,22 +87,42 @@ export class DiscussionCardComponent implements OnInit {
     this.setupTagSearch();
     this.setupUserSearch();
     this.setupBlockedUserSearch();
+    this.setupCommunitySearch();
+    this.setPermissions();
   }
 
   ngAfterViewInit() {
   }
 
+  ngOnChanges() {
+    this.setPermissions();
+  }
 
-  isCreator(): boolean {
-    if (this.userService.getUser() != null) {
-      return this.userService.getUser().id == this.discussion.userId;
+  setPermissions() {
+    this.isModerator = false;
+    this.isCreator = false;
+    let userId: number = this.userService.getUser().id;
+
+    // The multi-discussion fetch doesnt grab each communities creators, so check for this
+    if (userId == this.discussion.creator.id || 
+      (this.discussion.community.creator != null && userId == this.discussion.community.creator.id)) {
+      // Creators also have mod abilities
+      this.isCreator = true;
+      this.isModerator = true;
+
     } else {
-      return false;
+      let m = this.discussion.community.moderators.filter(m => m.id == userId)[0];
+      if (m !== undefined) {
+        this.isModerator = true;
+      }
+
     }
   }
 
-  toggleEditMode() {
-    this.editMode = !this.editMode;
+
+  toggleEditing() {
+    this.editing = !this.editing;
+    this.editingChange.next(this.editing);
   }
 
   setEditText($event) {
@@ -94,10 +130,18 @@ export class DiscussionCardComponent implements OnInit {
   }
 
   saveDiscussion() {
+    this.isSaving = true;
     this.discussionService.saveDiscussion(this.discussion).subscribe(
       d => {
         this.discussion = d;
-        this.editMode = false;
+        this.editing = false;
+        this.editingChange.next(this.editing);
+        this.userService.fetchFavoriteDiscussions();
+        this.isSaving = false;
+      },
+      error => {
+        this.toasterService.pop("error", "Error", error);
+        this.isSaving = false;
       });
   }
 
@@ -217,10 +261,6 @@ export class DiscussionCardComponent implements OnInit {
     this.discussion.privateUsers.splice(index, 1);
   }
 
-  privateUsersWithoutYou() {
-    return this.discussion.privateUsers.slice(1);
-  }
-
   // Blocked user methods
   setupBlockedUserSearch() {
     this.blockedUserSearchResultsObservable = Observable.create((observer: any) => {
@@ -255,6 +295,30 @@ export class DiscussionCardComponent implements OnInit {
   removeBlockedUser(user: User) {
     let index = this.discussion.blockedUsers.indexOf(user);
     this.discussion.blockedUsers.splice(index, 1);
+  }
+
+  // User search methods
+  setupCommunitySearch() {
+    this.communitySearchResultsObservable = Observable.create((observer: any) => {
+      this.communityService.searchCommunities(this.communitySearchSelected)
+        .subscribe((result: any) => {
+          observer.next(result.communities);
+        });
+    });
+  }
+
+  communityTypeaheadOnSelect(community: Community) {
+    // replace the community
+    this.discussion.community = community;
+    this.communitySearchSelected = '';
+  }
+
+  communityChangeTypeaheadLoading(e: boolean): void {
+    this.communityTypeaheadLoading = e;
+  }
+
+  communityChangeTypeaheadNoResults(e: boolean): void {
+    this.communityTypeaheadNoResults = e;
   }
 
   removeQuotes(text: string) {
