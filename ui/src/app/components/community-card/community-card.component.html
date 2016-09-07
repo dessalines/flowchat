@@ -17,15 +17,20 @@
           </li>
         </ul>
         <ul *ngIf="!textCollapsed" class="list-inline">
-          <li class="list-inline-item"> creator: <span class="tag tag-success">{{community.creator.name}}</span></li>
+          <li class="list-inline-item"> creator: 
+            <a [routerLink]="['/user',community.creator.id]" class="tag tag-success">{{community.creator.name}}</a>
+          </li>
           <li class="list-inline-item" *ngIf="community.moderators.length > 0"> moderators: </li>
-          <li class="list-inline-item tag tag-warning" *ngFor="let moderator of community.moderators">{{moderator.name}}</li>
+          <li class="list-inline-item" *ngFor="let moderator of community.moderators">
+            <a [routerLink]="['/user',moderator.id]" class="tag tag-warning">{{moderator.name}}</a>
+          </li>
         </ul>
       </small>
         <small class="text-muted">
         <span *ngIf="!community.modified">created {{community.created | moment}}</span>
         <span *ngIf="community.modified"><i>modified {{community.modified | moment}}</i></span>
-          by {{community.creator.name}}
+          by 
+          <a [routerLink]="['/user',community.creator.id]" class="link-unstyled">{{community.creator.name}}</a>
       </small>
         <ul class="list-inline">
           <li *ngIf="community.private_" class="tag tag-danger list-inline-item">Private</li>
@@ -230,6 +235,7 @@
     </div>
   </div>
   <div *ngIf="community.deleted">
-    <i>deleted {{community.modified | moment}}</i>    by {{community.creator.name}}
+    <i>deleted {{community.modified | moment}}</i>    by 
+    <a [routerLink]="['/user',community.creator.id]" class="link-unstyled">{{community.creator.name}}</a>
   </div>
 </div>

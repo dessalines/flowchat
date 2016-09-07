@@ -40,13 +40,10 @@ public class Tools {
 
     public static Logger log = (Logger) LoggerFactory.getLogger(Tools.class);
 
-
     public static ObjectMapper JACKSON = new ObjectMapper();
     public static TypeFactory typeFactory = JACKSON.getTypeFactory();
 
     public static MapType mapType = typeFactory.constructMapType(HashMap.class, String.class, String.class);
-
-
 
     private static final SecureRandom RANDOM = new SecureRandom();
 

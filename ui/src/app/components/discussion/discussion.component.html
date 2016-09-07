@@ -17,7 +17,9 @@
         <i class="fa fa-fw fa-user"></i>Users
       </div>
       <ul *ngIf="!usersCollapsed" class="list-group">
-        <li *ngFor="let user of users" class="list-group-item">{{user.name}}</li>
+        <li *ngFor="let user of users" class="list-group-item">
+          <a [routerLink]="['/user', user.id]" class="link-unstyled">{{user.name}}</a>
+        </li>
       </ul>
     </div>
   </div>

@@ -10,4 +10,5 @@ export * from './markdown-edit';
 export * from './navbar';
 export * from './sidebar';
 export * from './tag';
+export * from './user';
 
