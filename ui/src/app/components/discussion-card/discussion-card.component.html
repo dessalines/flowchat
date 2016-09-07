@@ -27,7 +27,8 @@
         <small class="text-muted">
         <span *ngIf="!discussion.modified">created {{discussion.created | moment}}</span>
         <span *ngIf="discussion.modified"><i>modified {{discussion.modified | moment}}</i></span>
-          by {{discussion.creator.name}}
+          by 
+          <a [routerLink]="['/user', discussion.creator.id]" class="link-unstyled" >{{discussion.creator.name}}</a>
       </small>
         <ul class="list-inline">
           <li *ngIf="discussion.private_" class="tag tag-danger list-inline-item">Private</li>
@@ -244,6 +245,7 @@
     </div>
   </div>
   <div *ngIf="discussion.deleted">
-    <i>deleted {{discussion.modified | moment}}</i>    by {{discussion.modifiedByUser.name}}
+    <i>deleted {{discussion.modified | moment}}</i> by 
+    <a [routerLink]="['/user', discussion.modifiedByUser.id]" class="link-unstyled">{{discussion.modifiedByUser.name}}</a>
   </div>
 </div>

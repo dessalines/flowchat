@@ -2,14 +2,19 @@
   <ul class="list-inline">
     <li class="text-muted list-inline-item" role="button"
       (click)="collapsed = !collapsed">{{collapseText()}}</li>
-    <li class="list-inline-item"
-      [ngClass]="{'tag-primary':isCommunityCreator(), 'tag-warning': isCommunityModerator(), 'tag-success': isDiscussionCreator(), 'tag': !isDiscussionUser(), 'text-primary': isDiscussionUser()}">{{comment.user.name}}</li>
+    <li class="list-inline-item">
+      <a [routerLink]="['/user',comment.user.id]"
+      [ngClass]="{'tag-primary':isCommunityCreator(), 'tag-warning': isCommunityModerator(), 'tag-success': isDiscussionCreator(), 'tag': !isDiscussionUser(), 'text-primary': isDiscussionUser()}" >{{comment.user.name}}
+      </a>
+    </li>
     <li *ngIf="comment.avgRank" class="tag tag-pill tag-default list-inline-item"
       tooltipPlacement="bottom" tooltip="Average Score">{{comment.avgRank}}</li>
     <li *ngIf="rank" class="tag tag-pill tag-info list-inline-item"
       tooltipPlacement="bottom" tooltip="Your Vote">{{rank}}</li>
     <li *ngIf="comment.avgRank" class="text-muted list-inline-item"><small>{{comment.numberOfVotes}} votes</small></li>
-    <li *ngIf="comment.deleted" class="text-muted list-inline-item"><small><i>deleted {{comment.modified | moment}} by {{comment.modifiedByUser.name}}</i></small></li>
+    <li *ngIf="comment.deleted" class="text-muted list-inline-item"><small><i>deleted {{comment.modified | moment}} by 
+      <a class="link-unstyled" [routerLink]="['/user',comment.modifiedByUser.id]">{{comment.modifiedByUser.name}}</a></i></small>
+    </li>
     <span *ngIf="!comment.deleted">
       <li *ngIf="!comment.modified" class="text-muted list-inline-item"><small>{{comment.created | moment}}</small></li>
       <li *ngIf="comment.modified" class="text-muted list-inline-item"><small><i>modified {{comment.modified | moment}}</i></small></li>

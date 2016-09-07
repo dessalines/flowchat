@@ -2,6 +2,7 @@ import { Routes, RouterModule }   from '@angular/router';
 import { ModuleWithProviders } from '@angular/core';
 import {HomeComponent} from './components/home/index';
 import {TagComponent} from './components/tag/index';
+import {UserComponent} from './components/user/index';
 import {CommunityComponent} from './components/community/index';
 import {CommunityModlogComponent} from './components/community-modlog/index';
 import {SidebarComponent} from './components/sidebar/index';
@@ -15,6 +16,10 @@ const appRoutes: Routes = [
   {
     path: 'all',
     component: HomeComponent
+  },
+  {
+    path: 'user/:userId',
+    component: UserComponent
   },
   {
     path: 'tag/:tagId',

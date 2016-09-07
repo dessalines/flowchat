@@ -14,7 +14,6 @@ import {MODAL_DIRECTIVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
 
 
 @Component({
-
   selector: 'app-discussion',
   templateUrl: 'discussion.component.html',
   styleUrls: ['discussion.component.scss'],
