@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import {Location, LocationStrategy, HashLocationStrategy} from '@angular/common';
 import { AppComponent } from './app.component';
-import { HomeComponent, TagComponent, CommunityComponent, CommunityModlogComponent, DiscussionComponent } from './components';
+import { HomeComponent, TagComponent, CommunityComponent, CommunityModlogComponent, DiscussionComponent, UserComponent } from './components';
 import { routing,
   appRoutingProviders } from './app.routing';
 import { Title } from '@angular/platform-browser';
@@ -19,7 +19,8 @@ import {HTTP_PROVIDERS} from '@angular/http';
     TagComponent,
     // CommunityComponent,
     CommunityModlogComponent,
-    DiscussionComponent
+    DiscussionComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,

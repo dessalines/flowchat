@@ -1,34 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import {Router, ActivatedRoute, ROUTER_DIRECTIVES} from '@angular/router';
-import {CommunityService} from '../../services/community.service';
-import {Community} from '../../shared/community.interface';
+import {UserService} from '../../services/user.service';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
 import { MomentPipe } from '../../pipes/moment.pipe';
+import {MarkdownPipe} from '../../pipes/markdown.pipe';
 import {FooterComponent} from '../footer/index';
-import {CommunityRole} from '../../shared/community-role.enum';
+import {DiscussionRole} from '../../shared/discussion-role.enum';
 
 @Component({
-  selector: 'app-community-modlog',
-  templateUrl: 'community-modlog.component.html',
-  styleUrls: ['community-modlog.component.css'],
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.scss'],
   directives: [ROUTER_DIRECTIVES, FooterComponent],
-  pipes: [MomentPipe]
+  pipes: [MomentPipe, MarkdownPipe]
 })
-export class CommunityModlogComponent implements OnInit {
+export class UserComponent implements OnInit {
 
   private sub: any;
-  private modlog: Array<any>;
+  private userLog: Array<any>;
 
   constructor(private route: ActivatedRoute,
     private router: Router,
-    private communityService: CommunityService,
+    private userService: UserService,
     private toasterService: ToasterService) { }
 
   ngOnInit() {
 
     this.sub = this.route.params.subscribe(params => {
-      let communityId: number = +params['communityId'];
-      this.getCommunityModlog(communityId);
+      let userId: number = +params['userId'];
+      this.getUserLog(userId);
     });
 
   }
@@ -37,10 +37,10 @@ export class CommunityModlogComponent implements OnInit {
     this.sub.unsubscribe();
   }
 
-  getCommunityModlog(communityId: number) {
-    this.communityService.getCommunityModlog(communityId).subscribe(c => {
-      this.modlog = c;
-      console.log(this.modlog);
+  getUserLog(userId: number) {
+    this.userService.getUserLog(userId).subscribe(c => {
+      this.userLog = c;
+      console.log(this.userLog);
     },
       error => {
         this.toasterService.pop("error", "Error", error);
@@ -49,7 +49,7 @@ export class CommunityModlogComponent implements OnInit {
   }
 
   getRole(id: number): string {
-    return CommunityRole[id];
+    return DiscussionRole[id];
   }
 
 }

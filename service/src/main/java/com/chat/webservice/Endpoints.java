@@ -15,6 +15,7 @@ import com.chat.types.tag.Tag;
 import com.chat.types.tag.Tags;
 import com.chat.types.user.User;
 import com.chat.types.user.Users;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
@@ -110,6 +111,27 @@ public class Endpoints {
             Users users = Users.create(userRows);
 
             return users.json();
+
+        });
+
+        get("/user_log/:id", (req, res) -> {
+
+            User userObj = Actions.getOrCreateUserObj(req, res);
+
+            Long id = Long.valueOf(req.params(":id"));
+
+            LazyList<Tables.UserAuditView> auditRows = Tables.UserAuditView.find("user_id = ?", id);
+
+            String json = auditRows.toJson(false, "action", "action_tstamp", "comment_text",
+                    "community_id", "community_name", "discussion_id", "discussion_title", "id",
+                    "modified_by_user_id", "modified_by_user_name",
+                    "table_name", "user_id", "user_name", "role_id");
+
+            json = json.replaceAll("\\\\", "").replace("\n", "\\n");
+
+            log.info(json);
+
+            return json;
 
         });
 

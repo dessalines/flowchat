@@ -17,6 +17,9 @@ public class Tables {
     @Table("user_view")
     public static class UserView extends Model {}
 
+    @Table("user_audit_view")
+    public static class UserAuditView extends Model {}
+
     @Table("login")
     public static class Login extends Model {}
 
