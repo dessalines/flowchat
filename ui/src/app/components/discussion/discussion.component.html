@@ -1,0 +1,50 @@
+<div class="row bottom-margin" (window:scroll)="onScroll($event)">
+  <div *ngIf="discussion" class="col-xs-12 col-lg-10">
+    <app-discussion-card [discussion]="discussion"
+      [(editing)]="editing"></app-discussion-card>
+    <div *ngIf="!editing">
+      <div *ngFor="let comment of comments" class="card">
+        <app-comment [comment]="comment" [discussion]="discussion"
+          (replyingEvent)="setIsReplying($event)"></app-comment>
+      </div>
+      <i *ngIf="!comments" class="fa fa-circle-o-notch fa-spin fa-5x text-xs-center block"></i>
+      <h4 *ngIf="comments?.length == 0">No Comments</h4>
+    </div>
+  </div>
+  <div class="col-xs-12 col-lg-2">
+    <div class="card">
+      <div role="button" class="card-header" (click)="toggleUsersCollapsed()">
+        <i class="fa fa-fw fa-user"></i>Users
+      </div>
+      <ul *ngIf="!usersCollapsed" class="list-group">
+        <li *ngFor="let user of users" class="list-group-item">
+          <a [routerLink]="['/user', user.id]" class="link-unstyled">{{user.name}}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<nav *ngIf="!topParentId && !clearTopReply && !isReplying && !discussion?.deleted"
+  class="navbar navbar-fixed-bottom navbar-light bg-faded">
+  <app-markdown-edit (textEvent)="setTopReply($event)"
+    [rows]="1"></app-markdown-edit>
+  <button (click)="sendTopReply()" class="btn btn-primary pull-xs-right special-nav-button"
+    type="submit">Send</button>
+</nav>
+<div bsModal #reconnectModal="bs-modal" class="modal fade"
+  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body text-xs-center">
+        <button id="closeModalButton" type="button"
+          class="close" (click)="reconnectModal.hide()"
+          aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <p>Click to Reconnect...</p>
+        <button class="btn btn-primary" (click)="websocketReconnect()">Reconnect</button>
+      </div>
+    </div>
+  </div>
+</div>

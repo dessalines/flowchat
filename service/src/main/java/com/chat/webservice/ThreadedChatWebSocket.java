@@ -4,6 +4,11 @@ import ch.qos.logback.classic.Logger;
 import com.chat.db.Actions;
 import com.chat.tools.Tools;
 import com.chat.types.*;
+import com.chat.types.comment.Comment;
+import com.chat.types.comment.Comments;
+import com.chat.types.discussion.Discussion;
+import com.chat.types.user.User;
+import com.chat.types.user.Users;
 import com.chat.types.websocket.input.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.eclipse.jetty.websocket.api.Session;
@@ -40,7 +45,6 @@ public class ThreadedChatWebSocket {
 
     @OnWebSocketConnect
     public void onConnect(Session session) throws Exception {
-
 
         Tools.dbInit();
 
@@ -186,7 +190,7 @@ public class ThreadedChatWebSocket {
         List<Long> parentBreadCrumbs = Tools.convertArrayToList(arr);
 
 
-        Comment newComment = Actions.createComment(ss.getUserObj().getId(),
+        com.chat.db.Tables.Comment newComment = Actions.createComment(ss.getUserObj().getId(),
                 ss.getDiscussionId(),
                 parentBreadCrumbs,
                 replyData.getReply());
@@ -196,7 +200,7 @@ public class ThreadedChatWebSocket {
 
 
         // Convert to a proper commentObj
-        CommentObj co = CommentObj.create(ctv, null);
+        Comment co = Comment.create(ctv, null);
 
 
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
@@ -205,7 +209,7 @@ public class ThreadedChatWebSocket {
         broadcastMessage(filteredScopes, co.json("reply"));
 
         // TODO find a way to do this without having to query every time?
-        DiscussionObj do_ = Actions.saveFavoriteDiscussion(ss.getUserObj().getId(), ss.getDiscussionId());
+        com.chat.types.discussion.Discussion do_ = Actions.saveFavoriteDiscussion(ss.getUserObj().getId(), ss.getDiscussionId());
         if (do_ != null) sendMessage(session, do_.json("discussion"));
     }
 
@@ -214,14 +218,16 @@ public class ThreadedChatWebSocket {
 
     public void messageEdit(Session session, String editDataStr) {
 
+        SessionScope ss = SessionScope.findBySession(sessionScopes, session);
+
         EditData editData = EditData.fromJson(editDataStr);
 
-        Comment c = Actions.editComment(editData.getId(), editData.getEdit());
+        com.chat.db.Tables.Comment c = Actions.editComment(ss.getUserObj().getId(), editData.getId(), editData.getEdit());
 
         CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", c.getLongId());
 
         // Convert to a proper commentObj, but with nothing embedded
-        CommentObj co = CommentObj.create(ctv, null);
+        Comment co = Comment.create(ctv, null);
 
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
                 sessionScopes, session, co.getBreadcrumbs());
@@ -232,14 +238,16 @@ public class ThreadedChatWebSocket {
 
     public void messageDelete(Session session, String deleteDataStr) {
 
+        SessionScope ss = SessionScope.findBySession(sessionScopes, session);
+
         DeleteData deleteData = DeleteData.fromJson(deleteDataStr);
 
-        Comment c = Actions.deleteComment(deleteData.getDeleteId());
+        com.chat.db.Tables.Comment c = Actions.deleteComment(ss.getUserObj().getId(), deleteData.getDeleteId());
 
         CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", c.getLongId());
 
         // Convert to a proper commentObj, but with nothing embedded
-        CommentObj co = CommentObj.create(ctv, null);
+        Comment co = Comment.create(ctv, null);
 
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
                 sessionScopes, session, co.getBreadcrumbs());
@@ -256,7 +264,7 @@ public class ThreadedChatWebSocket {
         TopReplyData topReplyData = TopReplyData.fromJson(topReplyDataStr);
 
 
-        Comment newComment = Actions.createComment(ss.getUserObj().getId(),
+        com.chat.db.Tables.Comment newComment = Actions.createComment(ss.getUserObj().getId(),
                 ss.getDiscussionId(),
                 null,
                 topReplyData.getTopReply());
@@ -265,7 +273,7 @@ public class ThreadedChatWebSocket {
         CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", newComment.getLongId());
 
         // Convert to a proper commentObj
-        CommentObj co = CommentObj.create(ctv, null);
+        Comment co = Comment.create(ctv, null);
 
 
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
@@ -274,7 +282,7 @@ public class ThreadedChatWebSocket {
         broadcastMessage(filteredScopes, co.json("reply"));
 
         // TODO find a way to do this without having to query every time?
-        DiscussionObj do_ = Actions.saveFavoriteDiscussion(ss.getUserObj().getId(), ss.getDiscussionId());
+        Discussion do_ = Actions.saveFavoriteDiscussion(ss.getUserObj().getId(), ss.getDiscussionId());
         if (do_ != null) sendMessage(session, do_.json("discussion"));
 
     }
@@ -297,7 +305,7 @@ public class ThreadedChatWebSocket {
         CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", commentId);
 
         // Convert to a proper commentObj, but with nothing embedded
-        CommentObj co = CommentObj.create(ctv, null);
+        Comment co = Comment.create(ctv, null);
 
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
                 sessionScopes, session, co.getBreadcrumbs());
@@ -338,7 +346,7 @@ public class ThreadedChatWebSocket {
         Long discussionId = SessionScope.getDiscussionIdFromSession(session);
         Long topParentId = SessionScope.getTopParentIdFromSession(session);
 
-        UserObj userObj = Actions.getOrCreateUserObj(uid, auth);
+        User userObj = Actions.getOrCreateUserObj(uid, auth);
 
         SessionScope ss = new SessionScope(session, userObj, discussionId, topParentId);
         sessionScopes.add(ss);

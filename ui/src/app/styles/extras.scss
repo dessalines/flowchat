@@ -149,3 +149,11 @@ a {
 .card-heading + .list-group .list-group-item:first-child {
   border-top-width: 0;
 }
+
+button, html [type="button"], [type="reset"], [type="submit"] {
+    -webkit-appearance: none !important;
+}
+
+.block {
+  display: block !important;
+}

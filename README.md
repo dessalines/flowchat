@@ -4,23 +4,25 @@
 [![Build Status](https://travis-ci.org/tchoulihan/flowchat.svg?branch=master)](https://travis-ci.org/tchoulihan/flowchat)
 
 <!---
-I made a live-updating, threaded discussion alternative to reddit and slack called FlowChat, written in java and angular2. Self-hostable, and open-source.
+	FlowChat: a live-updating, threaded discussion platform, featuring reddit-like communities, and slack-like chatrooms. Self-hostable, open-source, written in java and angular2.
 -->
 
-[FlowChat](http://flowchat.tk) is an open-source, self-hostable, **live-updating** discussion platform, featuring chatrooms with threaded conversations, and voting.
+[FlowChat](http://flowchat.tk) is an open-source, self-hostable, **live-updating** discussion platform, featuring communities, discussions with threaded conversations, and voting.
 
 It can act as an alternative to forums, as a private team communication platform(like slack), a content creation platform(like reddit), or a voting/polling platform like [referendum](https://referendum.ml).
 
-Flowchat tries to solve the problem of having a fluid, free-feeling group chat, while allowing for side conversations so that every comment isn't at the top level. Multiple conversations can take place at once, without interrupting the flow of the chatroom.
+Flowchat tries to solve the problem of having a fluid, free-feeling group chat, while allowing for side conversations so that every comment isn't at the top level. Multiple conversations can take place **at once**, without interrupting the flow of the chatroom.
 
-It uses [range voting](http://rangevoting.org/UniqBest.html)(also known as olympic score voting) for both comments and discussions. Range voting is more expressive than simple :thumbsup: or :thumbsdown: votes.
+It uses [range voting](http://rangevoting.org/UniqBest.html)(also known as olympic score voting) for sorting comments, discussions, and communities. Range voting is *more expressive* than simple :thumbsup: or :thumbsdown: votes.
+
+Check out the default community, [vanilla](http://flowchat.tk/#/community/1), or create your own.
 
 It features:
-- A complete chat application with live updating, threaded discussion.
-- Private or public discussions
-- Customizable discussion and comment sorting, by recentness, and popularity.
-- Discussion hashtags. 
-- Discussion creators can block users, or delete comments.
+- A complete discussion platform with communities, and live-updating threaded discussions.
+- Private or public discussions and communities
+- Customizable sorting, by recentness, and popularity.
+- Hashtags for discussions and communities. 
+- Discussion/Community creators can block users, appoint moderators, or delete comments.
 
 Tech used:
 - [Java Spark](https://github.com/perwendel/spark), [Bootstrap v4](https://github.com/twbs/bootstrap), [Angular2](https://github.com/angular/angular), [Angular-cli](https://github.com/angular/angular-cli), [ng2-bootstrap](http://valor-software.com/ng2-bootstrap/), [ActiveJDBC](http://javalite.io/activejdbc), [Liquibase](http://www.liquibase.org/), [Postgres](https://www.postgresql.org/), [Markdown-it](https://github.com/markdown-it/markdown-it), [angular2-toaster](https://github.com/Stabzs/Angular2-Toaster)

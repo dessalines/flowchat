@@ -1,31 +1,44 @@
 {
   "project": {
-    "version": "1.0.0-beta.9",
+    "version": "1.0.0-beta.11-webpack.8",
     "name": "flowchat"
   },
   "apps": [
     {
-      "main": "src/main.ts",
-      "tsconfig": "src/tsconfig.json",
-      "mobile": false
+      "root": "src",
+      "outDir": "dist",
+      "assets": "assets",
+      "index": "index.html",
+      "main": "main.ts",
+      "test": "test.ts",
+      "tsconfig": "tsconfig.json",
+      "prefix": "app",
+      "mobile": false,
+      "styles": [
+        "styles.scss"
+      ],
+      "scripts": [],
+      "environments": {
+        "source": "environments/environment.ts",
+        "prod": "environments/environment.prod.ts",
+        "dev": "environments/environment.dev.ts"
+      }
     }
   ],
   "addons": [],
   "packages": [],
   "e2e": {
     "protractor": {
-      "config": "config/protractor.conf.js"
+      "config": "./protractor.conf.js"
     }
   },
   "test": {
     "karma": {
-      "config": "config/karma.conf.js"
+      "config": "./karma.conf.js"
     }
   },
   "defaults": {
-    "prefix": "app",
-    "sourceDir": "src",
-    "styleExt": "css",
+    "styleExt": "scss",
     "prefixInterfaces": false,
     "lazyRoutePrefix": "+"
   }

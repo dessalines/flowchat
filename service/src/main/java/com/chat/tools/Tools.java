@@ -3,6 +3,9 @@ package com.chat.tools;
 import ch.qos.logback.classic.Logger;
 import com.chat.DataSources;
 import com.chat.db.Actions;
+import com.chat.db.Tables;
+import com.chat.types.community.CommunityRole;
+import com.chat.types.user.User;
 import com.chat.webservice.ConstantsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
@@ -37,13 +40,10 @@ public class Tools {
 
     public static Logger log = (Logger) LoggerFactory.getLogger(Tools.class);
 
-
     public static ObjectMapper JACKSON = new ObjectMapper();
     public static TypeFactory typeFactory = JACKSON.getTypeFactory();
 
     public static MapType mapType = typeFactory.constructMapType(HashMap.class, String.class, String.class);
-
-
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
@@ -226,6 +226,30 @@ public class Tools {
         }
 
         return orderByOut;
+    }
+
+    public static Set<Long> fetchCommunitiesFromParams(String communityParam, User userObj) {
+
+        log.info("community param = " + communityParam);
+        Set<Long> communityIds = new HashSet<>();
+        if (communityParam.equals("all")) {
+            return null;
+        } else if (communityParam.equals("favorites")) {
+            // Fetch the user's favorite communities
+            LazyList<Tables.CommunityUser> favoriteCommunities =
+                    Tables.CommunityUser.where("user_id = ? and community_role_id != ?",
+                            userObj.getId(),
+                            CommunityRole.BLOCKED.getVal());
+            communityIds = favoriteCommunities.collectDistinct("community_id");
+        } else {
+            communityIds.add(Long.valueOf(communityParam));
+        }
+
+        if (communityIds.isEmpty()) {
+            communityIds = null;
+        }
+
+        return communityIds;
     }
 
 }

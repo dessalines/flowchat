@@ -7,10 +7,10 @@ declare var markdownitEmoji: any;
 declare var autosize: any;
 
 @Component({
-  moduleId: module.id,
+
   selector: 'app-markdown-edit',
   templateUrl: 'markdown-edit.component.html',
-  styleUrls: ['markdown-edit.component.css']
+  styleUrls: ['markdown-edit.component.scss']
 })
 export class MarkdownEditComponent implements OnInit {
 

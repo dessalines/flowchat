@@ -1,4 +1,4 @@
-<div class="container">
+<div>
   <div class="row">
     <div class="col-xs-12 col-md-10 trending-discussions">
       <h3>Trending Discussions</h3>
@@ -7,6 +7,14 @@
           <li class="tag tag-default list-inline-item"
           *ngFor="let tag of popularTags">
             <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
+          </li>
+        </ul>
+      </small>
+      <small>
+        <ul *ngIf="popularCommunities" class="list-inline">trending communities:
+          <li class="tag tag-primary list-inline-item"
+          *ngFor="let community of popularCommunities">
+            <a class="link-unstyled" [routerLink]="['/community', community.id]">{{removeQuotes(community.name)}}</a>
           </li>
         </ul>
       </small>
@@ -32,5 +40,11 @@
         [discussion]="discussion"></app-discussion-card>
     </div>
   </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <i *ngIf="!discussions" class="fa fa-circle-o-notch fa-spin fa-5x text-xs-center block"></i>
+      <h4 *ngIf="discussions?.length == 0">Subscribe to some communities such as <a class="link-unstyled tag tag-primary" [routerLink]="['/community', 1]">vanilla</a> to see discussions</h4>
+    </div>
+  </div>
+  <app-footer></app-footer>
 </div>
-<app-footer></app-footer>

@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
 import {Comment} from '../../shared/comment.interface';
+import {CommentRole} from '../../shared/comment-role.enum';
+import {Discussion} from '../../shared/discussion.interface';
 import {ThreadedChatService} from '../../services/threaded-chat.service';
 import {UserService} from '../../services/user.service';
 import { MomentPipe } from '../../pipes/moment.pipe';
@@ -11,11 +13,10 @@ import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import {TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 
 @Component({
-  moduleId: module.id,
   selector: 'app-comment',
   templateUrl: 'comment.component.html',
-  styleUrls: ['comment.component.css'],
-  styles: [':host >>> p { margin-bottom: .2rem; }'],
+  styleUrls: ['comment.component.scss'],
+  // styles: [':host >>> p { margin-bottom: .2rem; }'], TODO
   directives: [CommentComponent, MarkdownEditComponent, ROUTER_DIRECTIVES, TOOLTIP_DIRECTIVES],
   pipes: [MomentPipe, MarkdownPipe]
 })
@@ -23,6 +24,9 @@ import {TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 export class CommentComponent implements OnInit {
 
   @Input() comment: any; // Couldn't get strict typing of this to work for recursive templates
+
+  // Have to pass in the discussion to get the moderators and comment roles
+  @Input() discussion: Discussion;
 
   // This emits an event to the higher level chat component, because you only
   // want to focus on new comments when not replying
@@ -38,11 +42,15 @@ export class CommentComponent implements OnInit {
 
   private collapsed: boolean = false;
 
-  private editable: boolean = false;
-
   private showVoteSlider: boolean = false;
 
   private rank: number;
+
+  private editable: boolean = false;
+
+  private deleteable: boolean = false;
+
+  private commentRole: CommentRole;
 
   constructor(private threadedChatService: ThreadedChatService,
     private userService: UserService) { }
@@ -77,13 +85,15 @@ export class CommentComponent implements OnInit {
 
   ngOnInit() {
     this.setEditable();
+    this.setDeleteable();
+    this.setCommentRole();
     this.setRank();
   }
 
   sendMessage() {
-    
+
     this.threadedChatService.send(this.replyData());
-  
+
     this.showReply = false;
     this.replyingEvent.emit(this.showReply);
     this.replyText = "";
@@ -164,18 +174,52 @@ export class CommentComponent implements OnInit {
 
   setEditable() {
     if (this.userService.getUser() != null &&
-      this.comment.userId == this.userService.getUser().id) {
+      this.comment.user.id == this.userService.getUser().id) {
       this.editable = true;
     }
   }
 
-  isDiscussionOwner() {
-    if (this.userService.getUser() != null) {
-      return this.comment.discussionOwnerId == this.userService.getUser().id ;
+  setDeleteable() {
+    if (this.discussion.community.creator.id === this.userService.getUser().id) {
+      this.deleteable = true;
     } else {
-      return false;
+      let m = this.discussion.community.moderators.filter(m => m.id == this.userService.getUser().id)[0];
+      if (m !== undefined) {
+        this.deleteable = true;
+      } else {
+        this.deleteable = false;
+      }
     }
   }
+
+  setCommentRole() {
+    if (this.comment.user.id == this.discussion.creator.id) {
+      this.commentRole = CommentRole.DiscussionCreator;
+    } else if (this.comment.user.id == this.discussion.community.creator.id) {
+      this.commentRole = CommentRole.CommunityCreator;
+    } else if (this.discussion.community.moderators.filter(m => m.id == this.comment.user.id)[0] !== undefined) {
+      this.commentRole = CommentRole.CommunityModerator;
+    } else {
+      this.commentRole = CommentRole.User;
+    }
+  }
+
+  isCommunityCreator() {
+    return this.commentRole == CommentRole.CommunityCreator;
+  }
+
+  isCommunityModerator() {
+    return this.commentRole == CommentRole.CommunityModerator;
+  }
+
+  isDiscussionCreator() {
+    return this.commentRole == CommentRole.DiscussionCreator;
+  }
+
+  isDiscussionUser() {
+    return this.commentRole == CommentRole.User;
+  }
+
 }
 
 interface ReplyData {
