@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  endpoint: 'http://flowchat.tk/',
-  websocket: 'ws://flowchat.tk/threaded_chat'
+  endpoint: 'http://flow-chat.com/',
+  websocket: 'ws://flow-chat.com/threaded_chat'
 };
