@@ -1,0 +1,19 @@
+version: '2'
+services:
+  db:
+    image: postgres:9.3
+    environment:
+      POSTGRES_DB: flowchat
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test
+  web:
+    build: .
+    ports: 
+      - "4567:4567"
+    links:
+      - db
+    depends_on:
+      - db
+    volumes:
+      - .:/services/target
+      - .:/ui/dist
