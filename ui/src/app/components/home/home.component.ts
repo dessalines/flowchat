@@ -23,6 +23,7 @@ import { Router, ROUTER_DIRECTIVES, ActivatedRoute } from '@angular/router';
 export class HomeComponent implements OnInit {
 
   private discussions: Array<Discussion>;
+  private currentCount: number = 0;
   private popularTags: Array<Tag>;
   private popularCommunities: Array<Community>;
   private sorting: string = "time-86400";
@@ -31,6 +32,8 @@ export class HomeComponent implements OnInit {
   private scrollDebounce: number = 0;
 
   private communityId: string;
+
+  private loadingDiscussions: boolean = false;
 
   constructor(private toasterService: ToasterService,
     private userService: UserService,
@@ -86,15 +89,26 @@ export class HomeComponent implements OnInit {
   }
 
   getDiscussions(communityId: string, page: number, orderBy: string) {
-    this.discussionService.getDiscussions(page, undefined, undefined, communityId, orderBy).subscribe(
-      d => {
-        // Append them
-        if (this.discussions === undefined) {
-          this.discussions = [];
-        }
-        
-        this.discussions.push(...d.discussions);
-      });
+
+
+    if (this.discussions === undefined || this.discussions.length < this.currentCount) {
+
+      this.loadingDiscussions = true;
+      this.discussionService.getDiscussions(page, undefined, undefined, communityId, orderBy).subscribe(
+        d => {
+          // Append them
+          if (this.discussions === undefined) {
+            this.discussions = [];
+          }
+
+          this.currentCount = d.count;
+          this.discussions.push(...d.discussions);
+          this.loadingDiscussions = false;
+        });
+
+    } else {
+      console.log("No more discussions.");
+    }
   }
 
   getPopularTags(orderBy: string) {

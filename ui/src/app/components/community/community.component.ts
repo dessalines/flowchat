@@ -20,6 +20,7 @@ import {ToasterService} from 'angular2-toaster/angular2-toaster';
 export class CommunityComponent implements OnInit {
 
   private discussions: Array<Discussion>;
+  private currentCount: number = 0;
   private sorting: string = "time-86400";
 
   private community: Community;
@@ -30,6 +31,8 @@ export class CommunityComponent implements OnInit {
   private sub: any;
 
   private editing: Boolean = false;
+
+  private loadingDiscussions: boolean = false;
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -59,20 +62,31 @@ export class CommunityComponent implements OnInit {
     this.communityService.getCommunity(communityId).subscribe(c => {
       this.community = c;
     },
-    error => {
-      this.toasterService.pop("error", "Error", error);
-       this.router.navigate(['/']);
-    });
+      error => {
+        this.toasterService.pop("error", "Error", error);
+        this.router.navigate(['/']);
+      });
   }
 
   getDiscussions(communityId: number, page: number, orderBy: string) {
-    this.discussionService.getDiscussions(page, undefined, undefined, communityId.toString(), orderBy).subscribe(
-      d => {
-        if (this.discussions === undefined) {
-          this.discussions = [];
-        }
-        this.discussions.push(...d.discussions);
-      });
+
+    if (this.discussions === undefined || this.discussions.length < this.currentCount) {
+
+      this.loadingDiscussions = true;
+
+      this.discussionService.getDiscussions(page, undefined, undefined, communityId.toString(), orderBy).subscribe(
+        d => {
+          if (this.discussions === undefined) {
+            this.discussions = [];
+          }
+
+          this.currentCount = d.count;
+          this.discussions.push(...d.discussions);
+          this.loadingDiscussions = false;
+        });
+    } else {
+      console.log("No more discussions.");
+    }
   }
 
   onScroll(event) {
