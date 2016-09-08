@@ -11,7 +11,6 @@ import {DiscussionCardComponent} from '../discussion-card/index';
 import {FooterComponent} from '../footer/index';
 
 @Component({
-
   selector: 'app-tag',
   templateUrl: 'tag.component.html',
   styleUrls: ['tag.component.scss'],
@@ -21,6 +20,7 @@ import {FooterComponent} from '../footer/index';
 export class TagComponent implements OnInit {
 
   private discussions: Array<Discussion>;
+  private currentCount: number = 0;
   private communities: Array<Community>;
 
   private sorting: string = "time-86400";
@@ -31,6 +31,8 @@ export class TagComponent implements OnInit {
   private scrollDebounce: number = 0;
 
   private sub: any;
+
+  private loadingDiscussions: boolean = false;
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -43,7 +45,6 @@ export class TagComponent implements OnInit {
 
     this.sub = this.route.params.subscribe(params => {
       let tagId: number = +params['tagId'];
-      this.discussions = [];
       this.currentPageNum = 1;
       this.scrollDebounce = 0;
       this.getTag(tagId);
@@ -64,14 +65,23 @@ export class TagComponent implements OnInit {
   }
 
   getDiscussions(tagId: number, page: number, orderBy: string) {
-    this.discussionService.getDiscussions(page, undefined, tagId.toString(), undefined, orderBy).subscribe(
-      d => {
-        if (this.discussions === undefined) {
-          this.discussions = [];
-        }
-        this.discussions.push(...d.discussions);
-        console.log(d.discussions);
-      });
+
+    if (this.discussions === undefined || this.discussions.length < this.currentCount) {
+
+      this.loadingDiscussions = true;
+
+      this.discussionService.getDiscussions(page, undefined, tagId.toString(), undefined, orderBy).subscribe(
+        d => {
+          if (this.discussions === undefined) {
+            this.discussions = [];
+          }
+          this.currentCount = d.count;
+          this.discussions.push(...d.discussions);
+          this.loadingDiscussions = false;
+        });
+    } else {
+      console.log("No more discussions.");
+    }
   }
 
   getCommunities(tagId: number, orderBy: string) {
