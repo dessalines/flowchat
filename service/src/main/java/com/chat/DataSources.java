@@ -12,7 +12,7 @@ public class DataSources {
 
     public static final String CODE_DIR = System.getProperty("user.dir");
 
-    public static final Boolean SSL = false;
+    public static Boolean SSL = false;
 
     public static final Integer EXPIRE_SECONDS = 86400 * 7; // stays logged in for 7 days
 
