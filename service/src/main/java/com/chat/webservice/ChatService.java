@@ -44,6 +44,7 @@ public class ChatService {
 //        log.getLoggerContext().getLogger("spark.webserver").setLevel(Level.OFF);
 
         if (jks != null) {
+            log.info(jks.getAbsolutePath());
             Spark.secure(jks.getAbsolutePath(), "changeit", null,null);
             DataSources.SSL = true;
         }
