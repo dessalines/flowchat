@@ -14,6 +14,7 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.slf4j.LoggerFactory;
+import spark.Spark;
 
 import java.io.File;
 import java.util.*;
@@ -31,6 +32,9 @@ public class ChatService {
     @Option(name="-ui_dist",usage="The location of the ui dist folder.")
     private File uiDist = new File("../ui/dist");
 
+    @Option(name="-ssl",usage="The location of the java keystore .jks file.")
+    private File jks;
+
     public void doMain(String[] args) {
 
         parseArguments(args);
@@ -38,6 +42,11 @@ public class ChatService {
         log.setLevel(Level.toLevel(loglevel));
         log.getLoggerContext().getLogger("org.eclipse.jetty").setLevel(Level.OFF);
         log.getLoggerContext().getLogger("spark.webserver").setLevel(Level.OFF);
+
+        if (jks != null) {
+            Spark.secure(jks.getAbsolutePath(), "changeit", null,null);
+            DataSources.SSL = true;
+        }
 
         staticFiles.externalLocation(uiDist.getAbsolutePath());
         staticFiles.expireTime(600);
