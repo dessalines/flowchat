@@ -50,6 +50,8 @@ export class NavbarComponent implements OnInit {
 
   private favIcon: any;
 
+  private collapseNavbar: boolean = true;
+
   constructor(private userService: UserService,
     private loginService: LoginService,
     private router: Router,
@@ -223,6 +225,10 @@ export class NavbarComponent implements OnInit {
         this.unreadMessages = [];
         this.changeFaviconBasedOnMessages();
       });
+  }
+
+  toggleCollapseNavbar() {
+    this.collapseNavbar = !this.collapseNavbar;
   }
 
 

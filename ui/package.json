@@ -26,7 +26,7 @@
     "zone.js": "0.6.12",
     "angular2-toaster": "^0.3.5-rc.2",
     "autosize": "^3.0.15",
-    "bootstrap": "^4.0.0-alpha.3",
+    "bootstrap": "^4.0.0-alpha.4",
     "es6-shim": "0.35.1",
     "favico.js": "^0.3.10",
     "font-awesome": "^4.6.3",
@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@types/jasmine": "^2.2.30",
-    "angular-cli": "^1.0.0-beta.11-webpack.8",
+    "angular-cli": "^1.0.0-beta.14",
     "awesome-typescript-loader": "2.2.1",
     "codelyzer": "~0.0.26",
     "jasmine-core": "2.4.1",
