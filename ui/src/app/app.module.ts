@@ -15,11 +15,17 @@ import { routing,
   appRoutingProviders } from './app.routing';
 import { Title } from '@angular/platform-browser';
 import {SeoService} from './services/seo.service';
-import {HTTP_PROVIDERS} from '@angular/http';
+import { MomentPipe, MarkdownPipe } from './pipes';
+
+
+import {ToasterModule, ToasterService} from 'angular2-toaster/angular2-toaster';
+import { TooltipModule, DropdownModule, ModalModule, TabsModule, TypeaheadModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 
 @NgModule({
   declarations: [
+
+    // Components
     AppComponent,
     HomeComponent,
     TagComponent,
@@ -27,12 +33,26 @@ import {HTTP_PROVIDERS} from '@angular/http';
     CommunityModlogComponent,
     DiscussionComponent,
     UserComponent,
-    DiscussionCardSelectComponent
+    DiscussionCardSelectComponent,
+
+    // Pipes
+    MomentPipe,
+    MarkdownPipe,
+
+
+    // ng2-bootstrap modules
+    TooltipModule,
+    DropdownModule,
+    ModalModule,
+    TabsModule,
+    TypeaheadModule
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
+    ToasterModule,
+
     routing
   ],
   providers: [appRoutingProviders,

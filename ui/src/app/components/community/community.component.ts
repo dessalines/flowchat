@@ -1,20 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {Router, ActivatedRoute, ROUTER_DIRECTIVES} from '@angular/router';
-import {DiscussionService} from '../../services/discussion.service';
-import {CommunityService} from '../../services/community.service';
-import {Discussion} from '../../shared/discussion.interface';
-import {Tag} from '../../shared/tag.interface';
-import {Community} from '../../shared/community.interface';
-import {CommunityCardComponent} from '../community-card/index';
-import {DiscussionCardComponent} from '../discussion-card/index';
-import {FooterComponent} from '../footer/index';
+import {Router, ActivatedRoute} from '@angular/router';
+import {DiscussionService, CommunityService} from '../../services';
+import {Discussion, Tag, Community} from '../../shared';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
 
 @Component({
   selector: 'app-community',
   templateUrl: 'community.component.html',
   styleUrls: ['community.component.scss'],
-  directives: [CommunityCardComponent, DiscussionCardComponent, FooterComponent, ROUTER_DIRECTIVES],
   providers: []
 })
 export class CommunityComponent implements OnInit {

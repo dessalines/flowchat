@@ -1,20 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {Router, ActivatedRoute, ROUTER_DIRECTIVES} from '@angular/router';
-import {DiscussionService} from '../../services/discussion.service';
-import {CommunityService} from '../../services/community.service';
-import {TagService} from '../../services/tag.service';
-import {Discussion} from '../../shared/discussion.interface';
-import {Community} from '../../shared/community.interface';
-import {Tag} from '../../shared/tag.interface';
-import {Tools} from '../../shared/tools';
-import {DiscussionCardComponent} from '../discussion-card/index';
-import {FooterComponent} from '../footer/index';
+import {Router, ActivatedRoute} from '@angular/router';
+import {DiscussionService, CommunityService, TagService} from '../../services';
+import {Discussion, Community, Tag, Tools} from '../../shared';
+
 
 @Component({
   selector: 'app-tag',
   templateUrl: 'tag.component.html',
   styleUrls: ['tag.component.scss'],
-  directives: [DiscussionCardComponent, FooterComponent, ROUTER_DIRECTIVES],
   providers: []
 })
 export class TagComponent implements OnInit {
