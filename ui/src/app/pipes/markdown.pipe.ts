@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 // import * as markdown_it from 'markdown-it'; TODO
 import {Tools} from '../shared/tools';
 
@@ -13,7 +13,7 @@ export class MarkdownPipe implements PipeTransform {
 
   private markdownIt: any;
 
-  constructor(private sanitizer: DomSanitizationService) {
+  constructor(private sanitizer: DomSanitizer) {
     this.markdownIt = new MarkdownIt();
     this.markdownIt.use(markdownitEmoji);
   }

@@ -1,18 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import {FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl} from '@angular/forms';
-import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
-import {Community} from '../../shared/community.interface';
-import {Tag} from '../../shared/tag.interface';
-import {User} from '../../shared/user.interface';
-import {Tools} from '../../shared/tools';
-import { MomentPipe } from '../../pipes/moment.pipe';
-import {MarkdownPipe} from '../../pipes/markdown.pipe';
-import {UserService} from '../../services/user.service';
-import {CommunityService} from '../../services/community.service';
-import {TagService} from '../../services/tag.service';
-import { Router, ROUTER_DIRECTIVES } from '@angular/router';
-import {MarkdownEditComponent} from '../markdown-edit/index';
-import {TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+import { FormGroup, FormControl} from '@angular/forms';
+import {Router, ActivatedRoute} from '@angular/router';
+import {Community, Tag, User, Tools} from '../../shared';
+import {UserService, CommunityService, TagService} from '../../services';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
@@ -26,9 +16,6 @@ import 'rxjs/add/operator/switchMap';
   selector: 'app-community-card',
   templateUrl: 'community-card.component.html',
   styleUrls: ['community-card.component.scss'],
-  directives: [MarkdownEditComponent, TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES,
-    ROUTER_DIRECTIVES, FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
-  pipes: [MomentPipe, MarkdownPipe]
 })
 export class CommunityCardComponent implements OnInit {
 

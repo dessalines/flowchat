@@ -1,25 +1,17 @@
-import {Component, Input, provide, OnInit, ViewChild} from '@angular/core';
-import { HTTP_PROVIDERS }    from '@angular/http';
-import {ThreadedChatService} from '../../services/threaded-chat.service';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {ThreadedChatService, DiscussionService, UserService} from '../../services';
 import {Comment, User, Discussion, Tag, CommentRole} from '../../shared';
-import {CommentComponent} from '../comment/index';
-import {DiscussionCardComponent} from '../discussion-card/index';
-import {UserService} from '../../services/user.service';
-import {DiscussionService} from '../../services/discussion.service';
 import {Subscription} from 'rxjs/Subscription';
 import {Router, ActivatedRoute} from '@angular/router';
 import {MarkdownEditComponent} from '../markdown-edit/index';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
-import {MODAL_DIRECTIVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
 
 
 @Component({
   selector: 'app-discussion',
   templateUrl: 'discussion.component.html',
   styleUrls: ['discussion.component.scss'],
-  providers: [HTTP_PROVIDERS, ThreadedChatService],
-  directives: [CommentComponent, MarkdownEditComponent, DiscussionCardComponent, MODAL_DIRECTIVES],
-  viewProviders: [BS_VIEW_PROVIDERS]
+  providers: [ThreadedChatService],
 })
 export class DiscussionComponent implements OnInit {
 

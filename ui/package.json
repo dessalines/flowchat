@@ -12,19 +12,21 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "2.0.0-rc.5",
-    "@angular/compiler": "2.0.0-rc.5",
-    "@angular/core": "2.0.0-rc.5",
-    "@angular/forms": "0.3.0",
-    "@angular/http": "2.0.0-rc.5",
-    "@angular/platform-browser": "2.0.0-rc.5",
-    "@angular/platform-browser-dynamic": "2.0.0-rc.5",
-    "@angular/router": "3.0.0-rc.1",
-    "core-js": "^2.4.0",
-    "rxjs": "5.0.0-beta.11",
+    "@angular/common": "2.0.0",
+    "@angular/compiler": "2.0.0",
+    "@angular/core": "2.0.0",
+    "@angular/forms": "2.0.0",
+    "@angular/http": "2.0.0",
+    "@angular/platform-browser": "2.0.0",
+    "@angular/platform-browser-dynamic": "2.0.0",
+    "@angular/router": "3.0.0",
+    "@angular/upgrade": "2.0.0",
+    "core-js": "^2.4.1",
+    "reflect-metadata": "^0.1.3",
+    "rxjs": "5.0.0-beta.12",
     "ts-helpers": "^1.1.1",
-    "zone.js": "0.6.12",
-    "angular2-toaster": "^0.3.5-rc.2",
+    "zone.js": "^0.6.23",
+    "angular2-toaster": "^1.0.1",
     "autosize": "^3.0.15",
     "bootstrap": "^4.0.0-alpha.4",
     "es6-shim": "0.35.1",
@@ -33,7 +35,7 @@
     "markdown-it": "^6.0.5",
     "markdown-it-emoji": "^1.2.0",
     "moment": "^2.13.0",
-    "ng2-bootstrap": "1.0.24",
+    "ng2-bootstrap": "1.1.5",
     "node-sass": "^3.8.0"
   },
   "devDependencies": {
@@ -50,6 +52,6 @@
     "protractor": "4.0.3",
     "ts-node": "1.2.1",
     "tslint": "3.13.0",
-    "typescript": "2.0.0"
+    "typescript": "^2.0.2"
   }
 }
