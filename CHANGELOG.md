@@ -1,5 +1,7 @@
 # FlowChat
 
+[Recently fixed issues](https://github.com/tchoulihan/flowchat/issues?q=is%3Aissue+is%3Aclosed)
+
 # [Release 0.4.0](https://github.com/tchoulihan/flowchat/milestone/3)
 - Communities! [#27](https://github.com/tchoulihan/flowchat/issues/27)
 - User pages [#29](https://github.com/tchoulihan/flowchat/issues/29)
