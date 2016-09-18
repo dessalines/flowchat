@@ -1,10 +1,12 @@
 [FlowChat](http://flow-chat.com) &mdash; An open-source, live updating, threaded chat platform with voting. 
 ==========
 ![](http://img.shields.io/version/0.3.1.png?color=green)
-[![Build Status](https://travis-ci.org/tchoulihan/flowchat.svg?branch=master)](https://travis-ci.org/tchoulihan/flowchat)
+[![Build Status](https://travis-ci.org/dessalines/flowchat.svg?branch=master)](https://travis-ci.org/dessalines/flowchat)
 
 <!---
-	FlowChat: a live-updating, threaded discussion platform, featuring reddit-like communities, and slack-like chatrooms. Self-hostable, open-source, written in java and angular2.
+	FlowChat: a live-updating, threaded discussion app, featuring reddit-like communities, and slack-like chatrooms. Self-hostable, open-source, written in java and angular2.
+
+	Hey /r/blank, marxist and programmer here. I made an app called FlowChat: a live-updating, threaded discussion app, featuring reddit-like communities, and slack-like chatrooms. Self-hostable, open-source.
 -->
 
 [FlowChat](http://flow-chat.com) is an open-source, self-hostable, **live-updating** discussion platform, featuring communities, discussions with threaded conversations, and voting.
@@ -51,7 +53,7 @@ Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 - Postgres 9.3 or higher
 
 ### Download Flowchat
-`git clone https://github.com/tchoulihan/flowchat`
+`git clone https://github.com/dessalines/flowchat`
 
 ### Setup a postgres database
 [Here](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04) are some instructions to get your DB up and running.
@@ -92,4 +94,4 @@ You can redirect ports in linux to route from port 80 to this port:
 `sudo iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 4567`
 
 ## Bugs and feature requests
-Have a bug or a feature request? If your issue isn't [already listed](https://github.com/tchoulihan/flowchat/issues/), then open a [new issue here](https://github.com/tchoulihan/flowchat/issues/new).
+Have a bug or a feature request? If your issue isn't [already listed](https://github.com/dessalines/flowchat/issues/), then open a [new issue here](https://github.com/dessalines/flowchat/issues/new).
