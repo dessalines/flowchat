@@ -15,6 +15,7 @@ export class CommunityComponent implements OnInit {
   private discussions: Array<Discussion>;
   private currentCount: number = 0;
   private sorting: string = "time-86400";
+  private viewType: string = "list";
 
   private community: Community;
 
@@ -108,6 +109,9 @@ export class CommunityComponent implements OnInit {
     this.getDiscussions(this.community.id, this.currentPageNum, this.sorting);
   }
 
+  isCard(): boolean {
+    return this.viewType==='card';
+  }
 
 }
 

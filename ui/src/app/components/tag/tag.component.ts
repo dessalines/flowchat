@@ -17,6 +17,7 @@ export class TagComponent implements OnInit {
   private communities: Array<Community>;
 
   private sorting: string = "time-86400";
+  private viewType: string = "list";
 
   private tag: Tag;
 
@@ -107,6 +108,10 @@ export class TagComponent implements OnInit {
 
   removeQuotes(text: string) {
     return Tools.removeQuotes(text);
+  }
+
+  isCard(): boolean {
+    return this.viewType === 'card';
   }
 
 }
