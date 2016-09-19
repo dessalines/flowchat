@@ -1,10 +1,13 @@
 <div>
   <div class="row">
-    <div class="col-xs-12 col-md-10">
+    <div class="col-xs-12 col-md-8">
       <h2 *ngIf="tag">#{{tag.name}}</h2>
     </div>
     <div class="col-xs-12 col-md-2">
-      <app-discussion-card-select (selectChange)="resort($event)"></app-discussion-card-select>
+      <app-discussion-card-view-type-select [(viewType)]="viewType"></app-discussion-card-view-type-select>
+    </div>
+    <div class="col-xs-12 col-md-2">
+      <app-discussion-card-sort-select (selectChange)="resort($event)"></app-discussion-card-sort-select>
     </div>
   </div>
   <small *ngIf="communities?.length > 0">
@@ -15,10 +18,10 @@
       </li>
     </ul>
   </small>
-  <div class="card-deck-wrapper">
-    <div (window:scroll)="onScroll($event)" class="card-deck">
-      <app-discussion-card class="col-md-4" *ngFor="let discussion of discussions"
-        [discussion]="discussion"></app-discussion-card>
+  <div [class.card-deck-wrapper]="isCard()">
+    <div (window:scroll)="onScroll($event)" [ngClass]="{'card-deck': isCard(), 'list-group': !isCard()}">
+      <app-discussion-card [viewType]="viewType" [ngClass]="{'col-md-4': isCard()}"
+        *ngFor="let discussion of discussions" [discussion]="discussion"></app-discussion-card>
     </div>
   </div>
   <div class="row">

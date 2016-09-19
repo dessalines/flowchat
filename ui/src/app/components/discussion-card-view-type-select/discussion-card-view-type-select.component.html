@@ -1,0 +1,7 @@
+<select [ngModel]="viewType" (ngModelChange)="changeEvent($event)"
+  class="form-control discussion-card-select">
+  <option disabled>Switch View</option>
+  <option disabled>──────────</option>
+  <option value="card">Card</option>
+  <option value="list">List</option>
+</select>

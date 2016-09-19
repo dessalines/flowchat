@@ -123,9 +123,6 @@
 	- Use default html sliders [1](http://stackoverflow.com/questions/15935837/how-to-display-a-range-input-slider-vertically) [styling](http://danielstern.ca/range.css/#/) [fiddle](http://jsfiddle.net/Mmgxg/)
 
   # TODO
-- Discussion Trending by time spans
 - Publish markdown-edit as library, [example](http://blog.angular-university.io/how-to-create-an-angular-2-library-and-how-to-consume-it-jspm-vs-webpack/).
-- Add https support
 - Figure out `autosize.min.js`, and `favico` issue, stop using them from a CDN.
 - Get font awesome working locally
-- Add periodic DB backups

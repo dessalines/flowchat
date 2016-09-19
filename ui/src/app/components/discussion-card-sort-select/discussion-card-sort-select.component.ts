@@ -1,11 +1,11 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-discussion-card-select',
-  templateUrl: './discussion-card-select.component.html',
-  styleUrls: ['./discussion-card-select.component.scss']
+  selector: 'app-discussion-card-sort-select',
+  templateUrl: './discussion-card-sort-select.component.html',
+  styleUrls: ['./discussion-card-sort-select.component.scss']
 })
-export class DiscussionCardSelectComponent implements OnInit {
+export class DiscussionCardSortSelectComponent implements OnInit {
 
   private defaultSort: string = "time-86400";
 

@@ -1,6 +1,6 @@
 <div>
   <div class="row">
-    <div class="col-xs-12 col-md-10 trending-discussions">
+    <div class="col-xs-12 col-md-8 trending-discussions">
       <h3>Trending Discussions</h3>
       <small>
         <ul *ngIf="popularTags" class="list-inline">trending tags:
@@ -20,12 +20,15 @@
       </small>
     </div>
     <div class="col-xs-12 col-md-2">
-      <app-discussion-card-select (selectChange)="resort($event)"></app-discussion-card-select>
+      <app-discussion-card-view-type-select [(viewType)]="viewType"></app-discussion-card-view-type-select>
+    </div>
+    <div class="col-xs-12 col-md-2">
+      <app-discussion-card-sort-select (selectChange)="resort($event)"></app-discussion-card-sort-select>
     </div>
   </div>
-  <div class="card-deck-wrapper">
-    <div (window:scroll)="onScroll($event)" class="card-deck">
-      <app-discussion-card class="col-md-4" *ngFor="let discussion of discussions"
+  <div [class.card-deck-wrapper]="isCard()">
+    <div (window:scroll)="onScroll($event)" [ngClass]="{'card-deck': isCard(), 'list-group': !isCard()}">
+      <app-discussion-card [viewType]="viewType" [ngClass]="{'col-md-4': isCard()}" *ngFor="let discussion of discussions"
         [discussion]="discussion"></app-discussion-card>
     </div>
   </div>

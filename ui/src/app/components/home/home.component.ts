@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
   private popularTags: Array<Tag>;
   private popularCommunities: Array<Community>;
   private sorting: string = "time-86400";
+  private viewType: string = "list";
 
   private currentPageNum: number = 1;
   private scrollDebounce: number = 0;
@@ -118,6 +119,10 @@ export class HomeComponent implements OnInit {
 
   removeQuotes(text: string) {
     return Tools.removeQuotes(text);
+  }
+
+  isCard(): boolean {
+    return this.viewType==='card';
   }
 
 }
