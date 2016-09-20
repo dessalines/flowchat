@@ -10,10 +10,9 @@ services:
     build: .
     ports: 
       - "4567:4567"
-    links:
-      - db
     depends_on:
       - db
+    links:
+      - db
     volumes:
-      - .:/services/target
-      - .:/ui/dist
+      - .:/app

@@ -8,7 +8,7 @@
 		<!--The Database location and login, here's a sample-->
 		<jdbc.url>jdbc:postgresql://127.0.0.1/flowchat</jdbc.url>
 		<jdbc.username>postgres</jdbc.username>
-		<jdbc.password>test</jdbc.password>
+		<jdbc.password></jdbc.password>
 
 		<!--The sorting for discussions, comments, and tags are:
  			Sorting score =
@@ -132,6 +132,12 @@
 
 
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.liquibase/liquibase-core -->
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>3.5.1</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
