@@ -1,20 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import {FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl} from '@angular/forms';
-import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
-import {Discussion} from '../../shared/discussion.interface';
-import {Tag} from '../../shared/tag.interface';
-import {User} from '../../shared/user.interface';
-import {Community} from '../../shared/community.interface';
-import {Tools} from '../../shared/tools';
-import { MomentPipe } from '../../pipes/moment.pipe';
-import {MarkdownPipe} from '../../pipes/markdown.pipe';
-import {UserService} from '../../services/user.service';
-import {DiscussionService} from '../../services/discussion.service';
-import {CommunityService} from '../../services/community.service';
-import {TagService} from '../../services/tag.service';
-import { Router, ROUTER_DIRECTIVES } from '@angular/router';
-import {MarkdownEditComponent} from '../markdown-edit/index';
-import {TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+import {FormGroup, FormControl} from '@angular/forms';
+import {Discussion, Tag, User, Community, Tools} from '../../shared';
+import {UserService, DiscussionService, CommunityService, TagService} from '../../services';
+import { Router } from '@angular/router';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
@@ -25,13 +13,9 @@ import 'rxjs/add/operator/switchMap';
 
 
 @Component({
-
   selector: 'app-discussion-card',
   templateUrl: 'discussion-card.component.html',
   styleUrls: ['discussion-card.component.scss'],
-  directives: [MarkdownEditComponent, TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES,
-    ROUTER_DIRECTIVES, FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
-  pipes: [MomentPipe, MarkdownPipe]
 })
 export class DiscussionCardComponent implements OnInit {
 
@@ -41,6 +25,8 @@ export class DiscussionCardComponent implements OnInit {
 
   @Input() editing: boolean = false;
   @Output() editingChange = new EventEmitter();
+
+  @Input() viewType: string = 'card';
 
   private isCreator: boolean = false;
   private isModerator: boolean = false;
@@ -327,6 +313,14 @@ export class DiscussionCardComponent implements OnInit {
 
   isImageType(text: string): boolean {
     return Tools.isImageType(text);
+  }
+
+  isCard(): boolean {
+    return this.viewType==='card';
+  }
+
+  hasImage(): boolean {
+    return this.discussion.link && this.isImageType(this.discussion.link);
   }
 
 }

@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {Router, ROUTER_DIRECTIVES } from '@angular/router';
-import {DiscussionComponent} from '../discussion/index';
-import {UserService} from '../../services/user.service';
+import {Router } from '@angular/router';
+import {UserService} from '../../services';
 
 @Component({
-
   selector: 'app-sidebar',
   templateUrl: 'sidebar.component.html',
   styleUrls: ['sidebar.component.scss'],
-  directives: [ROUTER_DIRECTIVES]
 })
 export class SidebarComponent implements OnInit {
 

@@ -1,26 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import {Router, ActivatedRoute, ROUTER_DIRECTIVES} from '@angular/router';
-import {DiscussionService} from '../../services/discussion.service';
-import {CommunityService} from '../../services/community.service';
-import {Discussion} from '../../shared/discussion.interface';
-import {Tag} from '../../shared/tag.interface';
-import {Community} from '../../shared/community.interface';
-import {CommunityCardComponent} from '../community-card/index';
-import {DiscussionCardComponent} from '../discussion-card/index';
-import {FooterComponent} from '../footer/index';
+import {Router, ActivatedRoute} from '@angular/router';
+import {DiscussionService, CommunityService} from '../../services';
+import {Discussion, Tag, Community} from '../../shared';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
 
 @Component({
   selector: 'app-community',
   templateUrl: 'community.component.html',
   styleUrls: ['community.component.scss'],
-  directives: [CommunityCardComponent, DiscussionCardComponent, FooterComponent, ROUTER_DIRECTIVES],
   providers: []
 })
 export class CommunityComponent implements OnInit {
 
   private discussions: Array<Discussion>;
+  private currentCount: number = 0;
   private sorting: string = "time-86400";
+  private viewType: string = "list";
 
   private community: Community;
 
@@ -30,6 +25,8 @@ export class CommunityComponent implements OnInit {
   private sub: any;
 
   private editing: Boolean = false;
+
+  private loadingDiscussions: boolean = false;
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -59,20 +56,31 @@ export class CommunityComponent implements OnInit {
     this.communityService.getCommunity(communityId).subscribe(c => {
       this.community = c;
     },
-    error => {
-      this.toasterService.pop("error", "Error", error);
-       this.router.navigate(['/']);
-    });
+      error => {
+        this.toasterService.pop("error", "Error", error);
+        this.router.navigate(['/']);
+      });
   }
 
   getDiscussions(communityId: number, page: number, orderBy: string) {
-    this.discussionService.getDiscussions(page, undefined, undefined, communityId.toString(), orderBy).subscribe(
-      d => {
-        if (this.discussions === undefined) {
-          this.discussions = [];
-        }
-        this.discussions.push(...d.discussions);
-      });
+
+    if (this.discussions === undefined || this.discussions.length < this.currentCount) {
+
+      this.loadingDiscussions = true;
+
+      this.discussionService.getDiscussions(page, undefined, undefined, communityId.toString(), orderBy).subscribe(
+        d => {
+          if (this.discussions === undefined) {
+            this.discussions = [];
+          }
+
+          this.currentCount = d.count;
+          this.discussions.push(...d.discussions);
+          this.loadingDiscussions = false;
+        });
+    } else {
+      console.log("No more discussions.");
+    }
   }
 
   onScroll(event) {
@@ -101,6 +109,9 @@ export class CommunityComponent implements OnInit {
     this.getDiscussions(this.community.id, this.currentPageNum, this.sorting);
   }
 
+  isCard(): boolean {
+    return this.viewType==='card';
+  }
 
 }
 

@@ -1,7 +1,9 @@
 # Building the front end
 cd ui
 npm i
-ng build $@
+npm install -g angular-cli@latest
+npm i angular-cli@latest --save-dev
+ng build
 cd ..
 
 # Building the back end

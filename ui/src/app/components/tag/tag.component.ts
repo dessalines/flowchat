@@ -1,29 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import {Router, ActivatedRoute, ROUTER_DIRECTIVES} from '@angular/router';
-import {DiscussionService} from '../../services/discussion.service';
-import {CommunityService} from '../../services/community.service';
-import {TagService} from '../../services/tag.service';
-import {Discussion} from '../../shared/discussion.interface';
-import {Community} from '../../shared/community.interface';
-import {Tag} from '../../shared/tag.interface';
-import {Tools} from '../../shared/tools';
-import {DiscussionCardComponent} from '../discussion-card/index';
-import {FooterComponent} from '../footer/index';
+import {Router, ActivatedRoute} from '@angular/router';
+import {DiscussionService, CommunityService, TagService} from '../../services';
+import {Discussion, Community, Tag, Tools} from '../../shared';
+
 
 @Component({
-
   selector: 'app-tag',
   templateUrl: 'tag.component.html',
   styleUrls: ['tag.component.scss'],
-  directives: [DiscussionCardComponent, FooterComponent, ROUTER_DIRECTIVES],
   providers: []
 })
 export class TagComponent implements OnInit {
 
   private discussions: Array<Discussion>;
+  private currentCount: number = 0;
   private communities: Array<Community>;
 
   private sorting: string = "time-86400";
+  private viewType: string = "list";
 
   private tag: Tag;
 
@@ -31,6 +25,8 @@ export class TagComponent implements OnInit {
   private scrollDebounce: number = 0;
 
   private sub: any;
+
+  private loadingDiscussions: boolean = false;
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -43,7 +39,6 @@ export class TagComponent implements OnInit {
 
     this.sub = this.route.params.subscribe(params => {
       let tagId: number = +params['tagId'];
-      this.discussions = [];
       this.currentPageNum = 1;
       this.scrollDebounce = 0;
       this.getTag(tagId);
@@ -64,14 +59,23 @@ export class TagComponent implements OnInit {
   }
 
   getDiscussions(tagId: number, page: number, orderBy: string) {
-    this.discussionService.getDiscussions(page, undefined, tagId.toString(), undefined, orderBy).subscribe(
-      d => {
-        if (this.discussions === undefined) {
-          this.discussions = [];
-        }
-        this.discussions.push(...d.discussions);
-        console.log(d.discussions);
-      });
+
+    if (this.discussions === undefined || this.discussions.length < this.currentCount) {
+
+      this.loadingDiscussions = true;
+
+      this.discussionService.getDiscussions(page, undefined, tagId.toString(), undefined, orderBy).subscribe(
+        d => {
+          if (this.discussions === undefined) {
+            this.discussions = [];
+          }
+          this.currentCount = d.count;
+          this.discussions.push(...d.discussions);
+          this.loadingDiscussions = false;
+        });
+    } else {
+      console.log("No more discussions.");
+    }
   }
 
   getCommunities(tagId: number, orderBy: string) {
@@ -104,6 +108,10 @@ export class TagComponent implements OnInit {
 
   removeQuotes(text: string) {
     return Tools.removeQuotes(text);
+  }
+
+  isCard(): boolean {
+    return this.viewType === 'card';
   }
 
 }

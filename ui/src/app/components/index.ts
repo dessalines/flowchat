@@ -4,6 +4,8 @@ export * from './community-card';
 export * from './community-modlog';
 export * from './discussion';
 export * from './discussion-card';
+export * from './discussion-card-sort-select';
+export * from './discussion-card-view-type-select';
 export * from './footer';
 export * from './home';
 export * from './markdown-edit';

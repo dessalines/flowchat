@@ -5,3 +5,5 @@ export { Discussion } from './discussion.interface';
 export { Community } from './community.interface';
 export {Tools} from './tools';
 export {CommentRole} from './comment-role.enum';
+export {CommunityRole} from './community-role.enum';
+export {DiscussionRole} from './discussion-role.enum';

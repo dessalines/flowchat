@@ -33,14 +33,7 @@
   vertical-align: middle;
 }
 
-.list-group-item {
-  border: none;
-  border-top: 1px solid #ddd;
-}
 
-.list-group-item:first-child {
-  border-top: none;
-}
 
 .truncate {
   display: inline-block;
@@ -99,7 +92,7 @@ blockquote {
 .card-title,
 .card-text,
 .card-text>p {
-  margin-bottom: .2rem !important;
+  margin-bottom: .1rem !important;
 }
 
 .navbar-brand {
@@ -144,6 +137,10 @@ a {
   .list-group .list-group-item:last-child {
     border-bottom: 0;
   }
+}
+
+.list-group-item:last-child {
+  margin-bottom: -1px !important;
 }
 
 .card-heading + .list-group .list-group-item:first-child {

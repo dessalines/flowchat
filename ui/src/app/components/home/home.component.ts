@@ -1,36 +1,31 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2-toaster/angular2-toaster';
-import {DiscussionService} from '../../services/discussion.service';
-import {TagService} from '../../services/tag.service';
-import {CommunityService} from '../../services/community.service';
-import {UserService} from '../../services/user.service';
-import {Discussion} from '../../shared/discussion.interface';
-import {Tag} from '../../shared/tag.interface';
-import {Community} from '../../shared/community.interface';
-import {Tools} from '../../shared/tools';
-import {DiscussionCardComponent} from '../discussion-card/index';
-import {FooterComponent} from '../footer/index';
-import { Router, ROUTER_DIRECTIVES, ActivatedRoute } from '@angular/router';
+import {DiscussionService, TagService, CommunityService, UserService} from '../../services';
+import {Discussion, Tag, Community, Tools} from '../../shared';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
 
   selector: 'app-home',
   templateUrl: 'home.component.html',
   styleUrls: ['home.component.scss'],
-  directives: [DiscussionCardComponent, FooterComponent, ROUTER_DIRECTIVES],
   providers: []
 })
 export class HomeComponent implements OnInit {
 
   private discussions: Array<Discussion>;
+  private currentCount: number = 0;
   private popularTags: Array<Tag>;
   private popularCommunities: Array<Community>;
   private sorting: string = "time-86400";
+  private viewType: string = "list";
 
   private currentPageNum: number = 1;
   private scrollDebounce: number = 0;
 
   private communityId: string;
+
+  private loadingDiscussions: boolean = false;
 
   constructor(private toasterService: ToasterService,
     private userService: UserService,
@@ -86,15 +81,26 @@ export class HomeComponent implements OnInit {
   }
 
   getDiscussions(communityId: string, page: number, orderBy: string) {
-    this.discussionService.getDiscussions(page, undefined, undefined, communityId, orderBy).subscribe(
-      d => {
-        // Append them
-        if (this.discussions === undefined) {
-          this.discussions = [];
-        }
-        
-        this.discussions.push(...d.discussions);
-      });
+
+
+    if (this.discussions === undefined || this.discussions.length < this.currentCount) {
+
+      this.loadingDiscussions = true;
+      this.discussionService.getDiscussions(page, undefined, undefined, communityId, orderBy).subscribe(
+        d => {
+          // Append them
+          if (this.discussions === undefined) {
+            this.discussions = [];
+          }
+
+          this.currentCount = d.count;
+          this.discussions.push(...d.discussions);
+          this.loadingDiscussions = false;
+        });
+
+    } else {
+      console.log("No more discussions.");
+    }
   }
 
   getPopularTags(orderBy: string) {
@@ -113,6 +119,10 @@ export class HomeComponent implements OnInit {
 
   removeQuotes(text: string) {
     return Tools.removeQuotes(text);
+  }
+
+  isCard(): boolean {
+    return this.viewType==='card';
   }
 
 }

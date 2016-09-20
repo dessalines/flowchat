@@ -1,18 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {Router, ActivatedRoute, ROUTER_DIRECTIVES} from '@angular/router';
-import {CommunityService} from '../../services/community.service';
-import {Community} from '../../shared/community.interface';
+import {Router, ActivatedRoute} from '@angular/router';
+import {CommunityService} from '../../services';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
-import { MomentPipe } from '../../pipes/moment.pipe';
-import {FooterComponent} from '../footer/index';
-import {CommunityRole} from '../../shared/community-role.enum';
+import {CommunityRole, Community} from '../../shared';
 
 @Component({
   selector: 'app-community-modlog',
   templateUrl: 'community-modlog.component.html',
   styleUrls: ['community-modlog.component.css'],
-  directives: [ROUTER_DIRECTIVES, FooterComponent],
-  pipes: [MomentPipe]
 })
 export class CommunityModlogComponent implements OnInit {
 

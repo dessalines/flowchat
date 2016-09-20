@@ -69,8 +69,6 @@ public class Endpoints {
 
         post("/login", (req, res) -> {
 
-            log.info(req.body());
-
             Map<String, String> vars = Tools.createMapFromReqBody(req.body());
 
             String userOrEmail = vars.get("usernameOrEmail");
@@ -83,8 +81,6 @@ public class Endpoints {
         });
 
         post("/signup", (req, res) -> {
-
-            log.info(req.body());
 
             Map<String, String> vars = Tools.createMapFromReqBody(req.body());
 
@@ -129,8 +125,6 @@ public class Endpoints {
                     "table_name", "user_id", "user_name", "role_id");
 
             json = json.replaceAll("\\\\", "").replace("\n", "\\n");
-
-            log.info(json);
 
             return json;
 
@@ -214,7 +208,6 @@ public class Endpoints {
 
 
             Long id = Long.valueOf(req.params(":id"));
-            log.info("got to discussion " + id);
 
             User userObj = Actions.getOrCreateUserObj(req, res);
 
@@ -250,8 +243,6 @@ public class Endpoints {
 
             // Check to make sure user is isn't blocked from the community
             df.getCommunity().checkBlocked(userObj);
-
-            log.info(df.json());
 
             return df.json();
 
@@ -418,14 +409,10 @@ public class Endpoints {
 
                 Discussions d = Discussions.create(dntv, null, null, null, null, Long.valueOf(dntv.size()));
 
-                log.info(d.json());
-
                 json = d.json();
             } else {
                 json = "{\"Discussions\": []}";
             }
-
-            log.info(json);
 
             return json;
 
@@ -459,8 +446,6 @@ public class Endpoints {
                         userObj.getId(), userObj.getId());
 
                 Comments comments = Comments.replies(cbv);
-
-                log.info(comments.json());
 
                 return comments.json();
 
@@ -524,8 +509,6 @@ public class Endpoints {
 
             // Check to make sure user isn't blocked
             co.checkBlocked(userObj);
-
-            log.info(co.json());
 
             return co.json();
 
@@ -665,14 +648,10 @@ public class Endpoints {
 
                 Communities d = Communities.create(dntv, null, null, null, Long.valueOf(dntv.size()));
 
-                log.info(d.json());
-
                 json = d.json();
             } else {
                 json = "{\"Communities\": []}";
             }
-
-            log.info(json);
 
             return json;
 

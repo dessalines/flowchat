@@ -1,20 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {CORE_DIRECTIVES} from '@angular/common';
-import {MODAL_DIRECTIVES, BS_VIEW_PROVIDERS, DROPDOWN_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
-import {FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormGroup, FormControl} from '@angular/forms';
-import {LoginService} from '../../services/login.service';
-import {UserService} from '../../services/user.service';
-import {DiscussionService} from '../../services/discussion.service';
-import {CommunityService} from '../../services/community.service';
-import {NotificationsService} from '../../services/notifications.service';
+import {FormGroup, FormControl} from '@angular/forms';
+import {LoginService, UserService, DiscussionService, CommunityService, NotificationsService} from '../../services';
 import {User, Discussion, Comment, Tools} from '../../shared';
-import { Router, ROUTER_DIRECTIVES } from '@angular/router';
-import {DiscussionComponent} from '../discussion';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import {TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
-import {MarkdownPipe} from '../../pipes/markdown.pipe';
-import { MomentPipe } from '../../pipes/moment.pipe';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
 
 declare var Favico: any;
@@ -24,12 +14,7 @@ declare var Favico: any;
   selector: 'app-navbar',
   templateUrl: 'navbar.component.html',
   styleUrls: ['navbar.component.scss'],
-  directives: [MODAL_DIRECTIVES, DROPDOWN_DIRECTIVES, CORE_DIRECTIVES,
-    TYPEAHEAD_DIRECTIVES, TOOLTIP_DIRECTIVES, ROUTER_DIRECTIVES,
-    FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
   providers: [],
-  viewProviders: [BS_VIEW_PROVIDERS],
-  pipes: [MomentPipe, MarkdownPipe]
 })
 export class NavbarComponent implements OnInit {
 
@@ -49,6 +34,8 @@ export class NavbarComponent implements OnInit {
   private unreadMessages: Array<Comment>;
 
   private favIcon: any;
+
+  private collapseNavbar: boolean = true;
 
   constructor(private userService: UserService,
     private loginService: LoginService,
@@ -223,6 +210,10 @@ export class NavbarComponent implements OnInit {
         this.unreadMessages = [];
         this.changeFaviconBasedOnMessages();
       });
+  }
+
+  toggleCollapseNavbar() {
+    this.collapseNavbar = !this.collapseNavbar;
   }
 
 
