@@ -1,7 +1,17 @@
 .card-block-no-bottom {
-	padding-bottom: 2px;
+  padding-bottom: 2px;
 }
 
 .card-block-no-top {
-	padding-top: 2px;
+  padding-top: 2px;
+}
+
+.expand-on-hover {
+  transition: all .2s ease-in-out;
+}
+
+.expand-on-hover:hover {
+  max-width: 500px;
+  position: relative;
+  z-index: 999;
 }

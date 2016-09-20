@@ -3,7 +3,7 @@
     <div *ngIf="!editing">
       <div [ngClass]="{'row': !isCard() && hasImage(), 'row-fluid': !isCard() && !hasImage()}">
       <div [ngClass]="{'col-xs-2': !isCard() && hasImage(),
-           'col-xl-1': !isCard() && hasImage()}">
+           'col-xl-1': !isCard() && hasImage()>
       <a *ngIf="!isCard() && hasImage()"
         href="{{discussion.link}}" target="_blank">
         <div [innerHTML]="discussion.link | markdown"></div>
