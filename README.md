@@ -1,13 +1,15 @@
-[FlowChat](http://flowchat.tk) &mdash; An open-source, live updating, threaded chat platform with voting. 
+[FlowChat](http://flow-chat.com) &mdash; An open-source, live updating, threaded chat platform with voting. 
 ==========
 ![](http://img.shields.io/version/0.3.1.png?color=green)
-[![Build Status](https://travis-ci.org/tchoulihan/flowchat.svg?branch=master)](https://travis-ci.org/tchoulihan/flowchat)
+[![Build Status](https://travis-ci.org/dessalines/flowchat.svg?branch=master)](https://travis-ci.org/dessalines/flowchat)
 
 <!---
-	FlowChat: a live-updating, threaded discussion platform, featuring reddit-like communities, and slack-like chatrooms. Self-hostable, open-source, written in java and angular2.
+	FlowChat: a live-updating, threaded discussion app, featuring reddit-like communities, and slack-like chatrooms. Self-hostable, open-source, written in java and angular2.
+
+	Hey /r/blank, marxist and programmer here. I made an app called FlowChat: a live-updating, threaded discussion app, featuring reddit-like communities, and slack-like chatrooms. Self-hostable, open-source.
 -->
 
-[FlowChat](http://flowchat.tk) is an open-source, self-hostable, **live-updating** discussion platform, featuring communities, discussions with threaded conversations, and voting.
+[FlowChat](http://flow-chat.com) is an open-source, self-hostable, **live-updating** discussion platform, featuring communities, discussions with threaded conversations, and voting.
 
 It can act as an alternative to forums, as a private team communication platform(like slack), a content creation platform(like reddit), or a voting/polling platform like [referendum](https://referendum.ml).
 
@@ -15,7 +17,7 @@ Flowchat tries to solve the problem of having a fluid, free-feeling group chat, 
 
 It uses [range voting](http://rangevoting.org/UniqBest.html)(also known as olympic score voting) for sorting comments, discussions, and communities. Range voting is *more expressive* than simple :thumbsup: or :thumbsdown: votes.
 
-Check out the default community, [vanilla](http://flowchat.tk/#/community/1), or create your own.
+Check out the default community, [vanilla](http://flow-chat.com/#/community/1), or create your own.
 
 It features:
 - A complete discussion platform with communities, and live-updating threaded discussions.
@@ -27,7 +29,7 @@ It features:
 Tech used:
 - [Java Spark](https://github.com/perwendel/spark), [Bootstrap v4](https://github.com/twbs/bootstrap), [Angular2](https://github.com/angular/angular), [Angular-cli](https://github.com/angular/angular-cli), [ng2-bootstrap](http://valor-software.com/ng2-bootstrap/), [ActiveJDBC](http://javalite.io/activejdbc), [Liquibase](http://www.liquibase.org/), [Postgres](https://www.postgresql.org/), [Markdown-it](https://github.com/markdown-it/markdown-it), [angular2-toaster](https://github.com/Stabzs/Angular2-Toaster)
 
-Check out a sample discussion [here](http://flowchat.tk/#/discussion/13).
+Check out a sample discussion [here](http://flow-chat.com/#/discussion/13).
 
 Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 
@@ -51,7 +53,7 @@ Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 - Postgres 9.3 or higher
 
 ### Download Flowchat
-`git clone https://github.com/tchoulihan/flowchat`
+`git clone https://github.com/dessalines/flowchat`
 
 ### Setup a postgres database
 [Here](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04) are some instructions to get your DB up and running.
@@ -92,4 +94,4 @@ You can redirect ports in linux to route from port 80 to this port:
 `sudo iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 4567`
 
 ## Bugs and feature requests
-Have a bug or a feature request? If your issue isn't [already listed](https://github.com/tchoulihan/flowchat/issues/), then open a [new issue here](https://github.com/tchoulihan/flowchat/issues/new).
+Have a bug or a feature request? If your issue isn't [already listed](https://github.com/dessalines/flowchat/issues/), then open a [new issue here](https://github.com/dessalines/flowchat/issues/new).

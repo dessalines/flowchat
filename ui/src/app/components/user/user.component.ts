@@ -1,18 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {Router, ActivatedRoute, ROUTER_DIRECTIVES} from '@angular/router';
-import {UserService} from '../../services/user.service';
+import {Router, ActivatedRoute} from '@angular/router';
+import {UserService} from '../../services';
+import {DiscussionRole} from '../../shared';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
-import { MomentPipe } from '../../pipes/moment.pipe';
-import {MarkdownPipe} from '../../pipes/markdown.pipe';
-import {FooterComponent} from '../footer/index';
-import {DiscussionRole} from '../../shared/discussion-role.enum';
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
-  directives: [ROUTER_DIRECTIVES, FooterComponent],
-  pipes: [MomentPipe, MarkdownPipe]
 })
 export class UserComponent implements OnInit {
 

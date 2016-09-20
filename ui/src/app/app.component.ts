@@ -1,5 +1,5 @@
 import { Component, ViewContainerRef} from '@angular/core';
-import { ROUTER_DIRECTIVES, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { DiscussionComponent } from './components/discussion/index';
 import { SidebarComponent } from './components/sidebar/index';
 import { NavbarComponent } from './components/navbar/index';
@@ -18,7 +18,6 @@ import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
-  directives: [NavbarComponent, SidebarComponent, ROUTER_DIRECTIVES, ToasterContainerComponent],
   providers: [UserService, ToasterService, DiscussionService, CommunityService, TagService, NotificationsService, LoginService]
 })
 export class AppComponent {

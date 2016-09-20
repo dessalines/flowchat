@@ -1,24 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
-import {Comment} from '../../shared/comment.interface';
-import {CommentRole} from '../../shared/comment-role.enum';
-import {Discussion} from '../../shared/discussion.interface';
-import {ThreadedChatService} from '../../services/threaded-chat.service';
-import {UserService} from '../../services/user.service';
-import { MomentPipe } from '../../pipes/moment.pipe';
-import {MarkdownEditComponent} from '../markdown-edit/index';
+import {Comment, CommentRole, Discussion} from '../../shared';
+import {UserService, ThreadedChatService} from '../../services';
 import * as moment from 'moment';
-import {MarkdownPipe} from '../../pipes/markdown.pipe';
-import { Router, ROUTER_DIRECTIVES } from '@angular/router';
-import {TOOLTIP_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 
 @Component({
   selector: 'app-comment',
   templateUrl: 'comment.component.html',
   styleUrls: ['comment.component.scss'],
   // styles: [':host >>> p { margin-bottom: .2rem; }'], TODO
-  directives: [CommentComponent, MarkdownEditComponent, ROUTER_DIRECTIVES, TOOLTIP_DIRECTIVES],
-  pipes: [MomentPipe, MarkdownPipe]
 })
 
 export class CommentComponent implements OnInit {

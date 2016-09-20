@@ -1,5 +1,8 @@
 <nav class="navbar navbar-full navbar-light">
-  <div class="container-fluid">
+  <button (click)="toggleCollapseNavbar()" class="navbar-toggler hidden-md-up" type="button">
+    &#9776;
+  </button>
+  <div [class.collapse]="collapseNavbar" class="collapse navbar-toggleable-sm">
     <div>
       <a class="navbar-brand" [routerLink]="['/']"><i class="fa fa-fw fa-comment-o"></i>&nbsp;FlowChat</a>
       <ul class="nav navbar-nav">

@@ -1,0 +1,1 @@
+export {DiscussionCardViewTypeSelectComponent} from './discussion-card-view-type-select.component';

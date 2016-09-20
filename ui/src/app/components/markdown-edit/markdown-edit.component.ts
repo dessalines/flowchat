@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
-import {DomSanitizationService, SafeHtml} from '@angular/platform-browser';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {Tools} from '../../shared/tools';
 import {MarkdownPipe} from '../../pipes/markdown.pipe';
 
@@ -29,7 +29,7 @@ export class MarkdownEditComponent implements OnInit {
 
   private previewMode: boolean = false;
 
-  constructor(private sanitizer: DomSanitizationService) {}
+  constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     if (this.inputText != null) {
