@@ -1,7 +1,7 @@
 version: '2'
 services:
   db:
-    image: postgres:9.3
+    image: postgres:latest
     environment:
       POSTGRES_DB: flowchat
       POSTGRES_USER: postgres
