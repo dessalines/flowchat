@@ -1,0 +1,20 @@
+version: '2'
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: flowchat
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test
+  web:
+    build: .
+    ports: 
+      - "4567:4567"
+    depends_on:
+      - db
+    links:
+      - db
+    volumes:
+      - ./service/target/:/app/service/target/
+      - ./service/src/main/resources/liquibase/:/app/service/src/main/resources/liquibase/
+      - ./ui/dist:/app/ui/dist

@@ -18,6 +18,8 @@ public class DataSources {
 
     public static final String PROPERTIES_FILE = CODE_DIR + "/target/classes/app.properties";
 
-    public static final Properties PROPERTIES = Tools.loadProperties(PROPERTIES_FILE);
+    public static Properties PROPERTIES = Tools.loadProperties(PROPERTIES_FILE);
+
+    public static final String CHANGELOG_MASTER = CODE_DIR + "/src/main/resources/liquibase/db.changelog-master.xml";
 
 }

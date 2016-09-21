@@ -8,6 +8,15 @@ import com.chat.db.Actions;
 import com.chat.db.Transformations;
 import com.chat.tools.Tools;
 import com.chat.types.*;
+import liquibase.Contexts;
+import liquibase.Liquibase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.LiquibaseException;
+import liquibase.resource.FileSystemResourceAccessor;
+import liquibase.sdk.Context;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Paginator;
 import org.kohsuke.args4j.CmdLineException;
@@ -17,6 +26,9 @@ import org.slf4j.LoggerFactory;
 import spark.Spark;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.*;
 
 import static com.chat.db.Tables.*;
@@ -35,6 +47,9 @@ public class ChatService {
     @Option(name="-ssl",usage="The location of the java keystore .jks file.")
     private File jks;
 
+    @Option(name="-docker",usage="Use the docker container")
+    private Boolean docker = false;
+
     public void doMain(String[] args) {
 
         parseArguments(args);
@@ -48,6 +63,13 @@ public class ChatService {
             DataSources.SSL = true;
         }
 
+        if (docker) {
+            DataSources.PROPERTIES.setProperty("jdbc.url", "jdbc:postgresql://db/flowchat");
+            DataSources.PROPERTIES.setProperty("jdbc.password", "test");
+        }
+
+        runLiquibase();
+        
         staticFiles.externalLocation(uiDist.getAbsolutePath());
         staticFiles.expireTime(600);
 
@@ -92,6 +114,34 @@ public class ChatService {
 
     public static void main(String[] args) throws Exception {
         new ChatService().doMain(args);
+    }
+
+    private void runLiquibase() {
+
+        Liquibase liquibase = null;
+        Connection c = null;
+        try {
+            c = DriverManager.getConnection(DataSources.PROPERTIES.getProperty("jdbc.url"),
+                    DataSources.PROPERTIES.getProperty("jdbc.username"),
+                    DataSources.PROPERTIES.getProperty("jdbc.password"));
+
+            Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(c));
+            log.info(DataSources.CHANGELOG_MASTER);
+            liquibase = new Liquibase(DataSources.CHANGELOG_MASTER, new FileSystemResourceAccessor(), database);
+            liquibase.update("main");
+        } catch (SQLException | LiquibaseException e) {
+            e.printStackTrace();
+            throw new NoSuchElementException(e.getMessage());
+        } finally {
+            if (c != null) {
+                try {
+                    c.rollback();
+                    c.close();
+                } catch (SQLException e) {
+                    //nothing to do
+                }
+            }
+        }
     }
 
 }

@@ -48,7 +48,6 @@ public class Tools {
     public static final BasicPasswordEncryptor PASS_ENCRYPT = new BasicPasswordEncryptor();
 
     public static final void dbInit() {
-
         try {
             new DB("default").open("org.postgresql.Driver",
                     DataSources.PROPERTIES.getProperty("jdbc.url"),
