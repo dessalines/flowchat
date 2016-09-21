@@ -154,3 +154,13 @@ button, html [type="button"], [type="reset"], [type="submit"] {
 .block {
   display: block !important;
 }
+
+.expand-on-hover {
+  transition: all .1s ease-in-out;
+}
+
+.expand-on-hover:hover {
+  max-width: 500px;
+  position: relative;
+  z-index: 999;
+}

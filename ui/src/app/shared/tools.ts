@@ -36,12 +36,12 @@ export class Tools {
 
   static replaceImages(text: string): string {
     return text.replace(/(https?:\/\/.*\.(?:png|jpg|jpeg|gifv|gif))/g,
-      '<img class="img-fluid" src="$1">');
+      '<img class="img-fluid expand-on-hover" src="$1">');
   }
 
   static replaceImgur(text: string): string {
     return text.replace(/(?:https?:\/\/)(?:www\.)?(?:imgur\.com)\/?([^\s<]+)/g,
-      '<img class="img-fluid" src="https://i.imgur.com/$1.jpg">');
+      '<img class="img-fluid expand-on-hover" src="https://i.imgur.com/$1.jpg">');
   }
 
   static replaceYoutubeWithEmbed(text: string): string {

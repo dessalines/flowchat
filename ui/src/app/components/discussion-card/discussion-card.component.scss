@@ -5,13 +5,3 @@
 .card-block-no-top {
   padding-top: 2px;
 }
-
-.expand-on-hover {
-  transition: all .2s ease-in-out;
-}
-
-.expand-on-hover:hover {
-  max-width: 500px;
-  position: relative;
-  z-index: 999;
-}
