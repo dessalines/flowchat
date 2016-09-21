@@ -1,0 +1,8 @@
+/**
+#!service/target/flowchat.jar
+#!service/src/main/resources/*
+#!ui/dist
+
+#ADD /service/target/flowchat.jar /app/service/target/flowchat.jar
+#ADD /service/src/main/resources/liquibase/ /app/service/src/main/resources/liquibase/
+#ADD /ui/dist /app/ui/dist

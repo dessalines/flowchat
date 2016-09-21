@@ -15,4 +15,6 @@ services:
     links:
       - db
     volumes:
-      - .:/app
+      - ./service/target/:/app/service/target/
+      - ./service/src/main/resources/liquibase/:/app/service/src/main/resources/liquibase/
+      - ./ui/dist:/app/ui/dist
