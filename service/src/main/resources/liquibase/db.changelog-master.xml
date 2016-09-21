@@ -6,5 +6,15 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <includeAll path="src/main/resources/liquibase/changelogs"/>
+    <!-- INCLUDEALL not working right now <includeAll path="src/main/resources/liquibase/changelogs"/>-->
+    <include file="src/main/resources/liquibase/changelogs/2016-05-23.1.sql"/>
+    <include file="src/main/resources/liquibase/changelogs/2016-05-24.1.sql"/>
+    <include file="src/main/resources/liquibase/changelogs/2016-06-27.1.sql"/>
+    <include file="src/main/resources/liquibase/changelogs/2016-06-28.1.sql"/>
+    <include file="src/main/resources/liquibase/changelogs/2016-07-20.1.sql"/>
+    <include file="src/main/resources/liquibase/changelogs/2016-08-12.1.sql"/>
+    <include file="src/main/resources/liquibase/changelogs/2016-08-15.1.sql"/>
+    <include file="src/main/resources/liquibase/changelogs/2016-08-16.1.sql"/>
+    <include file="src/main/resources/liquibase/changelogs/2016-08-26.1.sql"/>
+    <include file="src/main/resources/liquibase/changelogs/2016-09-01.1.sql"/>
 </databaseChangeLog>
