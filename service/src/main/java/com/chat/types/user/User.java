@@ -1,13 +1,19 @@
 package com.chat.types.user;
 
+import com.chat.db.Tables;
+import com.chat.tools.Tools;
 import com.chat.types.JSONWriter;
+
+import java.io.IOException;
 
 /**
  * Created by tyler on 6/10/16.
  */
 public class User implements JSONWriter {
     private Long id;
-    private String name;
+    private String name, auth;
+
+    private UserSettings settings;
 
     private User(Long id, String name) {
         this.id = id;
@@ -21,6 +27,15 @@ public class User implements JSONWriter {
                 user.getString("name"));
     }
 
+    public static User create(Tables.UserView uv) {
+        User user = new User(uv.getLongId(),
+                uv.getString("name"));
+
+        user.settings = UserSettings.create(uv);
+
+        return user;
+    }
+
     public static User create(Long id, String name) {
         return new User(id, name);
     }
@@ -31,6 +46,18 @@ public class User implements JSONWriter {
 
     public String getName() {
         return name;
+    }
+
+    public UserSettings getSettings() {
+        return settings;
+    }
+
+    public String getAuth() {
+        return auth;
+    }
+
+    public void setAuth(String auth) {
+        this.auth = auth;
     }
 
     @Override
@@ -55,5 +82,16 @@ public class User implements JSONWriter {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
+    }
+
+    public static User fromJson(String dataStr) {
+
+        try {
+            return Tools.JACKSON.readValue(dataStr, User.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

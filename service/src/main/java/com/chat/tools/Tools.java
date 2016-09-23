@@ -10,6 +10,12 @@ import com.chat.webservice.ConstantsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import liquibase.Liquibase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.LiquibaseException;
+import liquibase.resource.FileSystemResourceAccessor;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.javalite.activejdbc.*;
 import org.javalite.http.Http;
@@ -24,10 +30,9 @@ import java.math.BigInteger;
 import java.net.HttpCookie;
 import java.net.URLDecoder;
 import java.security.SecureRandom;
-import java.sql.Array;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -247,6 +252,34 @@ public class Tools {
         }
 
         return communityIds;
+    }
+
+    public static void runLiquibase() {
+
+        Liquibase liquibase = null;
+        Connection c = null;
+        try {
+            c = DriverManager.getConnection(DataSources.PROPERTIES.getProperty("jdbc.url"),
+                    DataSources.PROPERTIES.getProperty("jdbc.username"),
+                    DataSources.PROPERTIES.getProperty("jdbc.password"));
+
+            Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(c));
+            log.info(DataSources.CHANGELOG_MASTER);
+            liquibase = new Liquibase(DataSources.CHANGELOG_MASTER, new FileSystemResourceAccessor(), database);
+            liquibase.update("main");
+        } catch (SQLException | LiquibaseException e) {
+            e.printStackTrace();
+            throw new NoSuchElementException(e.getMessage());
+        } finally {
+            if (c != null) {
+                try {
+                    c.rollback();
+                    c.close();
+                } catch (SQLException e) {
+                    //nothing to do
+                }
+            }
+        }
     }
 
 }

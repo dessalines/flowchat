@@ -14,7 +14,10 @@ import com.chat.types.community.CommunityRole;
 import com.chat.types.discussion.Discussion;
 import com.chat.types.discussion.DiscussionRole;
 import com.chat.types.tag.Tag;
+import com.chat.types.user.SortType;
 import com.chat.types.user.User;
+import com.chat.types.user.ViewType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.javalite.activejdbc.LazyList;
 
 import org.slf4j.LoggerFactory;
@@ -100,26 +103,26 @@ public class Actions {
         log.info("getOrCreateUser id = " + id + " auth = " + auth);
 
         User userObj;
-        if (id != null) {
+        Tables.UserView dbUser;
 
+        if (id != null) {
             if (auth == null || auth.equals("undefined")) {
-                Tables.User dbUser = Tables.User.findFirst("id = ?", id);
-                userObj = User.create(dbUser.getLongId(), dbUser.getString("name"));
+                dbUser = Tables.UserView.findFirst("id = ?", id);
             } else {
-                UserLoginView uv = UserLoginView.findFirst("auth = ?", auth);
-                userObj = User.create(uv.getLongId(), uv.getString("name"));
+                dbUser = Tables.UserView.findFirst("auth = ?", auth);
             }
 
         } else {
-            Tables.User dbUser = Actions.createUser();
-            userObj = User.create(dbUser.getLongId(), dbUser.getString("name"));
+            Tables.User newUser = Actions.createUser();
+            dbUser = Tables.UserView.findFirst("id = ?", newUser.getLongId());
         }
+
+        userObj = User.create(dbUser);
 
         return userObj;
     }
 
-    //  TODO make this more generic, don't require creating login rows for the anonymous users
-    public static User getOrCreateUserObj(Request req, Response res) {
+    public static User getOrCreateUserObj(Request req) {
 
         log.info(req.headers("user"));
 
@@ -133,6 +136,29 @@ public class Actions {
 
         return getOrCreateUserObj(ufh.getId(), ufh.getAuth());
 
+    }
+
+    public static User updateUser(User userIn) {
+        UserSetting us = UserSetting.findFirst("user_id = ?", userIn.getId());
+
+        if (userIn.getSettings().getReadOnboardAlert() != null) {
+            us.setBoolean("read_onboard_alert", userIn.getSettings().getReadOnboardAlert());
+        }
+
+        if (userIn.getSettings().getDefaultViewTypeRadioValue() != null) {
+            us.setInteger("default_view_type_id", ViewType.getFromRadioValue(userIn.getSettings().getDefaultViewTypeRadioValue()).getVal());
+        }
+
+        if (userIn.getSettings().getDefaultSortTypeRadioValue() != null) {
+            us.setInteger("default_sort_type_id", SortType.getFromRadioValue(userIn.getSettings().getDefaultSortTypeRadioValue()).getVal());
+        }
+
+        us.saveIt();
+
+        UserView dbUser = Tables.UserView.findFirst("id = ?", userIn.getId());
+        User userObj = User.create(dbUser);
+
+        return userObj;
     }
 
     public static Discussion createDiscussion(Long userId) {
@@ -320,14 +346,12 @@ public class Actions {
     }
 
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private static class UserFromHeader {
-        private Long id, full_user_id, login_id;
-        private String auth, name, email;
-        private Timestamp created, expire_time;
+        private Long id;
+        private String auth;
 
-
-        public UserFromHeader() {
-        }
+        public UserFromHeader() {}
 
         public UserFromHeader(Long id, String auth) {
             this.id = id;
@@ -344,37 +368,14 @@ public class Actions {
             return null;
         }
 
-        public String getAuth() {
-            return auth;
-        }
-
         public Long getId() {
             return id;
         }
 
-        public String getName() {
-            return name;
+        public String getAuth() {
+            return auth;
         }
 
-        public Long getFull_user_id() {
-            return full_user_id;
-        }
-
-        public Long getLogin_id() {
-            return login_id;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public Timestamp getCreated() {
-            return created;
-        }
-
-        public Timestamp getExpire_time() {
-            return expire_time;
-        }
     }
 
     public static Tables.User createUser() {
@@ -382,16 +383,20 @@ public class Actions {
                 "name", Tools.generateSecureRandom());
         user.set("name", "user_" + user.getLongId()).saveIt();
 
+        UserSetting.createIt("user_id", user.getLongId());
+
         return user;
     }
 
-    public static UserLoginView login(String userOrEmail, String password, Request req, Response res) {
+    public static User login(String userOrEmail, String password) {
 
         // Find the user, then create a login for them
 
         UserView uv = UserView.findFirst("name = ? or email = ?", userOrEmail, userOrEmail);
 
         Login login;
+        String auth;
+
         if (uv == null) {
             throw new NoSuchElementException("Incorrect user/email");
         } else {
@@ -403,25 +408,26 @@ public class Actions {
 
             if (correctPass) {
 
-                String auth = Tools.generateSecureRandom();
+                auth = Tools.generateSecureRandom();
                 login = Login.createIt("user_id", fu.getInteger("user_id"),
                         "auth", auth,
                         "expire_time", Tools.newExpireTimestamp());
-
-                Actions.setCookiesForLogin(fu, auth, res);
 
             } else {
                 throw new NoSuchElementException("Incorrect Password");
             }
         }
 
-        UserLoginView ulv = UserLoginView.findFirst("login_id = ?", login.getLongId());
+        UserView dbUser = UserView.findFirst("login_id = ?", login.getLongId());
 
-        return ulv;
+        User userObj = User.create(dbUser);
+        userObj.setAuth(auth);
+
+        return userObj;
 
     }
 
-    public static UserLoginView signup(String userName, String password, String verifyPassword, String email, Request req, Response res) {
+    public static User signup(String userName, String password, String verifyPassword, String email) {
 
         if (email != null && email.equals("")) {
             email = null;
@@ -440,7 +446,7 @@ public class Actions {
         }
 
         Login login;
-
+        String auth;
         if (uv == null) {
 
             // Create the user and full user
@@ -455,20 +461,21 @@ public class Actions {
                     "password_encrypted", encryptedPassword);
 
             // now login that user
-            String auth = Tools.generateSecureRandom();
+            auth = Tools.generateSecureRandom();
             login = Login.createIt("user_id", user.getId(),
                     "auth", auth,
                     "expire_time", Tools.newExpireTimestamp());
-
-            Actions.setCookiesForLogin(fu, auth, res);
 
         } else {
             throw new NoSuchElementException("Username/email already exists");
         }
 
-        UserLoginView ulv = UserLoginView.findFirst("login_id = ?", login.getLongId());
+        UserView dbUser = UserView.findFirst("login_id = ?", login.getLongId());
 
-        return ulv;
+        User userObj = User.create(dbUser);
+        userObj.setAuth(auth);
+
+        return userObj;
 
     }
 
@@ -708,24 +715,4 @@ public class Actions {
 
     }
 
-
-    public static String setCookiesForLogin(Tables.User user, String auth, Response res) {
-        Boolean secure = DataSources.SSL;
-
-        res.cookie("auth", auth, DataSources.EXPIRE_SECONDS, secure);
-        res.cookie("id", user.getId().toString(), DataSources.EXPIRE_SECONDS, secure);
-        res.cookie("name", user.getString("name"), DataSources.EXPIRE_SECONDS, secure);
-
-        return "Logged in";
-    }
-
-    public static String setCookiesForLogin(FullUser fu, String auth, Response res) {
-        Boolean secure = DataSources.SSL;
-
-        res.cookie("auth", auth, DataSources.EXPIRE_SECONDS, secure);
-        res.cookie("id", fu.getString("user_id"), DataSources.EXPIRE_SECONDS, secure);
-        res.cookie("username", fu.getString("name"), DataSources.EXPIRE_SECONDS, secure);
-
-        return "Logged in";
-    }
 }

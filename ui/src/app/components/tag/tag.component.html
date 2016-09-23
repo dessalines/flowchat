@@ -7,7 +7,7 @@
       <app-discussion-card-view-type-select [(viewType)]="viewType"></app-discussion-card-view-type-select>
     </div>
     <div class="col-xs-12 col-md-2">
-      <app-discussion-card-sort-select (selectChange)="resort($event)"></app-discussion-card-sort-select>
+      <app-discussion-card-sort-select [sortType]="sortType" (sortTypeChange)="resort($event)"></app-discussion-card-sort-select>
     </div>
   </div>
   <small *ngIf="communities?.length > 0">

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
-import {DiscussionService, CommunityService, TagService} from '../../services';
+import {DiscussionService, CommunityService, TagService, UserService} from '../../services';
 import {Discussion, Community, Tag, Tools} from '../../shared';
 
 
@@ -16,8 +16,8 @@ export class TagComponent implements OnInit {
   private currentCount: number = 0;
   private communities: Array<Community>;
 
-  private sorting: string = "time-86400";
-  private viewType: string = "list";
+  private sortType: string = this.userService.getUser().settings.defaultSortTypeRadioValue;;
+  private viewType: string = this.userService.getUser().settings.defaultViewTypeRadioValue;;
 
   private tag: Tag;
 
@@ -32,18 +32,19 @@ export class TagComponent implements OnInit {
     private router: Router,
     private discussionService: DiscussionService,
     private communityService: CommunityService,
-    private tagService: TagService) {
+    private tagService: TagService,
+    private userService: UserService) {
   }
 
   ngOnInit() {
-
+    
     this.sub = this.route.params.subscribe(params => {
       let tagId: number = +params['tagId'];
       this.currentPageNum = 1;
       this.scrollDebounce = 0;
       this.getTag(tagId);
-      this.getDiscussions(tagId, this.currentPageNum, this.sorting);
-      this.getCommunities(tagId, this.sorting);
+      this.getDiscussions(tagId, this.currentPageNum, this.sortType);
+      this.getCommunities(tagId, this.sortType);
     });
 
   }
@@ -91,7 +92,7 @@ export class TagComponent implements OnInit {
         this.scrollDebounce = 1;
         // you're at the bottom of the page
         this.currentPageNum += 1;
-        this.getDiscussions(this.tag.id, this.currentPageNum, this.sorting);
+        this.getDiscussions(this.tag.id, this.currentPageNum, this.sortType);
         setTimeout(() => this.scrollDebounce = 0, 1000);
       }
     }
@@ -99,11 +100,11 @@ export class TagComponent implements OnInit {
 
   resort($event) {
     console.log('resorting' + $event);
-    this.sorting = $event;
+    this.sortType = $event;
     this.discussions = undefined;
     this.currentPageNum = 1;
     this.scrollDebounce = 0;
-    this.getDiscussions(this.tag.id, this.currentPageNum, this.sorting);
+    this.getDiscussions(this.tag.id, this.currentPageNum, this.sortType);
   }
 
   removeQuotes(text: string) {

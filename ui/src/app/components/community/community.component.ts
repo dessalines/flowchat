@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
-import {DiscussionService, CommunityService} from '../../services';
+import {DiscussionService, CommunityService, UserService} from '../../services';
 import {Discussion, Tag, Community} from '../../shared';
 import {ToasterService} from 'angular2-toaster/angular2-toaster';
 
@@ -14,8 +14,8 @@ export class CommunityComponent implements OnInit {
 
   private discussions: Array<Discussion>;
   private currentCount: number = 0;
-  private sorting: string = "time-86400";
-  private viewType: string = "list";
+  private sortType: string = this.userService.getUser().settings.defaultSortTypeRadioValue;
+  private viewType: string = this.userService.getUser().settings.defaultViewTypeRadioValue;
 
   private community: Community;
 
@@ -32,7 +32,8 @@ export class CommunityComponent implements OnInit {
     private router: Router,
     private discussionService: DiscussionService,
     private communityService: CommunityService,
-    private toasterService: ToasterService) {
+    private toasterService: ToasterService,
+    private userService: UserService) {
   }
 
   ngOnInit() {
@@ -42,7 +43,7 @@ export class CommunityComponent implements OnInit {
       this.currentPageNum = 1;
       this.scrollDebounce = 0;
       this.getCommunity(communityId);
-      this.getDiscussions(communityId, this.currentPageNum, this.sorting);
+      this.getDiscussions(communityId, this.currentPageNum, this.sortType);
       this.editing = Boolean(this.route.snapshot.params["editMode"]);
     });
 
@@ -89,7 +90,7 @@ export class CommunityComponent implements OnInit {
         this.scrollDebounce = 1;
         // you're at the bottom of the page
         this.currentPageNum += 1;
-        this.getDiscussions(this.community.id, this.currentPageNum, this.sorting);
+        this.getDiscussions(this.community.id, this.currentPageNum, this.sortType);
         setTimeout(() => this.scrollDebounce = 0, 1000);
       }
     }
@@ -102,11 +103,11 @@ export class CommunityComponent implements OnInit {
 
   resort($event) {
     console.log('resorting' + $event);
-    this.sorting = $event;
+    this.sortType = $event;
     this.discussions = undefined;
     this.currentPageNum = 1;
     this.scrollDebounce = 0;
-    this.getDiscussions(this.community.id, this.currentPageNum, this.sorting);
+    this.getDiscussions(this.community.id, this.currentPageNum, this.sortType);
   }
 
   isCard(): boolean {

@@ -61,9 +61,21 @@ public class Endpoints {
 
         get("/user", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             return userObj.json();
+
+        });
+
+        put("/user", (req, res) -> {
+
+            User userIn = User.fromJson(req.body());
+
+            User userOut = Actions.updateUser(userIn);
+
+            res.status(HttpStatus.OK_200);
+
+            return userOut.json();
 
         });
 
@@ -74,9 +86,9 @@ public class Endpoints {
             String userOrEmail = vars.get("usernameOrEmail");
             String password = vars.get("password");
 
-            Tables.UserLoginView ulv = Actions.login(userOrEmail, password, req, res);
+            User userObj = Actions.login(userOrEmail, password);
 
-            return ulv.toJson(false);
+            return userObj.json();
 
         });
 
@@ -89,11 +101,11 @@ public class Endpoints {
             String verifyPassword = vars.get("verifyPassword");
             String email = vars.get("email");
 
-            Tables.UserLoginView ulv = Actions.signup(userName, password, verifyPassword, email, req, res);
+            User userObj = Actions.signup(userName, password, verifyPassword, email);
 
             res.status(HttpStatus.CREATED_201);
 
-            return ulv.toJson(false);
+            return userObj.json();
 
         });
 
@@ -113,7 +125,7 @@ public class Endpoints {
 
         get("/user_log/:id", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             Long id = Long.valueOf(req.params(":id"));
 
@@ -172,7 +184,6 @@ public class Endpoints {
 
         post("/tag", (req, res) -> {
 
-
             String name = Tools.createMapFromReqBody(req.body()).get("name");
 
             Tag to = Actions.createTag(name);
@@ -209,7 +220,7 @@ public class Endpoints {
 
             Long id = Long.valueOf(req.params(":id"));
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             Tables.DiscussionFullView dfv = Tables.DiscussionFullView.findFirst("id = ?", id);
 
@@ -259,7 +270,7 @@ public class Endpoints {
             String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-" + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight();
 
             orderBy = Tools.constructOrderByCustom(orderBy);
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             Set<Long> communityIds = Tools.fetchCommunitiesFromParams(req.params(":communityId"), userObj);
 
@@ -351,7 +362,7 @@ public class Endpoints {
 
         post("/discussion_rank/:id/:rank", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
 
             Long discussionId = Long.valueOf(req.params(":id"));
@@ -367,7 +378,7 @@ public class Endpoints {
 
         post("/discussion", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             Discussion do_ = Actions.createDiscussion(userObj.getId());
 
@@ -379,7 +390,7 @@ public class Endpoints {
 
         put("/discussion", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             Discussion doIn = Discussion.fromJson(req.body());
 
@@ -393,7 +404,7 @@ public class Endpoints {
 
         get("/favorite_discussions", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             LazyList<Tables.FavoriteDiscussionUserView> favs = Tables.FavoriteDiscussionUserView.where(
                     "user_id = ? and deleted = ?",
@@ -420,7 +431,7 @@ public class Endpoints {
 
         delete("/favorite_discussion/:id", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             Long discussionId = Long.valueOf(req.params(":id"));
 
@@ -438,7 +449,7 @@ public class Endpoints {
 
         get("/unread_replies", (req, res) -> {
 
-                User userObj = Actions.getOrCreateUserObj(req, res);
+                User userObj = Actions.getOrCreateUserObj(req);
 
                 // Fetch your unread replies
                 LazyList<Tables.CommentBreadcrumbsView> cbv = Tables.CommentBreadcrumbsView.where(
@@ -453,7 +464,7 @@ public class Endpoints {
 
         post("/mark_reply_as_read/:id", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             Long commentId = Long.valueOf(req.params(":id"));
 
@@ -468,7 +479,7 @@ public class Endpoints {
 
         post("/mark_all_replies_as_read", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             // Mark the reply as read
             Actions.markAllRepliesAsRead(userObj.getId());
@@ -486,7 +497,7 @@ public class Endpoints {
 
             Long id = Long.valueOf(req.params(":id"));
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             Tables.CommunityView cv = Tables.CommunityView.findFirst("id = ?", id);
 
@@ -524,7 +535,7 @@ public class Endpoints {
             String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-" + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight();;
 
             orderBy = Tools.constructOrderByCustom(orderBy);
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             Paginator p;
 
@@ -591,7 +602,7 @@ public class Endpoints {
 
         post("/community_rank/:id/:rank", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             Long id = Long.valueOf(req.params(":id"));
             Integer rank = Integer.valueOf(req.params(":rank"));
@@ -606,7 +617,7 @@ public class Endpoints {
 
         post("/community", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             Community co_ = Actions.createCommunity(userObj.getId());
 
@@ -618,7 +629,7 @@ public class Endpoints {
 
         put("/community", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             Community coIn = Community.fromJson(req.body());
 
@@ -632,7 +643,7 @@ public class Endpoints {
 
         get("/favorite_communities", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             LazyList<Tables.CommunityUserView> favs = Tables.CommunityUserView.where("user_id = ? and deleted = ? and community_role_id != ?",
                     userObj.getId(),
@@ -659,7 +670,7 @@ public class Endpoints {
 
         post("/favorite_community/:id", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             Long communityId = Long.valueOf(req.params(":id"));
 
@@ -673,7 +684,7 @@ public class Endpoints {
 
         delete("/favorite_community/:id", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             Long communityId = Long.valueOf(req.params(":id"));
 
@@ -687,7 +698,7 @@ public class Endpoints {
 
         get("/community_modlog/:id", (req, res) -> {
 
-            User userObj = Actions.getOrCreateUserObj(req, res);
+            User userObj = Actions.getOrCreateUserObj(req);
 
             Long id = Long.valueOf(req.params(":id"));
 

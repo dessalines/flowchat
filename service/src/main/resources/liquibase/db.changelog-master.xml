@@ -17,4 +17,5 @@
     <include file="src/main/resources/liquibase/changelogs/2016-08-16.1.sql"/>
     <include file="src/main/resources/liquibase/changelogs/2016-08-26.1.sql"/>
     <include file="src/main/resources/liquibase/changelogs/2016-09-01.1.sql"/>
+    <include file="src/main/resources/liquibase/changelogs/2016-09-23.1.sql"/>
 </databaseChangeLog>
