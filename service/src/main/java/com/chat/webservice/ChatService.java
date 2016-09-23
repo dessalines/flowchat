@@ -50,6 +50,9 @@ public class ChatService {
     @Option(name="-docker",usage="Use the docker container")
     private Boolean docker = false;
 
+    @Option(name="-liquibase", usage="Run liquibase changeset")
+    private Boolean liquibase = false;
+
     public void doMain(String[] args) {
 
         parseArguments(args);
@@ -68,7 +71,9 @@ public class ChatService {
             DataSources.PROPERTIES.setProperty("jdbc.password", "test");
         }
 
-        runLiquibase();
+        if (liquibase) {
+            Tools.runLiquibase();
+        }
         
         staticFiles.externalLocation(uiDist.getAbsolutePath());
         staticFiles.expireTime(600);
@@ -114,34 +119,6 @@ public class ChatService {
 
     public static void main(String[] args) throws Exception {
         new ChatService().doMain(args);
-    }
-
-    private void runLiquibase() {
-
-        Liquibase liquibase = null;
-        Connection c = null;
-        try {
-            c = DriverManager.getConnection(DataSources.PROPERTIES.getProperty("jdbc.url"),
-                    DataSources.PROPERTIES.getProperty("jdbc.username"),
-                    DataSources.PROPERTIES.getProperty("jdbc.password"));
-
-            Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(c));
-            log.info(DataSources.CHANGELOG_MASTER);
-            liquibase = new Liquibase(DataSources.CHANGELOG_MASTER, new FileSystemResourceAccessor(), database);
-            liquibase.update("main");
-        } catch (SQLException | LiquibaseException e) {
-            e.printStackTrace();
-            throw new NoSuchElementException(e.getMessage());
-        } finally {
-            if (c != null) {
-                try {
-                    c.rollback();
-                    c.close();
-                } catch (SQLException e) {
-                    //nothing to do
-                }
-            }
-        }
     }
 
 }

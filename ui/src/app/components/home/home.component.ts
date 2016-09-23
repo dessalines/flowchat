@@ -17,8 +17,8 @@ export class HomeComponent implements OnInit {
   private currentCount: number = 0;
   private popularTags: Array<Tag>;
   private popularCommunities: Array<Community>;
-  private sorting: string = "time-86400";
-  private viewType: string = "list";
+  private sortType: string = this.userService.getUser().settings.defaultSortTypeRadioValue;
+  private viewType: string = this.userService.getUser().settings.defaultViewTypeRadioValue;
 
   private currentPageNum: number = 1;
   private scrollDebounce: number = 0;
@@ -42,6 +42,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     console.log(this.route.snapshot.url.toString());
     console.log(this.userService.getFavoriteCommunities());
+
     this.communityId = this.route.snapshot.url.toString();
 
     if (this.userService.getFavoriteCommunities() === undefined || this.userService.getFavoriteCommunities().length == 0) {
@@ -52,15 +53,15 @@ export class HomeComponent implements OnInit {
 
     console.log(this.communityId);
 
-    this.getDiscussions(this.communityId, this.currentPageNum, this.sorting);
+    this.getDiscussions(this.communityId, this.currentPageNum, this.sortType);
 
-    this.getPopularTags(this.sorting);
-    this.getPopularCommunities(this.sorting);
+    this.getPopularTags(this.sortType);
+    this.getPopularCommunities(this.sortType);
   }
 
   resort($event) {
     console.log('resorting' + $event);
-    this.sorting = $event;
+    this.sortType = $event;
     this.discussions = undefined;
     this.currentPageNum = 1;
     this.scrollDebounce = 0;
@@ -74,7 +75,7 @@ export class HomeComponent implements OnInit {
         this.scrollDebounce = 1;
         // you're at the bottom of the page
         this.currentPageNum += 1;
-        this.getDiscussions(this.communityId, this.currentPageNum, this.sorting);
+        this.getDiscussions(this.communityId, this.currentPageNum, this.sortType);
         setTimeout(() => this.scrollDebounce = 0, 1000);
       }
     }
