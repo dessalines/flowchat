@@ -1,4 +1,5 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import {UserService} from '../../services';
 
 @Component({
   selector: 'app-discussion-card-sort-select',
@@ -7,17 +8,21 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class DiscussionCardSortSelectComponent implements OnInit {
 
-  private defaultSort: string = "time-86400";
+  @Input() sortType: string;
 
-  @Output() selectChange = new EventEmitter();
+  @Output() sortTypeChange = new EventEmitter();
 
-  constructor() { }
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
   }
 
   changeEvent($event) {
-    this.selectChange.next($event);
+    this.sortTypeChange.next($event);
+    this.userService.getUser().settings.defaultSortTypeRadioValue = $event;
+    this.userService.saveUser().subscribe(u => {
+      this.userService.setUserSettings(u.settings);
+    });
   }
 
 }

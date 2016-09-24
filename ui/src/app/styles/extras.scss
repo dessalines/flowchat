@@ -156,11 +156,11 @@ button, html [type="button"], [type="reset"], [type="submit"] {
 }
 
 .expand-on-hover {
-  transition: all .1s ease-in-out;
+  transition: all .05s ease-in-out;
 }
 
 .expand-on-hover:hover {
-  max-width: 500px;
+  max-width: 907px;
   position: relative;
   z-index: 999;
 }

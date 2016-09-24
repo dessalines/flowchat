@@ -10,8 +10,7 @@
       <div class="card-block card-block-no-top">
         <p *ngIf="community.text && !textCollapsed"
           class="card-text" [innerHTML]="community.text | markdown"></p>
-        <small>
-        <ul class="list-inline">
+        <ul class="list-inline small">
           <li class="tag tag-default list-inline-item" *ngFor="let tag of community.tags">
             <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
           </li>
@@ -25,14 +24,14 @@
             <a [routerLink]="['/user',moderator.id]" class="tag tag-warning">{{moderator.name}}</a>
           </li>
         </ul>
-      </small>
+    
         <small class="text-muted">
         <span *ngIf="!community.modified">created {{community.created | moment}}</span>
         <span *ngIf="community.modified"><i>modified {{community.modified | moment}}</i></span>
           by 
           <a [routerLink]="['/user',community.creator.id]" class="link-unstyled">{{community.creator.name}}</a>
       </small>
-        <ul class="list-inline">
+        <ul class="list-inline small">
           <li *ngIf="community.private_" class="tag tag-danger list-inline-item">Private</li>
           <li *ngIf="!isCreator && !isModerator && !userService.hasFavoriteCommunity(community)"
             role="button" class="list-inline-item"
