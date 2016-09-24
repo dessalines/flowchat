@@ -82,11 +82,19 @@ export class UserService {
     this.user = {
       id: null,
       name: null,
-      auth: null
-    }
+      auth: null,
+      settings: this.defaultSettings
+    };
+    
     this.favoriteDiscussions = [];
     this.clearCookies();
 
+  }
+
+  private defaultSettings: UserSettings = {
+    defaultViewTypeRadioValue: 'list',
+    defaultSortTypeRadioValue: 'time-86400',
+    readOnboardAlert: false
   }
 
   sendLoginEvent(user: User) {
