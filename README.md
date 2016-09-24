@@ -35,7 +35,7 @@ Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 
 [Change log](CHANGELOG.md)
 
-----
+==========
 
 ## Screenshots:
 <img src="http://i.imgur.com/lZBMsn5.png">
@@ -45,20 +45,34 @@ Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 
 ## Installation 
 
-*If you want to self-host flowchat.*
+*If you want to self-host or develop flowchat.*
 
-### Requirements
+### Option 1 : Docker
+
+Install `docker` and `docker-compose`. 
+
+```sh
+git clone https://github.com/dessalines/flowchat
+cd flowchat
+docker-compose up
+```
+
+and goto `http://localhost:4567/`
+
+### Option 2 : Local development
+
+#### Requirements
 - Java 8 + Maven
 - Node + npm, [nvm](https://github.com/creationix/nvm) is the preferred installation method.
 - Postgres 9.3 or higher
 
-### Download Flowchat
+#### Download Flowchat
 `git clone https://github.com/dessalines/flowchat`
 
-### Setup a postgres database
+#### Setup a postgres database
 [Here](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04) are some instructions to get your DB up and running.
 
-### Edit your pom.xml file to point to your database
+#### Edit your pom.xml file to point to your database
 ```sh
 cd flowchat
 vim service/pom.xml
@@ -79,19 +93,21 @@ Edit it to point to your own database:
 <sorting_number_of_votes_weight>0.001</sorting_number_of_votes_weight>
 <sorting_avg_rank_weight>0.01</sorting_avg_rank_weight>
 ```
-### Install flowchat
+#### Install flowchat
 
 for local testing: 
 
-`./install.sh` and goto `http://localhost:4567/`
+`./install_dev.sh` and goto `http://localhost:4567/`
 
 for a production environment, edit `ui/config/environment.prod.ts` to point to your hostname, then run:
 
-`./install.sh -prod`
+`./install_prod.sh`
 
 You can redirect ports in linux to route from port 80 to this port:
 
 `sudo iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 4567`
+
+==========
 
 ## Bugs and feature requests
 Have a bug or a feature request? If your issue isn't [already listed](https://github.com/dessalines/flowchat/issues/), then open a [new issue here](https://github.com/dessalines/flowchat/issues/new).
