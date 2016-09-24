@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {User, Discussion, Tools, Community} from '../shared';
+import {User, UserSettings, Discussion, Tools, Community} from '../shared';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -32,6 +32,8 @@ export class UserService {
 
   private getUserLogUrl: string = environment.endpoint + 'user_log/';
 
+  private saveUserUrl: string = environment.endpoint + 'user';
+
   constructor(private http: Http) {
     this.setUserFromCookie();
     this.fetchFavoriteDiscussions();
@@ -52,29 +54,31 @@ export class UserService {
 
   public isAnonymousUser(): boolean {
     return this.user != null &&
-      (this.user.auth === undefined || this.user.auth == 'undefined');
+      (this.user.auth === undefined || this.user.auth == 'undefined' || this.user.auth == null);
   }
 
   public isFullUser() {
     return this.user != null &&
-      !(this.user.auth === undefined || this.user.auth == 'undefined');
+      !(this.user.auth === undefined || this.user.auth == 'undefined' || this.user.auth == null);
   }
 
-  public setUser(user: User) {
+  setUser(user: User) {
     this.user = user;
-    this.setCookies(this.user);
+    this.setCookies(user);
     this.fetchFavoriteDiscussions();
     this.fetchFavoriteCommunities();
   }
 
+  setUserSettings(settings: UserSettings) {
+    this.user.settings = settings;
+    this.setCookies(this.user);
+  }
+
   setUserFromCookie() {
-    if (Tools.readCookie("uid") != null) {
-      this.user = {
-        id: Number(Tools.readCookie("uid")),
-        name: Tools.readCookie("name"),
-        auth: Tools.readCookie("auth")
-      }
+    if (Tools.readCookie("user") != null) {
+      this.user = JSON.parse(Tools.readCookie("user"));
     }
+
     console.log(this.user);
   }
 
@@ -83,11 +87,19 @@ export class UserService {
     this.user = {
       id: null,
       name: null,
-      auth: null
-    }
+      auth: null,
+      settings: this.defaultSettings
+    };
+    
     this.favoriteDiscussions = [];
     this.clearCookies();
 
+  }
+
+  private defaultSettings: UserSettings = {
+    defaultViewTypeRadioValue: 'list',
+    defaultSortTypeRadioValue: 'time-86400',
+    readOnboardAlert: false
   }
 
   sendLoginEvent(user: User) {
@@ -95,16 +107,19 @@ export class UserService {
   }
 
 
+  public saveUser() {
+    return this.http.put(this.saveUserUrl, this.user)
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+
   setCookies(user: User) {
-    Tools.createCookie("uid", user.id, user.expire_time);
-    Tools.createCookie("auth", user.auth, user.expire_time);
-    Tools.createCookie("name", user.name, user.expire_time);
+    Tools.createCookie("user", JSON.stringify(user), user.expire_time);
   }
 
   clearCookies() {
-    Tools.eraseCookie("uid");
-    Tools.eraseCookie("auth");
-    Tools.eraseCookie("name");
+    Tools.eraseCookie("user");
   }
 
 

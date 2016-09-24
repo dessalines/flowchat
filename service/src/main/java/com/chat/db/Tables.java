@@ -11,6 +11,9 @@ public class Tables {
     @Table("user_")
     public static class User extends Model {}
 
+    @Table("user_setting")
+    public static class UserSetting extends Model {}
+
     @Table("full_user")
     public static class FullUser extends Model {}
 
@@ -22,9 +25,6 @@ public class Tables {
 
     @Table("login")
     public static class Login extends Model {}
-
-    @Table("user_login_view")
-    public static class UserLoginView extends Model {}
 
     @Table("comment")
     public static class Comment extends Model {}

@@ -6,7 +6,7 @@
     </div>
     <div *ngIf="!editing" class="col-xs-12 col-md-2">
       <app-discussion-card-view-type-select [(viewType)]="viewType"></app-discussion-card-view-type-select>
-      <app-discussion-card-sort-select (selectChange)="resort($event)"></app-discussion-card-sort-select>
+      <app-discussion-card-sort-select [sortType]="sortType" (sortTypeChange)="resort($event)"></app-discussion-card-sort-select>
     </div>
   </div>
   <div *ngIf="!editing">
