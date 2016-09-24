@@ -21,7 +21,8 @@ import { HomeComponent,
   NavbarComponent,
   SidebarComponent,
   FooterComponent,
-  MarkdownEditComponent } from './components';
+  MarkdownEditComponent,
+  OnboardAlertComponent } from './components';
 import { Title } from '@angular/platform-browser';
 import {SeoService} from './services';
 import { MomentPipe,
@@ -32,7 +33,8 @@ import { TooltipModule,
   DropdownModule,
   ModalModule,
   TabsModule,
-  TypeaheadModule } from 'ng2-bootstrap/ng2-bootstrap';
+  TypeaheadModule,
+  AlertModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 @NgModule({
   declarations: [
@@ -55,10 +57,12 @@ import { TooltipModule,
     SidebarComponent,
     FooterComponent,
     MarkdownEditComponent,
+    OnboardAlertComponent,
 
     // Pipes
     MomentPipe,
     MarkdownPipe,
+    OnboardAlertComponent,
     
   ],
   imports: [
@@ -74,6 +78,7 @@ import { TooltipModule,
     ModalModule,
     TabsModule,
     TypeaheadModule,
+    AlertModule,
 
     routing
   ],
