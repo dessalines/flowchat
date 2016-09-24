@@ -14,7 +14,7 @@
       <div [ngClass]="{
         'card-block': isCard(),
         'card-block-no-bottom': isCard()}">
-        <h5 [class.card-title]="isCard()">
+        <h5 [class.card-title]="isCard()" class="card-block-no-bottom">
           <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">{{discussion.title}} </a>
           <small *ngIf="isCreator"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditing()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
         </h5>
@@ -28,8 +28,8 @@
         'card-block-no-top': isCard()}">
         <p *ngIf="discussion.text" class="card-text"
           [innerHTML]="discussion.text | markdown"></p>
-        <small>
-        <ul class="list-inline">
+        
+        <ul class="list-inline small">
           <li class="list-inline-item">
             <span class="text-muted">
               <span *ngIf="!discussion.modified">created {{discussion.created | moment}}</span>
@@ -46,9 +46,9 @@
             <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
-      </small>
       
-        <ul class="list-inline">
+      
+        <ul class="list-inline small">
           <li *ngIf="discussion.private_" class="tag tag-danger list-inline-item">Private</li>
           <li *ngIf="!isCreator" role="button" class="list-inline-item"
             (click)="toggleShowVoteSlider()"
