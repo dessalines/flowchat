@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2-toaster/angular2-toaster';
 import {DiscussionService, TagService, CommunityService, UserService} from '../../services';
-import {Discussion, Tag, Community, Tools} from '../../shared';
+import {Discussion, Tag, Community, Tools, User} from '../../shared';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -124,6 +124,13 @@ export class HomeComponent implements OnInit {
 
   isCard(): boolean {
     return this.viewType==='card';
+  }
+
+  readOnboardAlert() {
+    // this.userService.getUser().settings.readOnboardAlert = true;
+    this.userService.saveUser().subscribe(u => {
+      this.userService.setUserSettings(u.settings);
+    });
   }
 
 }

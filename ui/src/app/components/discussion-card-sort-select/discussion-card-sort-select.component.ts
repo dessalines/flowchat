@@ -21,7 +21,7 @@ export class DiscussionCardSortSelectComponent implements OnInit {
     this.sortTypeChange.next($event);
     this.userService.getUser().settings.defaultSortTypeRadioValue = $event;
     this.userService.saveUser().subscribe(u => {
-      this.userService.setUser(u);
+      this.userService.setUserSettings(u.settings);
     });
   }
 

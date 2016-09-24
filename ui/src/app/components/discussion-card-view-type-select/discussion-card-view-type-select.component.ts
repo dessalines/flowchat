@@ -21,8 +21,8 @@ export class DiscussionCardViewTypeSelectComponent implements OnInit {
 		this.viewTypeChange.next($event);
 		this.userService.getUser().settings.defaultViewTypeRadioValue = $event;
 		this.userService.saveUser().subscribe(u => {
-      this.userService.setUser(u);
-    });
+      		this.userService.setUserSettings(u.settings);
+    	});
 	}
 
 }

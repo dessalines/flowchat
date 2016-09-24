@@ -69,6 +69,11 @@ export class UserService {
     this.fetchFavoriteCommunities();
   }
 
+  setUserSettings(settings: UserSettings) {
+    this.user.settings = settings;
+    this.setCookies(this.user);
+  }
+
   setUserFromCookie() {
     if (Tools.readCookie("user") != null) {
       this.user = JSON.parse(Tools.readCookie("user"));
