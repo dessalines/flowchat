@@ -16,8 +16,8 @@ export class TagComponent implements OnInit {
   private currentCount: number = 0;
   private communities: Array<Community>;
 
-  private sortType: string = this.userService.getUser().settings.defaultSortTypeRadioValue;;
-  private viewType: string = this.userService.getUser().settings.defaultViewTypeRadioValue;;
+  private sortType: string = this.userService.getUserSettings().defaultSortTypeRadioValue;
+  private viewType: string = this.userService.getUserSettings().defaultViewTypeRadioValue;
 
   private tag: Tag;
 

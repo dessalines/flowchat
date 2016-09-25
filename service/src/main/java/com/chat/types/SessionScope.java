@@ -1,6 +1,7 @@
 package com.chat.types;
 
 import ch.qos.logback.classic.Logger;
+import com.chat.db.Actions;
 import com.chat.tools.Tools;
 import com.chat.types.user.User;
 import org.eclipse.jetty.websocket.api.Session;
@@ -96,21 +97,19 @@ public class SessionScope {
         return Long.valueOf(session.getUpgradeRequest().getParameterMap().get("discussionId").iterator().next());
     }
 
-    public static String getAuthFromSession(Session session) {
-        Map<String, String> cookieMap = Tools.cookieListToMap(session.getUpgradeRequest().getCookies());
-
-        return cookieMap.get("auth");
-    }
-
-    public static Long getUserIdFromSession(Session session) {
+    public static User getUserFromSession(Session session) {
 
         Map<String, String> cookieMap = Tools.cookieListToMap(session.getUpgradeRequest().getCookies());
-        String uid = cookieMap.get("uid");
-        if (uid != null) {
-            return Long.valueOf(uid);
+        String userObjStr = cookieMap.get("user");
+
+        User user;
+        if (userObjStr == null) {
+            user = Actions.getOrCreateUserObj(null, null);
         } else {
-            return null;
+            user = User.fromJson(userObjStr);
         }
+
+        return user;
 
     }
 

@@ -62,6 +62,14 @@ export class UserService {
       !(this.user.auth === undefined || this.user.auth == 'undefined' || this.user.auth == null);
   }
 
+  getUserSettings(): UserSettings {
+    if (this.user == undefined) {
+      return this.defaultSettings;
+    } else {
+      return this.user.settings;
+    }
+  }
+
   setUser(user: User) {
     this.user = user;
     this.setCookies(user);
@@ -90,7 +98,7 @@ export class UserService {
       auth: null,
       settings: this.defaultSettings
     };
-    
+
     this.favoriteDiscussions = [];
     this.clearCookies();
 
@@ -115,6 +123,7 @@ export class UserService {
 
 
   setCookies(user: User) {
+    this.clearCookies();
     Tools.createCookie("user", JSON.stringify(user), user.expire_time);
   }
 
@@ -124,12 +133,11 @@ export class UserService {
 
 
   getOptions(): RequestOptions {
-    let headers = new Headers(
-      {
-        // 'Content-Type': 'application/json',
-        'user': JSON.stringify(this.getUser())
-      });
-    return new RequestOptions({ headers: headers});
+    let headers = new Headers({
+      // 'Content-Type': 'application/json',
+      'user': JSON.stringify(this.getUser())
+    });
+    return new RequestOptions({ headers: headers });
   }
 
   searchUsers(query: string) {
@@ -228,7 +236,7 @@ export class UserService {
   }
 
   hasFavoriteCommunity(community: Community): boolean {
-    return (this.favoriteCommunities !== undefined && 
+    return (this.favoriteCommunities !== undefined &&
       this.favoriteCommunities.filter(c => community.id == c.id)[0] !== undefined);
   }
 

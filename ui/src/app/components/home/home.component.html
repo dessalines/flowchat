@@ -1,5 +1,5 @@
 <div>
-  <app-onboard-alert *ngIf="!userService.getUser().settings.readOnboardAlert"></app-onboard-alert>
+  <app-onboard-alert *ngIf="!userService.getUserSettings().readOnboardAlert"></app-onboard-alert>
   <div class="row">
     <div class="col-xs-12 col-md-8 trending-discussions ">
       <h3>Trending Discussions</h3>

@@ -17,8 +17,8 @@ export class HomeComponent implements OnInit {
   private currentCount: number = 0;
   private popularTags: Array<Tag>;
   private popularCommunities: Array<Community>;
-  private sortType: string = this.userService.getUser().settings.defaultSortTypeRadioValue;
-  private viewType: string = this.userService.getUser().settings.defaultViewTypeRadioValue;
+  private sortType: string = this.userService.getUserSettings().defaultSortTypeRadioValue;
+  private viewType: string = this.userService.getUserSettings().defaultViewTypeRadioValue;
 
   private currentPageNum: number = 1;
   private scrollDebounce: number = 0;
@@ -127,7 +127,7 @@ export class HomeComponent implements OnInit {
   }
 
   readOnboardAlert() {
-    // this.userService.getUser().settings.readOnboardAlert = true;
+    // this.userService.getUserSettings().readOnboardAlert = true;
     this.userService.saveUser().subscribe(u => {
       this.userService.setUserSettings(u.settings);
     });
