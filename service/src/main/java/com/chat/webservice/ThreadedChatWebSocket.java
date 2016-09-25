@@ -341,12 +341,11 @@ public class ThreadedChatWebSocket {
 
     private SessionScope setupSessionScope(Session session) {
 
-        String auth = SessionScope.getAuthFromSession(session);
-        Long uid = SessionScope.getUserIdFromSession(session);
+        User userObj = SessionScope.getUserFromSession(session);
         Long discussionId = SessionScope.getDiscussionIdFromSession(session);
         Long topParentId = SessionScope.getTopParentIdFromSession(session);
 
-        User userObj = Actions.getOrCreateUserObj(uid, auth);
+        log.info(userObj.json());
 
         SessionScope ss = new SessionScope(session, userObj, discussionId, topParentId);
         sessionScopes.add(ss);

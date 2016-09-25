@@ -14,8 +14,8 @@ export class CommunityComponent implements OnInit {
 
   private discussions: Array<Discussion>;
   private currentCount: number = 0;
-  private sortType: string = this.userService.getUser().settings.defaultSortTypeRadioValue;
-  private viewType: string = this.userService.getUser().settings.defaultViewTypeRadioValue;
+  private sortType: string = this.userService.getUserSettings().defaultSortTypeRadioValue;
+  private viewType: string = this.userService.getUserSettings().defaultViewTypeRadioValue;
 
   private community: Community;
 

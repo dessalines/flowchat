@@ -106,12 +106,11 @@ public class Actions {
         Tables.UserView dbUser;
 
         if (id != null) {
-            if (auth == null || auth.equals("undefined")) {
+            if (auth == null || auth.equals("null")) {
                 dbUser = Tables.UserView.findFirst("id = ?", id);
             } else {
                 dbUser = Tables.UserView.findFirst("auth = ?", auth);
             }
-
         } else {
             Tables.User newUser = Actions.createUser();
             dbUser = Tables.UserView.findFirst("id = ?", newUser.getLongId());
