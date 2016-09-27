@@ -112,4 +112,11 @@ public class AppTest {
 
     }
 
+    @Test
+    public void testEncrypt() {
+        String encryptedPassword = Tools.PASS_ENCRYPT.encryptPassword("asdf");
+        log.info(encryptedPassword);
+
+    }
+
 }

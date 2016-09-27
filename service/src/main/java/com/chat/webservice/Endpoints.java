@@ -267,7 +267,8 @@ public class Endpoints {
             Long tagId = (!req.params(":tagId").equals("all")) ? Long.valueOf(req.params(":tagId")) : null;
             Integer limit = (req.params(":limit") != null) ? Integer.valueOf(req.params(":limit")) : 10;
             Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
-            String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-" + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight();
+            String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-" +
+                    ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight().intValue();
 
             orderBy = Tools.constructOrderByCustom(orderBy);
             User userObj = Actions.getOrCreateUserObj(req);
@@ -532,7 +533,8 @@ public class Endpoints {
             Integer limit = (req.params(":limit") != null) ? Integer.valueOf(req.params(":limit")) : 10;
             Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
 
-            String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-" + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight();;
+            String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-" +
+                    ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight().intValue();
 
             orderBy = Tools.constructOrderByCustom(orderBy);
             User userObj = Actions.getOrCreateUserObj(req);
