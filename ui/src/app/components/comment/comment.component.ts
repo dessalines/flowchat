@@ -7,9 +7,7 @@ import * as moment from 'moment';
   selector: 'app-comment',
   templateUrl: 'comment.component.html',
   styleUrls: ['comment.component.scss'],
-  // styles: [':host >>> p { margin-bottom: .2rem; }'], TODO
 })
-
 export class CommentComponent implements OnInit {
 
   @Input() comment: any; // Couldn't get strict typing of this to work for recursive templates

@@ -31,9 +31,9 @@ export class CommunityService {
     private userService: UserService) {
   }
 
-  getCommunity(id: number) {
+  getCommunity(id: number): Observable<Community> {
     return this.http.get(this.getCommunityUrl + id, this.userService.getOptions())
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
