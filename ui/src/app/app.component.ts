@@ -1,18 +1,20 @@
 import { Component, ViewContainerRef} from '@angular/core';
 import { Router } from '@angular/router';
-import { DiscussionComponent } from './components/discussion/index';
-import { SidebarComponent } from './components/sidebar/index';
-import { NavbarComponent } from './components/navbar/index';
-import {HomeComponent} from './components/home/index';
-import {TagComponent} from './components/tag/index';
-import {UserService} from './services/user.service';
-import {DiscussionService} from './services/discussion.service';
-import {CommunityService} from './services/community.service';
-import {LoginService} from './services/login.service';
-import {SeoService} from './services/seo.service';
-import {TagService} from './services/tag.service';
-import {NotificationsService} from './services/notifications.service';
-import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2-toaster/angular2-toaster';
+import { DiscussionComponent,
+  SidebarComponent,
+  NavbarComponent,
+  HomeComponent,
+  TagComponent } from './components';
+import { UserService,
+  DiscussionService,
+  CommunityService,
+  LoginService,
+  SeoService,
+  TagService,
+  NotificationsService } from './services';
+import { ToasterContainerComponent,
+  ToasterService,
+  ToasterConfig } from 'angular2-toaster/angular2-toaster';
 
 @Component({
   selector: 'app-root',
