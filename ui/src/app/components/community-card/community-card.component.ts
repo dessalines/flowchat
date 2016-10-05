@@ -148,8 +148,8 @@ export class CommunityCardComponent implements OnInit {
   setupTagSearch() {
     this.tagSearchResultsObservable = Observable.create((observer: any) => {
       this.tagService.searchTags(this.tagSearchSelected)
-        .subscribe((result: any) => {
-          observer.next(result.tags);
+        .subscribe(r => {
+          observer.next(r);
         });
     });
   }
@@ -209,8 +209,8 @@ export class CommunityCardComponent implements OnInit {
   setupUserSearch() {
     this.userSearchResultsObservable = Observable.create((observer: any) => {
       this.userService.searchUsers(this.userSearchSelected)
-        .subscribe((result: any) => {
-          observer.next(result.users);
+        .subscribe(r => {
+          observer.next(r);
         });
     });
   }
@@ -245,8 +245,8 @@ export class CommunityCardComponent implements OnInit {
   setupBlockedUserSearch() {
     this.blockedUserSearchResultsObservable = Observable.create((observer: any) => {
       this.userService.searchUsers(this.blockedUserSearchSelected)
-        .subscribe((result: any) => {
-          observer.next(result.users);
+        .subscribe(r => {
+          observer.next(r);
         });
     });
   }
@@ -281,8 +281,8 @@ export class CommunityCardComponent implements OnInit {
   setupModeratorSearch() {
     this.moderatorSearchResultsObservable = Observable.create((observer: any) => {
       this.userService.searchUsers(this.moderatorSearchSelected)
-        .subscribe((result: any) => {
-          observer.next(result.users);
+        .subscribe(r => {
+          observer.next(r);
         });
     });
   }

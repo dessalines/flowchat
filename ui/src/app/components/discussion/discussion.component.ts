@@ -68,7 +68,7 @@ export class DiscussionComponent implements OnInit {
     this.sub = this.route.params.subscribe(params => {
       this.discussionId = +params["discussionId"];
       this.editing = Boolean(this.route.snapshot.params["editMode"]);
-      
+
       if (+params["commentId"] != null) {
         this.topParentId = +params["commentId"];
       }
@@ -247,7 +247,7 @@ export class DiscussionComponent implements OnInit {
 
   private editComment(editedComment: Comment) {
 
-    // If its the top level, stop and return 
+    // If its the top level, stop and return
     if (editedComment.parentId == null) {
       this.replaceEditedComment(this.comments, editedComment);
 
@@ -269,7 +269,7 @@ export class DiscussionComponent implements OnInit {
 
   private addNewComment(newComment: Comment) {
 
-    // If its the top level, stop and return 
+    // If its the top level, stop and return
     if (newComment.parentId == null) {
       this.comments.unshift(newComment);
       setTimeout(() => { document.getElementById("comment_" + newComment.id).scrollIntoView(); }, 50);

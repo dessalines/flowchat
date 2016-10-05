@@ -1,5 +1,4 @@
-import {Tag} from './tag.interface.ts';
-import {User} from './user.interface.ts';
+import {Tag, User} from './';
 
 export interface Community {
   id: number;

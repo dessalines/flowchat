@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {User, UserSettings, Discussion, Tools, Community} from '../shared';
+import {User, UserSettings, Discussion, Discussions, Tools, Community, Communities} from '../shared';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -33,6 +33,12 @@ export class UserService {
   private getUserLogUrl: string = environment.endpoint + 'user_log/';
 
   private saveUserUrl: string = environment.endpoint + 'user';
+
+  private defaultSettings: UserSettings = {
+    defaultViewTypeRadioValue: 'list',
+    defaultSortTypeRadioValue: 'time-86400',
+    readOnboardAlert: false
+  }
 
   constructor(private http: Http) {
     this.setUserFromCookie();
@@ -104,20 +110,14 @@ export class UserService {
 
   }
 
-  private defaultSettings: UserSettings = {
-    defaultViewTypeRadioValue: 'list',
-    defaultSortTypeRadioValue: 'time-86400',
-    readOnboardAlert: false
-  }
-
   sendLoginEvent(user: User) {
     this.userSource.next(user);
   }
 
 
-  public saveUser() {
+  public saveUser(): Observable<User> {
     return this.http.put(this.saveUserUrl, this.user)
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
@@ -140,9 +140,9 @@ export class UserService {
     return new RequestOptions({ headers: headers });
   }
 
-  searchUsers(query: string) {
+  searchUsers(query: string): Observable<Array<User>> {
     return this.http.get(this.queryUsersUrl + query)
-      .map(this.extractData)
+      .map(r => r.json().users)
       .catch(this.handleError);
   }
 
@@ -153,9 +153,9 @@ export class UserService {
       error => console.log(error));
   }
 
-  private fetchFavoriteDiscussionsObs() {
+  private fetchFavoriteDiscussionsObs(): Observable<Discussions> {
     return this.http.get(this.fetchFavoriteDiscussionsUrl, this.getOptions())
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
@@ -195,9 +195,9 @@ export class UserService {
       error => console.log(error));
   }
 
-  private fetchFavoriteCommunitiesObs() {
+  private fetchFavoriteCommunitiesObs(): Observable<Communities> {
     return this.http.get(this.fetchFavoriteCommunitiesUrl, this.getOptions())
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 

@@ -18,26 +18,26 @@ export class LoginService {
   private signupUrl: string = environment.endpoint + 'signup';
 
   constructor(private http: Http,
-    private userService: UserService) { 
+    private userService: UserService) {
   }
 
   getOrCreateUser(): Observable<User> {
     return this.http.get(this.getOrCreateUrl, this.userService.getOptions())
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
   login(usernameOrEmail: string, password: string): Observable<User> {
     let reqBody: string = JSON.stringify({ usernameOrEmail, password });
     return this.http.post(this.loginUrl, reqBody)
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
   signup(username: string, password: string, verifyPassword: string, email: string): Observable<User> {
     let reqBody: string = JSON.stringify({ username, password, verifyPassword, email });
     return this.http.post(this.signupUrl, reqBody)
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
@@ -46,13 +46,5 @@ export class LoginService {
     let errMsg = error._body;
     return Observable.throw(errMsg);
   }
-
-  private extractData(res: Response) {
-    let body = res.json();
-    // console.log(body);
-    return body || {};
-  }
-
-
 
 }

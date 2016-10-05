@@ -6,7 +6,7 @@ import 'rxjs/add/observable/throw';
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
 import {UserService} from './user.service';
-import {Discussion} from '../shared/discussion.interface';
+import {Discussion, Discussions} from '../shared';
 import {environment} from '../../environments/environment';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class DiscussionService {
   private createDiscussionUrl: string = environment.endpoint + 'discussion';
   private saveDiscussionUrl: string = environment.endpoint + 'discussion';
 
-  private getDiscussionsUrl(page: number, 
+  private getDiscussionsUrl(page: number,
     limit: number,
     tagId: string,
     communityId: string,
@@ -30,43 +30,43 @@ export class DiscussionService {
     private userService: UserService) {
   }
 
-  getDiscussion(id: number) {
+  getDiscussion(id: number): Observable<Discussion> {
     return this.http.get(this.getDiscussionUrl + id, this.userService.getOptions())
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
-  getDiscussions(page: number = 1, 
-    limit: number = 12, 
+  getDiscussions(page: number = 1,
+    limit: number = 12,
     tagId: string = 'all',
     communityId: string = 'all',
-    orderBy: string = 'time-86400') {
+    orderBy: string = 'time-86400'): Observable<Discussions> {
     return this.http.get(this.getDiscussionsUrl(page, limit, tagId, communityId, orderBy), this.userService.getOptions())
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
-  searchDiscussions(query: string) {
+  searchDiscussions(query: string): Observable<Discussions> {
     return this.http.get(this.queryDiscussionsUrl + query)
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
   saveRank(id: number, rank: number) {
     return this.http.post(this.saveRankUrl + id + '/' + rank, null, this.userService.getOptions())
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
-  createDiscussion() {
+  createDiscussion(): Observable<Discussion> {
     return this.http.post(this.createDiscussionUrl, null, this.userService.getOptions())
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
-  saveDiscussion(discussion: Discussion) {
+  saveDiscussion(discussion: Discussion): Observable<Discussion> {
     return this.http.put(this.saveDiscussionUrl, discussion, this.userService.getOptions())
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
@@ -77,10 +77,5 @@ export class DiscussionService {
     return Observable.throw(errMsg);
   }
 
-  private extractData(res: Response) {
-    let body = res.json();
-    console.log(body);
-    return body || {};
-  }
 
 }
