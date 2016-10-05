@@ -37,7 +37,7 @@ export class TagComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
     this.sub = this.route.params.subscribe(params => {
       let tagId: number = +params['tagId'];
       this.currentPageNum = 1;

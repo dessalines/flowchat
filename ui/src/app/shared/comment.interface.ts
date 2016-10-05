@@ -1,4 +1,4 @@
-import {User} from './user.interface.ts';
+import {User} from './';
 
 export interface Comment {
 	id: number;

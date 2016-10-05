@@ -6,7 +6,7 @@ import 'rxjs/add/observable/throw';
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
 import {UserService} from './user.service';
-import {Community} from '../shared/community.interface';
+import {Community, Communities} from '../shared';
 import {environment} from '../../environments/environment';
 
 
@@ -38,39 +38,39 @@ export class CommunityService {
   }
 
   getCommunities(page: number = 1, limit: number = 12, tagId: string = 'all',
-    orderBy: string = 'time-86400') {
+    orderBy: string = 'time-86400'): Observable<Communities> {
     return this.http.get(this.getCommunitiesUrl(page, limit, tagId, orderBy), this.userService.getOptions())
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
-  searchCommunities(query: string) {
+  searchCommunities(query: string): Observable<Communities> {
     return this.http.get(this.queryCommunityUrl + query)
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
   saveRank(id: number, rank: number) {
     return this.http.post(this.saveRankUrl + id + '/' + rank, null, this.userService.getOptions())
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
-  createCommunity() {
+  createCommunity(): Observable<Community> {
     return this.http.post(this.createCommunityUrl, null, this.userService.getOptions())
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
-  saveCommunity(community: Community) {
+  saveCommunity(community: Community): Observable<Community> {
     return this.http.put(this.saveCommunityUrl, community, this.userService.getOptions())
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
   getCommunityModlog(id: number) {
     return this.http.get(this.getCommunityModlogUrl + id, this.userService.getOptions())
-      .map(this.extractData)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
@@ -79,11 +79,6 @@ export class CommunityService {
     let errMsg = error._body;
 
     return Observable.throw(errMsg);
-  }
-
-  private extractData(res: Response) {
-    let body = res.json();
-    return body || {};
   }
 
 }

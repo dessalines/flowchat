@@ -89,20 +89,20 @@ export class DiscussionCardComponent implements OnInit {
     this.isCreator = false;
     if (this.userService.getUser()) {
       let userId: number = this.userService.getUser().id;
-  
+
       // The multi-discussion fetch doesnt grab each communities creators, so check for this
-      if (userId == this.discussion.creator.id || 
+      if (userId == this.discussion.creator.id ||
         (this.discussion.community.creator != null && userId == this.discussion.community.creator.id)) {
         // Creators also have mod abilities
         this.isCreator = true;
         this.isModerator = true;
-  
+
       } else {
         let m = this.discussion.community.moderators.filter(m => m.id == userId)[0];
         if (m !== undefined) {
           this.isModerator = true;
         }
-  
+
       }
     }
   }
@@ -156,8 +156,8 @@ export class DiscussionCardComponent implements OnInit {
   setupTagSearch() {
     this.tagSearchResultsObservable = Observable.create((observer: any) => {
       this.tagService.searchTags(this.tagSearchSelected)
-        .subscribe((result: any) => {
-          observer.next(result.tags);
+        .subscribe(r => {
+          observer.next(r);
         });
     });
   }
@@ -217,8 +217,8 @@ export class DiscussionCardComponent implements OnInit {
   setupUserSearch() {
     this.userSearchResultsObservable = Observable.create((observer: any) => {
       this.userService.searchUsers(this.userSearchSelected)
-        .subscribe((result: any) => {
-          observer.next(result.users);
+        .subscribe(r => {
+          observer.next(r);
         });
     });
   }
@@ -253,8 +253,8 @@ export class DiscussionCardComponent implements OnInit {
   setupBlockedUserSearch() {
     this.blockedUserSearchResultsObservable = Observable.create((observer: any) => {
       this.userService.searchUsers(this.blockedUserSearchSelected)
-        .subscribe((result: any) => {
-          observer.next(result.users);
+        .subscribe(r => {
+          observer.next(r);
         });
     });
   }
@@ -289,8 +289,8 @@ export class DiscussionCardComponent implements OnInit {
   setupCommunitySearch() {
     this.communitySearchResultsObservable = Observable.create((observer: any) => {
       this.communityService.searchCommunities(this.communitySearchSelected)
-        .subscribe((result: any) => {
-          observer.next(result.communities);
+        .subscribe(r => {
+          observer.next(r.communities);
         });
     });
   }
