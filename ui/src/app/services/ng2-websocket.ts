@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
-import {isPresent, isString, isArray,isFunction} from '@angular/common/src/facade/lang';
+import {isPresent} from '@angular/common/src/facade/lang';
 import {Scheduler} from "rxjs/Rx";
 import {Subject} from "rxjs/Subject";
 
@@ -99,7 +99,7 @@ export class $WebSocket  {
             var data = this.sendQueue.shift();
 
             this.socket.send(
-                isString(data.message) ? data.message : JSON.stringify(data.message)
+                this.isString(data.message) ? data.message : JSON.stringify(data.message)
             );
             // data.deferred.resolve();
         }
@@ -134,7 +134,7 @@ export class $WebSocket  {
 
 
     onMessage(callback, options) {
-        if (!isFunction(callback)) {
+        if (typeof callback !== 'function') {
             throw new Error('Callback must be a function');
         }
 
@@ -217,6 +217,10 @@ export class $WebSocket  {
             return -1;
         }
         return this.internalConnectionState || this.socket.readyState;
+    }
+
+    isString(myVar) {
+        return typeof myVar === 'string' || myVar instanceof String;
     }
 
 
