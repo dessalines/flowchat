@@ -1,8 +1,7 @@
 # Building the front end
 cd ui
-npm i
-npm install -g angular-cli@latest
-npm i angular-cli@latest --save-dev
+yarn global add angular-cli@latest
+yarn
 ng build -prod
 cd ..
 
