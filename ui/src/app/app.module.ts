@@ -82,8 +82,7 @@ import { TooltipModule,
 
     routing
   ],
-  providers: [appRoutingProviders,
-    Title,
+  providers: [Title,
     SeoService
   ],
   bootstrap: [AppComponent]

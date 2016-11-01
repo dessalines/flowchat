@@ -43,7 +43,7 @@
             target="_blank"><small><i class="fa fa-fw fa-beer text-muted"></i></small></a>
         </li>
       </ul>
-      <ul *ngIf="userService.isFullUser()" class="nav navbar-nav pull-xs-right">
+      <ul *ngIf="userService.isFullUser()" class="nav navbar-nav float-xs-right">
         <li dropdown class="nav-item" keyboardNav="true">
           <a class="nav-link link-unstyled" role="button"
             type="button" dropdownToggle tooltipPlacement="bottom"
@@ -89,7 +89,7 @@
         </ul>
       </li>
       </ul>
-      <ul class="nav navbar-nav pull-xs-right">
+      <ul class="nav navbar-nav float-xs-right">
         <li *ngIf="!userService.isFullUser()" class="nav-item">
           <a role="button" class="nav-link link-unstyled"
             (click)="loginModal.show()">Login/Signup</a>
