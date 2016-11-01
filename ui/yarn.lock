@@ -17,10 +17,6 @@
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@angular/common/-/common-2.1.2.tgz#5c5b37c21d6e573def1670f43962c262bc9be82e"
 
-"@angular/common@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/common/-/common-2.0.0.tgz#6d5b38cef8bec69726590f395da10c2d89146247"
-
 "@angular/compiler-cli@~2.1.0":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-2.1.2.tgz#9c34433af2183f294b9c63a035c785e002edc792"
@@ -33,37 +29,25 @@
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-2.1.2.tgz#bd2a6c558de5350bdd43aa8e8de757943ac01d2a"
 
-"@angular/compiler@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-2.0.0.tgz#724e7c68ac177aa933aa75a6b4cb11e5aa795d2c"
-
 "@angular/core@~2.1.0":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-2.1.2.tgz#ce39521643f3d97bc5923d5a7aa76604e973dac8"
 
-"@angular/core@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/core/-/core-2.0.0.tgz#87b5ea4a7ae063d27bcf2332a4aa932d887abe2b"
+"@angular/forms@~2.1.0":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-2.1.2.tgz#c55539ea5da6d60f64475f39392ae5dd76a7e990"
 
-"@angular/forms@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-2.0.0.tgz#4f472223f61aec49f27575ef49b0d6cac3be1e31"
+"@angular/http@~2.1.0":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@angular/http/-/http-2.1.2.tgz#50aa96c3b68a44b98e3f837886c96e5930eb543a"
 
-"@angular/http@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/http/-/http-2.0.0.tgz#ee3206cd1683581dd57dabba93c0e23af19b4732"
-
-"@angular/platform-browser-dynamic@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-2.0.0.tgz#2ee3f2bb08b4864902c5b7c283f77863c89d8715"
+"@angular/platform-browser-dynamic@~2.1.0":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-2.1.2.tgz#3d51b494cfe0a29354c8c1f28369883679982af4"
 
 "@angular/platform-browser@~2.1.0":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-2.1.2.tgz#1f07c3a5668ac2381a7324f9001521deede159bc"
-
-"@angular/platform-browser@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-2.0.0.tgz#7f8603be42511d3133e95888a1b5c5132fc89c46"
 
 "@angular/platform-server@~2.1.0":
   version "2.1.2"
@@ -71,19 +55,15 @@
   dependencies:
     parse5 "^2.2.1"
 
-"@angular/router@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/router/-/router-3.0.0.tgz#cdf91b3a5d85ad39aff4fd882455c9b8c3129cd9"
+"@angular/router@~3.1.0":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@angular/router/-/router-3.1.2.tgz#1046c943ace795027e2e5057df8c897da968fcd6"
 
 "@angular/tsc-wrapped@^0.3.0", "@angular/tsc-wrapped@~0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@angular/tsc-wrapped/-/tsc-wrapped-0.3.0.tgz#98cdeb5c38d145b187c0ad0397a8d98b217f33f2"
   dependencies:
     tsickle "^0.1.7"
-
-"@angular/upgrade@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/upgrade/-/upgrade-2.0.0.tgz#6d2c0071e55f57ca1eff683758626d7ef6cdbee0"
 
 "@ngtools/webpack@latest":
   version "1.1.4"
@@ -95,9 +75,17 @@
   version "2.5.36"
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.5.36.tgz#6d804b79a57e9380d766a2680e9362c17d9556d2"
 
-"@types/node@^6.0.35":
+"@types/node@^6.0.35", "@types/node@^6.0.42":
   version "6.0.46"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.46.tgz#8d9e48572831f05b11cc4c793754d43437219d62"
+
+"@types/q@^0.0.30":
+  version "0.0.30"
+  resolved "https://registry.yarnpkg.com/@types/q/-/q-0.0.30.tgz#fd7ee1af40f21cdd1f519268073b3432ec17d7a3"
+
+"@types/selenium-webdriver@~2.53.30":
+  version "2.53.33"
+  resolved "https://registry.yarnpkg.com/@types/selenium-webdriver/-/selenium-webdriver-2.53.33.tgz#64672bae3acedf9d9e6bcfa8bdb7c37497751c3d"
 
 abbrev@~1.0.7, abbrev@1, abbrev@1.0.x:
   version "1.0.9"
@@ -1433,10 +1421,11 @@ codecov@^1.0.1:
     request ">=2.42.0"
     urlgrey ">=0.4.0"
 
-codelyzer@~0.0.26:
-  version "0.0.28"
-  resolved "https://registry.yarnpkg.com/codelyzer/-/codelyzer-0.0.28.tgz#294d31224f99f5268ab5e40b7e71060ddb942fa3"
+codelyzer@1.0.0-beta.1:
+  version "1.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/codelyzer/-/codelyzer-1.0.0-beta.1.tgz#f159d86d436da28dc3b46009c5749f4db2dcce1c"
   dependencies:
+    escape-string-regexp "^1.0.5"
     sprintf-js "^1.0.3"
 
 color-convert@^1.3.0:
@@ -2460,10 +2449,6 @@ es6-promise@^3.0.2:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-3.3.1.tgz#a08cdde84ccdbf34d027a1451bc91d4bcd28a613"
 
-es6-shim@0.35.1:
-  version "0.35.1"
-  resolved "https://registry.yarnpkg.com/es6-shim/-/es6-shim-0.35.1.tgz#a23524009005b031ab4a352ac196dfdfd1144ab7"
-
 es6-symbol@^3.0.2, es6-symbol@~3.1, es6-symbol@3:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/es6-symbol/-/es6-symbol-3.1.0.tgz#94481c655e7a7cad82eba832d97d5433496d7ffa"
@@ -3086,7 +3071,7 @@ glob@^6.0.0, glob@^6.0.1, glob@~6.0:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-glob@^7.0.0, glob@^7.0.3, glob@^7.0.4, glob@^7.0.5, glob@~7.1.1:
+glob@^7.0.0, glob@^7.0.3, glob@^7.0.4, glob@^7.0.5, glob@^7.0.6, glob@~7.1.1:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.1.tgz#805211df04faaf1c63a3600306cdf5ade50b2ec8"
   dependencies:
@@ -3852,6 +3837,10 @@ jasmine-core@~2.4.0, jasmine-core@2.4.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-2.4.1.tgz#6f83ab3a0f16951722ce07d206c773d57cc838be"
 
+jasmine-core@~2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-2.5.2.tgz#6f61bd79061e27f43e6f9355e44b3c6cab6ff297"
+
 jasmine-spec-reporter@2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/jasmine-spec-reporter/-/jasmine-spec-reporter-2.5.0.tgz#12e4782e6445c0dfabb8def4c52edd30f6362d42"
@@ -3865,6 +3854,14 @@ jasmine@2.4.1:
     exit "^0.1.2"
     glob "^3.2.11"
     jasmine-core "~2.4.0"
+
+jasmine@2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-2.5.2.tgz#6283cef7085c095cc25d651e954df004f7e3e421"
+  dependencies:
+    exit "^0.1.2"
+    glob "^7.0.6"
+    jasmine-core "~2.5.2"
 
 jasminewd2@0.0.10:
   version "0.0.10"
@@ -5876,16 +5873,18 @@ protractor@^3.3.0:
     selenium-webdriver "2.52.0"
     source-map-support "~0.4.0"
 
-protractor@4.0.5:
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/protractor/-/protractor-4.0.5.tgz#f479e3931cb18779df901fb2418c17abb47b5228"
+protractor@4.0.9:
+  version "4.0.9"
+  resolved "https://registry.yarnpkg.com/protractor/-/protractor-4.0.9.tgz#152f72e3729b2576226e370dc308699cccfa77ba"
   dependencies:
     "@types/jasmine" "^2.2.31"
     "@types/node" "^6.0.35"
+    "@types/q" "^0.0.30"
+    "@types/selenium-webdriver" "~2.53.30"
     adm-zip "0.4.7"
     chalk "^1.1.3"
     glob "^7.0.3"
-    jasmine "2.4.1"
+    jasmine "2.5.2"
     jasminewd2 "0.0.10"
     optimist "~0.6.0"
     q "1.4.1"
@@ -6227,7 +6226,7 @@ reduce-function-call@^1.0.1:
   dependencies:
     balanced-match "~0.1.0"
 
-reflect-metadata@^0.1.2, reflect-metadata@^0.1.3:
+reflect-metadata@^0.1.2:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.8.tgz#72426d570b60776e3688968bd5ab9537a15cecf6"
 
@@ -7498,10 +7497,6 @@ typescript@1.8.10:
   version "1.8.10"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-1.8.10.tgz#b475d6e0dff0bf50f296e5ca6ef9fbb5c7320f1e"
 
-typescript@2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.0.2.tgz#a63f848074498a4dfa7f293afda0835d501d9540"
-
 uc.micro@^1.0.0, uc.micro@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.3.tgz#7ed50d5e0f9a9fb0a573379259f2a77458d50192"
@@ -7748,6 +7743,21 @@ wcwidth@^1.0.0:
 webdriver-manager@^10.2.2:
   version "10.2.6"
   resolved "https://registry.yarnpkg.com/webdriver-manager/-/webdriver-manager-10.2.6.tgz#6c02625fbaa97d1f6105edc7f22cdcf5caee038c"
+  dependencies:
+    adm-zip "^0.4.7"
+    chalk "^1.1.1"
+    del "^2.2.0"
+    glob "^7.0.3"
+    ini "^1.3.4"
+    minimist "^1.2.0"
+    q "^1.4.1"
+    request "^2.69.0"
+    rimraf "^2.5.2"
+    semver "^5.3.0"
+
+webdriver-manager@10.2.5:
+  version "10.2.5"
+  resolved "https://registry.yarnpkg.com/webdriver-manager/-/webdriver-manager-10.2.5.tgz#6433c1a64b038388c295ed0dc9daa71e5df5024e"
   dependencies:
     adm-zip "^0.4.7"
     chalk "^1.1.1"
