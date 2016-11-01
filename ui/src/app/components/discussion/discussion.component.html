@@ -28,7 +28,7 @@
   class="navbar navbar-fixed-bottom navbar-light bg-faded">
   <app-markdown-edit (textEvent)="setTopReply($event)"
     [rows]="1"></app-markdown-edit>
-  <button (click)="sendTopReply()" class="btn btn-primary pull-xs-right special-nav-button"
+  <button (click)="sendTopReply()" class="btn btn-primary float-xs-right special-nav-button"
     type="submit">Send</button>
 </nav>
 <div bsModal #reconnectModal="bs-modal" class="modal fade"
