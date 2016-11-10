@@ -64,16 +64,16 @@
                   <ul class="list-inline">
                     <li class="list-inline-item">from {{message.userName}}</li>
                     <li *ngIf="message.deleted" class="text-muted list-inline-item"><small><i>deleted {{message.modified | moment}}</i></small></li>
-            <span *ngIf="!message.deleted">
+                    <span *ngIf="!message.deleted">
                       <li *ngIf="!message.modified" class="text-muted list-inline-item"><small>{{message.created | moment}}</small></li>
                       <li *ngIf="message.modified" class="text-muted list-inline-item"><small><i>modified {{message.modified | moment}}</i></small></li>
                     </span>
+                  </ul>
+                </small>
+              </div>
+            </li>
           </ul>
-          </small>
-          </div>
         </li>
-      </ul>
-      </li>
       <li dropdown class="nav-item" keyboardNav="true">
         <a class="nav-link link-unstyled" role="button"
           type="button" dropdownToggle>
