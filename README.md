@@ -1,4 +1,4 @@
-[FlowChat](http://flow-chat.com) &mdash; An open-source, live updating, threaded chat platform with voting. 
+[FlowChat](http://flow-chat.com) &mdash; An open-source, live updating, threaded chat platform with range voting. 
 ==========
 ![](http://img.shields.io/version/0.3.1.png?color=green)
 [![Build Status](https://travis-ci.org/dessalines/flowchat.svg?branch=master)](https://travis-ci.org/dessalines/flowchat)

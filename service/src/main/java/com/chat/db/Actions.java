@@ -465,6 +465,8 @@ public class Actions {
                     "auth", auth,
                     "expire_time", Tools.newExpireTimestamp());
 
+            UserSetting.createIt("user_id", user.getLongId());
+
         } else {
             throw new NoSuchElementException("Username/email already exists");
         }
