@@ -10,3 +10,4 @@ export {Tools} from './tools';
 export {CommentRole} from './comment-role.enum';
 export {CommunityRole} from './community-role.enum';
 export {DiscussionRole} from './discussion-role.enum';
+export {WebSocketConfig} from './ng2-websocket-config.interface';

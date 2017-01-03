@@ -2,7 +2,7 @@
 cd ui
 yarn global add angular-cli@latest
 yarn
-ng build -prod
+ng build -prod -aot
 cd ..
 
 # Building the back end

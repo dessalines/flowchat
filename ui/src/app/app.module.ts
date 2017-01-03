@@ -3,8 +3,6 @@ import { NgModule, } from '@angular/core';
 import { FormsModule,
   ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { routing,
-  appRoutingProviders } from './app.routing';
 import {Location, LocationStrategy, HashLocationStrategy} from '@angular/common';
 import { AppComponent } from './app.component';
 import { HomeComponent,
@@ -34,11 +32,11 @@ import { TooltipModule,
   ModalModule,
   TabsModule,
   TypeaheadModule,
-  AlertModule } from 'ng2-bootstrap/ng2-bootstrap';
+  AlertModule } from 'ng2-bootstrap';
+import { AppRoutingModule } from './app.routing';
 
 @NgModule({
   declarations: [
-
 
     // Components
     AppComponent,
@@ -71,16 +69,15 @@ import { TooltipModule,
     ReactiveFormsModule,
     HttpModule,
     ToasterModule,
+    AppRoutingModule,
 
     // ng2-bootstrap modules
-    TooltipModule,
-    DropdownModule,
-    ModalModule,
-    TabsModule,
-    TypeaheadModule,
-    AlertModule,
-
-    routing
+    TooltipModule.forRoot(),
+    DropdownModule.forRoot(),
+    ModalModule.forRoot(),
+    TabsModule.forRoot(),
+    TypeaheadModule.forRoot(),
+    AlertModule.forRoot()
   ],
   providers: [Title,
     SeoService

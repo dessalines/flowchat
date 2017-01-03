@@ -9,8 +9,8 @@ import {ToasterService} from 'angular2-toaster/angular2-toaster';
 
 @Component({
   selector: 'app-discussion',
-  templateUrl: 'discussion.component.html',
-  styleUrls: ['discussion.component.scss'],
+  templateUrl: './discussion.component.html',
+  styleUrls: ['./discussion.component.scss'],
   providers: [ThreadedChatService],
 })
 export class DiscussionComponent implements OnInit {

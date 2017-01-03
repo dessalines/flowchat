@@ -1,11 +1,12 @@
 import {Injectable}    from '@angular/core';
-import {$WebSocket, WebSocketConfig}    from './ng2-websocket';
+import {NG2WebSocket}    from './ng2-websocket';
+import {WebSocketConfig} from '../shared';
 import {environment} from '../../environments/environment';
 
 @Injectable()
 export class ThreadedChatService {
 
-  public ws: $WebSocket;
+  public ws: NG2WebSocket;
 
   public config: WebSocketConfig;
 
@@ -27,7 +28,7 @@ export class ThreadedChatService {
 
     let url = environment.websocket + "?discussionId=" + discussionId + "&topParentId=" + topParentId;
     // this.ws = new $WebSocket(url, null, this.config);
-    this.ws = new $WebSocket(url);
+    this.ws = new NG2WebSocket(url);
     this.ws.connect();
 
   }

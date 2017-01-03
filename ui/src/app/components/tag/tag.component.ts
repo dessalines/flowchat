@@ -6,8 +6,8 @@ import {Discussion, Community, Tag, Tools} from '../../shared';
 
 @Component({
   selector: 'app-tag',
-  templateUrl: 'tag.component.html',
-  styleUrls: ['tag.component.scss'],
+  templateUrl: './tag.component.html',
+  styleUrls: ['./tag.component.scss'],
   providers: []
 })
 export class TagComponent implements OnInit {
