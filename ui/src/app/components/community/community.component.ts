@@ -6,8 +6,8 @@ import {ToasterService} from 'angular2-toaster/angular2-toaster';
 
 @Component({
   selector: 'app-community',
-  templateUrl: 'community.component.html',
-  styleUrls: ['community.component.scss'],
+  templateUrl: './community.component.html',
+  styleUrls: ['./community.component.scss'],
   providers: []
 })
 export class CommunityComponent implements OnInit {

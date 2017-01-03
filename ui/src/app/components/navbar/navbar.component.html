@@ -36,7 +36,7 @@
         </li>
         <li class="nav-item">
           <a role="button" class="nav-link link-unstyled"
-            tooltipPlacement="bottom" tooltip="Donate to the developer"
+            placement="bottom" tooltip="Donate to the developer"
             href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2XTHDEBUNQ47U&lc=US&item_name=FlowChat&item_number=flowchat_02&amount=5%2e00&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
             target="_blank"><small><i class="fa fa-fw fa-beer text-muted"></i></small></a>
         </li>
@@ -44,7 +44,7 @@
       <ul *ngIf="userService.isFullUser()" class="nav navbar-nav float-xs-right">
         <li dropdown class="nav-item" keyboardNav="true">
           <a class="nav-link link-unstyled" role="button"
-            type="button" dropdownToggle tooltipPlacement="bottom"
+            type="button" dropdownToggle placement="bottom"
             tooltip="Messages">
             <span *ngIf="unreadMessages?.length > 0" class="tag tag-info navbar-label">{{unreadMessages?.length}}</span>
             <i class="fa fa-fw fa-envelope-o"></i>
@@ -52,7 +52,7 @@
           <ul class="dropdown-menu messages-dropdown"
             role="menu">
             <h6 class="dropdown-header">Messages 
-              <small role="button" (click)="markAllNotificationsAsRead()" tooltipPlacement="bottom"
+              <small role="button" (click)="markAllNotificationsAsRead()" placement="bottom"
             tooltip="Mark all as read"><i class="fa fa-fw fa-check"></i></small>
             </h6>
             <li *ngFor="let message of unreadMessages"

@@ -3,8 +3,8 @@
     <div *ngIf="!editing">
       <div class="card-block card-block-no-bottom">
         <h4 class="card-title">
-          <span role="button" class="link-unstyled" (click)="toggleCollapseText()" tooltipPlacement="bottom" tooltip="Show/Hide Text">{{community.name}}</span>
-          <small *ngIf="isModerator"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditing()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
+          <span role="button" class="link-unstyled" (click)="toggleCollapseText()" placement="bottom" tooltip="Show/Hide Text">{{community.name}}</span>
+          <small *ngIf="isModerator"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditing()" placement="bottom" tooltip="Edit"></i></small>
         </h4>
       </div>
       <div class="card-block card-block-no-top">
@@ -36,25 +36,25 @@
           <li *ngIf="!isCreator && !isModerator && !userService.hasFavoriteCommunity(community)"
             role="button" class="list-inline-item"
             (click)="userService.saveFavoriteCommunity(community)"
-            tooltipPlacement="bottom" tooltip="Save to Favorites"><i class="fa fa-fw fa-heart-o"></i></li>
+            placement="bottom" tooltip="Save to Favorites"><i class="fa fa-fw fa-heart-o"></i></li>
           <li *ngIf="!isCreator &&!isModerator && userService.hasFavoriteCommunity(community)"
             role="button" class="list-inline-item"
             (click)="userService.removeFavoriteCommunity(community.id)"
-            tooltipPlacement="bottom" tooltip="Remove from Favorites"><i class="fa fa-fw fa-heart text-danger"></i></li>
+            placement="bottom" tooltip="Remove from Favorites"><i class="fa fa-fw fa-heart text-danger"></i></li>
           <li *ngIf="isModerator && !isCreator"
             role="button" class="list-inline-item"
             (click)="userService.removeFavoriteCommunity(community.id)"
-            tooltipPlacement="bottom" tooltip="Stop being a moderator"><i class="fa fa-fw fa-shield text-danger"></i></li>
+            placement="bottom" tooltip="Stop being a moderator"><i class="fa fa-fw fa-shield text-danger"></i></li>
           <li role="button" class="list-inline-item">
-            <a class="link-unstyled" [routerLink]="['modlog']"><i class="fa fa-fw fa-shield" tooltipPlacement="bottom" tooltip="View Moderator Log (modlog)"></i></a></li>
+            <a class="link-unstyled" [routerLink]="['modlog']"><i class="fa fa-fw fa-shield" placement="bottom" tooltip="View Moderator Log (modlog)"></i></a></li>
           <li *ngIf="!isCreator" role="button"
             class="list-inline-item" (click)="toggleShowVoteSlider()"
-            tooltipPlacement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
+            placement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
           <li *ngIf="community.avgRank" class="tag tag-pill tag-default list-inline-item"
-            tooltipPlacement="bottom" tooltip="Average Score">
+            placement="bottom" tooltip="Average Score">
             {{community.avgRank}}</li>
           <li *ngIf="community.userRank" class="tag tag-pill tag-info list-inline-item"
-            tooltipPlacement="bottom" tooltip="Your Vote">
+            placement="bottom" tooltip="Your Vote">
             {{community.userRank}}</li>
           <li *ngIf="community.numberOfVotes" class="text-muted list-inline-item">
             <small> {{community.numberOfVotes}} votes</small></li>

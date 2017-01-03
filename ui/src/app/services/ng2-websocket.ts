@@ -4,9 +4,11 @@ import {isPresent} from '@angular/common/src/facade/lang';
 import {Scheduler} from "rxjs/Rx";
 import {Subject} from "rxjs/Subject";
 
+import {WebSocketConfig} from '../shared';
+
 
 @Injectable()
-export class $WebSocket  {
+export class NG2WebSocket  {
 
     private reconnectAttempts = 0;
     private sendQueue = [];
@@ -26,6 +28,7 @@ export class $WebSocket  {
     private socket: WebSocket;
     private dataStream: Subject<any>;
     private  internalConnectionState: number;
+
     constructor(private url:string, private protocols?:Array<string>, private config?: WebSocketConfig  ) {
         var match = new RegExp('wss?:\/\/').test(url);
         if (!match) {
@@ -225,11 +228,5 @@ export class $WebSocket  {
 
 
 
-}
-
-export interface WebSocketConfig {
-    initialTimeout:number;
-    maxTimeout:number ;
-    reconnectIfNotNormalClose: boolean
 }
 
