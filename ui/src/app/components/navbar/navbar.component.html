@@ -1,4 +1,4 @@
-<nav class="navbar navbar-full navbar-light">
+<nav class="navbar navbar-full navbar-dark bg-primary">
   <button (click)="toggleCollapseNavbar()" class="navbar-toggler hidden-md-up" type="button"></button>
   <div [class.collapse]="collapseNavbar" class="collapse navbar-toggleable-sm">
     <div>
@@ -19,7 +19,7 @@
               placeholder="Search"
               name="discussion_form"
               >
-            <button class="btn-link" type="submit"><i class="fa fa-fw fa-search"></i></button>
+            <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-search"></i></button>
           </form>
         </li>
         <li class="nav-item">
@@ -38,7 +38,7 @@
           <a role="button" class="nav-link link-unstyled"
             placement="bottom" tooltip="Donate to the developer"
             href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2XTHDEBUNQ47U&lc=US&item_name=FlowChat&item_number=flowchat_02&amount=5%2e00&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
-            target="_blank"><small><i class="fa fa-fw fa-beer text-muted"></i></small></a>
+            target="_blank"><small><i class="fa fa-fw fa-beer"></i></small></a>
         </li>
       </ul>
       <ul *ngIf="userService.isFullUser()" class="nav navbar-nav float-xs-right">

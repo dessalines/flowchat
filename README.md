@@ -37,12 +37,6 @@ Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 
 ==========
 
-## Screenshots:
-<img src="http://i.imgur.com/lZBMsn5.png">
-<img src="http://i.imgur.com/hwNc0mx.png">
-<img src="http://i.imgur.com/JbOBf1h.png">
-<img src="http://i.imgur.com/chhvZwC.png">
-
 ## Installation 
 
 *If you want to self-host or develop flowchat.*
