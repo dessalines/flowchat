@@ -58,7 +58,7 @@ and goto `http://localhost:4567/`
 #### Requirements
 - Java 8 + Maven
 - Node + npm/yarn, [nvm](https://github.com/creationix/nvm) is the preferred installation method.
-- angular-cli: npm i -g angular-cli@latest
+- angular-cli: `npm i -g angular-cli@latest`
 - Postgres 9.3 or higher
 
 #### Download Flowchat
