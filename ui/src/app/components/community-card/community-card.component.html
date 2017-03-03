@@ -3,25 +3,25 @@
     <div *ngIf="!editing">
       <div class="card-block card-block-no-bottom">
         <h4 class="card-title">
-          <span role="button" class="link-unstyled" (click)="toggleCollapseText()" tooltipPlacement="bottom" tooltip="Show/Hide Text">{{community.name}}</span>
-          <small *ngIf="isModerator"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditing()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
+          <span role="button" class="link-unstyled" (click)="toggleCollapseText()" placement="bottom" tooltip="Show/Hide Text">{{community.name}}</span>
+          <small *ngIf="isModerator"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditing()" placement="bottom" tooltip="Edit"></i></small>
         </h4>
       </div>
       <div class="card-block card-block-no-top">
         <p *ngIf="community.text && !textCollapsed"
           class="card-text" [innerHTML]="community.text | markdown"></p>
         <ul class="list-inline small">
-          <li class="tag tag-default list-inline-item" *ngFor="let tag of community.tags">
+          <li class="badge badge-default list-inline-item" *ngFor="let badge of community.tags">
             <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
         <ul *ngIf="!textCollapsed" class="list-inline">
           <li class="list-inline-item"> creator: 
-            <a [routerLink]="['/user',community.creator.id]" class="tag tag-success">{{community.creator.name}}</a>
+            <a [routerLink]="['/user',community.creator.id]" class="badge badge-success">{{community.creator.name}}</a>
           </li>
           <li class="list-inline-item" *ngIf="community.moderators.length > 0"> moderators: </li>
           <li class="list-inline-item" *ngFor="let moderator of community.moderators">
-            <a [routerLink]="['/user',moderator.id]" class="tag tag-warning">{{moderator.name}}</a>
+            <a [routerLink]="['/user',moderator.id]" class="badge badge-warning">{{moderator.name}}</a>
           </li>
         </ul>
     
@@ -32,29 +32,29 @@
           <a [routerLink]="['/user',community.creator.id]" class="link-unstyled">{{community.creator.name}}</a>
       </small>
         <ul class="list-inline small">
-          <li *ngIf="community.private_" class="tag tag-danger list-inline-item">Private</li>
+          <li *ngIf="community.private_" class="badge badge-danger list-inline-item">Private</li>
           <li *ngIf="!isCreator && !isModerator && !userService.hasFavoriteCommunity(community)"
             role="button" class="list-inline-item"
             (click)="userService.saveFavoriteCommunity(community)"
-            tooltipPlacement="bottom" tooltip="Save to Favorites"><i class="fa fa-fw fa-heart-o"></i></li>
+            placement="bottom" tooltip="Save to Favorites"><i class="fa fa-fw fa-heart-o"></i></li>
           <li *ngIf="!isCreator &&!isModerator && userService.hasFavoriteCommunity(community)"
             role="button" class="list-inline-item"
             (click)="userService.removeFavoriteCommunity(community.id)"
-            tooltipPlacement="bottom" tooltip="Remove from Favorites"><i class="fa fa-fw fa-heart text-danger"></i></li>
+            placement="bottom" tooltip="Remove from Favorites"><i class="fa fa-fw fa-heart text-danger"></i></li>
           <li *ngIf="isModerator && !isCreator"
             role="button" class="list-inline-item"
             (click)="userService.removeFavoriteCommunity(community.id)"
-            tooltipPlacement="bottom" tooltip="Stop being a moderator"><i class="fa fa-fw fa-shield text-danger"></i></li>
+            placement="bottom" tooltip="Stop being a moderator"><i class="fa fa-fw fa-shield text-danger"></i></li>
           <li role="button" class="list-inline-item">
-            <a class="link-unstyled" [routerLink]="['modlog']"><i class="fa fa-fw fa-shield" tooltipPlacement="bottom" tooltip="View Moderator Log (modlog)"></i></a></li>
+            <a class="link-unstyled" [routerLink]="['modlog']"><i class="fa fa-fw fa-shield" placement="bottom" tooltip="View Moderator Log (modlog)"></i></a></li>
           <li *ngIf="!isCreator" role="button"
             class="list-inline-item" (click)="toggleShowVoteSlider()"
-            tooltipPlacement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
-          <li *ngIf="community.avgRank" class="tag tag-pill tag-default list-inline-item"
-            tooltipPlacement="bottom" tooltip="Average Score">
+            placement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
+          <li *ngIf="community.avgRank" class="badge badge-pill badge-default list-inline-item"
+            placement="bottom" tooltip="Average Score">
             {{community.avgRank}}</li>
-          <li *ngIf="community.userRank" class="tag tag-pill tag-info list-inline-item"
-            tooltipPlacement="bottom" tooltip="Your Vote">
+          <li *ngIf="community.userRank" class="badge badge-pill badge-info list-inline-item"
+            placement="bottom" tooltip="Your Vote">
             {{community.userRank}}</li>
           <li *ngIf="community.numberOfVotes" class="text-muted list-inline-item">
             <small> {{community.numberOfVotes}} votes</small></li>
@@ -112,8 +112,8 @@
           </div>
           <ul *ngIf="community.tags" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeTag(tag)"
-              class="tag tag-default list-inline-item"
-              *ngFor="let tag of community.tags">
+              class="badge badge-default list-inline-item"
+              *ngFor="let badge of community.tags">
               <span>{{removeQuotes(tag.name)}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
           </ul>
@@ -152,7 +152,7 @@
           </div>
           <ul *ngIf="community.moderators" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeModerator(moderator)"
-              class="tag tag-default list-inline-item"
+              class="badge badge-default list-inline-item"
               *ngFor="let moderator of community.moderators">
               <span>{{moderator.name}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
@@ -179,7 +179,7 @@
           </div>
           <ul *ngIf="community.privateUsers" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removePrivateUser(privateUser)"
-              class="tag tag-default list-inline-item"
+              class="badge badge-default list-inline-item"
               *ngFor="let privateUser of community.privateUsers">
               <span>{{privateUser.name}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
@@ -207,7 +207,7 @@
           </div>
           <ul *ngIf="community.blockedUsers" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeBlockedUser(blockedUser)"
-              class="tag tag-default list-inline-item"
+              class="badge badge-default list-inline-item"
               *ngFor="let blockedUser of community.blockedUsers">
               <span>{{blockedUser.name}}<i class="fa fa-fw fa-remove"></i></span>
             </li>

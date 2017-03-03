@@ -16,7 +16,7 @@
         'card-block-no-bottom': isCard()}">
         <h5 [class.card-title]="isCard()" class="card-block-no-bottom">
           <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">{{discussion.title}} </a>
-          <small *ngIf="isCreator"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditing()" tooltipPlacement="bottom" tooltip="Edit"></i></small>
+          <small *ngIf="isCreator"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditing()" placement="bottom" tooltip="Edit"></i></small>
         </h5>
       </div>
       <a *ngIf="isCard() && hasImage()"
@@ -39,42 +39,42 @@
               in
             </span>
           </li>
-          <li *ngIf="discussion.community" class="tag tag-primary list-inline-item">
+          <li *ngIf="discussion.community" class="badge badge-primary list-inline-item">
             <a class="link-unstyled" [routerLink]="['/community', discussion.community.id]">{{removeQuotes(discussion.community.name)}}</a>
           </li>
-          <li class="tag tag-default list-inline-item" *ngFor="let tag of discussion.tags">
+          <li class="badge badge-default list-inline-item" *ngFor="let tag of discussion.tags">
             <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
       
       
         <ul class="list-inline small">
-          <li *ngIf="discussion.private_" class="tag tag-danger list-inline-item">Private</li>
+          <li *ngIf="discussion.private_" class="badge badge-danger list-inline-item">Private</li>
           <li *ngIf="!isCreator" role="button" class="list-inline-item"
             (click)="toggleShowVoteSlider()"
-            tooltipPlacement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
-          <li *ngIf="discussion.avgRank" class="tag tag-pill tag-default list-inline-item"
-            tooltipPlacement="bottom" tooltip="Average Score">
+            placement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
+          <li *ngIf="discussion.avgRank" class="badge badge-pill badge-default list-inline-item"
+            placement="bottom" tooltip="Average Score">
             {{discussion.avgRank}}</li>
-          <li *ngIf="discussion.userRank" class="tag tag-pill tag-info list-inline-item"
-            tooltipPlacement="bottom" tooltip="Your Vote">
+          <li *ngIf="discussion.userRank" class="badge badge-pill badge-info list-inline-item"
+            placement="bottom" tooltip="Your Vote">
             {{discussion.userRank}}</li>
           <li *ngIf="discussion.numberOfVotes" class="text-muted list-inline-item">
             <small> {{discussion.numberOfVotes}} votes</small></li>
           <li *ngIf="discussion.link" class="list-inline-item">
             <a class="link-unstyled" href="{{discussion.link}}"
               target="_blank"><i class="fa fa-external-link"
-              aria-hidden="true" tooltipPlacement="bottom" tooltip="Link"></i></a>
+              aria-hidden="true" placement="bottom" tooltip="Link"></i></a>
           </li>
           <li class="list-inline-item" role="button">
             <a [routerLink]="['/discussion', discussion.id]"
               class="link-unstyled">
-              <i class="fa fa-fw fa-comments-o" tooltipPlacement="bottom"
+              <i class="fa fa-fw fa-comments-o" placement="bottom"
                 tooltip="Comments"></i></a>
           </li>
           <li role="button" *ngIf="isCreator || isModerator"
             (click)="deleteDiscussion()" class="list-inline-item">
-            <i class="fa fa-fw fa-remove" tooltipPlacement="bottom"
+            <i class="fa fa-fw fa-remove" placement="bottom"
               tooltip="Delete"></i>
           </li>
         </ul>
@@ -134,7 +134,7 @@
             </div>
           </div>
           <ul class="col-md-6 list-inline form-control-label">
-            <li class="tag tag-primary list-inline-item">
+            <li class="badge badge-primary list-inline-item">
               <span>{{discussion.community.name}}</span>
             </li>
           </ul>
@@ -171,7 +171,7 @@
           </div>
           <ul *ngIf="discussion.tags" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeTag(tag)"
-              class="tag tag-default list-inline-item"
+              class="badge badge-default list-inline-item"
               *ngFor="let tag of discussion.tags">
               <span>{{removeQuotes(tag.name)}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
@@ -210,7 +210,7 @@
           </div>
           <ul *ngIf="discussion.privateUsers" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removePrivateUser(privateUser)"
-              class="tag tag-default list-inline-item"
+              class="badge badge-default list-inline-item"
               *ngFor="let privateUser of discussion.privateUsers">
               <span>{{privateUser.name}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
@@ -238,7 +238,7 @@
           </div>
           <ul *ngIf="discussion.blockedUsers" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeBlockedUser(blockedUser)"
-              class="tag tag-default list-inline-item"
+              class="badge badge-default list-inline-item"
               *ngFor="let blockedUser of discussion.blockedUsers">
               <span>{{blockedUser.name}}<i class="fa fa-fw fa-remove"></i></span>
             </li>

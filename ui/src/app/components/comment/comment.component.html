@@ -4,13 +4,13 @@
       (click)="collapsed = !collapsed">{{collapseText()}}</li>
     <li class="list-inline-item">
       <a [routerLink]="['/user',comment.user.id]"
-      [ngClass]="{'tag-primary':isCommunityCreator(), 'tag-warning': isCommunityModerator(), 'tag-success': isDiscussionCreator(), 'tag': !isDiscussionUser(), 'text-primary': isDiscussionUser()}" >{{comment.user.name}}
+      [ngClass]="{'badge-primary':isCommunityCreator(), 'badge-warning': isCommunityModerator(), 'badge-success': isDiscussionCreator(), 'tag': !isDiscussionUser(), 'text-primary': isDiscussionUser()}" >{{comment.user.name}}
       </a>
     </li>
-    <li *ngIf="comment.avgRank" class="tag tag-pill tag-default list-inline-item"
-      tooltipPlacement="bottom" tooltip="Average Score">{{comment.avgRank}}</li>
-    <li *ngIf="rank" class="tag tag-pill tag-info list-inline-item"
-      tooltipPlacement="bottom" tooltip="Your Vote">{{rank}}</li>
+    <li *ngIf="comment.avgRank" class="badge badge-pill badge-default list-inline-item"
+      placement="bottom" tooltip="Average Score">{{comment.avgRank}}</li>
+    <li *ngIf="rank" class="badge badge-pill badge-info list-inline-item"
+      placement="bottom" tooltip="Your Vote">{{rank}}</li>
     <li *ngIf="comment.avgRank" class="text-muted list-inline-item"><small>{{comment.numberOfVotes}} votes</small></li>
     <li *ngIf="comment.deleted" class="text-muted list-inline-item"><small><i>deleted {{comment.modified | moment}} by 
       <a class="link-unstyled" [routerLink]="['/user',comment.modifiedByUser.id]">{{comment.modifiedByUser.name}}</a></i></small>
@@ -40,26 +40,26 @@
     <ul class="list-inline">
       <span *ngIf="!comment.deleted">
       <li *ngIf="userService.getUser().id != comment.user.id" role="button" class="list-inline-item" (click)="toggleShowVoteSlider()">
-        <i class="fa fa-fw fa-star-half-o" tooltipPlacement="bottom" tooltip="Vote"></i>
+        <i class="fa fa-fw fa-star-half-o" placement="bottom" tooltip="Vote"></i>
       </li>
       <li role="button" class="list-inline-item" (click)="toggleShowReply()">
-        <i class="fa fa-fw fa-reply" tooltipPlacement="bottom" tooltip="Reply"></i>
+        <i class="fa fa-fw fa-reply" placement="bottom" tooltip="Reply"></i>
       </li>
       <li role="button" *ngIf="editable" (click)="toggleShowEdit()" class="list-inline-item">
-        <i class="fa fa-fw fa-edit" tooltipPlacement="bottom" tooltip="Edit"></i>
+        <i class="fa fa-fw fa-edit" placement="bottom" tooltip="Edit"></i>
       </li>
       <li role="button" *ngIf="editable || deleteable" (click)="deleteComment()" class="list-inline-item">
-        <i class="fa fa-fw fa-remove" tooltipPlacement="bottom" tooltip="Delete"></i>
+        <i class="fa fa-fw fa-remove" placement="bottom" tooltip="Delete"></i>
       </li>
       </span>
       <li *ngIf="comment.parentId" role="button" class="list-inline-item">
-        <a class="link-unstyled" [routerLink]="['/discussion', comment.discussionId, 'comment', comment.parentId]"><i class="fa fa-fw fa-level-up" tooltipPlacement="bottom" tooltip="View Parent"></i></a>
+        <a class="link-unstyled" [routerLink]="['/discussion', comment.discussionId, 'comment', comment.parentId]"><i class="fa fa-fw fa-level-up" placement="bottom" tooltip="View Parent"></i></a>
       </li>
       <li *ngIf="!comment.parentId" role="button" class="list-inline-item">
-        <a class="link-unstyled" [routerLink]="['/discussion', comment.discussionId]"><i class="fa fa-fw fa-level-up" tooltipPlacement="bottom" tooltip="View Discussion"></i></a>
+        <a class="link-unstyled" [routerLink]="['/discussion', comment.discussionId]"><i class="fa fa-fw fa-level-up" placement="bottom" tooltip="View Discussion"></i></a>
       </li>
       <li *ngIf="comment.id != comment.topParentId || comment.parentId == null" role="button" class="list-inline-item">
-        <a class="link-unstyled" [routerLink]="['/discussion', comment.discussionId, 'comment', comment.id]"><i class="fa fa-fw fa-level-down" tooltipPlacement="bottom" tooltip="View Children"></i></a>
+        <a class="link-unstyled" [routerLink]="['/discussion', comment.discussionId, 'comment', comment.id]"><i class="fa fa-fw fa-level-down" placement="bottom" tooltip="View Children"></i></a>
       </li>
     </ul>
   </small>
