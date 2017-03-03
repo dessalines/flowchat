@@ -28,13 +28,13 @@ import {SeoService} from './services';
 import { MomentPipe,
   MarkdownPipe } from './pipes';
 import {ToasterModule,
-  ToasterService} from 'angular2-toaster/angular2-toaster';
+  ToasterService} from 'angular2-toaster';
 import { TooltipModule,
   DropdownModule,
   ModalModule,
   TabsModule,
   TypeaheadModule,
-  AlertModule } from 'ng2-bootstrap/ng2-bootstrap';
+  AlertModule } from 'ng2-bootstrap';
 
 @NgModule({
   declarations: [
@@ -73,12 +73,12 @@ import { TooltipModule,
     ToasterModule,
 
     // ng2-bootstrap modules
-    TooltipModule,
-    DropdownModule,
-    ModalModule,
-    TabsModule,
-    TypeaheadModule,
-    AlertModule,
+    TooltipModule.forRoot(),
+    DropdownModule.forRoot(),
+    ModalModule.forRoot(),
+    TabsModule.forRoot(),
+    TypeaheadModule.forRoot(),
+    AlertModule.forRoot(),
 
     routing
   ],

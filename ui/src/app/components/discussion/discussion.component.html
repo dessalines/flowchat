@@ -7,7 +7,7 @@
         <app-comment [comment]="comment" [discussion]="discussion"
           (replyingEvent)="setIsReplying($event)"></app-comment>
       </div>
-      <i *ngIf="!comments" class="fa fa-circle-o-notch fa-spin fa-5x text-xs-center block"></i>
+      <i *ngIf="!comments" class="fa fa-circle-o-notch fa-spin fa-5x text-center block"></i>
       <h4 *ngIf="comments?.length == 0">Comment on the bottom bar...</h4>
     </div>
   </div>
@@ -25,7 +25,7 @@
   </div>
 </div>
 <nav *ngIf="!topParentId && !clearTopReply && !isReplying && !discussion?.deleted"
-  class="navbar navbar-fixed-bottom navbar-light bg-faded">
+  class="navbar fixed-bottom navbar-light bg-faded">
   <app-markdown-edit (textEvent)="setTopReply($event)"
     [rows]="1"></app-markdown-edit>
   <button (click)="sendTopReply()" class="btn btn-primary float-xs-right special-nav-button"
@@ -36,7 +36,7 @@
   aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
-      <div class="modal-body text-xs-center">
+      <div class="modal-body text-center">
         <button id="closeModalButton" type="button"
           class="close" (click)="reconnectModal.hide()"
           aria-label="Close">

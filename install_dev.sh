@@ -1,6 +1,6 @@
 # Building the front end
 cd ui
-yarn global add angular-cli@latest
+#npm i -g @angular/cli
 yarn
 ng build
 cd ..

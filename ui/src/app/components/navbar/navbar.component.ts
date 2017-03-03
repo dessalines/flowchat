@@ -5,12 +5,11 @@ import {User, Discussion, Comment, Tools} from '../../shared';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import {ToasterService} from 'angular2-toaster/angular2-toaster';
+import {ToasterService} from 'angular2-toaster';
 
 declare var Favico: any;
 
 @Component({
-
   selector: 'app-navbar',
   templateUrl: 'navbar.component.html',
   styleUrls: ['navbar.component.scss'],

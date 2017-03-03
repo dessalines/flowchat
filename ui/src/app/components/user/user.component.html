@@ -1,6 +1,6 @@
 <div class="logRow">
   <div class="col-xs-12">
-    <i *ngIf="!userLog" class="fa fa-circle-o-notch fa-spin fa-5x text-xs-center block"></i>
+    <i *ngIf="!userLog" class="fa fa-circle-o-notch fa-spin fa-5x text-center block"></i>
     <div *ngFor="let logRow of userLog">
       <span class="text-muted">{{logRow.action_tstamp | moment}} &mdash;</span>
       <span [ngSwitch]="logRow.action">

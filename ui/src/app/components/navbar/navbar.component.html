@@ -1,9 +1,8 @@
-<nav class="navbar navbar-full navbar-light">
-  <button (click)="toggleCollapseNavbar()" class="navbar-toggler hidden-md-up" type="button">
+<nav class="navbar navbar-inverse bg-primary navbar-toggleable-sm">
+  <button (click)="toggleCollapseNavbar()" class="navbar-toggler navbar-toggler-right" type="button">
     &#9776;
   </button>
-  <div [class.collapse]="collapseNavbar" class="collapse navbar-toggleable-sm">
-    <div>
+  <div [class.collapse]="collapseNavbar" class="collapse navbar-collapse">
       <a class="navbar-brand" [routerLink]="['/']"><i class="fa fa-fw fa-comment-o"></i>&nbsp;FlowChat</a>
       <ul class="nav navbar-nav">
         <li class="nav-item">
@@ -38,23 +37,23 @@
         </li>
         <li class="nav-item">
           <a role="button" class="nav-link link-unstyled"
-            tooltipPlacement="bottom" tooltip="Donate to the developer"
+            placement="bottom" tooltip="Donate to the developer"
             href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2XTHDEBUNQ47U&lc=US&item_name=FlowChat&item_number=flowchat_02&amount=5%2e00&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
-            target="_blank"><small><i class="fa fa-fw fa-beer text-muted"></i></small></a>
+            target="_blank"><small><i class="fa fa-fw fa-beer"></i></small></a>
         </li>
       </ul>
-      <ul *ngIf="userService.isFullUser()" class="nav navbar-nav float-xs-right">
+      <ul *ngIf="userService.isFullUser()" class="nav navbar-nav ml-auto">
         <li dropdown class="nav-item" keyboardNav="true">
           <a class="nav-link link-unstyled" role="button"
-            type="button" dropdownToggle tooltipPlacement="bottom"
+            type="button" dropdownToggle placement="bottom"
             tooltip="Messages">
-            <span *ngIf="unreadMessages?.length > 0" class="tag tag-info navbar-label">{{unreadMessages?.length}}</span>
+            <span *ngIf="unreadMessages?.length > 0" class="badge badge-info navbar-label">{{unreadMessages?.length}}</span>
             <i class="fa fa-fw fa-envelope-o"></i>
           </a>
           <ul class="dropdown-menu messages-dropdown"
             role="menu">
             <h6 class="dropdown-header">Messages 
-              <small role="button" (click)="markAllNotificationsAsRead()" tooltipPlacement="bottom"
+              <small role="button" (click)="markAllNotificationsAsRead()" placement="bottom"
             tooltip="Mark all as read"><i class="fa fa-fw fa-check"></i></small>
             </h6>
             <li *ngFor="let message of unreadMessages"
@@ -89,7 +88,7 @@
         </ul>
       </li>
       </ul>
-      <ul class="nav navbar-nav float-xs-right">
+      <ul class="nav navbar-nav ml-auto">
         <li *ngIf="!userService.isFullUser()" class="nav-item">
           <a role="button" class="nav-link link-unstyled"
             (click)="loginModal.show()">Login/Signup</a>
@@ -100,7 +99,6 @@
         </li>
       </ul>
     </div>
-  </div>
 </nav>
 <!-- Modals -->
 <div bsModal #loginModal="bs-modal" class="modal fade"
@@ -116,7 +114,7 @@
         </button>
         <div class="row">
           <div class="col-md-6 vertical-line-right">
-            <h4 class="text-xs-center"> Signup </h4>
+            <h4 class="text-center"> Signup </h4>
             <br>
             <form #signupForm="ngForm" (ngSubmit)="signupSubmit()"
               class="form-horizontal" role="form">
@@ -186,7 +184,7 @@
           </div>
           <!-- The sign up tab -->
           <div class="col-md-6">
-            <h4 class="text-xs-center"> Log in </h4>
+            <h4 class="text-center"> Log in </h4>
             <br>
             <form #loginForm="ngForm" (ngSubmit)="loginSubmit()"
               class="form-horizontal">
