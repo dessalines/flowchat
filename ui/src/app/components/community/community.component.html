@@ -1,6 +1,6 @@
 <div>
   <div class="row">
-    <div class="col-xs-12" [class.col-md-10]="!editing">
+    <div class="col-xs-12" [class.col-md-10]="!editing" [class.col-md-12]="editing">
       <app-community-card *ngIf="community" [community]="community"
         [(editing)]="editing"></app-community-card>
     </div>

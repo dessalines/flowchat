@@ -11,7 +11,7 @@
         <p *ngIf="community.text && !textCollapsed"
           class="card-text" [innerHTML]="community.text | markdown"></p>
         <ul class="list-inline small">
-          <li class="badge badge-default list-inline-item" *ngFor="let badge of community.tags">
+          <li class="badge badge-default list-inline-item" *ngFor="let tag of community.tags">
             <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
@@ -113,7 +113,7 @@
           <ul *ngIf="community.tags" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeTag(tag)"
               class="badge badge-default list-inline-item"
-              *ngFor="let badge of community.tags">
+              *ngFor="let tag of community.tags">
               <span>{{removeQuotes(tag.name)}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
           </ul>
