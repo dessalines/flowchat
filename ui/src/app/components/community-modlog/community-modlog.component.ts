@@ -6,8 +6,8 @@ import {CommunityRole, Community} from '../../shared';
 
 @Component({
   selector: 'app-community-modlog',
-  templateUrl: 'community-modlog.component.html',
-  styleUrls: ['community-modlog.component.css'],
+  templateUrl: './community-modlog.component.html',
+  styleUrls: ['./community-modlog.component.css'],
 })
 export class CommunityModlogComponent implements OnInit {
 

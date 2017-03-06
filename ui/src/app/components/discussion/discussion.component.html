@@ -1,13 +1,13 @@
 <div class="row bottom-margin" (window:scroll)="onScroll($event)">
   <div *ngIf="discussion" class="col-xs-12 col-lg-10">
     <app-discussion-card [discussion]="discussion"
-      [(editing)]="editing"></app-discussion-card>
+      [editing]="editing" (editingChange)="editingChanged($event)"></app-discussion-card>
     <div *ngIf="!editing">
       <div *ngFor="let comment of comments" class="card">
         <app-comment [comment]="comment" [discussion]="discussion"
           (replyingEvent)="setIsReplying($event)"></app-comment>
       </div>
-      <i *ngIf="!comments" class="fa fa-circle-o-notch fa-spin fa-5x text-center block"></i>
+      <i *ngIf="!comments" class="fa fa-circle-o-notch fa-spin fa-5x fa-center"></i>
       <h4 *ngIf="comments?.length == 0">Comment on the bottom bar...</h4>
     </div>
   </div>

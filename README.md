@@ -1,4 +1,4 @@
-[FlowChat](http://flow-chat.com) &mdash; An open-source, live updating, threaded chat platform with voting. 
+[FlowChat](http://flow-chat.com) &mdash; An open-source, live updating, threaded chat platform with range voting. 
 ==========
 ![](http://img.shields.io/version/0.3.1.png?color=green)
 [![Build Status](https://travis-ci.org/dessalines/flowchat.svg?branch=master)](https://travis-ci.org/dessalines/flowchat)
@@ -37,12 +37,6 @@ Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 
 ==========
 
-## Screenshots:
-<img src="http://i.imgur.com/lZBMsn5.png">
-<img src="http://i.imgur.com/hwNc0mx.png">
-<img src="http://i.imgur.com/JbOBf1h.png">
-<img src="http://i.imgur.com/chhvZwC.png">
-
 ## Installation 
 
 *If you want to self-host or develop flowchat.*
@@ -63,7 +57,8 @@ and goto `http://localhost:4567/`
 
 #### Requirements
 - Java 8 + Maven
-- Node + npm, [nvm](https://github.com/creationix/nvm) is the preferred installation method.
+- Node + npm/yarn, [nvm](https://github.com/creationix/nvm) is the preferred installation method.
+- angular-cli: `npm i -g angular-cli@latest`
 - Postgres 9.3 or higher
 
 #### Download Flowchat

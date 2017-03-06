@@ -7,8 +7,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 @Component({
 
   selector: 'app-home',
-  templateUrl: 'home.component.html',
-  styleUrls: ['home.component.scss'],
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
   providers: []
 })
 export class HomeComponent implements OnInit {

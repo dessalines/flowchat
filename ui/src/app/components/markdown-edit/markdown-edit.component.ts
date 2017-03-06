@@ -9,8 +9,8 @@ declare var autosize: any;
 @Component({
 
   selector: 'app-markdown-edit',
-  templateUrl: 'markdown-edit.component.html',
-  styleUrls: ['markdown-edit.component.scss']
+  templateUrl: './markdown-edit.component.html',
+  styleUrls: ['./markdown-edit.component.scss']
 })
 export class MarkdownEditComponent implements OnInit {
 

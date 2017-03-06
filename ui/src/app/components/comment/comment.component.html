@@ -4,7 +4,7 @@
       (click)="collapsed = !collapsed">{{collapseText()}}</li>
     <li class="list-inline-item">
       <a [routerLink]="['/user',comment.user.id]"
-      [ngClass]="{'badge-primary':isCommunityCreator(), 'badge-warning': isCommunityModerator(), 'badge-success': isDiscussionCreator(), 'tag': !isDiscussionUser(), 'text-primary': isDiscussionUser()}" >{{comment.user.name}}
+      [ngClass]="{'badge-primary':isCommunityCreator(), 'badge-warning': isCommunityModerator(), 'badge-success': isDiscussionCreator(), 'badge': !isDiscussionUser(), 'text-primary': isDiscussionUser()}" >{{comment.user.name}}
       </a>
     </li>
     <li *ngIf="comment.avgRank" class="badge badge-pill badge-default list-inline-item"

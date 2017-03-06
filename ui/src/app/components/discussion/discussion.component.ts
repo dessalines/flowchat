@@ -9,8 +9,8 @@ import {ToasterService} from 'angular2-toaster/angular2-toaster';
 
 @Component({
   selector: 'app-discussion',
-  templateUrl: 'discussion.component.html',
-  styleUrls: ['discussion.component.scss'],
+  templateUrl: './discussion.component.html',
+  styleUrls: ['./discussion.component.scss'],
   providers: [ThreadedChatService],
 })
 export class DiscussionComponent implements OnInit {
@@ -94,6 +94,15 @@ export class DiscussionComponent implements OnInit {
   ngOnDestroy() {
     this.unloadSubscriptions();
     this.sub.unsubscribe();
+  }
+
+  editingChanged($event) {
+    if (!$event) {
+      this.unloadSubscriptions();
+      this.sub.unsubscribe();
+      this.ngOnInit();
+      this.editing = false;
+    }
   }
 
   unloadSubscriptions() {

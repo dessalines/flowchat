@@ -2,7 +2,7 @@
 cd ui
 #npm i -g @angular/cli
 yarn
-ng build
+ng build -aot
 cd ..
 
 # Building the back end
