@@ -11,8 +11,8 @@ declare var Favico: any;
 
 @Component({
   selector: 'app-navbar',
-  templateUrl: 'navbar.component.html',
-  styleUrls: ['navbar.component.scss'],
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.scss'],
   providers: [],
 })
 export class NavbarComponent implements OnInit {

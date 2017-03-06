@@ -14,8 +14,8 @@ import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'app-discussion-card',
-  templateUrl: 'discussion-card.component.html',
-  styleUrls: ['discussion-card.component.scss'],
+  templateUrl: './discussion-card.component.html',
+  styleUrls: ['./discussion-card.component.scss'],
 })
 export class DiscussionCardComponent implements OnInit {
 

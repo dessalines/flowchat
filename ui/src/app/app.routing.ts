@@ -1,14 +1,14 @@
-import { Routes, RouterModule }   from '@angular/router';
-import { ModuleWithProviders } from '@angular/core';
-import {HomeComponent} from './components/home/index';
-import {TagComponent} from './components/tag/index';
-import {UserComponent} from './components/user/index';
-import {CommunityComponent} from './components/community/index';
-import {CommunityModlogComponent} from './components/community-modlog/index';
-import {SidebarComponent} from './components/sidebar/index';
-import {DiscussionComponent} from './components/discussion/index';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import {HomeComponent, 
+  TagComponent, 
+  UserComponent, 
+  CommunityComponent, 
+  CommunityModlogComponent, 
+  SidebarComponent, 
+  DiscussionComponent} from './components';
 
-const appRoutes: Routes = [
+const routes: Routes = [
   {
     path: '',
     component: HomeComponent
@@ -42,9 +42,8 @@ const appRoutes: Routes = [
     component: DiscussionComponent
   }
 ];
-
-export const appRoutingProviders: any[] = [
-
-];
-
-export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes,{ useHash: true });
+@NgModule({
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }

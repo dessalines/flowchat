@@ -45,7 +45,7 @@ public class Endpoints {
         before((req, res) -> {
             res.header("Access-Control-Allow-Origin", "*");
             res.header("Access-Control-Allow-Credentials", "true");
-            res.header("Access-Control-Allow-Headers", "content-type,user");
+            res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, user, X-Requested-With");
             res.header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
             Tools.dbInit();
         });
