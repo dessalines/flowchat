@@ -6,7 +6,7 @@
       <small>
         <ul *ngIf="popularTags " class="list-inline ">trending tags:
           <li class="badge badge-default list-inline-item "
-          *ngFor="let badge of popularTags ">
+          *ngFor="let tag of popularTags ">
             <a class="link-unstyled
         " [routerLink]="[ '/tag', tag.id] ">{{removeQuotes(tag.name)}}</a>
           </li>
