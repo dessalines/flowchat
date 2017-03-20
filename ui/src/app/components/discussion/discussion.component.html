@@ -1,11 +1,9 @@
 <div class="row bottom-margin" (window:scroll)="onScroll($event)">
   <div *ngIf="discussion" class="col-xs-12 col-lg-10">
-    <app-discussion-card [discussion]="discussion"
-      [editing]="editing" (editingChange)="editingChanged($event)"></app-discussion-card>
+    <app-discussion-card [discussion]="discussion" [editing]="editing" (editingChange)="editingChanged($event)"></app-discussion-card>
     <div *ngIf="!editing">
       <div *ngFor="let comment of comments" class="card">
-        <app-comment [comment]="comment" [discussion]="discussion"
-          (replyingEvent)="setIsReplying($event)"></app-comment>
+        <app-comment [comment]="comment" [discussion]="discussion" (replyingEvent)="setIsReplying($event)"></app-comment>
       </div>
       <i *ngIf="!comments" class="fa fa-circle-o-notch fa-spin fa-5x fa-center"></i>
       <h4 *ngIf="comments?.length == 0">Comment on the bottom bar...</h4>
@@ -24,22 +22,17 @@
     </div>
   </div>
 </div>
-<nav *ngIf="!topParentId && !clearTopReply && !isReplying && !discussion?.deleted"
-  class="navbar fixed-bottom navbar-light bg-faded">
-  <app-markdown-edit (textEvent)="setTopReply($event)"
-    [rows]="1"></app-markdown-edit>
-  <button (click)="sendTopReply()" class="btn btn-primary float-xs-right special-nav-button"
-    type="submit">Send</button>
+<nav *ngIf="!topParentId && !clearTopReply && !isReplying && !discussion?.deleted" class="navbar fixed-bottom navbar-light bg-faded">
+  <div class="row">
+    <app-markdown-edit class="col-sm-10 col-md-11" (textEvent)="setTopReply($event)" [rows]="1"></app-markdown-edit>
+    <button (click)="sendTopReply()" class="btn btn-primary col-sm-2 col-md-1 special-nav-button" type="submit">Send</button>
+  </div>
 </nav>
-<div bsModal #reconnectModal="bs-modal" class="modal fade"
-  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-  aria-hidden="true">
+<div bsModal #reconnectModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-body text-center">
-        <button id="closeModalButton" type="button"
-          class="close" (click)="reconnectModal.hide()"
-          aria-label="Close">
+        <button id="closeModalButton" type="button" class="close" (click)="reconnectModal.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
         <p>Click to Reconnect...</p>
