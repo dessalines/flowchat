@@ -1,85 +1,130 @@
-// Minty 4.0.0
+// Litera 4.0.0
 // Bootswatch
 
 
-$web-font-path: "https://fonts.googleapis.com/css?family=Montserrat" !default;
+$web-font-path: "https://fonts.googleapis.com/css?family=Raleway:400,700" !default;
 @import url($web-font-path);
 
 // Navbar ======================================================================
 
 .navbar {
-  font-family: $headings-font-family;
+  font-size: 14px;
+}
+
+.bg-primary {
+  background-color: #fff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+
+  &.navbar-fixed-top {
+    border-width: 0 0 1px 0;
+  }
+
+  &.navbar-fixed-bottom {
+    border-width: 1px 0 0 0;
+  }
 }
 
 .bg-inverse {
-  background-color: $btn-secondary-bg !important;
+  background-color: $brand-success !important;
 }
 
 // Buttons =====================================================================
 
 .btn {
-  font-family: $headings-font-family;
+  border-radius: 17.25px;
+  font-family: $font-family-sans-serif;
+  font-size: 14px;
+
+  &-lg {
+    border-radius: 43px;
+  }
+
+  &-sm {
+    border-radius: 13.5px;
+    font-size: 11px;
+  }
 }
 
 // Typography ==================================================================
 
-// Tables ======================================================================
-
-.thead-inverse th {
-  background-color: $brand-primary;
-  font-family: $headings-font-family;
+p {
+  font-family: $font-family-serif;
 }
 
-.table-success,
-.table-info,
-.table-warning,
-.table-danger {
-  color: #fff;
+blockquote {
+  font-style: italic;
+
+  &-footer {
+    color: $blockquote-border-color;
+  }
 }
 
-// Forms =======================================================================
-
-legend {
-  font-family: $headings-font-family;
+footer {
+  font-size: 14px;
 }
 
-// Navs ========================================================================
-
-.dropdown-menu {
+.lead {
+  color: $gray-light;
   font-family: $font-family-sans-serif;
 }
 
-.breadcrumb {
-  a {
-    color: $navbar-inverse-color;
-  }
+// Tables ======================================================================
 
-  a:hover {
+table,
+.table {
+  font-size: 14px;
+
+  &-success,
+  &-info,
+  &-warning,
+  &-danger {
     color: #fff;
-    text-decoration: none;
   }
 }
 
+
+// Forms =======================================================================
+
+// Navs ========================================================================
+
+
+.nav,
+.breadcrumb,
 .pagination {
-  .page-link:hover {
-    text-decoration: none;
-  }
+  font-size: 14px;
 }
 
 // Indicators ==================================================================
 
 .alert {
+  font-size: 14px;
 
-  h1, h2, h3, h4, h5, h6 {
-    color: inherit;
+  &, p {
+    font-family: $font-family-sans-serif;
   }
 
-  a,
-  .alert-link {
+  a, .alert-link {
     color: #fff;
+    font-weight: normal;
+    text-decoration: underline;
   }
+}
+
+.tag {
+
+  &-default {
+    color: $btn-secondary-color;
+  }
+}
+
+.tooltip {
+  font-size: 11px;
 }
 
 // Progress bars ===============================================================
 
 // Containers ==================================================================
+
+.list-group {
+  font-size: 14px;
+}
