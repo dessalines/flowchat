@@ -1,6 +1,11 @@
 .special-nav-button {
   height: 39px;
-  margin-top: 32px;
+}
+
+@media (min-width: 576px) {
+	.special-nav-button {
+		margin-top: 32px;
+	}
 }
 
 .bottom-margin {
