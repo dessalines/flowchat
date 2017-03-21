@@ -1,4 +1,4 @@
-<div>
+ <div>
   <div class="row">
     <div class="col-xs-12" [class.col-md-10]="!editing" [class.col-md-12]="editing">
       <app-community-card *ngIf="community" [community]="community"
@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-12">
+      <div class="col-xs-12 col-md-12">
         <i *ngIf="loadingDiscussions" class="fa fa-circle-o-notch fa-spin fa-5x fa-center"></i>
         <h4 *ngIf="discussions?.length == 0">No Discussions</h4>
       </div>
