@@ -96,7 +96,7 @@
         </app-markdown-edit>
         <br>
         <div *ngIf="isCreator" class="form-group row">
-          <label class="col-sm-1 form-control-label">Tags</label>
+          <label class="col-sm-2 form-control-label">Tags</label>
           <div class="col-md-5 input-group">
             <input [(ngModel)]="tagSearchSelected" [typeahead]="tagSearchResultsObservable"
               (typeaheadOnSelect)="tagTypeaheadOnSelect($event.item)"
@@ -136,7 +136,7 @@
           </div>
         </div>
         <div *ngIf="isCreator" class="form-group row">
-          <label class="col-sm-1 form-control-label">Moderators</label>
+          <label class="col-sm-2 form-control-label">Moderators</label>
           <div class="col-md-5">
             <input [(ngModel)]="moderatorSearchSelected"
               [typeahead]="moderatorSearchResultsObservable"
@@ -164,7 +164,7 @@
           </div>
         </div>
         <div *ngIf="community.private_ && isModerator" class="form-group row">
-          <label class="col-sm-1 form-control-label">Invite Users</label>
+          <label class="col-sm-2 form-control-label">Invite Users</label>
           <div class="col-md-5">
             <input [(ngModel)]="userSearchSelected" [typeahead]="userSearchResultsObservable"
               (typeaheadOnSelect)="userTypeaheadOnSelect($event.item)"
@@ -191,7 +191,7 @@
           </div>
         </div>
         <div *ngIf="isModerator" class="form-group row">
-          <label class="col-sm-1 form-control-label">Block Users</label>
+          <label class="col-sm-2 form-control-label">Block Users</label>
           <div class="col-md-5">
             <input [(ngModel)]="blockedUserSearchSelected"
               [typeahead]="blockedUserSearchResultsObservable"
