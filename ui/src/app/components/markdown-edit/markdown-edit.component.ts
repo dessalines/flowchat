@@ -24,10 +24,10 @@ export class MarkdownEditComponent implements OnInit {
 
   @ViewChild('textArea') textArea;
 
-  private textBox: string;
-  private html: SafeHtml;
+  public textBox: string;
+  public html: SafeHtml;
 
-  private previewMode: boolean = false;
+  public previewMode: boolean = false;
 
   constructor(private sanitizer: DomSanitizer) {}
 

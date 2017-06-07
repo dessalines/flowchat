@@ -1,14 +1,12 @@
-import {
-  beforeEachProviders,
-  it,
-  describe,
-  expect,
-  inject
-} from '@angular/core/testing';
+import { TestBed, async, inject } from '@angular/core/testing';
 import { ThreadedChatService } from './threaded-chat.service';
 
 describe('ThreadedChatService Service', () => {
-  beforeEachProviders(() => [ThreadedChatService]);
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [ThreadedChatService]
+    });
+  });
 
   it('should ...',
       inject([ThreadedChatService], (service: ThreadedChatService) => {

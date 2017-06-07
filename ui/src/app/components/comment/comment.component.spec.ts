@@ -1,46 +1,26 @@
-import {
-  beforeEach,
-  beforeEachProviders,
-  describe,
-  expect,
-  it,
-  inject,
-} from '@angular/core/testing';
-import { ComponentFixture, TestComponentBuilder } from '@angular/compiler/testing';
-import { Component } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 import { CommentComponent } from './comment.component';
 
-describe('Component: Comment', () => {
-  let builder: TestComponentBuilder;
+describe('Component: User', () => {
+  let component: CommentComponent;
+  let fixture: ComponentFixture<CommentComponent>;
 
-  beforeEachProviders(() => [CommentComponent]);
-  beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {
-    builder = tcb;
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ CommentComponent ]
+    })
+    .compileComponents();
   }));
 
-  it('should inject the component', inject([CommentComponent],
-      (component: CommentComponent) => {
+  beforeEach(() => {
+    fixture = TestBed.createComponent(CommentComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
     expect(component).toBeTruthy();
-  }));
-
-  it('should create the component', inject([], () => {
-    return builder.createAsync(CommentComponentTestController)
-      .then((fixture: ComponentFixture<any>) => {
-        let query = fixture.debugElement.query(By.directive(CommentComponent));
-        expect(query).toBeTruthy();
-        expect(query.componentInstance).toBeTruthy();
-      });
-  }));
+  });
 });
-
-@Component({
-  selector: 'test',
-  template: `
-    <app-comment></app-comment>
-  `,
-  directives: [CommentComponent]
-})
-class CommentComponentTestController {
-}
-

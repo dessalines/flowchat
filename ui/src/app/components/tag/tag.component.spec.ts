@@ -1,46 +1,26 @@
-import {
-  beforeEach,
-  beforeEachProviders,
-  describe,
-  expect,
-  it,
-  inject,
-} from '@angular/core/testing';
-import { ComponentFixture, TestComponentBuilder } from '@angular/compiler/testing';
-import { Component } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 import { TagComponent } from './tag.component';
 
 describe('Component: Tag', () => {
-  let builder: TestComponentBuilder;
+  let component: TagComponent;
+  let fixture: ComponentFixture<TagComponent>;
 
-  beforeEachProviders(() => [TagComponent]);
-  beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {
-    builder = tcb;
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ TagComponent ]
+    })
+    .compileComponents();
   }));
 
-  it('should inject the component', inject([TagComponent],
-      (component: TagComponent) => {
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TagComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
     expect(component).toBeTruthy();
-  }));
-
-  it('should create the component', inject([], () => {
-    return builder.createAsync(TagComponentTestController)
-      .then((fixture: ComponentFixture<any>) => {
-        let query = fixture.debugElement.query(By.directive(TagComponent));
-        expect(query).toBeTruthy();
-        expect(query.componentInstance).toBeTruthy();
-      });
-  }));
+  });
 });
-
-@Component({
-  selector: 'test',
-  template: `
-    <app-tag></app-tag>
-  `,
-  directives: [TagComponent]
-})
-class TagComponentTestController {
-}
-

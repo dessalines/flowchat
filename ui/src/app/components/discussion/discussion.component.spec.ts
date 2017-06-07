@@ -1,46 +1,26 @@
-import {
-  beforeEach,
-  beforeEachProviders,
-  describe,
-  expect,
-  it,
-  inject,
-} from '@angular/core/testing';
-import { ComponentFixture, TestComponentBuilder } from '@angular/compiler/testing';
-import { Component } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 import { DiscussionComponent } from './discussion.component';
 
-describe('Component: Chat', () => {
-  let builder: TestComponentBuilder;
+describe('Component: User', () => {
+  let component: DiscussionComponent;
+  let fixture: ComponentFixture<DiscussionComponent>;
 
-  beforeEachProviders(() => [DiscussionComponent]);
-  beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {
-    builder = tcb;
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ DiscussionComponent ]
+    })
+    .compileComponents();
   }));
 
-  it('should inject the component', inject([DiscussionComponent],
-      (component: DiscussionComponent) => {
+  beforeEach(() => {
+    fixture = TestBed.createComponent(DiscussionComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
     expect(component).toBeTruthy();
-  }));
-
-  it('should create the component', inject([], () => {
-    return builder.createAsync(DiscussionComponentTestController)
-      .then((fixture: ComponentFixture<any>) => {
-        let query = fixture.debugElement.query(By.directive(DiscussionComponent));
-        expect(query).toBeTruthy();
-        expect(query.componentInstance).toBeTruthy();
-      });
-  }));
+  });
 });
-
-@Component({
-  selector: 'test',
-  template: `
-    <app-discussion></app-discussion>
-  `,
-  directives: [DiscussionComponent]
-})
-class DiscussionComponentTestController {
-}
-

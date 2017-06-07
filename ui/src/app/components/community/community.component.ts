@@ -12,21 +12,21 @@ import {ToasterService} from 'angular2-toaster/angular2-toaster';
 })
 export class CommunityComponent implements OnInit {
 
-  private discussions: Array<Discussion>;
-  private currentCount: number = 0;
-  private sortType: string = this.userService.getUserSettings().defaultSortTypeRadioValue;
-  private viewType: string = this.userService.getUserSettings().defaultViewTypeRadioValue;
+  public discussions: Array<Discussion>;
+  public currentCount: number = 0;
+  public sortType: string = this.userService.getUserSettings().defaultSortTypeRadioValue;
+  public viewType: string = this.userService.getUserSettings().defaultViewTypeRadioValue;
 
-  private community: Community;
+  public community: Community;
 
-  private currentPageNum: number = 1;
-  private scrollDebounce: number = 0;
+  public currentPageNum: number = 1;
+  public scrollDebounce: number = 0;
 
-  private sub: any;
+  public sub: any;
 
-  private editing: Boolean = false;
+  public editing: Boolean = false;
 
-  private loadingDiscussions: boolean = false;
+  public loadingDiscussions: boolean = false;
 
   constructor(private route: ActivatedRoute,
     private router: Router,

@@ -1,9 +1,9 @@
 <nav class="navbar navbar-inverse bg-primary navbar-toggleable-md">
+  <a class="navbar-brand" [routerLink]="['/']"><i class="fa fa-fw fa-comment-o"></i>&nbsp;FlowChat</a>
   <button (click)="toggleCollapseNavbar()" class="navbar-toggler navbar-toggler-right" type="button">
     &#9776;
   </button>
   <div [class.collapse]="collapseNavbar" class="collapse navbar-collapse">
-      <a class="navbar-brand" [routerLink]="['/']"><i class="fa fa-fw fa-comment-o"></i>&nbsp;FlowChat</a>
       <ul class="nav navbar-nav">
         <li class="nav-item">
           <form [formGroup]="discussionSearchForm" class="form-inline">
@@ -42,7 +42,8 @@
             target="_blank"><small><i class="fa fa-fw fa-beer"></i></small></a>
         </li>
       </ul>
-      <ul *ngIf="userService.isFullUser()" class="nav navbar-nav ml-auto">
+      <div class="ml-auto">
+      <ul *ngIf="userService.isFullUser()" class="nav navbar-nav">
         <li dropdown class="nav-item" keyboardNav="true">
           <a class="nav-link link-unstyled" role="button"
             type="button" dropdownToggle placement="bottom"
@@ -50,7 +51,7 @@
             <span *ngIf="unreadMessages?.length > 0" class="badge badge-info navbar-label">{{unreadMessages?.length}}</span>
             <i class="fa fa-fw fa-envelope-o"></i>
           </a>
-          <ul class="dropdown-menu messages-dropdown"
+          <ul class="dropdown-menu messages-dropdown dropdown-menu-right"
             role="menu">
             <h6 class="dropdown-header">Messages 
               <small role="button" (click)="markAllNotificationsAsRead()" placement="bottom"
@@ -78,9 +79,9 @@
       <li dropdown class="nav-item" keyboardNav="true">
         <a class="nav-link link-unstyled" role="button"
           type="button" dropdownToggle>
-            {{userService.getUser().name}}<span class="caret"></span>
-          </a>
-        <ul class="dropdown-menu user-dropdown" role="menu">
+            {{userService.getUser().name}}<i class="ml-2 fa fa-caret-down"></i>
+        </a>
+        <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
           <!--             <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
             <li class="divider dropdown-divider"></li> -->
           <li role="menuitem"><a (click)="logout()" class="dropdown-item"
@@ -88,7 +89,7 @@
         </ul>
       </li>
       </ul>
-      <ul class="nav navbar-nav ml-auto">
+      <ul class="nav navbar-nav">
         <li *ngIf="!userService.isFullUser()" class="nav-item">
           <a role="button" class="nav-link link-unstyled"
             (click)="loginModal.show()">Login/Signup</a>
@@ -98,6 +99,7 @@
           <a (click)="logout()" role="button" class="nav-link link-unstyled">Logout</a>
         </li>
       </ul>
+      </div>
     </div>
 </nav>
 <!-- Modals -->

@@ -12,7 +12,7 @@ import {ToasterService} from 'angular2-toaster/angular2-toaster';
 export class UserComponent implements OnInit {
 
   private sub: any;
-  private userLog: Array<any>;
+  public userLog: Array<any>;
 
   constructor(private route: ActivatedRoute,
     private router: Router,

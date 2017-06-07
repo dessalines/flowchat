@@ -9,11 +9,11 @@ import {UserService} from '../../services';
 })
 export class SidebarComponent implements OnInit {
 
-  discussionCollapsed: boolean = false;
-  communityCollapsed: boolean = false;
+  public discussionCollapsed: boolean = false;
+  public communityCollapsed: boolean = false;
 
   constructor(private router: Router,
-    private userService: UserService) {}
+    public userService: UserService) {}
 
   ngOnInit() {
   }

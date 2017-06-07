@@ -7,8 +7,8 @@
 	<properties>
 		<!--The Database location and login, here's a sample-->
 		<jdbc.url>jdbc:postgresql://127.0.0.1/flowchat</jdbc.url>
-		<jdbc.username>postgres</jdbc.username>
-		<jdbc.password></jdbc.password>
+		<jdbc.username>flowchat</jdbc.username>
+		<jdbc.password>asdf</jdbc.password>
 
 		<!--The sorting for discussions, comments, and tags are:
  			Sorting score =

@@ -21,18 +21,18 @@ import { HomeComponent,
   FooterComponent,
   MarkdownEditComponent,
   OnboardAlertComponent } from './components';
-import { Title } from '@angular/platform-browser';
-import {SeoService} from './services';
 import { MomentPipe,
   MarkdownPipe } from './pipes';
 import {ToasterModule,
   ToasterService} from 'angular2-toaster';
 import { TooltipModule,
-  DropdownModule,
+  BsDropdownModule,
   ModalModule,
   TabsModule,
   TypeaheadModule,
-  AlertModule } from 'ng2-bootstrap';
+  AlertModule } from 'ngx-bootstrap';
+
+import { Title } from '@angular/platform-browser'
 
 import { AppRoutingModule } from './app.routing';
 
@@ -74,15 +74,13 @@ import { AppRoutingModule } from './app.routing';
 
     // ng2-bootstrap modules
     TooltipModule.forRoot(),
-    DropdownModule.forRoot(),
+    BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
     TabsModule.forRoot(),
     TypeaheadModule.forRoot(),
     AlertModule.forRoot()
   ],
-  providers: [Title,
-    SeoService
-  ],
+  providers: [Title],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

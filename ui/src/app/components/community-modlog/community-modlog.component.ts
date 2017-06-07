@@ -11,8 +11,8 @@ import {CommunityRole, Community} from '../../shared';
 })
 export class CommunityModlogComponent implements OnInit {
 
-  private sub: any;
-  private modlog: Array<any>;
+  public sub: any;
+  public modlog: Array<any>;
 
   constructor(private route: ActivatedRoute,
     private router: Router,
