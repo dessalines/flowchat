@@ -13,22 +13,22 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
-  private discussions: Array<Discussion>;
-  private currentCount: number = 0;
-  private popularTags: Array<Tag>;
-  private popularCommunities: Array<Community>;
-  private sortType: string = this.userService.getUserSettings().defaultSortTypeRadioValue;
-  private viewType: string = this.userService.getUserSettings().defaultViewTypeRadioValue;
+  public discussions: Array<Discussion>;
+  public currentCount: number = 0;
+  public popularTags: Array<Tag>;
+  public popularCommunities: Array<Community>;
+  public sortType: string = this.userService.getUserSettings().defaultSortTypeRadioValue;
+  public viewType: string = this.userService.getUserSettings().defaultViewTypeRadioValue;
 
-  private currentPageNum: number = 1;
-  private scrollDebounce: number = 0;
+  public currentPageNum: number = 1;
+  public scrollDebounce: number = 0;
 
-  private communityId: string;
+  public communityId: string;
 
-  private loadingDiscussions: boolean = false;
+  public loadingDiscussions: boolean = false;
 
   constructor(private toasterService: ToasterService,
-    private userService: UserService,
+    public userService: UserService,
     private discussionService: DiscussionService,
     private tagService: TagService,
     private communityService: CommunityService,

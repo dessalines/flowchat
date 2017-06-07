@@ -1,11 +1,26 @@
-/* tslint:disable:no-unused-variable */
-
-import { TestBed, async } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 import { DiscussionCardViewTypeSelectComponent } from './discussion-card-view-type-select.component';
 
-describe('Component: DiscussionCardViewTypeSelect', () => {
-  it('should create an instance', () => {
-    let component = new DiscussionCardViewTypeSelectComponent();
+describe('Component: User', () => {
+  let component: DiscussionCardViewTypeSelectComponent;
+  let fixture: ComponentFixture<DiscussionCardViewTypeSelectComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ DiscussionCardViewTypeSelectComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(DiscussionCardViewTypeSelectComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

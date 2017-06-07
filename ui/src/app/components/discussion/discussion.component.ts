@@ -15,41 +15,41 @@ import {ToasterService} from 'angular2-toaster/angular2-toaster';
 })
 export class DiscussionComponent implements OnInit {
 
-  private comments: Array<Comment>;
-  private scrollDebounce: number = 0;
-  private currentTopLimit: number = 20;
-  private currentCommentBatchSize: number = 20;
-  private maxDepth: number = 20;
+  public comments: Array<Comment>;
+  public scrollDebounce: number = 0;
+  public currentTopLimit: number = 20;
+  public currentCommentBatchSize: number = 20;
+  public maxDepth: number = 20;
 
-  private users: Array<User>;
-  private newCommentId: number;
+  public users: Array<User>;
+  public newCommentId: number;
 
-  private recursiveCommentStopper: boolean = false;
+  public recursiveCommentStopper: boolean = false;
 
-  private isReplying: boolean = false;
+  public isReplying: boolean = false;
 
-  private userServiceWatcher: Subscription;
-  private threadedChatSubscription: Subscription;
-  private discussionSubscription: Subscription;
+  public userServiceWatcher: Subscription;
+  public threadedChatSubscription: Subscription;
+  public discussionSubscription: Subscription;
 
-  private discussionId: number = null;
-  private topParentId: number = null;
+  public discussionId: number = null;
+  public topParentId: number = null;
 
-  private discussion: Discussion;
+  public discussion: Discussion;
 
-  private topReply: string;
-  private clearTopReply: boolean = false;
+  public topReply: string;
+  public clearTopReply: boolean = false;
 
   // This is set to true on ngOnDestroy, to not do an alert for reconnect
-  private websocketSoftClose: boolean = false;
+  public websocketSoftClose: boolean = false;
 
-  private sub: any;
+  public sub: any;
 
-  private isModerator: boolean = false;
+  public isModerator: boolean = false;
 
-  private usersCollapsed: boolean = false;
+  public usersCollapsed: boolean = false;
 
-  private editing: boolean = false;
+  public editing: boolean = false;
 
   @ViewChild('reconnectModal') reconnectModal;
 

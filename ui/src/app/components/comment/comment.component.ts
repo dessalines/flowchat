@@ -19,25 +19,25 @@ export class CommentComponent implements OnInit {
   // want to focus on new comments when not replying
   @Output() replyingEvent = new EventEmitter();
 
-  private replyText: string;
+  public replyText: string;
 
-  private showReply: boolean = false;
+  public showReply: boolean = false;
 
-  private editText: string;
+  public editText: string;
 
-  private showEdit: boolean = false;
+  public showEdit: boolean = false;
 
-  private collapsed: boolean = false;
+  public collapsed: boolean = false;
 
-  private showVoteSlider: boolean = false;
+  public showVoteSlider: boolean = false;
 
-  private rank: number;
+  public rank: number;
 
-  private editable: boolean = false;
+  public editable: boolean = false;
 
-  private deleteable: boolean = false;
+  public deleteable: boolean = false;
 
-  private commentRole: CommentRole;
+  public commentRole: CommentRole;
 
   constructor(private threadedChatService: ThreadedChatService,
     private userService: UserService) { }
@@ -112,27 +112,27 @@ export class CommentComponent implements OnInit {
     this.threadedChatService.send(this.commentRankData());
   }
 
-  private replyData(): ReplyData {
+  replyData(): ReplyData {
     return {
       parentId: this.comment.id,
       reply: this.replyText
     }
   }
 
-  private editData(): EditData {
+  editData(): EditData {
     return {
       id: this.comment.id,
       edit: this.editText,
     }
   }
 
-  private deleteData(): DeleteData {
+  deleteData(): DeleteData {
     return {
       deleteId: this.comment.id
     }
   }
 
-  private commentRankData(): CommentRankData {
+  commentRankData(): CommentRankData {
     return {
       rank: this.rank,
       commentId: this.comment.id
@@ -140,11 +140,11 @@ export class CommentComponent implements OnInit {
 
   }
 
-  private collapseText(): string {
+  collapseText(): string {
     return (this.collapsed) ? "[+]" : "[-]";
   }
 
-  private isCommentNew(): boolean {
+  isCommentNew(): boolean {
     let now = moment().subtract(2, 'minutes');
     let then = (this.comment.modified != null) ? moment(this.comment.modified) :
       moment(this.comment.created);

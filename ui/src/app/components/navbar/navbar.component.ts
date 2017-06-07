@@ -17,26 +17,26 @@ declare var Favico: any;
 })
 export class NavbarComponent implements OnInit {
 
-  private signup: Signup = {};
-  private login: Login = {};
+  public signup: Signup = {};
+  public login: Login = {};
 
   // The search bar
   public discussionSearchControl: FormControl = new FormControl();
   public discussionSearchForm: FormGroup = new FormGroup({
     discussionSearchControl: this.discussionSearchControl
   });
-  private discussionSearchSelected: string = '';
-  private discussionSearchResultsObservable: Observable<any>;
-  private discussionTypeaheadLoading: boolean = false;
-  private discussionTypeaheadNoResults: boolean = false;
+  public discussionSearchSelected: string = '';
+  public discussionSearchResultsObservable: Observable<any>;
+  public discussionTypeaheadLoading: boolean = false;
+  public discussionTypeaheadNoResults: boolean = false;
 
-  private unreadMessages: Array<Comment>;
+  public unreadMessages: Array<Comment>;
 
-  private favIcon: any;
+  public favIcon: any;
 
-  private collapseNavbar: boolean = true;
+  public collapseNavbar: boolean = true;
 
-  constructor(private userService: UserService,
+  constructor(public userService: UserService,
     private loginService: LoginService,
     private router: Router,
     private discussionService: DiscussionService,

@@ -1,16 +1,9 @@
-import {
-  it,
-  describe,
-  expect,
-  inject,
-  beforeEachProviders
-} from '@angular/core/testing';
+import { TestBed, async } from '@angular/core/testing';
 import { MomentPipe } from './moment.pipe';
 
-describe('Moment Pipe', () => {
-    beforeEachProviders(() => [MomentPipe]);
-
-  it('should transform the input', inject([MomentPipe], (pipe: MomentPipe) => {
-      // expect(pipe.transform(true)).toBe(null);
-  }));
+describe('Pipe: Moment', () => {
+  it('create an instance', () => {
+    let pipe = new MomentPipe();
+    expect(pipe).toBeTruthy();
+  });
 });

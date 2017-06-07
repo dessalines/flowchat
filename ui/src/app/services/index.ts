@@ -5,10 +5,4 @@ export { UserService } from './user.service';
 export { CommunityService } from './community.service';
 export { DiscussionService } from './discussion.service';
 export { NotificationsService } from './notifications.service';
-export { SeoService } from './seo.service';
 export { TagService } from './tag.service';
-
-
-
-
-

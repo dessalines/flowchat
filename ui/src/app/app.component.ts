@@ -9,7 +9,6 @@ import { UserService,
   DiscussionService,
   CommunityService,
   LoginService,
-  SeoService,
   TagService,
   NotificationsService } from './services';
 import { ToasterContainerComponent,
@@ -39,14 +38,9 @@ export class AppComponent {
   public constructor(viewContainerRef: ViewContainerRef,
     private router: Router,
     private toasterService: ToasterService,
-    private seoService: SeoService
     ) {
     // You need this small hack in order to catch application root view container ref
     this.viewContainerRef = viewContainerRef;
-
-    seoService.setTitle('FlowChat');
-    seoService.setMetaDescription('An open-source, live updating, threaded chat platform with voting.');
-    seoService.setMetaRobots('Index, Follow');
   }
 
   // Prevent backspace navigation

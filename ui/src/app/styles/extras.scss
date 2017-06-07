@@ -165,6 +165,12 @@ html [type="button"],
   display: block !important;
 }
 
+.badge {
+  padding: .5em .5em;
+}
+.mark {
+  background-color: #ffffa7;
+}
 // Disable expand image on hover for now
 // .expand-on-hover {
 //   transition: all .05s ease-in-out;

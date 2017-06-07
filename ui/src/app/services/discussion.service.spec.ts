@@ -1,14 +1,12 @@
-import {
-  beforeEachProviders,
-  it,
-  describe,
-  expect,
-  inject
-} from '@angular/core/testing';
+import { TestBed, async, inject } from '@angular/core/testing';
 import { DiscussionService } from './discussion.service';
 
 describe('Discussion Service', () => {
-  beforeEachProviders(() => [DiscussionService]);
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [DiscussionService]
+    });
+  });
 
   it('should ...',
       inject([DiscussionService], (service: DiscussionService) => {

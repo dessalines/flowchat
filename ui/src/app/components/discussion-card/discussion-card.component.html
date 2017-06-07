@@ -1,4 +1,4 @@
-<div [class.card]="isCard()" [class.list-group-item]="!isCard()">
+<div [class.card]="isCard()" [class.list-group-item]="!isCard()" [class.mr-1]="isCard()">
   <div *ngIf="!discussion.deleted">
     <div *ngIf="!editing">
       <div [ngClass]="{'row': !isCard() && hasImage(), 'row-fluid': !isCard() && !hasImage()}">
