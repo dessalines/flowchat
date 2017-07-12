@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse bg-primary navbar-toggleable-md">
+<nav class="navbar navbar-light bg-primary navbar-toggleable-md">
   <a class="navbar-brand" [routerLink]="['/']"><i class="fa fa-fw fa-comment-o"></i>&nbsp;FlowChat</a>
   <button (click)="toggleCollapseNavbar()" class="navbar-toggler navbar-toggler-right" type="button">
     &#9776;
@@ -16,11 +16,11 @@
               (typeaheadLoading)="discussionChangeTypeaheadLoading($event)"
               (typeaheadNoResults)="discussionChangeTypeaheadNoResults($event)"
               [typeaheadWaitMs]="200"
-              class="form-control" type="text"
+              class="form-control ml-sm-1 mr-sm-2 search-box" type="text"
               placeholder="Search"
               name="discussion_form"
               >
-            <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-search"></i></button>
+            <button class="btn btn-outline-primary mr-sm-2" type="submit"><i class="fa fa-fw fa-search"></i></button>
           </form>
         </li>
         <li class="nav-item">
