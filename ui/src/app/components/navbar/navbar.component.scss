@@ -2,14 +2,8 @@
   vertical-align: inherit;
 }
 
-.navbar {
-  min-height: 60px;
-}
-
-.navbar-brand {
-  font-weight: 900;
-  margin-right: 100px;
-  padding-top: .45rem;
+.search-box {
+  max-width: 180px;
 }
 
 .messages-dropdown {
@@ -28,11 +22,6 @@
   position: absolute;
   display: block;
   right: 15px;
-}
-
-.nav-link {
-  font-size: .9375rem;
-  font-weight: 600;
 }
 
 .nav-item {

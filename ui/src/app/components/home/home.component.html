@@ -2,8 +2,10 @@
   <app-onboard-alert *ngIf="!userService.getUserSettings().readOnboardAlert"></app-onboard-alert>
   <div class="row">
     <div class="col-xs-12 col-md-8 trending-discussions ">
-      <h3>Trending Discussions</h3>
-      <small>
+      <div class="card">
+        <div class="card-block">
+          <h3>Trending Discussions</h3>
+          <small>
         <ul *ngIf="popularTags " class="list-inline ">trending tags:
           <li class="badge badge-default list-inline-item "
           *ngFor="let tag of popularTags ">
@@ -12,7 +14,7 @@
           </li>
         </ul>
       </small>
-      <small>
+          <small>
         <ul *ngIf="popularCommunities " class="list-inline ">trending communities:
           <li class="badge badge-primary list-inline-item "
           *ngFor="let community of popularCommunities ">
@@ -21,6 +23,8 @@
           </li>
         </ul>
       </small>
+        </div>
+      </div>
     </div>
     <div class="col-xs-12 col-md-2
         ">
@@ -28,16 +32,14 @@
     </div>
     <div class="col-xs-12 col-md-2
         ">
-      <app-discussion-card-sort-select [sortType]="sortType "
-        (sortTypeChange)="resort($event) "></app-discussion-card-sort-select>
+      <app-discussion-card-sort-select [sortType]="sortType " (sortTypeChange)="resort($event) "></app-discussion-card-sort-select>
     </div>
   </div>
   <div [class.card-deck-wrapper]="isCard() ">
     <div (window:scroll)="onScroll($event)
         " [ngClass]="{ 'card-deck': isCard(), 'list-group': !isCard()} ">
       <app-discussion-card [viewType]="viewType
-        " [ngClass]="{ 'col-md-4': isCard()} "
-        *ngFor="let discussion of discussions
+        " [ngClass]="{ 'col-md-4': isCard()} " *ngFor="let discussion of discussions
         " [discussion]="discussion "></app-discussion-card>
     </div>
   </div>
