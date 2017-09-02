@@ -41,19 +41,7 @@ Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 
 *If you want to self-host or develop flowchat.*
 
-### Option 1 : Docker
-
-Install `docker` and `docker-compose`. 
-
-```sh
-git clone https://github.com/dessalines/flowchat
-cd flowchat
-docker-compose up
-```
-
-and goto `http://localhost:4567/`
-
-### Option 2 : Local development
+### Local development
 
 #### Requirements
 - Java 8 + Maven
@@ -65,7 +53,13 @@ and goto `http://localhost:4567/`
 `git clone https://github.com/dessalines/flowchat`
 
 #### Setup a postgres database
-[Here](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04) are some instructions to get your DB up and running.
+
+[Here](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04) are some instructions to get your postgres DB up and running.
+
+```sh
+psql -c "create user flowchat with password 'asdf' superuser"
+psql -c 'create database flowchat with owner flowchat;'
+```
 
 #### Edit your pom.xml file to point to your database
 ```sh
@@ -77,8 +71,8 @@ Edit it to point to your own database:
 ```xml
 <!--The Database location and login, here's a sample-->
 <jdbc.url>jdbc:postgresql://127.0.0.1/flowchat</jdbc.url>
-<jdbc.username>postgres</jdbc.username>
-<jdbc.password></jdbc.password
+<jdbc.username>flowchat</jdbc.username>
+<jdbc.password>asdf</jdbc.password
 <!--The sorting for discussions, comments, and tags are:
  	Sorting score =
 		created_weight/(now_seconds - comment_seconds) +
@@ -92,7 +86,16 @@ Edit it to point to your own database:
 
 for local testing: 
 
-`./install_dev.sh` and goto `http://localhost:4567/`
+`./install_dev.sh` and goto http://localhost:4567/
+
+for front end angular development, do:
+
+```
+cd ui
+ng serve
+```
+
+and goto http://localhost:4200
 
 for a production environment, edit `ui/config/environment.prod.ts` to point to your hostname, then run:
 
