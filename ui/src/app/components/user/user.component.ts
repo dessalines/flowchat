@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {UserService} from '../../services';
-import {DiscussionRole} from '../../shared';
-import {ToasterService} from 'angular2-toaster/angular2-toaster';
+import { Router, ActivatedRoute } from '@angular/router';
+
+import { UserService } from '../../services';
+import { DiscussionRole } from '../../shared';
+import { ToasterService } from 'angular2-toaster/angular2-toaster';
 
 @Component({
   selector: 'app-user',

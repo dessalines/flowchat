@@ -1,10 +1,12 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {ThreadedChatService, DiscussionService, UserService} from '../../services';
-import {Comment, User, Discussion, Tag, CommentRole} from '../../shared';
-import {Subscription} from 'rxjs/Subscription';
-import {Router, ActivatedRoute} from '@angular/router';
-import {MarkdownEditComponent} from '../markdown-edit/index';
-import {ToasterService} from 'angular2-toaster/angular2-toaster';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Title }     from '@angular/platform-browser';
+import { Subscription } from 'rxjs/Subscription';
+import { Router, ActivatedRoute } from '@angular/router';
+
+import { ThreadedChatService, DiscussionService, UserService } from '../../services';
+import { Comment, User, Discussion, Tag, CommentRole } from '../../shared';
+import { MarkdownEditComponent } from '../markdown-edit/index';
+import { ToasterService } from 'angular2-toaster/angular2-toaster';
 
 
 @Component({
@@ -57,6 +59,7 @@ export class DiscussionComponent implements OnInit {
     private userService: UserService,
     private route: ActivatedRoute,
     private router: Router,
+    private titleService: Title,
     private discussionService: DiscussionService,
     private toasterService: ToasterService) {
   }
@@ -143,6 +146,7 @@ export class DiscussionComponent implements OnInit {
     this.discussionSubscription = this.discussionService.getDiscussion(this.discussionId).
       subscribe(d => {
         this.discussion = d;
+        this.titleService.setTitle(d.title + ' - FlowChat');
         this.setIsModerator();
       },
       error => {

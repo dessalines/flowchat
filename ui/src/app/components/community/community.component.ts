@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {DiscussionService, CommunityService, UserService} from '../../services';
-import {Discussion, Tag, Community} from '../../shared';
-import {ToasterService} from 'angular2-toaster/angular2-toaster';
+import { Router, ActivatedRoute } from '@angular/router';
+import { ToasterService } from 'angular2-toaster/angular2-toaster';
+import { Title }     from '@angular/platform-browser';
+import { DiscussionService, CommunityService, UserService } from '../../services';
+import { Discussion, Tag, Community } from '../../shared';
 
 @Component({
   selector: 'app-community',
@@ -30,6 +31,7 @@ export class CommunityComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private router: Router,
+    private titleService: Title,
     private discussionService: DiscussionService,
     private communityService: CommunityService,
     private toasterService: ToasterService,
@@ -56,6 +58,7 @@ export class CommunityComponent implements OnInit {
   getCommunity(communityId: number) {
     this.communityService.getCommunity(communityId).subscribe(c => {
       this.community = c;
+      this.titleService.setTitle(c.name + ' - FlowChat');
     },
       error => {
         this.toasterService.pop("error", "Error", error);

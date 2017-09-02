@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {DiscussionService, CommunityService, TagService, UserService} from '../../services';
-import {Discussion, Community, Tag, Tools} from '../../shared';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Title }     from '@angular/platform-browser';
+
+import { DiscussionService, CommunityService, TagService, UserService } from '../../services';
+import { Discussion, Community, Tag, Tools } from '../../shared';
 
 
 @Component({
@@ -30,6 +32,7 @@ export class TagComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private router: Router,
+    private titleService: Title,
     private discussionService: DiscussionService,
     private communityService: CommunityService,
     private tagService: TagService,
@@ -56,6 +59,7 @@ export class TagComponent implements OnInit {
   getTag(tagId: number) {
     this.tagService.getTag(tagId).subscribe(t => {
       this.tag = t;
+      this.titleService.setTitle(t.name + ' - FlowChat');
     });
   }
 
