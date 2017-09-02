@@ -1,8 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {ToasterContainerComponent, ToasterService, ToasterConfig} from 'angular2-toaster/angular2-toaster';
-import {DiscussionService, TagService, CommunityService, UserService} from '../../services';
-import {Discussion, Tag, Community, Tools, User} from '../../shared';
+import { Title }     from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
+
+import { ToasterContainerComponent, ToasterService, ToasterConfig } from 'angular2-toaster/angular2-toaster';
+import { DiscussionService, TagService, CommunityService, UserService } from '../../services';
+import { Discussion, Tag, Community, Tools, User } from '../../shared';
+
 
 @Component({
 
@@ -27,13 +30,14 @@ export class HomeComponent implements OnInit {
 
   public loadingDiscussions: boolean = false;
 
-  constructor(private toasterService: ToasterService,
+  constructor(private router: Router,
+    private route: ActivatedRoute,
+    private titleService: Title,
+    private toasterService: ToasterService,
     public userService: UserService,
     private discussionService: DiscussionService,
     private tagService: TagService,
-    private communityService: CommunityService,
-    private router: Router,
-    private route: ActivatedRoute) { }
+    private communityService: CommunityService) { }
 
   popToast() {
     this.toasterService.pop('info', 'Args Title', 'Args Body');
@@ -57,6 +61,8 @@ export class HomeComponent implements OnInit {
 
     this.getPopularTags(this.sortType);
     this.getPopularCommunities(this.sortType);
+
+    this.titleService.setTitle('FlowChat');
   }
 
   resort($event) {
@@ -123,7 +129,7 @@ export class HomeComponent implements OnInit {
   }
 
   isCard(): boolean {
-    return this.viewType==='card';
+    return this.viewType === 'card';
   }
 
   readOnboardAlert() {
