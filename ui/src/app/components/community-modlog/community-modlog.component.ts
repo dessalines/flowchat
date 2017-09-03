@@ -35,7 +35,6 @@ export class CommunityModlogComponent implements OnInit {
   getCommunityModlog(communityId: number) {
     this.communityService.getCommunityModlog(communityId).subscribe(c => {
       this.modlog = c;
-      console.log(this.modlog);
     },
       error => {
         this.toasterService.pop("error", "Error", error);

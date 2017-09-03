@@ -45,7 +45,6 @@ export class AppComponent {
 
   // Prevent backspace navigation
   ngAfterViewInit() {
-    console.log('got here');
     window.addEventListener('keydown', (e: any) => {
       if (e.which === 8 && e.target.tagName == 'input') {
         e.preventDefault();
