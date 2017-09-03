@@ -65,8 +65,6 @@ export class DiscussionComponent implements OnInit {
   }
 
   ngOnInit() {
-    // console.log(this.routeParams);
-    // console.log(this.routeParamService.params());
 
     this.sub = this.route.params.subscribe(params => {
       this.discussionId = +params["discussionId"];
@@ -114,7 +112,6 @@ export class DiscussionComponent implements OnInit {
       this.scrollDebounce = 0;
       this.currentTopLimit = 20;
       this.threadedChatService.ws.close(true);
-      console.log('Destroying chat component');
       this.userServiceWatcher.unsubscribe();
       this.threadedChatSubscription.unsubscribe();
       // this.threadedChatService = null;
@@ -159,7 +156,7 @@ export class DiscussionComponent implements OnInit {
     this.threadedChatService.ws.onClose(cb => {
 
       if (!this.websocketSoftClose) {
-        console.log('ws connection closed');
+        console.error('ws connection closed');
 
         this.reconnectModal.show();
       }
@@ -182,7 +179,6 @@ export class DiscussionComponent implements OnInit {
   // not the specific one
   updateThreadedChat(someData: string) {
     let data = JSON.parse(someData);
-    console.log(data);
 
     if (data.comments) {
       this.comments = data.comments;
@@ -350,7 +346,6 @@ export class DiscussionComponent implements OnInit {
 
   setIsModerator() {
     let m = this.discussion.community.moderators.filter(m => m.id == this.userService.getUser().id)[0];
-    console.log(m);
     if (m !== undefined) {
       this.isModerator = true;
     } else {

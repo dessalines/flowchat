@@ -36,7 +36,6 @@ export class UserComponent implements OnInit {
   getUserLog(userId: number) {
     this.userService.getUserLog(userId).subscribe(c => {
       this.userLog = c;
-      console.log(this.userLog);
     },
       error => {
         this.toasterService.pop("error", "Error", error);

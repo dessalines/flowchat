@@ -44,8 +44,6 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.route.snapshot.url.toString());
-    console.log(this.userService.getFavoriteCommunities());
 
     this.communityId = this.route.snapshot.url.toString();
 
@@ -54,8 +52,6 @@ export class HomeComponent implements OnInit {
     } else if (this.communityId == "") {
       this.communityId = "favorites";
     }
-
-    console.log(this.communityId);
 
     this.getDiscussions(this.communityId, this.currentPageNum, this.sortType);
 
@@ -66,7 +62,6 @@ export class HomeComponent implements OnInit {
   }
 
   resort($event) {
-    console.log('resorting' + $event);
     this.sortType = $event;
     this.discussions = undefined;
     this.currentPageNum = 1;
@@ -105,8 +100,6 @@ export class HomeComponent implements OnInit {
           this.loadingDiscussions = false;
         });
 
-    } else {
-      console.log("No more discussions.");
     }
   }
 

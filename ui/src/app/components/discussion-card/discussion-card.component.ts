@@ -205,7 +205,6 @@ export class DiscussionCardComponent implements OnInit {
 
   createTag() {
     this.tagService.createTag(this.tagSearchSelected).subscribe(d => {
-      console.log(d);
       this.tagSearchSelected = '';
       this.toasterService.pop('success', 'New Tag Created', d.name);
       this.addTag(d);

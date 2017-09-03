@@ -93,7 +93,6 @@ export class CommunityCardComponent implements OnInit {
 
       } else {
         let m = this.community.moderators.filter(m => m.id == this.userService.getUser().id)[0];
-        console.log(m);
         if (m !== undefined) {
           this.isModerator = true;
         }
@@ -197,7 +196,6 @@ export class CommunityCardComponent implements OnInit {
 
   createTag() {
     this.tagService.createTag(this.tagSearchSelected).subscribe(d => {
-      console.log(d);
       this.tagSearchSelected = '';
       this.toasterService.pop('success', 'New Tag Created', d.name);
       this.addTag(d);

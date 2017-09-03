@@ -92,8 +92,6 @@ export class UserService {
     if (Tools.readCookie("user") != null) {
       this.user = JSON.parse(Tools.readCookie("user"));
     }
-
-    console.log(this.user);
   }
 
   logout() {
@@ -150,7 +148,7 @@ export class UserService {
     this.fetchFavoriteDiscussionsObs().subscribe(d => {
       this.favoriteDiscussions = d.discussions;
     },
-      error => console.log(error));
+      error => console.error(error));
   }
 
   private fetchFavoriteDiscussionsObs(): Observable<Discussions> {
@@ -167,7 +165,7 @@ export class UserService {
     this.favoriteDiscussions.splice(index, 1);
 
     this.removeFavoriteDiscussionObjs(discussionId).subscribe(null,
-      error => console.log(error));
+      error => console.error(error));
 
   }
 
@@ -192,7 +190,7 @@ export class UserService {
     this.fetchFavoriteCommunitiesObs().subscribe(d => {
       this.favoriteCommunities = d.communities;
     },
-      error => console.log(error));
+      error => console.error(error));
   }
 
   private fetchFavoriteCommunitiesObs(): Observable<Communities> {
@@ -209,7 +207,7 @@ export class UserService {
     this.favoriteCommunities.splice(index, 1);
 
     this.removeFavoriteCommunityObjs(communityId).subscribe(null,
-      error => console.log(error));
+      error => console.error(error));
 
   }
 
@@ -226,7 +224,7 @@ export class UserService {
 
     this.favoriteCommunities.push(community);
     this.saveFavoriteCommunityObjs(community.id).subscribe(null,
-      error => console.log(error));
+      error => console.error(error));
   }
 
   private saveFavoriteCommunityObjs(communityId: number) {
@@ -256,7 +254,6 @@ export class UserService {
 
   private extractData(res: Response) {
     let body = res.json();
-    console.log(body);
     return body || {};
   }
 

@@ -78,8 +78,6 @@ export class TagComponent implements OnInit {
           this.discussions.push(...d.discussions);
           this.loadingDiscussions = false;
         });
-    } else {
-      console.log("No more discussions.");
     }
   }
 
@@ -103,7 +101,6 @@ export class TagComponent implements OnInit {
   }
 
   resort($event) {
-    console.log('resorting' + $event);
     this.sortType = $event;
     this.discussions = undefined;
     this.currentPageNum = 1;

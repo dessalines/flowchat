@@ -37,9 +37,7 @@ export class ThreadedChatService {
     try {
       this.ws.send(data);
     } catch (e) {
-      console.log('aaaah I died');
-      alert('DERP');
-      console.log(e);
+      console.error('aaaah I died');
     }
   }
 

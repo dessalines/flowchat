@@ -70,7 +70,7 @@ export class NavbarComponent implements OnInit {
         this.setupUser(user);
       },
       error => {
-        console.log(error);
+        console.error(error);
         this.toasterService.pop("error", "Error", error);
       });
   }
@@ -84,7 +84,7 @@ export class NavbarComponent implements OnInit {
         this.setupUser(user);
       },
       error => {
-        console.log(error);
+        console.error(error);
         this.toasterService.pop("error", "Error", error);
       });
 
@@ -97,7 +97,7 @@ export class NavbarComponent implements OnInit {
         this.setupUser(user);
       },
       error => {
-        console.log(error);
+        console.error(error);
         this.toasterService.pop("error", "Error", error);
       });
   }
@@ -123,30 +123,26 @@ export class NavbarComponent implements OnInit {
 
   createDiscussion() {
     this.discussionService.createDiscussion().subscribe(d => {
-      console.log(d);
       this.userService.fetchFavoriteDiscussions();
       this.router.navigate(['/discussion', d.id, { editMode: true }]);
     },
-      error => console.log(error));
+      error => console.error(error));
   }
 
   createCommunity() {
     this.communityService.createCommunity().subscribe(d => {
-      console.log(d);
       this.userService.fetchFavoriteCommunities();
       this.router.navigate(['/community', d.id, { editMode: true }]);
     },
-      error => console.log(error));
+      error => console.error(error));
   }
 
   // Discussion searching methods
   // Tag search methods
   setupDiscussionSearch() {
     this.discussionSearchResultsObservable = Observable.create((observer: any) => {
-      console.log(this.discussionSearchControl.value);
       this.discussionService.searchDiscussions(this.discussionSearchControl.value)
         .subscribe((result: any) => {
-          console.log(result);
           observer.next(result.discussions);
         });
     });
@@ -198,7 +194,7 @@ export class NavbarComponent implements OnInit {
 
     }, 
     error => {
-      console.log(error);
+      console.error(error);
       this.toasterService.pop("error", "Error", error);
     });
   }
