@@ -53,7 +53,7 @@
           <li *ngIf="community.avgRank" class="badge badge-pill badge-info list-inline-item"
             placement="bottom" tooltip="Average Score">
             {{community.avgRank}}</li>
-          <li *ngIf="community.userRank" class="badge badge-pill badge-info list-inline-item"
+          <li *ngIf="community.userRank" class="badge badge-pill badge-warning list-inline-item"
             placement="bottom" tooltip="Your Vote">
             {{community.userRank}}</li>
           <li *ngIf="community.numberOfVotes" class="text-muted list-inline-item">
@@ -77,7 +77,7 @@
             <input [(ngModel)]="community.name" class="form-control"
               required minlength="3" maxlength="50"
               pattern="[a-zA-Z0-9_-]+" #communityName="ngModel"
-              name="community_name" />
+              name="community_name" autocomplete="off" />
             <div *ngIf="communityName.dirty" class="help-block text-danger">
               <small *ngIf="communityName.errors?.pattern">Invalid name</small>
               <small *ngIf="communityName.errors?.required">A name is required</small>
@@ -106,7 +106,7 @@
               [typeaheadWaitMs]="200" class="form-control"
               minlength="5" maxlength="20"
               pattern="[a-zA-Z0-9_-]+" name="tag_search"
-              #tagTerm="ngModel">
+              #tagTerm="ngModel" autocomplete="off">
             <button [disabled]="tagSearchSelected.length < 5 || tagSearchSelected.length > 20 || rgex.test(tagSearchSelected) == false"
               (click)="createTag()" class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
           </div>
@@ -144,7 +144,7 @@
               [typeaheadOptionField]="'name'"
               (typeaheadLoading)="moderatorChangeTypeaheadLoading($event)"
               (typeaheadNoResults)="moderatorChangeTypeaheadNoResults($event)"
-              [typeaheadWaitMs]="200" class="form-control"
+              [typeaheadWaitMs]="200" class="form-control" autocomplete="off"
               name="block_user_search">
             <div *ngIf="moderatorTypeaheadLoading===true">
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
@@ -171,7 +171,7 @@
               [typeaheadOptionField]="'name'"
               (typeaheadLoading)="userChangeTypeaheadLoading($event)"
               (typeaheadNoResults)="userChangeTypeaheadNoResults($event)"
-              [typeaheadWaitMs]="200" class="form-control"
+              [typeaheadWaitMs]="200" class="form-control" autocomplete="off"
               name="user_search">
             <div *ngIf="userTypeaheadLoading===true">
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
@@ -199,7 +199,7 @@
               [typeaheadOptionField]="'name'"
               (typeaheadLoading)="blockedUserChangeTypeaheadLoading($event)"
               (typeaheadNoResults)="blockedUserChangeTypeaheadNoResults($event)"
-              [typeaheadWaitMs]="200" class="form-control"
+              [typeaheadWaitMs]="200" class="form-control" autocomplete="off"
               name="block_user_search">
             <div *ngIf="blockedUserTypeaheadLoading===true">
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
