@@ -104,9 +104,10 @@ export class HomeComponent implements OnInit {
   }
 
   getPopularTags(orderBy: string) {
-    this.tagService.getPopularTags(undefined, undefined, orderBy).subscribe(
+    this.tagService.getPopularTags(5, undefined, orderBy).subscribe(
       t => {
-        this.popularTags = t
+        this.popularTags = t;
+        console.log(t);
       });
   }
 
