@@ -11,7 +11,7 @@
         <p *ngIf="community.text && !textCollapsed"
           class="card-text" [innerHTML]="community.text | markdown"></p>
         <ul class="list-inline small">
-          <li class="badge badge-default list-inline-item" *ngFor="let tag of community.tags">
+          <li class="badge badge-info list-inline-item" *ngFor="let tag of community.tags">
             <a class="link-unstyled" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
@@ -50,7 +50,7 @@
           <li *ngIf="!isCreator" role="button"
             class="list-inline-item" (click)="toggleShowVoteSlider()"
             placement="bottom" tooltip="Vote"><i class="fa fa-fw fa-star-half-o"></i></li>
-          <li *ngIf="community.avgRank" class="badge badge-pill badge-default list-inline-item"
+          <li *ngIf="community.avgRank" class="badge badge-pill badge-info list-inline-item"
             placement="bottom" tooltip="Average Score">
             {{community.avgRank}}</li>
           <li *ngIf="community.userRank" class="badge badge-pill badge-info list-inline-item"
@@ -112,7 +112,7 @@
           </div>
           <ul *ngIf="community.tags" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeTag(tag)"
-              class="badge badge-default list-inline-item"
+              class="badge badge-info list-inline-item"
               *ngFor="let tag of community.tags">
               <span>{{removeQuotes(tag.name)}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
@@ -152,7 +152,7 @@
           </div>
           <ul *ngIf="community.moderators" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeModerator(moderator)"
-              class="badge badge-default list-inline-item"
+              class="badge badge-info list-inline-item"
               *ngFor="let moderator of community.moderators">
               <span>{{moderator.name}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
@@ -179,7 +179,7 @@
           </div>
           <ul *ngIf="community.privateUsers" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removePrivateUser(privateUser)"
-              class="badge badge-default list-inline-item"
+              class="badge badge-info list-inline-item"
               *ngFor="let privateUser of community.privateUsers">
               <span>{{privateUser.name}}<i class="fa fa-fw fa-remove"></i></span>
             </li>
@@ -207,7 +207,7 @@
           </div>
           <ul *ngIf="community.blockedUsers" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeBlockedUser(blockedUser)"
-              class="badge badge-default list-inline-item"
+              class="badge badge-info list-inline-item"
               *ngFor="let blockedUser of community.blockedUsers">
               <span>{{blockedUser.name}}<i class="fa fa-fw fa-remove"></i></span>
             </li>

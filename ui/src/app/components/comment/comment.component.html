@@ -7,7 +7,7 @@
       [ngClass]="{'badge-primary':isCommunityCreator(), 'badge-warning': isCommunityModerator(), 'badge-success': isDiscussionCreator(), 'badge': !isDiscussionUser(), 'text-primary': isDiscussionUser()}" >{{comment.user.name}}
       </a>
     </li>
-    <li *ngIf="comment.avgRank" class="badge badge-pill badge-default list-inline-item"
+    <li *ngIf="comment.avgRank" class="badge badge-pill badge-info list-inline-item"
       placement="bottom" tooltip="Average Score">{{comment.avgRank}}</li>
     <li *ngIf="rank" class="badge badge-pill badge-info list-inline-item"
       placement="bottom" tooltip="Your Vote">{{rank}}</li>
