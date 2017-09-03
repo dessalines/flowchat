@@ -56,7 +56,7 @@
           <li *ngIf="discussion.avgRank" class="badge badge-pill badge-info list-inline-item"
             placement="bottom" tooltip="Average Score">
             {{discussion.avgRank}}</li>
-          <li *ngIf="discussion.userRank" class="badge badge-pill badge-info list-inline-item"
+          <li *ngIf="discussion.userRank" class="badge badge-pill badge-warning list-inline-item"
             placement="bottom" tooltip="Your Vote">
             {{discussion.userRank}}</li>
           <li *ngIf="discussion.numberOfVotes" class="text-muted list-inline-item">
@@ -97,7 +97,7 @@
           <div class="col-sm-10">
             <input [(ngModel)]="discussion.title" class="form-control"
               required minlength="3" maxlength="140"
-              name="discussion_title" #discussionTitle="ngModel"
+              name="discussion_title" #discussionTitle="ngModel" autocomplete="off"
             />
             <div *ngIf="discussionTitle.dirty" class="help-block text-danger">
               <small *ngIf="discussionTitle.errors?.pattern">Invalid title</small>
@@ -112,7 +112,7 @@
             <input [(ngModel)]="discussion.link" #discussionLink="ngModel"
               placeholder="optional" class="form-control"
               pattern="[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?"
-              name="discussion_link" />
+              name="discussion_link" autocomplete="off" />
             <div *ngIf="discussionLink.dirty" class="row col-sm-12 help-block text-danger">
               <small *ngIf="discussionLink.errors?.pattern">Invalid URL</small>
             </div>
@@ -127,7 +127,7 @@
               [typeaheadOptionField]="'name'"
               (typeaheadLoading)="communityChangeTypeaheadLoading($event)"
               (typeaheadNoResults)="communityChangeTypeaheadNoResults($event)"
-              [typeaheadWaitMs]="200" class="form-control"
+              [typeaheadWaitMs]="200" class="form-control" autocomplete="off"
               name="community_search">
             <div *ngIf="communityTypeaheadLoading===true">
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
@@ -165,7 +165,7 @@
               [typeaheadWaitMs]="200" class="form-control"
               minlength="5" maxlength="20"
               pattern="[a-zA-Z0-9_-]+" name="tag_search"
-              #tagTerm="ngModel">
+              #tagTerm="ngModel" autocomplete="off">
             <button [disabled]="tagSearchSelected.length < 5 || tagSearchSelected.length > 20 || rgex.test(tagSearchSelected) == false"
               (click)="createTag()" class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
           </div>
@@ -202,7 +202,7 @@
               [typeaheadOptionField]="'name'"
               (typeaheadLoading)="userChangeTypeaheadLoading($event)"
               (typeaheadNoResults)="userChangeTypeaheadNoResults($event)"
-              [typeaheadWaitMs]="200" class="form-control"
+              [typeaheadWaitMs]="200" class="form-control" autocomplete="off"
               name="user_search">
             <div *ngIf="userTypeaheadLoading===true">
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
@@ -230,7 +230,7 @@
               [typeaheadOptionField]="'name'"
               (typeaheadLoading)="blockedUserChangeTypeaheadLoading($event)"
               (typeaheadNoResults)="blockedUserChangeTypeaheadNoResults($event)"
-              [typeaheadWaitMs]="200" class="form-control"
+              [typeaheadWaitMs]="200" class="form-control" autocomplete="off"
               name="block_user_search">
             <div *ngIf="blockedUserTypeaheadLoading===true">
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
