@@ -45,7 +45,7 @@ export class TagService {
   getPopularTags(limit: number = 10, page: number = 1,
     orderBy: string = 'time-86400'): Observable<Array<Tag>>{
     return this.http.get(this.getPopularTagsUrl(limit, page, orderBy))
-      .map(r => r.json().tags)
+      .map(r => r.json())
       .catch(this.handleError);
   }
 
