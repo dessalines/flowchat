@@ -1,19 +1,25 @@
-import { Component, ViewContainerRef} from '@angular/core';
+import { Component, ViewContainerRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { DiscussionComponent,
+import {
+  DiscussionComponent,
   SidebarComponent,
   NavbarComponent,
   HomeComponent,
-  TagComponent } from './components';
-import { UserService,
+  TagComponent
+} from './components';
+import {
+  UserService,
   DiscussionService,
   CommunityService,
   LoginService,
   TagService,
-  NotificationsService } from './services';
-import { ToasterContainerComponent,
+  NotificationsService
+} from './services';
+import {
+  ToasterContainerComponent,
   ToasterService,
-  ToasterConfig } from 'angular2-toaster/angular2-toaster';
+  ToasterConfig
+} from 'angular2-toaster/angular2-toaster';
 
 @Component({
   selector: 'app-root',
@@ -38,7 +44,7 @@ export class AppComponent {
   public constructor(viewContainerRef: ViewContainerRef,
     private router: Router,
     private toasterService: ToasterService,
-    ) {
+  ) {
     // You need this small hack in order to catch application root view container ref
     this.viewContainerRef = viewContainerRef;
   }
