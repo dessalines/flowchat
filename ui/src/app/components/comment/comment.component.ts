@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import {Comment, CommentRole, Discussion} from '../../shared';
-import {UserService, ThreadedChatService} from '../../services';
+import { Comment, CommentRole, Discussion, Tools } from '../../shared';
+import { UserService, ThreadedChatService } from '../../services';
 import * as moment from 'moment';
 
 @Component({
@@ -40,7 +40,8 @@ export class CommentComponent implements OnInit {
   public commentRole: CommentRole;
 
   constructor(private threadedChatService: ThreadedChatService,
-    private userService: UserService) { }
+    private userService: UserService) {
+  }
 
   toggleShowReply() {
     this.showReply = !this.showReply;
@@ -75,6 +76,10 @@ export class CommentComponent implements OnInit {
     this.setDeleteable();
     this.setCommentRole();
     this.setRank();
+  }
+
+  ngAfterViewInit() {
+    Tools.zooming.listen('.img-zoomable');
   }
 
   sendMessage() {
