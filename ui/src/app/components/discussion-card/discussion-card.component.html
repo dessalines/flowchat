@@ -2,15 +2,14 @@
   <div *ngIf="!discussion.deleted">
     <div *ngIf="!editing">
       <div [ngClass]="{'row': !isCard() && hasImage(), 'row-fluid': !isCard() && !hasImage()}">
-      <div [ngClass]="{'col-xs-2': !isCard() && hasImage(),
-           'col-xl-1': !isCard() && hasImage()}">
+      <div [ngClass]="{'col-xs-2 col-xl-1 pr-0 pl-1': !isCard() && hasImage()}">
       <a *ngIf="!isCard() && hasImage()"
         href="{{discussion.link}}" target="_blank">
         <div [innerHTML]="discussion.link | markdown"></div>
+     <!--    <div class="embed-responsive embed-responsive-1by1"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zkYCMjoM5vY" frameborder="0" allowfullscreen controls="2"></iframe></div> -->
       </a>
       </div>
-      <div [ngClass]="{'col-xs-10': !isCard() && hasImage(),
-           'col-xl-11': !isCard() && hasImage()}">
+      <div [ngClass]="{'col-xs-10 col-xl-11': !isCard() && hasImage()}">
       <div [ngClass]="{
         'card-block': isCard(),
         'card-block-no-bottom': isCard()}">
