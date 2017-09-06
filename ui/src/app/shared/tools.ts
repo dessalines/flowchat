@@ -51,7 +51,7 @@ export class Tools {
   }
 
   static replaceImages(text: string): string {
-    return text.replace(/(https?:\/\/.*\.(?:png|jpg|jpeg))/g,
+    return text.replace(/(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/g,
       '<img class="img-fluid img-zoomable" src="$1" />');
   }
 

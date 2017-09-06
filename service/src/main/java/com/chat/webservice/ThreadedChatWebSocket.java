@@ -64,7 +64,7 @@ public class ThreadedChatWebSocket {
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes, session);
         broadcastMessage(filteredScopes, Users.create(SessionScope.getUserObjects(filteredScopes)).json());
 
-        log.info("session scope " + ss + " joined");
+        log.debug("session scope " + ss + " joined");
 
         Tools.dbClose();
 
@@ -76,7 +76,7 @@ public class ThreadedChatWebSocket {
         SessionScope ss = SessionScope.findBySession(sessionScopes, session);
         sessionScopes.remove(ss);
 
-        log.info("session scope " + ss + " left, " + statusCode + " " + reason);
+        log.debug("session scope " + ss + " left, " + statusCode + " " + reason);
 
         // Send the updated users to everyone in the right scope
         Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes, session);
@@ -127,7 +127,7 @@ public class ThreadedChatWebSocket {
         JsonNode rootNode = Tools.JACKSON.readTree(someData);
 
             Iterator<String> it = rootNode.fieldNames();
-            log.info(rootNode.asText());
+            log.debug(rootNode.asText());
             while (it.hasNext()) {
                 String nodeName = it.next();
                 switch(nodeName) {
@@ -182,7 +182,7 @@ public class ThreadedChatWebSocket {
         // Collect only works on refetch
         LazyList<Model> comments = fetchComments(ss);
 
-        log.info(ss.toString());
+        log.debug(ss.toString());
 
         // Necessary for comment tree
         Array arr = (Array) comments.collect("breadcrumbs", "id", replyData.getParentId()).get(0);
@@ -295,7 +295,7 @@ public class ThreadedChatWebSocket {
         CommentRankData commentRankData = CommentRankData.fromJson(voteStr);
 
         Long userId = ss.getUserObj().getId();
-        log.info(userId.toString());
+        log.debug(userId.toString());
         Long commentId = commentRankData.getCommentId();
         Integer rank = commentRankData.getRank();
 
@@ -345,7 +345,7 @@ public class ThreadedChatWebSocket {
         Long discussionId = SessionScope.getDiscussionIdFromSession(session);
         Long topParentId = SessionScope.getTopParentIdFromSession(session);
 
-        log.info(userObj.json());
+        log.debug(userObj.json());
 
         SessionScope ss = new SessionScope(session, userObj, discussionId, topParentId);
         sessionScopes.add(ss);
