@@ -309,6 +309,8 @@ public class Endpoints {
 
             LazyList<Tables.DiscussionNoTextView> dntvs = p.getPage(page);
 
+            log.debug(dntvs.toSql(true));
+
             Discussions discussions = null;
             if (!dntvs.isEmpty()) {
 
