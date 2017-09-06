@@ -1,4 +1,20 @@
+import * as Zooming from 'zooming';
+
 export class Tools {
+  static zooming = new Zooming({
+    enableGrab: false,
+    preloadImage: false,
+    closeOnWindowResize: true,
+    transitionDuration: 0.2,
+    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0, 1)',
+    bgColor: 'rgb(255, 255, 255)',
+    bgOpacity: 1,
+    scaleBase: 1.0,
+    scaleExtra: 0.5,
+    scrollThreshold: 40,
+    zIndex: 998,
+  });
+
   static createCookie(name: string, value: any, expireTime: number) {
     var expires = "; expires=" + new Date(9999999999999);;
     document.cookie = name + "=" + value + expires + "; path=/";
@@ -34,19 +50,19 @@ export class Tools {
 
   static replaceImages(text: string): string {
     return text.replace(/(https?:\/\/.*\.(?:png|jpg|jpeg|gifv|gif))/g,
-      '<img class="img-fluid expand-on-hover" src="$1">');
+      '<img class="img-fluid img-zoomable" src="$1">');
   }
 
   static replaceImgur(text: string): string {
     return text.replace(/(?:https?:\/\/)(?:www\.)?(?:imgur\.com)\/?([^\s<]+)/g,
-      '<img class="img-fluid expand-on-hover" src="https://i.imgur.com/$1.jpg">');
+      '<img class="img-fluid img-zoomable" src="https://i.imgur.com/$1.jpg">');
   }
 
   static replaceYoutubeWithEmbed(text: string): string {
     let replaced: string = text.replace(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?([^\s<]+)/g,
-      '<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/$1" frameborder="0" allowfullscreen controls="2"></iframe></div>').
+      '<div class="container px-0 py-0"><div class="embed-responsive embed-responsive-1by1"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/$1" frameborder="0" allowfullscreen controls="2"></iframe></div></div>').
       replace(/(?:https?:\/\/)?(?:www\.)?(?:vimeo\.com)\/?([^\s<]+)/g,
-      '<div class="embed-responsive embed-responsive-16by9"><iframe src="//player.vimeo.com/video/$1" class="embed-responsive-item" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>');
+      '<div class="embed-responsive embed-responsive-1by1"><iframe src="//player.vimeo.com/video/$1" class="embed-responsive-item" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>');
     return replaced;
   }
 

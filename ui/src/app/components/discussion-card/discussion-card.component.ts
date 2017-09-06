@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import {FormGroup, FormControl} from '@angular/forms';
-import {Discussion, Tag, User, Community, Tools} from '../../shared';
-import {UserService, DiscussionService, CommunityService, TagService} from '../../services';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { Discussion, Tag, User, Community, Tools } from '../../shared';
+import { UserService, DiscussionService, CommunityService, TagService } from '../../services';
 import { Router } from '@angular/router';
-import {ToasterService} from 'angular2-toaster/angular2-toaster';
+import { ToasterService } from 'angular2-toaster/angular2-toaster';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 
@@ -78,6 +78,7 @@ export class DiscussionCardComponent implements OnInit {
   }
 
   ngAfterViewInit() {
+    Tools.zooming.listen('.img-zoomable');
   }
 
   ngOnChanges() {
@@ -317,7 +318,7 @@ export class DiscussionCardComponent implements OnInit {
   }
 
   isCard(): boolean {
-    return this.viewType==='card';
+    return this.viewType === 'card';
   }
 
   hasImage(): boolean {
