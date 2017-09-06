@@ -51,7 +51,7 @@ public class RedditImporter implements Job {
         log.info("Fetching top reddit posts...");
 
         SubredditPaginator paginator = new SubredditPaginator(redditClient);
-        paginator.setSubreddit("all");
+        paginator.setSubreddit("popular");
         paginator.setTimePeriod(TimePeriod.DAY);
         paginator.setSorting(Sorting.TOP);
         paginator.setLimit(50);
