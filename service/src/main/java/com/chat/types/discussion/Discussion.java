@@ -6,6 +6,7 @@ import com.chat.types.JSONWriter;
 import com.chat.types.community.Community;
 import com.chat.types.tag.Tag;
 import com.chat.types.user.User;
+import com.chat.webservice.ConstantsService;
 import org.javalite.activejdbc.Model;
 
 import java.io.IOException;
@@ -161,7 +162,7 @@ public class Discussion implements JSONWriter {
     }
 
     public String getText() {
-        return text;
+        return ConstantsService.INSTANCE.replaceCensoredText(text);
     }
 
     public Long getId() {
@@ -169,7 +170,7 @@ public class Discussion implements JSONWriter {
     }
 
     public String getTitle() {
-        return title;
+        return ConstantsService.INSTANCE.replaceCensoredText(title);
     }
 
     public String getLink() {
