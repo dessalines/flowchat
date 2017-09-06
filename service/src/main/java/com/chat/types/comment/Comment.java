@@ -244,7 +244,7 @@ public class Comment implements JSONWriter {
     }
 
     public String getText() {
-        return text;
+        return ConstantsService.INSTANCE.replaceCensoredText(text);
     }
 
     public Timestamp getCreated() {

@@ -80,6 +80,9 @@ public class Tables {
     @Table("ranking_constants")
     public static class RankingConstants extends Model {}
 
+    @Table("censored_word")
+    public static class CensoredWord extends Model {}
+
     @Table("tags_view")
     public static class TagsView extends Model {}
 

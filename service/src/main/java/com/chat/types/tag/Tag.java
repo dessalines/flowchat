@@ -1,6 +1,7 @@
 package com.chat.types.tag;
 
 import com.chat.types.JSONWriter;
+import com.chat.webservice.ConstantsService;
 
 /**
  * Created by tyler on 6/19/16.
@@ -30,7 +31,7 @@ public class Tag implements JSONWriter {
     }
 
     public String getName() {
-        return name;
+        return ConstantsService.INSTANCE.replaceCensoredText(name);
     }
 
 

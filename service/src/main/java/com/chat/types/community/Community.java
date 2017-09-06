@@ -5,6 +5,7 @@ import com.chat.tools.Tools;
 import com.chat.types.JSONWriter;
 import com.chat.types.tag.Tag;
 import com.chat.types.user.User;
+import com.chat.webservice.ConstantsService;
 import org.javalite.activejdbc.Model;
 
 import java.io.IOException;
@@ -162,14 +163,16 @@ public class Community implements JSONWriter {
     }
 
     public String getText() {
-        return text;
+        return ConstantsService.INSTANCE.replaceCensoredText(text);
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {return name;}
+    public String getName() {
+        return ConstantsService.INSTANCE.replaceCensoredText(name);
+    }
 
     public List<User> getModerators() {return moderators;}
 
