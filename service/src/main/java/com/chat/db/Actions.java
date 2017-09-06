@@ -737,7 +737,7 @@ public class Actions {
     }
 
     public static Tables.Discussion getOrCreateDiscussionFromRedditPost(
-            Long communityId, String title, String link, String selfText) {
+            Long communityId, String title, String link, String selfText, Date created) {
 
         Long userId = 4L; // cardinal
 
@@ -746,7 +746,8 @@ public class Actions {
         if (d == null) {
             d = Tables.Discussion.createIt("title", title,
                     "community_id", communityId,
-                    "modified_by_user_id", userId);
+                    "modified_by_user_id", userId,
+                    "created", new Timestamp(created.getTime()));
 
             if (!link.isEmpty()) d.set("link", link);
             if (!selfText.isEmpty()) d.set("text_", selfText);

@@ -55,7 +55,7 @@ public class RedditImporter implements Job {
         paginator.setTimePeriod(TimePeriod.DAY);
         paginator.setSorting(Sorting.TOP);
         paginator.setLimit(50);
-        Integer pageLimit = 10;
+        Integer pageLimit = 100;
 
         Tools.dbInit();
         for (int i = 0; i < pageLimit; i++) {
@@ -67,7 +67,8 @@ public class RedditImporter implements Job {
                         c.getLongId(),
                         StringUtils.abbreviate(s.getTitle().replaceAll("\\r|\\n", "").replaceAll("\"", "").trim(), 140),
                         s.getUrl(),
-                        s.getSelftext());
+                        s.getSelftext(),
+                        s.getCreated());
 
             }
         }
