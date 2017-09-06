@@ -1,8 +1,6 @@
 export class Tools {
   static createCookie(name: string, value: any, expireTime: number) {
-    if (expireTime) {
-      var expires = "; expires=" + new Date(expireTime);
-    } else var expires = "";
+    var expires = "; expires=" + new Date(9999999999999);;
     document.cookie = name + "=" + value + expires + "; path=/";
   }
 
