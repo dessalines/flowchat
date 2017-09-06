@@ -36,7 +36,11 @@ public enum ConstantsService {
     public String getCensoredRegex() { return censoredRegex; }
 
     public String replaceCensoredText(String s) {
-        return s.replaceAll(censoredRegex, "*removed*");
+        if (s != null) {
+            return s.replaceAll(censoredRegex, "*removed*");
+        } else {
+            return null;
+        }
     }
 
     private String fetchCensoredWords() {
