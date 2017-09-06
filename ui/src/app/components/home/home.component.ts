@@ -71,13 +71,14 @@ export class HomeComponent implements OnInit {
 
   onScroll(event) {
 
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
       if (this.scrollDebounce == 0) {
         this.scrollDebounce = 1;
         // you're at the bottom of the page
         this.currentPageNum += 1;
         this.getDiscussions(this.communityId, this.currentPageNum, this.sortType);
-        setTimeout(() => this.scrollDebounce = 0, 1000);
+        console.log(this.currentPageNum);
+        setTimeout(() => this.scrollDebounce = 0, 200);
       }
     }
   }
