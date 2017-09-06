@@ -5,18 +5,16 @@ import com.chat.db.Transformations;
 import com.chat.types.JSONWriter;
 import org.javalite.activejdbc.Model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by tyler on 6/22/16.
  */
 public class Discussions implements JSONWriter {
-    private List<Discussion> discussions;
+    private Set<Discussion> discussions;
     private Long count;
 
-    private Discussions(List<Discussion> discussions, Long count) {
+    private Discussions(Set<Discussion> discussions, Long count) {
         this.count = count;
         this.discussions = discussions;
     }
@@ -39,7 +37,7 @@ public class Discussions implements JSONWriter {
                 Transformations.convertRowsToMap(discussionUsers, "discussion_id") : null;
 
         // Convert to a list of discussion objects
-        List<Discussion> dos = new ArrayList<>();
+        Set<Discussion> dos = new LinkedHashSet<>();
 
         for (Model view : discussions) {
             Long id = view.getLongId();
@@ -68,7 +66,7 @@ public class Discussions implements JSONWriter {
         return count;
     }
 
-    public List<Discussion> getDiscussions() {
+    public Set<Discussion> getDiscussions() {
         return discussions;
     }
 }

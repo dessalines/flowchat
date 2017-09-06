@@ -228,4 +228,19 @@ public class Discussion implements JSONWriter {
     public User getModifiedByUser() {
         return modifiedByUser;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Discussion that = (Discussion) o;
+
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

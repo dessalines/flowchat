@@ -19,6 +19,11 @@
 		<sorting_number_of_votes_weight>0.001</sorting_number_of_votes_weight>
 		<sorting_avg_rank_weight>0.01</sorting_avg_rank_weight>
 
+		<reddit_username></reddit_username>
+		<reddit_password></reddit_password>
+		<reddit_client_id></reddit_client_id>
+		<reddit_client_secret></reddit_client_secret>
+
 		<main.class>com.chat.webservice.ChatService</main.class>
 		<activejdbc.version>1.4.11</activejdbc.version>
 		<version>${project.version}</version>
@@ -130,8 +135,19 @@
 
 	</build>
 
+	<repositories>
+		<repository>
+			<id>jcenter</id>
+			<url>https://jcenter.bintray.com/</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
+		<dependency>
+			<groupId>net.dean.jraw</groupId>
+			<artifactId>JRAW</artifactId>
+			<version>0.9.0</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.liquibase/liquibase-core -->
 		<dependency>
 			<groupId>org.liquibase</groupId>

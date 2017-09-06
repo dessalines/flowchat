@@ -109,7 +109,7 @@ public class Transformations {
         }
 
         try {
-            log.info(Tools.JACKSON.writeValueAsString(rankMap));
+            log.debug(Tools.JACKSON.writeValueAsString(rankMap));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
