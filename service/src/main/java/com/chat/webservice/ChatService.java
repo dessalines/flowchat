@@ -6,6 +6,7 @@ import ch.qos.logback.classic.Logger;
 import com.chat.DataSources;
 import com.chat.db.Actions;
 import com.chat.db.Transformations;
+import com.chat.scheduled.ScheduledJobs;
 import com.chat.tools.Tools;
 import com.chat.types.*;
 import liquibase.Contexts;
@@ -53,6 +54,9 @@ public class ChatService {
     @Option(name="-liquibase", usage="Run liquibase changeset")
     private Boolean liquibase = false;
 
+    @Option(name="-reddit_import", usage="Fetch posts from reddit")
+    private Boolean redditImport = false;
+
     public void doMain(String[] args) {
 
         parseArguments(args);
@@ -94,6 +98,10 @@ public class ChatService {
         Endpoints.exceptions();
 
         init();
+
+        if (redditImport) {
+            ScheduledJobs.start();
+        }
 
     }
 

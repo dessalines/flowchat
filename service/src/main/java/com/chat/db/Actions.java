@@ -100,7 +100,7 @@ public class Actions {
 
     public static User getOrCreateUserObj(Long id, String auth) {
 
-        log.info("getOrCreateUser id = " + id + " auth = " + auth);
+        log.debug("getOrCreateUser id = " + id + " auth = " + auth);
 
         User userObj;
         Tables.UserView dbUser;
@@ -123,7 +123,7 @@ public class Actions {
 
     public static User getOrCreateUserObj(Request req) {
 
-        log.info(req.headers("user"));
+        log.debug(req.headers("user"));
 
         UserFromHeader ufh;
 
@@ -162,7 +162,7 @@ public class Actions {
 
     public static Discussion createDiscussion(Long userId) {
 
-        log.info("Creating discussion");
+        log.debug("Creating discussion");
         String title = "A new discussion";
 
         Tables.Discussion d = Tables.Discussion.createIt("title", title,
@@ -189,8 +189,8 @@ public class Actions {
         Tables.Discussion d = Tables.Discussion.findFirst("id = ?", do_.getId());
         LazyList<DiscussionUserView> udv = DiscussionUserView.where("discussion_id = ?", do_.getId());
 
-        log.info(udv.toJson(true));
-        log.info(do_.json());
+        log.debug(udv.toJson(true));
+        log.debug(do_.json());
 
         if (do_.getTitle() != null) d.set("title", do_.getTitle());
         if (do_.getLink() != null) d.set("link", do_.getLink());
@@ -359,7 +359,7 @@ public class Actions {
 
         public static UserFromHeader fromJson(String dataStr) {
             try {
-                log.info(dataStr);
+                log.debug(dataStr);
                 return Tools.JACKSON.readValue(dataStr, UserFromHeader.class);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -452,7 +452,7 @@ public class Actions {
             Tables.User user = Tables.User.createIt(
                     "name", userName);
 
-            log.info("encrypting the user password");
+            log.debug("encrypting the user password");
             String encryptedPassword = Tools.PASS_ENCRYPT.encryptPassword(password);
 
             FullUser fu = FullUser.createIt("user_id", user.getId(),
@@ -562,7 +562,7 @@ public class Actions {
 
     public static Community createCommunity(Long userId) {
 
-        log.info("Creating community");
+        log.debug("Creating community");
         String name = "new_community_" + UUID.randomUUID().toString().substring(0, 8);
 
         Tables.Community c = Tables.Community.createIt("name", name,
@@ -585,8 +585,8 @@ public class Actions {
         Tables.Community c = Tables.Community.findFirst("id = ?", co_.getId());
         LazyList<CommunityUserView> cuv = CommunityUserView.where("community_id = ?", co_.getId());
 
-        log.info(cuv.toJson(true));
-        log.info(co_.json());
+        log.debug(cuv.toJson(true));
+        log.debug(co_.json());
 
         if (co_.getName() != null) c.set("name", co_.getName());
         if (co_.getText() != null) c.set("text_", co_.getText());
@@ -713,6 +713,52 @@ public class Actions {
                 "user_id = ? and community_id = ?", userId, communityId);
 
         cu.delete();
+
+    }
+
+
+    public static Tables.Community getOrCreateCommunityFromSubreddit(String subredditName) {
+
+        Long userId = 4L; // cardinal
+
+        // Get the community / or create it if it doesn't exist
+        Tables.Community c = Tables.Community.findFirst("name = ?", subredditName);
+        if (c == null) {
+            c = Tables.Community.createIt("name", subredditName,
+                    "modified_by_user_id", userId);
+
+            CommunityUser.createIt("user_id", userId,
+                    "community_id", c.getLong("id"),
+                    "community_role_id", CommunityRole.CREATOR.getVal());
+
+        }
+
+        return c;
+    }
+
+    public static Tables.Discussion getOrCreateDiscussionFromRedditPost(
+            Long communityId, String title, String link, String selfText) {
+
+        Long userId = 4L; // cardinal
+
+        Tables.Discussion d = Tables.Discussion.findFirst("title = ?", title);
+
+        if (d == null) {
+            d = Tables.Discussion.createIt("title", title,
+                    "community_id", communityId,
+                    "modified_by_user_id", userId);
+
+            if (!link.isEmpty()) d.set("link", link);
+            if (!selfText.isEmpty()) d.set("text_", selfText);
+
+            d.saveIt();
+
+            DiscussionUser.createIt("user_id", userId,
+                    "discussion_id", d.getLong("id"),
+                    "discussion_role_id", DiscussionRole.CREATOR.getVal());
+        }
+
+        return d;
 
     }
 

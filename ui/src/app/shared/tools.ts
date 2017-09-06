@@ -41,21 +41,35 @@ export class Tools {
 
   static markdownReplacements(text: string): string {
     let out: string = text;
+    out = this.replaceGifv(out);
     out = this.replaceYoutubeWithEmbed(out);
     out = this.replaceImgur(out);
     out = this.replaceImages(out);
+    out = this.replaceVideos(out);
 
     return out;
   }
 
   static replaceImages(text: string): string {
-    return text.replace(/(https?:\/\/.*\.(?:png|jpg|jpeg|gifv|gif))/g,
-      '<img class="img-fluid img-zoomable" src="$1">');
+    return text.replace(/(https?:\/\/.*\.(?:png|jpg|jpeg))/g,
+      '<img class="img-fluid img-zoomable" src="$1" />');
+  }
+
+  static replaceGifv(text: string): string {
+    return text.replace('.gifv', '.mp4');
+  }
+
+  static replaceVideos(text: string): string {
+    return text.replace(/(https?:\/\/.*\.(?:mp4))/g,
+      '<video onPlay="" class="img-fluid" muted="" loop="" poster="$1" controls><source src="$1" type="video/mp4"></source></video>');
   }
 
   static replaceImgur(text: string): string {
-    return text.replace(/(?:https?:\/\/)(?:www\.)?(?:imgur\.com)\/?([^\s<]+)/g,
-      '<img class="img-fluid img-zoomable" src="https://i.imgur.com/$1.jpg">');
+    console.log(text);
+    let replaced = text.replace(/(?:https?:\/\/)(?:www\.)?(?:imgur\.com)\/?([^\s<]+)/g,
+      "https://i.imgur.com/$1");
+    console.log(replaced);
+    return replaced;
   }
 
   static replaceYoutubeWithEmbed(text: string): string {
@@ -68,7 +82,7 @@ export class Tools {
 
   static isImageType(text: string): boolean {
     let str: string = text.toString();
-    let match = str.match(/(https?:\/\/.*(?:png|jpg|jpeg|gifv|gif|imgur|youtube|vimeo))/g);
+    let match = str.match(/(https?:\/\/.*(?:png|jpg|jpeg|gifv|mp4|gif|imgur|youtube|vimeo))/g);
     if (match != null && match.length > 0) {
       return true;
     } else {

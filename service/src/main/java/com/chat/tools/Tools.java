@@ -136,7 +136,7 @@ public class Tools {
             }
         }
 
-//		log.info(GSON2.toJson(postMap));
+//		log.debug(GSON2.toJson(postMap));
 
         return postMap;
 
@@ -232,7 +232,7 @@ public class Tools {
 
     public static Set<Long> fetchCommunitiesFromParams(String communityParam, User userObj) {
 
-        log.info("community param = " + communityParam);
+        log.debug("community param = " + communityParam);
         Set<Long> communityIds = new HashSet<>();
         if (communityParam.equals("all")) {
             return null;
@@ -264,7 +264,7 @@ public class Tools {
                     DataSources.PROPERTIES.getProperty("jdbc.password"));
 
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(c));
-            log.info(DataSources.CHANGELOG_MASTER);
+            log.debug(DataSources.CHANGELOG_MASTER);
             liquibase = new Liquibase(DataSources.CHANGELOG_MASTER, new FileSystemResourceAccessor(), database);
             liquibase.update("main");
         } catch (SQLException | LiquibaseException e) {

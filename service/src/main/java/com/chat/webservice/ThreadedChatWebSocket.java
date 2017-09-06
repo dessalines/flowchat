@@ -3,7 +3,7 @@ package com.chat.webservice;
 import ch.qos.logback.classic.Logger;
 import com.chat.db.Actions;
 import com.chat.tools.Tools;
-import com.chat.types.*;
+import com.chat.types.SessionScope;
 import com.chat.types.comment.Comment;
 import com.chat.types.comment.Comments;
 import com.chat.types.discussion.Discussion;
