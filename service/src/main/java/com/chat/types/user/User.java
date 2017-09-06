@@ -3,6 +3,7 @@ package com.chat.types.user;
 import com.chat.db.Tables;
 import com.chat.tools.Tools;
 import com.chat.types.JSONWriter;
+import com.chat.webservice.ConstantsService;
 
 import java.io.IOException;
 
@@ -45,7 +46,7 @@ public class User implements JSONWriter {
     }
 
     public String getName() {
-        return name;
+        return ConstantsService.INSTANCE.replaceCensoredText(name);
     }
 
     public UserSettings getSettings() {
