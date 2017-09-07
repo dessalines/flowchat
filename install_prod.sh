@@ -5,4 +5,4 @@ yarn
 ng build -prod -aot
 cp -R dist/ ../service/src/main/resources
 cd ..
-find .
+echo $PWD
