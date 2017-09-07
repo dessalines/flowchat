@@ -3,6 +3,7 @@ cd ui
 #npm i -g @angular/cli
 yarn
 ng build -aot
+cp -R dist/ ../service/src/main/resources
 cd ..
 
 # Building the back end
