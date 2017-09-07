@@ -3,6 +3,7 @@ jdk:
 - oraclejdk8
 services:
 - postgresql
+- tree
 before_install:
 - psql -c "create user flowchat with password 'asdf' superuser" -U postgres
 - psql -c 'create database flowchat;' -U postgres
