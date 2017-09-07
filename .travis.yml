@@ -9,6 +9,7 @@ before_install:
 - cd service
 after_success:
 - cd ..
+- ./install_prod.sh
 - "./deploy.sh"
 addons:
   postgresql: '9.3'

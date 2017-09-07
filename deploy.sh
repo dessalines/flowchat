@@ -1,4 +1,3 @@
 if [ "$TRAVIS_BRANCH" == "master"  ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     export SSHPASS=$DEPLOY_PASS
-    #sshpass -e ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "source ~/.nvm/nvm.sh;cd ~/git/flowchat;git checkout master;git pull;./install_prod.sh"
-fi
+    sshpass -e ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "curl -s https://api.github.com/repos/dessalines/flowchat/releases/latest | grep browser_download_url | cut -d '"' -f 4 | xargs wget; java -jar flowchat.jar"
