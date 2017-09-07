@@ -10,7 +10,7 @@ before_install:
 after_success:
 - cd ..
 - ./install_prod.sh
-- "./deploy.sh"
+- ./deploy.sh
 addons:
   postgresql: '9.3'
   apt:
