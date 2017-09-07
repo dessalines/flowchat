@@ -42,9 +42,6 @@ public class ChatService {
     @Option(name="-loglevel", usage="Sets the log level [INFO, DEBUG, etc.]")
     private String loglevel = "INFO";
 
-    @Option(name="-ui_dist",usage="The location of the ui dist folder.")
-    private File uiDist = new File("../ui/dist");
-
     @Option(name="-ssl",usage="The location of the java keystore .jks file.")
     private File jks;
 
@@ -78,8 +75,8 @@ public class ChatService {
         if (liquibase) {
             Tools.runLiquibase();
         }
-        
-        staticFiles.externalLocation(uiDist.getAbsolutePath());
+
+        staticFiles.location("/dist");
         staticFiles.expireTime(600);
 
         // Instantiates the ranking constants
