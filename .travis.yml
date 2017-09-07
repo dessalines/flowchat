@@ -8,9 +8,6 @@ before_install:
 - psql -c 'create database flowchat;' -U postgres
 - cd ui; npm i -g @angular/cli; yarn; ng build -prod -aot
 - cd ../service
-after_success:
-- cd ..
-- ./deploy.sh
 addons:
   postgresql: '9.3'
   apt:
@@ -29,3 +26,6 @@ deploy:
   on:
     repo: dessalines/flowchat
     branch: travis_deploy
+after_deploy:
+- cd ..
+- ./deploy.sh
