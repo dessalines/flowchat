@@ -96,26 +96,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.liquibase</groupId>
-				<artifactId>liquibase-maven-plugin</artifactId>
-				<version>3.5.1</version>
-				<configuration>
-					<changeLogFile>src/main/resources/liquibase/db.changelog-master.xml</changeLogFile>
-					<driver>org.postgresql.Driver</driver>
-					<url>${jdbc.url}</url>
-					<username>${jdbc.username}</username>
-					<password>${jdbc.password}</password>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>properties-maven-plugin</artifactId>
 				<version>1.0-alpha-2</version>
