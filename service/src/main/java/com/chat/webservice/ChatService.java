@@ -49,7 +49,7 @@ public class ChatService {
     private Boolean docker = false;
 
     @Option(name="-liquibase", usage="Run liquibase changeset")
-    private Boolean liquibase = false;
+    private Boolean liquibase = true;
 
     @Option(name="-reddit_import", usage="Fetch posts from reddit")
     private Boolean redditImport = false;
