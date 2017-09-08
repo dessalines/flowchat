@@ -51,7 +51,7 @@ public class Endpoints {
         });
 
         after((req, res) -> {
-//            res.header("Content-Encoding", "gzip");
+            res.header("Content-Encoding", "gzip");
             Tools.dbClose();
         });
 
