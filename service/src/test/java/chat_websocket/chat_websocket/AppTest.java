@@ -17,7 +17,7 @@ public class AppTest {
 
     @Before
     public void setUp() {
-        ConstantsService.INSTANCE.getRankingConstants();
+//        ConstantsService.INSTANCE.getRankingConstants();
         Tools.dbInit();
     }
 
