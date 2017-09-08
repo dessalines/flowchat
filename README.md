@@ -64,23 +64,22 @@ psql -c 'create database flowchat with owner flowchat;'
 #### Edit your pom.xml file to point to your database
 ```sh
 cd flowchat
-vim service/pom.xml
+vim service/flowchat.properties
 ```
 
 Edit it to point to your own database:
-```xml
+```
 <!--The Database location and login, here's a sample-->
-<jdbc.url>jdbc:postgresql://127.0.0.1/flowchat</jdbc.url>
-<jdbc.username>flowchat</jdbc.username>
-<jdbc.password>asdf</jdbc.password
-<!--The sorting for discussions, comments, and tags are:
- 	Sorting score =
-		created_weight/(now_seconds - comment_seconds) +
-		number_of_votes*number_of_votes_weight +
-		avg_rank*avg_rank_weight-->
-<sorting_created_weight>3600</sorting_created_weight>
-<sorting_number_of_votes_weight>0.001</sorting_number_of_votes_weight>
-<sorting_avg_rank_weight>0.01</sorting_avg_rank_weight>
+jdbc.url=jdbc\:postgresql\://127.0.0.1/flowchat
+jdbc.username=flowchat
+jdbc.password=asdf
+sorting_created_weight=3600
+sorting_number_of_votes_weight=0.001
+sorting_avg_rank_weight=0.01
+reddit_client_id=
+reddit_client_secret=
+reddit_username=
+reddit_password=
 ```
 #### Install flowchat
 
