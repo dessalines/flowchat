@@ -22,7 +22,7 @@ deploy:
   provider: releases
   api_key:
     secure: JorCWY30UiSI5DWIlDbhKX0zHp+vB4u0+8354jYYHGGmKUoY4DjbLtaJ8wwt52QmhEhPMNQxU1siS41kwGqgm0uLX6zH9BJTB5Nh/1EEkSuoKpY8GgnCsXX+gV+ic+yTFDpqavyP7Xru8I7OfQt62fbBNApDpOEPPLzLYdWb+ILbo1OoGKgEN2s4UyuVllEniqxAMcTZg5IwqCDuGW2bZxopYu9WdkQvpGYmvI3HR47AHpV40OEB1i5JmRBBNOuJTdeRoD9bw0DecL0hv5eY4IHA4evttUdZQ0m33bGM89/d5CKUpgOloJprVQTFfF0iazGX0maJG2PeJzHDxfYtDtEccFhY26EVPUJZAfw6Zx+LS2surHH3rxc+wF2wiRQ1YEu0PUuBK/3OoIFVEeCPGoLAgWfOYTSnhtlxozwOgdzLwwqjwp1yxJx+cVx67wBwNoz3zcEdObmzI/1FrU1A9UwZmi8ciI4cTheEbhQkzN+yiZFsSD0wfm+pahKABkuuVJbdKUUiFgNHvBYWmFcflnexrUQ4rBLDPFvanRHe0bRtI21Z/T0uT6yBf89Y3ksV5Lb+oxUCzQvbefhIpdr/yTRm8ihhTUDcpBkSd6ztelTR1GBQaLjDLKFqbeLZIItrlsz4sE60gUGMQHDdP7fPuWD4aK95EsdvjoKjLDRzB6E=
-  file: build/dessalines/flowchat/service/target/flowchat.jar
+  file: target/flowchat.jar
   skip_cleanup: true
   on:
     repo: dessalines/flowchat
