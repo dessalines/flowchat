@@ -65,10 +65,8 @@ export class Tools {
   }
 
   static replaceImgur(text: string): string {
-    console.log(text);
     let replaced = text.replace(/(?:https?:\/\/)(?:www\.)?(?:imgur\.com)\/?([^\s<]+)/g,
       "https://i.imgur.com/$1.jpg");
-    console.log(replaced);
     return replaced;
   }
 

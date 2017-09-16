@@ -19,7 +19,11 @@
     "styles": [
       "styles.scss"
     ],
-    "scripts": [],
+    "scripts": [
+      "../node_modules/autosize/dist/autosize.min.js",
+      "../node_modules/markdown-it-emoji/dist/markdown-it-emoji.min.js",
+      "../node_modules/favico.js/favico-0.3.10.min.js"
+    ],
     "environmentSource": "environments/environment.ts",
     "environments": {
       "dev": "environments/environment.ts",
