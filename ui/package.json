@@ -23,7 +23,7 @@
     "@angular/router": "^4.0.0",
     "angular2-toaster": "^4.0.0",
     "autosize": "^3.0.15",
-    "bootstrap": "^4.0.0-alpha.6",
+    "bootstrap": "4.0.0-alpha.6",
     "core-js": "^2.4.1",
     "favico.js": "^0.3.10",
     "font-awesome": "^4.7.0",
