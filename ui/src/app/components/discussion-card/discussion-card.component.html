@@ -67,7 +67,7 @@
               class="link-unstyled">
               <i class="fa fa-fw fa-comments-o" placement="bottom"
                 tooltip="Comments"></i>
-              <small *ngIf="discussion.numberOfComments">{{discussion.numberOfComments}} comments</small>
+              <small class="text-muted" *ngIf="discussion.numberOfComments">{{discussion.numberOfComments}} comments</small>
             </a>
           </li>
           <li role="button" *ngIf="isCreator || isModerator"
