@@ -21,20 +21,20 @@
               name="discussion_form"
               autocomplete="off"
               >
-            <button class="btn btn-outline-primary mr-sm-2" type="submit"><i class="fa fa-search"></i></button>
+            <button class="btn btn-outline-primary mr-3" type="submit"><i class="fa fa-search"></i></button>
           </form>
+        </li>
+        <li class="nav-item">
+          <button role="button" class="btn btn-outline-primary mr-2"
+            (click)="createDiscussion()">Create a discussion</button>
+        </li>
+        <li class="nav-item">
+          <button role="button" class="btn btn-outline-primary mr-2"
+            (click)="createCommunity()">Create a community</button>
         </li>
         <li class="nav-item">
           <a class="nav-link link-unstyled" href="https://github.com/tchoulihan/flowchat"
             target="_blank">About</a>
-        </li>
-        <li class="nav-item">
-          <a role="button" class="nav-link link-unstyled"
-            (click)="createDiscussion()">Create a discussion</a>
-        </li>
-        <li class="nav-item">
-          <a role="button" class="nav-link link-unstyled"
-            (click)="createCommunity()">Create a community</a>
         </li>
         <li class="nav-item">
           <a role="button" class="nav-link link-unstyled"
