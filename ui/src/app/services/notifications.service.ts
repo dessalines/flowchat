@@ -19,7 +19,7 @@ export class NotificationsService {
   private markAsReadUrl: string = environment.endpoint + 'mark_reply_as_read/';
   private markAllAsReadUrl: string = environment.endpoint + 'mark_all_replies_as_read';
 
-  private fetchInterval: number = 60000;
+  private fetchInterval: number = 15000;
 
   constructor(private http: Http,
     private userService: UserService) {
