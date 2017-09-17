@@ -11,6 +11,7 @@ export interface Discussion {
   avgRank?: number;
   userRank?: number;
   numberOfVotes?: number;
+  numberOfComments?: number;
   tags?: Array<Tag>;
   private_?: boolean;
   privateUsers?: Array<User>;

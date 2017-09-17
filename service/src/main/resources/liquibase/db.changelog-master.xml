@@ -22,5 +22,6 @@
     <include file="/tmp/.flowchat.tmp/liquibase/changelogs/2017-09-06.1.sql"/>
     <include file="/tmp/.flowchat.tmp/liquibase/changelogs/2017-09-06.2.sql"/>
     <include file="/tmp/.flowchat.tmp/liquibase/changelogs/2017-09-06.3.sql"/>
+    <include file="/tmp/.flowchat.tmp/liquibase/changelogs/2017-09-17.1.sql"/>
 
 </databaseChangeLog>
