@@ -21,7 +21,7 @@ public class Discussion implements JSONWriter {
     private User creator, modifiedByUser;
     private String title, link, text;
     private Boolean private_, deleted;
-    private Integer avgRank, userRank, numberOfVotes;
+    private Integer avgRank, userRank, numberOfVotes, numberOfComments;
     private Community community;
     private List<Tag> tags;
     private List<User> privateUsers, blockedUsers;
@@ -38,6 +38,7 @@ public class Discussion implements JSONWriter {
                       Integer avgRank,
                       Integer userRank,
                       Integer numberOfVotes,
+                      Integer numberOfComments,
                       List<Tag> tags,
                       User creator,
                       User modifiedByUser,
@@ -57,6 +58,7 @@ public class Discussion implements JSONWriter {
         this.avgRank = avgRank;
         this.userRank = userRank;
         this.numberOfVotes = numberOfVotes;
+        this.numberOfComments = numberOfComments;
         this.tags = tags;
         this.creator = creator;
         this.privateUsers = privateUsers;
@@ -139,6 +141,7 @@ public class Discussion implements JSONWriter {
                 d.getInteger("avg_rank"),
                 vote,
                 d.getInteger("number_of_votes"),
+                d.getInteger("number_of_comments"),
                 tags,
                 creator,
                 modifiedByUser,
@@ -191,6 +194,10 @@ public class Discussion implements JSONWriter {
 
     public Integer getNumberOfVotes() {
         return numberOfVotes;
+    }
+
+    public Integer getNumberOfComments() {
+        return numberOfComments;
     }
 
     public List<Tag> getTags() {
