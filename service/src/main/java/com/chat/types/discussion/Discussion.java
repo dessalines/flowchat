@@ -73,7 +73,7 @@ public class Discussion implements JSONWriter {
 
     public void checkPrivate(User userObj) {
         if (getPrivate_().equals(true)) {
-            if (!getPrivateUsers().contains(userObj)) {
+            if (!userObj.equals(creator) && !getPrivateUsers().contains(userObj)) {
                 throw new NoSuchElementException("Private discussion, not allowed to view");
             }
         }
