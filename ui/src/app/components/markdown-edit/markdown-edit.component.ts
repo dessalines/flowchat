@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {Tools} from '../../shared/tools';
-import {MarkdownPipe} from '../../pipes/markdown.pipe';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Tools } from '../../shared/tools';
+import { MarkdownPipe } from '../../pipes/markdown.pipe';
 
 declare var markdownitEmoji: any;
 declare var autosize: any;
@@ -29,7 +29,7 @@ export class MarkdownEditComponent implements OnInit {
 
   public previewMode: boolean = false;
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     if (this.inputText != null) {
@@ -39,9 +39,9 @@ export class MarkdownEditComponent implements OnInit {
 
   ngAfterViewInit() {
     autosize(this.textArea.nativeElement);
-    if (this.focus) {
-      this.textArea.nativeElement.focus()
-    };
+    if (this.focus && !Tools.isMobileOrTablet()) {
+      this.textArea.nativeElement.focus();
+    }
   }
 
   setText() {
