@@ -33,7 +33,7 @@ Check out a sample discussion [here](http://flow-chat.com/#/discussion/13).
 
 Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 
-[Change log](CHANGELOG.md)
+[Change log](https://github.com/dessalines/flowchat/issues?q=is%3Aissue+is%3Aclosed)
 
 ==========
 
