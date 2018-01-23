@@ -1,4 +1,4 @@
-<div [id]="'comment_' + comment.id" class="card-block pb-0">
+<div [id]="'comment_' + comment.id" class="card-body pb-0">
   <ul class="list-inline mb-0">
     <li class="text-muted list-inline-item" role="button"
       (click)="collapsed = !collapsed">{{collapseText()}}</li>
@@ -21,7 +21,7 @@
     </span>
   </ul>
 </div>
-<div *ngIf="!collapsed" class="card-block pt-0">
+<div *ngIf="!collapsed" class="card-body pt-0">
   <div *ngIf="!comment.deleted">
     <div *ngIf="!showEdit" class="card-text"
       [class.mark]="isCommentNew()" [innerHTML]="comment.text | markdown">

@@ -1,11 +1,11 @@
-<nav class="navbar navbar-light bg-primary navbar-toggleable-md">
+<nav class="navbar navbar-dark bg-dark navbar-expand-md">
   <a class="navbar-brand" [routerLink]="['/']"><i class="fa fa-fw fa-comment-o"></i>&nbsp;FlowChat</a>
   <button (click)="toggleCollapseNavbar()" class="navbar-toggler navbar-toggler-right" type="button">
     &#9776;
   </button>
   <div [class.collapse]="collapseNavbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li class="nav-item">
+        <li class="nav-item nav-link">
           <form [formGroup]="discussionSearchForm" class="form-inline">
             <input 
               formControlName="discussionSearchControl"
@@ -24,19 +24,19 @@
             <button class="btn btn-outline-primary mr-3" type="submit"><i class="fa fa-search"></i></button>
           </form>
         </li>
-        <li class="nav-item">
+        <li class="nav-item nav-link">
           <button role="button" class="btn btn-outline-primary mr-2"
             (click)="createDiscussion()">Create a discussion</button>
         </li>
-        <li class="nav-item">
+        <li class="nav-item nav-link">
           <button role="button" class="btn btn-outline-primary mr-2"
             (click)="createCommunity()">Create a community</button>
         </li>
-        <li class="nav-item">
+        <li class="nav-item nav-link">
           <a class="nav-link link-unstyled" href="https://github.com/tchoulihan/flowchat"
             target="_blank">About</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item nav-link">
           <a role="button" class="nav-link link-unstyled"
             placement="bottom" tooltip="Donate to the developer"
             href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2XTHDEBUNQ47U&lc=US&item_name=FlowChat&item_number=flowchat_02&amount=5%2e00&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
@@ -44,62 +44,62 @@
         </li>
       </ul>
       <div class="ml-auto">
-      <ul *ngIf="userService.isFullUser()" class="nav navbar-nav">
-        <li dropdown class="nav-item" keyboardNav="true">
-          <a class="nav-link link-unstyled" role="button"
+        <ul *ngIf="userService.isFullUser()" class="nav navbar-nav">
+          <li dropdown class="nav-item" keyboardNav="true">
+            <a class="nav-link link-unstyled" role="button"
             type="button" dropdownToggle placement="bottom"
             tooltip="Messages">
             <span *ngIf="unreadMessages?.length > 0" class="badge badge-info navbar-label ml-2">{{unreadMessages?.length}}</span>
-            <i class="fa fa-fw fa-envelope-o"></i>
-          </a>
-          <ul class="dropdown-menu messages-dropdown dropdown-menu-right"
+              <i class="fa fa-fw fa-envelope-o"></i>
+            </a>
+            <ul class="dropdown-menu messages-dropdown dropdown-menu-right"
             role="menu">
-            <h6 class="dropdown-header">Messages 
-              <small role="button" (click)="markAllNotificationsAsRead()" placement="bottom"
+              <h6 class="dropdown-header">Messages 
+                <small role="button" (click)="markAllNotificationsAsRead()" placement="bottom"
             tooltip="Mark all as read"><i class="fa fa-fw fa-check"></i></small>
-            </h6>
-            <li *ngFor="let message of unreadMessages"
+              </h6>
+              <li *ngFor="let message of unreadMessages"
               role="menuitem">
-              <div class="dropdown-item" role="button"
+                <div class="dropdown-item" role="button"
                 (click)="gotoMessage(message)">
-                <div [innerHTML]="message.text | markdown"></div>
-                <small>
-                  <ul class="list-inline">
-                    <li class="list-inline-item">from {{message.user.name}}</li>
-                    <li *ngIf="message.deleted" class="text-muted list-inline-item"><small><i>deleted {{message.modified | moment}}</i></small></li>
-                    <span *ngIf="!message.deleted">
-                      <li *ngIf="!message.modified" class="text-muted list-inline-item"><small>{{message.created | moment}}</small></li>
-                      <li *ngIf="message.modified" class="text-muted list-inline-item"><small><i>modified {{message.modified | moment}}</i></small></li>
-                    </span>
-                  </ul>
-                </small>
-              </div>
-            </li>
-          </ul>
-        </li>
-      <li dropdown class="nav-item" keyboardNav="true">
-        <a class="nav-link link-unstyled" role="button"
+                  <div [innerHTML]="message.text | markdown"></div>
+                  <small>
+                    <ul class="list-inline">
+                      <li class="list-inline-item">from {{message.user.name}}</li>
+                      <li *ngIf="message.deleted" class="text-muted list-inline-item"><small><i>deleted {{message.modified | moment}}</i></small></li>
+                      <span *ngIf="!message.deleted">
+                        <li *ngIf="!message.modified" class="text-muted list-inline-item"><small>{{message.created | moment}}</small></li>
+                        <li *ngIf="message.modified" class="text-muted list-inline-item"><small><i>modified {{message.modified | moment}}</i></small></li>
+                      </span>
+                    </ul>
+                  </small>
+                </div>
+              </li>
+            </ul>
+          </li>
+        <li dropdown class="nav-item" keyboardNav="true">
+          <a class="nav-link link-unstyled" role="button"
           type="button" dropdownToggle>
             {{userService.getUser().name}}<i class="ml-2 fa fa-caret-down"></i>
-        </a>
-        <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
+          </a>
+          <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
           <!--             <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
             <li class="divider dropdown-divider"></li> -->
-          <li role="menuitem"><a (click)="logout()" class="dropdown-item"
+            <li role="menuitem"><a (click)="logout()" class="dropdown-item"
               href="#"><i class="fa fa-fw fa-sign-out"></i>Logout</a></li>
-        </ul>
-      </li>
+          </ul>
+        </li>
       </ul>
-      <ul class="nav navbar-nav">
-        <li *ngIf="!userService.isFullUser()" class="nav-item">
-          <a role="button" class="nav-link link-unstyled"
+        <ul class="nav navbar-nav">
+          <li *ngIf="!userService.isFullUser()" class="nav-item">
+            <a role="button" class="nav-link link-unstyled"
             (click)="loginModal.show()">Login/Signup</a>
-        </li>
-        <li *ngIf="userService.isAnonymousUser()"
+          </li>
+          <li *ngIf="userService.isAnonymousUser()"
           class="nav-item hidden-xs-up">
-          <a (click)="logout()" role="button" class="nav-link link-unstyled">Logout</a>
-        </li>
-      </ul>
+            <a (click)="logout()" role="button" class="nav-link link-unstyled">Logout</a>
+          </li>
+        </ul>
       </div>
     </div>
 </nav>
