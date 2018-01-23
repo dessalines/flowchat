@@ -176,3 +176,18 @@ html [type="button"],
 .inline {
   display: inline;
 }
+
+ngx-masonry {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+ngx-masonry-item, .masonry-column-sizer {
+  @media (min-width: 480px) {
+    width: calc(32%);
+  }
+  @media (max-width : 480px) {
+    width: calc(100%);
+  }
+}
