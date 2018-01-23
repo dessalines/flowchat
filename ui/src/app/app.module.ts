@@ -36,6 +36,10 @@ import { Title } from '@angular/platform-browser'
 
 import { AppRoutingModule } from './app.routing';
 
+import { NgxMasonryModule } from 'ngx-masonry';
+
+window['imagesLoaded'] = require('imagesloaded');
+
 @NgModule({
   declarations: [
 
@@ -78,7 +82,9 @@ import { AppRoutingModule } from './app.routing';
     ModalModule.forRoot(),
     TabsModule.forRoot(),
     TypeaheadModule.forRoot(),
-    AlertModule.forRoot()
+    AlertModule.forRoot(),
+
+    NgxMasonryModule
   ],
   providers: [Title],
   bootstrap: [AppComponent]

@@ -27,12 +27,18 @@
       <app-discussion-card-sort-select [sortType]="sortType " (sortTypeChange)="resort($event) "></app-discussion-card-sort-select>
     </div>
   </div>
-  <div [class.card-deck-wrapper]="isCard() ">
-    <div (window:scroll)="onScroll($event)
-        " [ngClass]="{ 'card-deck': isCard(), 'list-group': !isCard()} ">
-      <app-discussion-card [viewType]="viewType
-        " [ngClass]="{ 'col-md-4': isCard()} " *ngFor="let discussion of discussions
-        " [discussion]="discussion "></app-discussion-card>
+  <div (window:scroll)="onScroll($event)">
+    <div *ngIf="!isCard()" class="list-group">
+      <app-discussion-card [viewType]="viewType" *ngFor="let discussion of discussions" [discussion]="discussion "></app-discussion-card>
+    </div>
+    <div *ngIf="isCard()">
+      <div class="row">
+        <ngx-masonry [options]="{gutter: 10, percentPosition: true}" [useImagesLoaded]="true">
+          <ngx-masonry-item class="masonry-item" *ngFor="let discussion of discussions">
+            <app-discussion-card [viewType]="viewType" [discussion]="discussion "></app-discussion-card>
+          </ngx-masonry-item>
+        </ngx-masonry>
+      </div>
     </div>
   </div>
   <div class="row">
