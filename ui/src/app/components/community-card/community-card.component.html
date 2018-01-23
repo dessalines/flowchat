@@ -1,13 +1,13 @@
 <div class="card">
   <div *ngIf="!community.deleted">
     <div *ngIf="!editing">
-      <div class="card-block card-block-no-bottom">
+      <div class="card-body card-body-no-bottom">
         <h4 class="card-title">
           <span role="button" class="link-unstyled" (click)="toggleCollapseText()" placement="bottom" tooltip="Show/Hide Text">{{community.name}}</span>
           <small *ngIf="isModerator"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditing()" placement="bottom" tooltip="Edit"></i></small>
         </h4>
       </div>
-      <div class="card-block card-block-no-top">
+      <div class="card-body card-body-no-top">
         <p *ngIf="community.text && !textCollapsed"
           class="card-text" [innerHTML]="community.text | markdown"></p>
         <ul class="list-inline small">
@@ -70,7 +70,7 @@
       </div>
     </div>
     <div *ngIf="editing">
-      <form #communityForm="ngForm" class="card-block">
+      <form #communityForm="ngForm" class="card-body">
         <div *ngIf="isCreator" class="form-group row">
           <label class="col-sm-1 form-control-label">Name</label>
           <div class="col-sm-11">

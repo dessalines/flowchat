@@ -9,9 +9,9 @@
       </div>
       <div [ngClass]="{'col-xs-10 col-xl-11': !isCard() && hasImage()}">
       <div [ngClass]="{
-        'card-block': isCard(),
-        'card-block-no-bottom': isCard()}">
-        <h5 [class.card-title]="isCard()" class="card-block-no-bottom">
+        'card-body': isCard(),
+        'card-body-no-bottom': isCard()}">
+        <h5 [class.card-title]="isCard()" class="card-body-no-bottom">
           <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">{{discussion.title}} </a>
           <small *ngIf="isCreator"><i class="fa fa-fw fa-edit" role="button" (click)="toggleEditing()" placement="bottom" tooltip="Edit"></i></small>
         </h5>
@@ -20,8 +20,8 @@
         <div [innerHTML]="discussion.link | markdown"></div>
       </div>
       <div [ngClass]="{
-        'card-block': isCard(),
-        'card-block-no-top': isCard()}">
+        'card-body': isCard(),
+        'card-body-no-top': isCard()}">
         <p *ngIf="discussion.text" class="card-text"
           [innerHTML]="discussion.text | markdown"></p>
         
@@ -89,7 +89,7 @@
       </div>
     </div>
     <div *ngIf="editing">
-      <form #discussionForm="ngForm" class="card-block">
+      <form #discussionForm="ngForm" class="card-body">
         <div class="form-group row">
           <label class="col-sm-2 form-control-label">Title</label>
           <div class="col-sm-10">

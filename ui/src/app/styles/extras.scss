@@ -71,7 +71,7 @@ blockquote {
   clear: both;
   font-weight: 400;
   line-height: 1.42857143;
-  color: #333;
+  color: #fbfbfb;
   white-space: nowrap;
 }
 
@@ -155,7 +155,12 @@ html [type="button"],
   padding: .5em .5em;
 }
 .mark {
-  background-color: #ffffa7;
+  background-color: #3b3b01;
+}
+
+.navbar.bg-dark {
+  border: 0px;
+  border-bottom: 1px solid #282828;
 }
 // Disable expand image on hover for now
 // .expand-on-hover {
