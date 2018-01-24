@@ -39,7 +39,7 @@ export class Tools {
     return text.replace(/['"]+/g, '');
   }
 
-  static markdownReplacements(text: string): string {
+  static linkReplacements(text: string): string {
     let out: string = text;
     out = this.replaceGifv(out);
     out = this.replaceYoutubeWithEmbed(out);
