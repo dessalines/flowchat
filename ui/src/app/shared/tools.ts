@@ -7,7 +7,7 @@ export class Tools {
     closeOnWindowResize: true,
     transitionDuration: 0.2,
     transitionTimingFunction: 'cubic-bezier(0.4, 0, 0, 1)',
-    bgColor: 'rgb(255, 255, 255)',
+    bgColor: 'rgb(0,0,0)',
     bgOpacity: 1,
     scaleBase: 1.0,
     scaleExtra: 0.5,

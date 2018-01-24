@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.tchoulihan</groupId>
 	<artifactId>flowchat</artifactId>
-	<version>0.3.1</version>
+	<version>0.4.0</version>
 	<properties>
 		<!--The Database location and login, here's a sample-->
 		<jdbc.url>jdbc:postgresql://127.0.0.1/flowchat</jdbc.url>
@@ -16,7 +16,7 @@
 				number_of_votes*number_of_votes_weight +
 				avg_rank*avg_rank_weight-->
 		<sorting_created_weight>3600</sorting_created_weight>
-		<sorting_number_of_votes_weight>0.001</sorting_number_of_votes_weight>
+		<sorting_number_of_votes_weight>0.1</sorting_number_of_votes_weight>
 		<sorting_avg_rank_weight>0.01</sorting_avg_rank_weight>
 
 		<reddit_username></reddit_username>
