@@ -11,7 +11,7 @@
 
 [FlowChat](http://flow-chat.com) is an open-source, self-hostable, **live-updating** discussion platform, featuring communities, discussions with threaded conversations, and voting.
 
-It can act as an alternative to forums, as a private team communication platform(like slack), a content creation platform(like reddit), or a voting/polling platform like [referendum](https://referendum.ml).
+It can act as an alternative to forums, as a private team communication platform(like slack), a content creation platform(like reddit), or a voting/polling platform like [SimpleVote](https://simplevote.ml).
 
 Flowchat tries to solve the problem of having a fluid, free-feeling group chat, while allowing for side conversations so that every comment isn't at the top level. Multiple conversations can take place **at once**, without interrupting the flow of the chatroom.
 
