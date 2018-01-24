@@ -35,7 +35,7 @@ export class UserService {
   private saveUserUrl: string = environment.endpoint + 'user';
 
   private defaultSettings: UserSettings = {
-    defaultViewTypeRadioValue: 'list',
+    defaultViewTypeRadioValue: 'card',
     defaultSortTypeRadioValue: 'time-86400',
     readOnboardAlert: false
   }

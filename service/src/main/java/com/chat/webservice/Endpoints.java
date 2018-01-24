@@ -261,6 +261,8 @@ public class Endpoints {
         });
 
         // Get the user id
+        // A test query
+        // select title, created, number_of_votes, avg_rank, ranking(created, 86400, number_of_votes, 0.1, avg_rank, 0.01) from discussion_notext_view order by ranking(created, 86400, number_of_votes, 0.1, avg_rank, 0.01) desc limit 200;
         get("/discussions/:tagId/:communityId/:limit/:page/:orderBy", (req, res) -> {
 
 
