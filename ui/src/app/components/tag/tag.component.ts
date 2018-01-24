@@ -46,7 +46,7 @@ export class TagComponent implements OnInit {
       this.currentPageNum = 1;
       this.scrollDebounce = 0;
       this.getTag(tagId);
-      this.getDiscussions(tagId, this.currentPageNum, this.sortType);
+      this.getDiscussions(tagId, this.currentPageNum, this.sortType, true);
       this.getCommunities(tagId, this.sortType);
     });
 
@@ -63,15 +63,14 @@ export class TagComponent implements OnInit {
     });
   }
 
-  getDiscussions(tagId: number, page: number, orderBy: string) {
+  getDiscussions(tagId: number, page: number, orderBy: string, force: boolean = false) {
 
-    if (this.discussions === undefined || this.discussions.length < this.currentCount) {
-
+    if (this.discussions === undefined || this.discussions.length < this.currentCount || force) {
       this.loadingDiscussions = true;
 
       this.discussionService.getDiscussions(page, undefined, tagId.toString(), undefined, orderBy).subscribe(
         d => {
-          if (this.discussions === undefined) {
+          if (this.discussions === undefined || force) {
             this.discussions = [];
           }
           this.currentCount = d.count;
