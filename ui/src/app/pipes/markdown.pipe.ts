@@ -18,10 +18,12 @@ export class MarkdownPipe implements PipeTransform {
     this.markdownIt.use(markdownitEmoji);
   }
 
-  transform(value: string): any {
-    return this.sanitizer.bypassSecurityTrustHtml(
-      Tools.markdownReplacements(
-        this.markdownIt.render(value)));
+  transform(value: string, link: boolean = false): any {
+    let out = this.markdownIt.render(value);
+    if (link) {
+      out = Tools.linkReplacements(out);
+    }
+    return this.sanitizer.bypassSecurityTrustHtml(out);
   }
 
 }

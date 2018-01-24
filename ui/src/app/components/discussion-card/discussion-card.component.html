@@ -4,7 +4,7 @@
       <div [ngClass]="{'row': !isCard() && hasImage(), 'row-fluid': !isCard() && !hasImage()}">
       <div [ngClass]="{'col-xs-2 col-xl-1 pr-0 pl-1': !isCard() && hasImage()}">
       <div *ngIf="!isCard() && hasImage()">
-        <div [innerHTML]="discussion.link | markdown"></div>
+        <div [innerHTML]="discussion.link | markdown:true"></div>
       </div>
       </div>
       <div [ngClass]="{'col-xs-10 col-xl-11': !isCard() && hasImage()}">
@@ -17,7 +17,7 @@
         </h5>
       </div>
       <div *ngIf="isCard() && hasImage()">
-        <div [innerHTML]="discussion.link | markdown"></div>
+        <div [innerHTML]="discussion.link | markdown:true"></div>
       </div>
       <div [ngClass]="{
         'card-body': isCard(),
