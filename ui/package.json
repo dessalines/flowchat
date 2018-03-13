@@ -32,7 +32,7 @@
     "markdown-it-emoji": "^1.2.0",
     "moment": "^2.17.1",
     "ngx-bootstrap": "^2.0.0-rc.0",
-    "ngx-masonry": "^1.0.1",
+    "ngx-masonry": "^0.5.4",
     "rxjs": "^5.5.2",
     "ts-helpers": "^1.1.1",
     "zone.js": "^0.8.4",
