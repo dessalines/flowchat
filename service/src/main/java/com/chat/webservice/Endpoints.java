@@ -19,7 +19,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
-import org.javalite.activejdbc.Paginator;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 
@@ -199,17 +198,19 @@ public class Endpoints {
             Integer limit = (req.params(":limit") != null) ? Integer.valueOf(req.params(":limit")) : 10;
             Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
             String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "custom";
+            Integer offset = (page - 1) * limit;
 
             orderBy = Tools.constructOrderByPopularTagsCustom(orderBy);
 
-            Paginator p = new Paginator(Tables.TagsView.class, limit, "1=1").
-                    orderBy(orderBy);
-
-            LazyList<Tables.TagsView> popularTags = p.getPage(page);
+            LazyList<Tables.TagsView> popularTags = Tables.TagsView.findAll()
+                    .orderBy(orderBy)
+                    .limit(limit)
+                    .offset(offset);
 
             return popularTags.toJson(false);
 
         });
+
 
     }
 
@@ -269,47 +270,55 @@ public class Endpoints {
             Long tagId = (!req.params(":tagId").equals("all")) ? Long.valueOf(req.params(":tagId")) : null;
             Integer limit = (req.params(":limit") != null) ? Integer.valueOf(req.params(":limit")) : 10;
             Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
+            Integer offset = (page - 1) * limit;
+
             String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-" +
                     ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight().intValue();
 
             orderBy = Tools.constructOrderByCustom(orderBy);
+
             User userObj = Actions.getOrCreateUserObj(req);
 
             Set<Long> communityIds = Tools.fetchCommunitiesFromParams(req.params(":communityId"), userObj);
 
-            Paginator p;
+            LazyList<Tables.DiscussionNoTextView> dntvs;
             // TODO refactor this to a communitiesQueryBuilder, same with discussion(don't use parameterized anymore)
             if (tagId != null) {
                 if (communityIds != null) {
-                    p = new Paginator(Tables.DiscussionNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
+                    dntvs = Tables.DiscussionNoTextView.find("tag_ids @> ARRAY[?]::bigint[] " +
                             "and community_id in " + Tools.convertListToInQuery(communityIds) + " " +
                             "and private is false and deleted is false and title != ?",
                             tagId,
                             "A new discussion").
-                            orderBy(orderBy);
+                            orderBy(orderBy)
+                            .limit(limit)
+                            .offset(offset);
                 } else {
-                    p = new Paginator(Tables.DiscussionNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
+                    dntvs = Tables.DiscussionNoTextView.find("tag_ids @> ARRAY[?]::bigint[] " +
                             "and private is false and deleted is false and title != ?",
                             tagId, "A new discussion").
-                            orderBy(orderBy);
+                            orderBy(orderBy)
+                            .limit(limit)
+                            .offset(offset);
                 }
 
             } else {
                 if (communityIds != null) {
-                    p = new Paginator(Tables.DiscussionNoTextView.class, limit,
-                            "community_id in " + Tools.convertListToInQuery(communityIds) + " " +
+                    dntvs = Tables.DiscussionNoTextView.find("community_id in " + Tools.convertListToInQuery(communityIds) + " " +
                             "and private is false and deleted is false and title != ?",
                             "A new discussion").
-                            orderBy(orderBy);
+                            orderBy(orderBy)
+                            .limit(limit)
+                            .offset(offset);
                 } else {
-                    p = new Paginator(Tables.DiscussionNoTextView.class, limit, "private is false and deleted is false and title != ?",
+                    dntvs = Tables.DiscussionNoTextView.find("private is false and deleted is false and title != ?",
                             "A new discussion").
-                            orderBy(orderBy);
+                            orderBy(orderBy)
+                            .limit(limit)
+                            .offset(offset);
                 }
             }
 
-
-            LazyList<Tables.DiscussionNoTextView> dntvs = p.getPage(page);
 
             log.debug(dntvs.toSql(true));
 
@@ -340,10 +349,10 @@ public class Endpoints {
                         "id in " + Tools.convertListToInQuery(communityIds));
 
                 // Build discussion objects
-                discussions = Discussions.create(dntvs, communities, tags, users, votes, p.getCount());
+                discussions = Discussions.create(dntvs, communities, tags, users, votes, 999L);
 
             } else {
-                discussions = Discussions.create(dntvs, null, null, null, null, p.getCount());
+                discussions = Discussions.create(dntvs, null, null, null, null, 999L);
             }
 
             return discussions.json();
@@ -536,6 +545,7 @@ public class Endpoints {
             Long tagId = (!req.params(":tagId").equals("all")) ? Long.valueOf(req.params(":tagId")) : null;
             Integer limit = (req.params(":limit") != null) ? Integer.valueOf(req.params(":limit")) : 10;
             Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
+            Integer offset = (page - 1) * limit;
 
             String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy") : "time-" +
                     ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight().intValue();
@@ -543,23 +553,27 @@ public class Endpoints {
             orderBy = Tools.constructOrderByCustom(orderBy);
             User userObj = Actions.getOrCreateUserObj(req);
 
-            Paginator p;
 
+            LazyList<Tables.CommunityNoTextView> cv;
             // TODO for now don't show where private is false
             if (tagId != null) {
                 // fetch the tags
-                p = new Paginator(Tables.CommunityNoTextView.class, limit, "tag_ids @> ARRAY[?]::bigint[] " +
+                cv = Tables.CommunityNoTextView.find("tag_ids @> ARRAY[?]::bigint[] " +
                         "and private is false and deleted is false and name not like ?",
                         tagId, "new_community%").
-                        orderBy(orderBy);
+                        orderBy(orderBy)
+                        .limit(limit)
+                        .offset(offset);
             } else {
-                p = new Paginator(Tables.CommunityNoTextView.class, limit, "private is false and deleted is false and name not like ?",
+                cv = Tables.CommunityNoTextView.find("private is false and deleted is false and name not like ?",
                         "new_community%").
-                        orderBy(orderBy);
+                        orderBy(orderBy)
+                        .limit(limit)
+                        .offset(offset);
             }
 
 
-            LazyList<Tables.CommunityNoTextView> cv = p.getPage(page);
+
 
             Communities communities;
             if (!cv.isEmpty()) {
@@ -580,10 +594,10 @@ public class Endpoints {
                         "community_id in " + Tools.convertListToInQuery(ids));
 
                 // Build community objects
-                communities = Communities.create(cv, tags, users, votes, p.getCount());
+                communities = Communities.create(cv, tags, users, votes, 999L);
 
             } else {
-                communities = Communities.create(cv, null, null, null, p.getCount());
+                communities = Communities.create(cv, null, null, null, 999L);
             }
 
 

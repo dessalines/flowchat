@@ -36,7 +36,7 @@ import { Title } from '@angular/platform-browser'
 
 import { AppRoutingModule } from './app.routing';
 
-import { NgxMasonryModule } from './ngx-masonry/ngx-masonry.module';
+import { NgxMasonryModule } from 'ngx-masonry';
 
 window['imagesLoaded'] = require('imagesloaded');
 
