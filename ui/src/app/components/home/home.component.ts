@@ -100,7 +100,7 @@ export class HomeComponent implements OnInit {
           this.currentCount = d.count;
           this.discussions.push(...d.discussions);
           this.loadingDiscussions = false;
-          setTimeout(() => this.updateMasonryLayout = !this.updateMasonryLayout, 1000);
+          setTimeout(() => this.updateMasonryLayout = !this.updateMasonryLayout, 2000);
           
         });
 

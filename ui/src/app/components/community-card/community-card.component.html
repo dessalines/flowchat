@@ -221,14 +221,14 @@
         <br>
         <div class="btn-group" role="group">
           <button [disabled]="!communityForm.form.valid"
-            (click)="saveCommunity()" class="btn btn-primary">
+            (click)="saveCommunity()" class="btn btn-outline-primary">
             <span *ngIf="!isSaving">Save</span>
             <span *ngIf="isSaving">Saving<i class="fa fa-fw fa-circle-o-notch fa-spin"></i></span>
           </button>
           <button type="button" (click)="toggleEditing()"
-            class="btn btn-warning">Cancel</button>
+            class="btn btn-outline-warning">Cancel</button>
           <button *ngIf="isCreator" type="button" (click)="deleteCommunity()"
-            class="btn btn-danger">Delete</button>
+            class="btn btn-outline-danger">Delete</button>
         </div>
       </form>
     </div>

@@ -32,8 +32,8 @@
       (textEvent)="setEdit($event)"></app-markdown-edit>
     <br>
     <div class="btn-group" role="group">
-      <button class="btn btn-primary" (click)="editMessage()">Edit</button>
-      <button class="btn btn-danger" (click)="hideEdit()">Cancel</button>
+      <button class="btn btn-outline-primary" (click)="editMessage()">Edit</button>
+      <button class="btn btn-outline-danger" (click)="hideEdit()">Cancel</button>
     </div>
   </div>
   <small *ngIf="!showReply && !showEdit">
@@ -74,8 +74,8 @@
     <app-markdown-edit (textEvent)="setReply($event)"></app-markdown-edit>
     <br>
     <div class="btn-group" role="group">
-      <button class="btn btn-primary" (click)="sendMessage()">Send</button>
-      <button class="btn btn-danger" (click)="hideReply()">Cancel</button>
+      <button class="btn btn-outline-primary" (click)="sendMessage()">Send</button>
+      <button class="btn btn-outline-danger" (click)="hideReply()">Cancel</button>
     </div>
   </fieldset>
   <div class="card" *ngFor="let emb of comment.embedded">
