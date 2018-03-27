@@ -1,8 +1,8 @@
 <div>
   <app-onboard-alert *ngIf="!userService.getUserSettings().readOnboardAlert"></app-onboard-alert>
   <div class="row">
-    <div class="col-xs-12 col-md-8 trending-discussions ">
-        <ul *ngIf="popularTags " class="list-inline mb-1">
+    <div class="col-xs-12 col-md-8 trending-discussions mb-1">
+        <ul *ngIf="popularTags " class="list-inline">
           Trending tags:
           <li class="badge badge-info list-inline-item "
           *ngFor="let tag of popularTags">
@@ -33,7 +33,7 @@
     </div>
     <div *ngIf="isCard()">
       <div class="row">
-        <ngx-masonry [options]="{gutter: 10}" [useImagesLoaded]="true">
+        <ngx-masonry [options]="{gutter: 10, initLayout: true, transitionDuration: '0.4s'}" [useImagesLoaded]="true" [updateLayout]="updateMasonryLayout">
           <ngx-masonry-item class="masonry-item" *ngFor="let discussion of discussions">
             <app-discussion-card [viewType]="viewType" [discussion]="discussion "></app-discussion-card>
           </ngx-masonry-item>
@@ -43,7 +43,7 @@
   </div>
   <div class="row">
     <div class="col-xs-12 col-md-12">
-      <i *ngIf="loadingDiscussions " class="fa fa-circle-o-notch
+      <i *ngIf="loadingDiscussions" [hidden]="loadingDiscussions" class="fa fa-circle-o-notch
         fa-spin fa-5x fa-center"></i>
       <h4 *ngIf="discussions?.length==0
         ">Subscribe to some communities such as <a class="link-unstyled badge badge-primary

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-/* -- ngx-masonry -- */
+/*-- ngx-masonry --*/
 import { NgxMasonryComponent } from './ngx-masonry.component';
 import { NgxMasonryDirective } from './ngx-masonry.directive';
 

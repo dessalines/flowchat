@@ -1,13 +1,15 @@
 import {
-	Component,
-	OnInit,
-	OnDestroy,
-	Input,
-	Output,
-	ElementRef,
-	EventEmitter,
-	PLATFORM_ID,
-	Inject,
+  Component,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+  OnDestroy,
+  Input,
+  Output,
+  ElementRef,
+  EventEmitter,
+  PLATFORM_ID,
+  Inject
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
@@ -18,116 +20,124 @@ var masonryConstructor: any = undefined;
 import { NgxMasonryOptions } from './ngx-masonry-options.interface';
 
 @Component({
-	selector: '[ngx-masonry], ngx-masonry',
-	template: '<ng-content></ng-content>',
-	styles: [`
+  selector: '[ngx-masonry], ngx-masonry',
+  template: '<ng-content></ng-content>',
+  styles: [
+    `
 		:host {
 			display: block;
 		}
-	`],
+	`
+  ]
 })
-export class NgxMasonryComponent implements OnInit, OnDestroy {
-	constructor(
-		@Inject(PLATFORM_ID) private platformId: any,
-		private _element: ElementRef) {}
-	
-	public _msnry: any;
+export class NgxMasonryComponent implements OnInit, OnChanges, OnDestroy {
+  constructor(@Inject(PLATFORM_ID) private platformId: any, private _element: ElementRef) {}
 
-	// Inputs
-	@Input() public options: NgxMasonryOptions;
-	@Input() public useImagesLoaded: Boolean = false;
+  public _msnry: any;
 
-	// Outputs
-	@Output() layoutComplete: EventEmitter<any[]> = new EventEmitter<any[]>();
-	@Output() removeComplete: EventEmitter<any[]> = new EventEmitter<any[]>();
+  // Inputs
+  @Input() public options: NgxMasonryOptions;
+  @Input() public useImagesLoaded: Boolean = false;
+  @Input() updateLayout: Boolean = false;
 
-	ngOnInit() {
-    		///TODO: How to load imagesloaded only if this.useImagesLoaded===true?
-    		if (this.useImagesLoaded && imagesLoaded === undefined) {
-      			imagesLoaded = require('imagesloaded');
-    		}
+  // Outputs
+  @Output() layoutComplete: EventEmitter<any[]> = new EventEmitter<any[]>();
+  @Output() removeComplete: EventEmitter<any[]> = new EventEmitter<any[]>();
 
-		if (isPlatformBrowser(this.platformId) && masonryConstructor === undefined) {
-		      masonryConstructor = require('masonry-layout');
-	    	}
+  ngOnInit() {
+    ///TODO: How to load imagesloaded only if this.useImagesLoaded===true?
+    if (this.useImagesLoaded && imagesLoaded === undefined) {
+      imagesLoaded = require('imagesloaded');
+    }
 
-		// Create masonry options object
-		if (!this.options) this.options = {};
+    if (isPlatformBrowser(this.platformId) && masonryConstructor === undefined) {
+      masonryConstructor = require('masonry-layout');
+    }
 
-		// Set default itemSelector
-		if (!this.options.itemSelector) {
-			this.options.itemSelector = '[ngx-masonry-item], ngx-masonry-item';
-		}
+    // Create masonry options object
+    if (!this.options) this.options = {};
 
-		if (isPlatformBrowser(this.platformId)) {			
-			// Initialize Masonry
-			this._msnry = new masonryConstructor(this._element.nativeElement, this.options);
+    // Set default itemSelector
+    if (!this.options.itemSelector) {
+      this.options.itemSelector = '[ngx-masonry-item], ngx-masonry-item';
+    }
 
-			// console.log('AngularMasonry:', 'Initialized');
+    if (isPlatformBrowser(this.platformId)) {
+      // Initialize Masonry
+      this._msnry = new masonryConstructor(this._element.nativeElement, this.options);
 
-			// Bind to events
-			this._msnry.on('layoutComplete', (items: any) => {
-				this.layoutComplete.emit(items);
-			});
-			this._msnry.on('removeComplete', (items: any) => {
-				this.removeComplete.emit(items);
-			});
-		}
-	}
+      // Bind to events
+      this._msnry.on('layoutComplete', (items: any) => {
+        this.layoutComplete.emit(items);
+      });
+      this._msnry.on('removeComplete', (items: any) => {
+        this.removeComplete.emit(items);
+      });
+    }
+  }
 
-	ngOnDestroy() {
-		if (this._msnry) {
-			this._msnry.destroy();
-		}
-	}
+  ngOnChanges(changes: SimpleChanges) {
+    // only update layout if it's not the first change
+    if (changes.updateLayout) {
+      if (!changes.updateLayout.firstChange) {
+        this.layout();
+      }
+    }
+  }
 
-	public layout() {
-		setTimeout(() => {
-			this._msnry.layout();
-		});
+  ngOnDestroy() {
+    if (this._msnry) {
+      this._msnry.destroy();
+    }
+  }
 
-		// console.log('AngularMasonry:', 'Layout');
-	}
+  public layout() {
+    setTimeout(() => {
+      this._msnry.layout();
+    });
+  }
 
-	// public add(element: HTMLElement, prepend: boolean = false) {
-	public add(element: HTMLElement) {
-		var isFirstItem = false;
+  public reloadItems() {
+    setTimeout(() => {
+      this._msnry.reloadItems();
+    });
+  }
 
-		// Check if first item
-		if (this._msnry.items.length === 0) {
-			isFirstItem = true;
-		}
+  // public add(element: HTMLElement, prepend: boolean = false) {
+  public add(element: HTMLElement) {
+    var isFirstItem = false;
 
-		if (this.useImagesLoaded) {
-			imagesLoaded(element, (instance: any) => {
-				this._element.nativeElement.appendChild(element);
+    // Check if first item
+    if (this._msnry.items.length === 0) {
+      isFirstItem = true;
+    }
 
-				// Tell Masonry that a child element has been added
-				this._msnry.appended(element);
+    if (this.useImagesLoaded) {
+      imagesLoaded(element, (instance: any) => {
+        this._element.nativeElement.appendChild(element);
 
-				// layout if first item
-				if (isFirstItem) this.layout();
-			});
+        // Tell Masonry that a child element has been added
+        this._msnry.appended(element);
 
-			this._element.nativeElement.removeChild(element);
-		} else {
-			// Tell Masonry that a child element has been added
-			this._msnry.appended(element);
+        // layout if first item
+        if (isFirstItem) this.layout();
+      });
 
-			// layout if first item
-			if (isFirstItem) this.layout();
-		}
+      this._element.nativeElement.removeChild(element);
+    } else {
+      // Tell Masonry that a child element has been added
+      this._msnry.appended(element);
 
-		// console.log('AngularMasonry:', 'Brick added');
-	}
+      // layout if first item
+      if (isFirstItem) this.layout();
+    }
+  }
 
-	public remove(element: HTMLElement) {
-		// Tell Masonry that a child element has been removed
-		this._msnry.remove(element);
+  public remove(element: HTMLElement) {
+    // Tell Masonry that a child element has been removed
+    this._msnry.remove(element);
 
-		// Layout items
-		this.layout();
-
-		// console.log('AngularMasonry:', 'Brick removed');
-	}
+    // Layout items
+    this.layout();
+  }
 }

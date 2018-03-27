@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit {
   public communityId: string;
 
   public loadingDiscussions: boolean = false;
+  public updateMasonryLayout: boolean = false;
 
   constructor(private router: Router,
     private route: ActivatedRoute,
@@ -47,10 +48,10 @@ export class HomeComponent implements OnInit {
 
     this.communityId = this.route.snapshot.url.toString();
 
-    if (this.userService.getFavoriteCommunities() === undefined || this.userService.getFavoriteCommunities().length == 0) {
-      this.communityId = "all";
-    } else if (this.communityId == "") {
+    if (this.communityId === "") {
       this.communityId = "favorites";
+    } else {
+      this.communityId = "all";
     }
 
     this.getDiscussions(this.communityId, this.currentPageNum, this.sortType);
@@ -99,6 +100,8 @@ export class HomeComponent implements OnInit {
           this.currentCount = d.count;
           this.discussions.push(...d.discussions);
           this.loadingDiscussions = false;
+          setTimeout(() => this.updateMasonryLayout = !this.updateMasonryLayout, 1000);
+          
         });
 
     }
