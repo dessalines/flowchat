@@ -112,7 +112,7 @@ export class HomeComponent implements OnInit {
   }
 
   getPopularCommunities(orderBy: string) {
-    this.communityService.getCommunities(undefined, undefined, undefined, orderBy).subscribe(
+    this.communityService.getCommunities(undefined, 5, undefined, orderBy).subscribe(
       t => {
         this.popularCommunities = t.communities
       });

@@ -2,16 +2,16 @@
   <app-onboard-alert *ngIf="!userService.getUserSettings().readOnboardAlert"></app-onboard-alert>
   <div class="row">
     <div class="col-xs-12 col-md-8 trending-discussions ">
-        <i *ngIf="popularCommunities" class="fa fa-fw fa-line-chart"></i>
-        <ul *ngIf="popularTags " class="list-inline inline">Trending tags:
+        <ul *ngIf="popularTags " class="list-inline mb-1">
+          Trending tags:
           <li class="badge badge-info list-inline-item "
-          *ngFor="let tag of popularTags ">
+          *ngFor="let tag of popularTags">
             <a class="link-unstyled
         " [routerLink]="[ '/tag', tag.id] ">{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
-        <ul *ngIf="popularCommunities " class="list-inline inline">Trending communities:
-          <li class="badge badge-primary list-inline-item "
+        <ul *ngIf="popularCommunities " class="list-inline">Trending communities:
+          <li class="badge badge-primary list-inline-item"
           *ngFor="let community of popularCommunities ">
             <a class="link-unstyled
         " [routerLink]="[ '/community', community.id] ">{{removeQuotes(community.name)}}</a>
@@ -33,7 +33,7 @@
     </div>
     <div *ngIf="isCard()">
       <div class="row">
-        <ngx-masonry [options]="{gutter: 10, percentPosition: true}" [useImagesLoaded]="true">
+        <ngx-masonry [options]="{gutter: 10}" [useImagesLoaded]="true">
           <ngx-masonry-item class="masonry-item" *ngFor="let discussion of discussions">
             <app-discussion-card [viewType]="viewType" [discussion]="discussion "></app-discussion-card>
           </ngx-masonry-item>
