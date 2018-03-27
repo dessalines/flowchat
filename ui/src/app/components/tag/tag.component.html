@@ -24,7 +24,7 @@
     </div>
     <div *ngIf="isCard()">
       <div class="row">
-        <ngx-masonry [options]="{gutter: 10}" [useImagesLoaded]="true">
+        <ngx-masonry [options]="{gutter: 10, initLayout: true, transitionDuration: '0.4s'}" [useImagesLoaded]="true" [updateLayout]="updateMasonryLayout">
           <ngx-masonry-item class="masonry-item" *ngFor="let discussion of discussions">
             <app-discussion-card [viewType]="viewType" [discussion]="discussion "></app-discussion-card>
           </ngx-masonry-item>

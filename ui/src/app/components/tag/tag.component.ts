@@ -29,6 +29,7 @@ export class TagComponent implements OnInit {
   public sub: any;
 
   public loadingDiscussions: boolean = false;
+  public updateMasonryLayout: boolean = false;
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -76,6 +77,8 @@ export class TagComponent implements OnInit {
           this.currentCount = d.count;
           this.discussions.push(...d.discussions);
           this.loadingDiscussions = false;
+          setTimeout(() => this.updateMasonryLayout = !this.updateMasonryLayout, 1000);
+
         });
     }
   }

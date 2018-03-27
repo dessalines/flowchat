@@ -3,6 +3,7 @@ import {User, UserSettings, Discussion, Discussions, Tools, Community, Communiti
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
@@ -151,6 +152,7 @@ export class UserService {
       error => console.error(error));
   }
 
+
   private fetchFavoriteDiscussionsObs(): Observable<Discussions> {
     return this.http.get(this.fetchFavoriteDiscussionsUrl, this.getOptions())
       .map(r => r.json())
@@ -186,8 +188,8 @@ export class UserService {
   }
 
 
-  fetchFavoriteCommunities() {
-    this.fetchFavoriteCommunitiesObs().subscribe(d => {
+  fetchFavoriteCommunities(): Subscription {
+    return this.fetchFavoriteCommunitiesObs().subscribe(d => {
       this.favoriteCommunities = d.communities;
     },
       error => console.error(error));

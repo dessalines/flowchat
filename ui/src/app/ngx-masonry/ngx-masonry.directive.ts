@@ -1,12 +1,4 @@
-import {
-	Directive,
-	Inject,
-	ElementRef,
-	forwardRef,
-	OnDestroy,
-	AfterViewInit,
-	PLATFORM_ID,	
-} from '@angular/core';
+import { Directive, Inject, ElementRef, forwardRef, OnDestroy, AfterViewInit, PLATFORM_ID } from '@angular/core';
 
 import { NgxMasonryComponent } from './ngx-masonry.component';
 import { isPlatformBrowser } from '@angular/common';
@@ -26,13 +18,13 @@ export class NgxMasonryDirective implements OnDestroy, AfterViewInit {
 		private _element: ElementRef,
 		@Inject(forwardRef(() => NgxMasonryComponent))
 		private _parent: NgxMasonryComponent,
-		@Inject(PLATFORM_ID) private platformId: any,		
+		@Inject(PLATFORM_ID) private platformId: any
 	) {}
 
 	ngAfterViewInit() {
 		if (isPlatformBrowser(this.platformId)) {
 			this._parent.add(this._element.nativeElement);
-			this.watchForHtmlChanges();			
+			this.watchForHtmlChanges();
 		}
 	}
 
@@ -49,10 +41,7 @@ export class NgxMasonryDirective implements OnDestroy, AfterViewInit {
 		if (MutationObserver) {
 			/** Watch for any changes to subtree */
 			let self = this;
-			let observer = new MutationObserver(function(
-				mutations,
-				observerFromElement
-			) {
+			let observer = new MutationObserver(function(mutations, observerFromElement) {
 				self._parent.layout();
 			});
 

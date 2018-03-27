@@ -25,7 +25,7 @@
         <p *ngIf="discussion.text" class="card-text"
           [innerHTML]="discussion.text | markdown"></p>
         
-        <ul class="list-inline small">
+        <ul class="list-inline small mb-1">
           <li class="list-inline-item">
             <span class="text-muted">
               <span *ngIf="!discussion.modified">created {{discussion.created | moment}}</span>

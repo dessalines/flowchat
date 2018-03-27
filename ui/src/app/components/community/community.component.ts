@@ -28,6 +28,7 @@ export class CommunityComponent implements OnInit {
   public editing: Boolean = false;
 
   public loadingDiscussions: boolean = false;
+  public updateMasonryLayout: boolean = false;
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -81,6 +82,8 @@ export class CommunityComponent implements OnInit {
           this.currentCount = d.count;
           this.discussions.push(...d.discussions);
           this.loadingDiscussions = false;
+          setTimeout(() => this.updateMasonryLayout = !this.updateMasonryLayout, 1000);
+
         });
     }
   }
