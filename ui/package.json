@@ -39,7 +39,7 @@
     "zooming": "^1.2.4"
   },
   "devDependencies": {
-    "@angular/cli": "^1.6.6",
+    "@angular/cli": "^1.7.3",
     "@angular/compiler-cli": "^5.2.0",
     "@types/jasmine": "2.5.38",
     "@types/node": "~6.0.60",
