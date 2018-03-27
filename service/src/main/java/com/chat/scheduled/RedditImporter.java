@@ -61,10 +61,9 @@ public class RedditImporter implements Job {
         for (int i = 0; i < pageLimit; i++) {
             Listing<Submission> currentPage = paginator.next();
             for (Submission s : currentPage) {
-                Tables.Community c = Actions.getOrCreateCommunityFromSubreddit(s.getSubredditName());
+                Tables.Tag t = Actions.getOrCreateTagFromSubreddit(s.getSubredditName());
 
-                Actions.getOrCreateDiscussionFromRedditPost(
-                        c.getLongId(),
+                Actions.getOrCreateDiscussionFromRedditPost(t.getLongId(),
                         StringUtils.abbreviate(s.getTitle().replaceAll("\\r|\\n", "").replaceAll("\"", "").trim(), 140),
                         s.getUrl(),
                         s.getSelftext(),

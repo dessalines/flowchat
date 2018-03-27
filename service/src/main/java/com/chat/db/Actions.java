@@ -717,29 +717,26 @@ public class Actions {
     }
 
 
-    public static Tables.Community getOrCreateCommunityFromSubreddit(String subredditName) {
+    public static Tables.Tag getOrCreateTagFromSubreddit(String subredditName) {
 
         Long userId = 4L; // cardinal
 
-        // Get the community / or create it if it doesn't exist
-        Tables.Community c = Tables.Community.findFirst("name = ?", subredditName);
-        if (c == null) {
-            c = Tables.Community.createIt("name", subredditName,
-                    "modified_by_user_id", userId);
+        // Get the tag / or create it if it doesn't exist
+        Tables.Tag t = Tables.Tag.findFirst("name = ?", subredditName);
 
-            CommunityUser.createIt("user_id", userId,
-                    "community_id", c.getLong("id"),
-                    "community_role_id", CommunityRole.CREATOR.getVal());
+        if (t == null) {
+            t = Tables.Tag.createIt("name", subredditName);
 
         }
 
-        return c;
+        return t;
     }
 
     public static Tables.Discussion getOrCreateDiscussionFromRedditPost(
-            Long communityId, String title, String link, String selfText, Date created) {
+            Long tagId, String title, String link, String selfText, Date created) {
 
         Long userId = 4L; // cardinal
+        Long communityId = 1L; // Vanilla
 
         Tables.Discussion d = Tables.Discussion.findFirst("title = ?", title);
 
@@ -757,6 +754,9 @@ public class Actions {
             DiscussionUser.createIt("user_id", userId,
                     "discussion_id", d.getLong("id"),
                     "discussion_role_id", DiscussionRole.CREATOR.getVal());
+
+            DiscussionTag.createIt("discussion_id", d.getLong("id"),
+                    "tag_id", tagId);
         }
 
         return d;
