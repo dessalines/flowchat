@@ -165,7 +165,7 @@
               pattern="[a-zA-Z0-9_-]+" name="tag_search"
               #tagTerm="ngModel" autocomplete="off">
             <button [disabled]="tagSearchSelected.length < 5 || tagSearchSelected.length > 20 || rgex.test(tagSearchSelected) == false"
-              (click)="createTag()" class="input-group-addon btn btn-primary"><i class="fa fa-fw fa-plus"></i></button>
+              (click)="createTag()" class="input-group-addon btn btn-outline-primary"><i class="fa fa-fw fa-plus"></i></button>
           </div>
           <ul *ngIf="discussion.tags" class="col-md-6 list-inline form-control-label">
             <li role="button" (click)="removeTag(tag)"
@@ -250,14 +250,14 @@
         <br>
         <div class="btn-group" role="group">
           <button [disabled]="!discussionForm.form.valid"
-            (click)="saveDiscussion()" class="btn btn-primary">
+            (click)="saveDiscussion()" class="btn btn-outline-primary">
             <span *ngIf="!isSaving">Save</span>
             <span *ngIf="isSaving">Saving<i class="fa fa-fw fa-circle-o-notch fa-spin"></i></span>
           </button>
           <button type="button" (click)="toggleEditing()"
-            class="btn btn-warning">Cancel</button>
+            class="btn btn-outline-warning">Cancel</button>
           <button type="button" (click)="deleteDiscussion()"
-            class="btn btn-danger">Delete</button>
+            class="btn btn-outline-danger">Delete</button>
         </div>
       </form>
     </div>

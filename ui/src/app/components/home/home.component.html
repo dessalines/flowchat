@@ -1,16 +1,16 @@
 <div>
   <app-onboard-alert *ngIf="!userService.getUserSettings().readOnboardAlert"></app-onboard-alert>
   <div class="row">
-    <div class="col-xs-12 col-md-8 trending-discussions mb-1">
-        <ul *ngIf="popularTags " class="list-inline">
+    <div class="col-xs-12 col-md-8 trending-discussions">
+        <ul *ngIf="popularTags " class="list-inline mb-1">
           Trending tags:
-          <li class="badge badge-info list-inline-item "
+          <li class="badge badge-info list-inline-item"
           *ngFor="let tag of popularTags">
             <a class="link-unstyled
         " [routerLink]="[ '/tag', tag.id] ">{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
-        <ul *ngIf="popularCommunities " class="list-inline">Trending communities:
+        <ul *ngIf="popularCommunities " class="list-inline mb-1">Trending communities:
           <li class="badge badge-primary list-inline-item"
           *ngFor="let community of popularCommunities ">
             <a class="link-unstyled
