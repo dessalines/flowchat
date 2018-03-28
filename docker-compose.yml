@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  flowchat:
+    build: .
+    depends_on:
+      - flowchat_db
+    ports:
+     - "4567:4567"
+    environment:
+      FLOWCHAT_DB_URL: "jdbc:postgresql://flowchat_db/flowchat"
+      FLOWCHAT_DB_USERNAME: "postgres"
+      FLOWCHAT_DB_PASSWORD: "example"
+
+  flowchat_db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: flowchat
