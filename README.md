@@ -35,7 +35,13 @@ Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 
 [Change log](https://github.com/dessalines/flowchat/issues?q=is%3Aissue+is%3Aclosed)
 
-==========
+![screen1](https://i.imgur.com/8YSbqa8.jpg)
+
+![screen2](https://i.imgur.com/OgUMpwp.png)
+
+
+
+---
 
 ## Installation 
 
