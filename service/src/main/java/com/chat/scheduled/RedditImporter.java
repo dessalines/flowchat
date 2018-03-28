@@ -29,7 +29,7 @@ public class RedditImporter implements Job {
     private RedditClient redditClient;
 
     public void init() {
-        log.info("got here");
+
         try {
             UserAgent myUserAgent = UserAgent.of("desktop", "com.flowchat", "v0.1", "dessalines");
             redditClient = new RedditClient(myUserAgent);

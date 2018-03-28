@@ -80,7 +80,6 @@ public class Discussion implements JSONWriter {
     }
 
     public void checkBlocked(User userObj) {
-        System.out.println(Arrays.toString(getBlockedUsers().toArray()));
         if (getBlockedUsers().contains(userObj)) {
             throw new NoSuchElementException("You have been blocked from this discussion");
         }

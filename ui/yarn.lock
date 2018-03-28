@@ -6889,6 +6889,6 @@ zone.js@^0.8.4:
   version "0.8.17"
   resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.8.17.tgz#4c5e5185a857da8da793daf3919371c5a36b2a0b"
 
-zooming@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/zooming/-/zooming-1.2.4.tgz#31cd79ec3525f218351f67c56cbd6a84dff4a5fa"
+zooming@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/zooming/-/zooming-1.4.2.tgz#42e27d0b604d2ca5d18ecd64df507fd9f0fdc09d"
