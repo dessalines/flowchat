@@ -52,8 +52,8 @@ public class SessionScope {
         Set<SessionScope> filteredScopes;
         Long discussionId = getDiscussionIdFromSession(session);
 
-        log.info(Arrays.toString(breadcrumbs.toArray()));
-        log.info(scopes.toString());
+        log.debug(Arrays.toString(breadcrumbs.toArray()));
+        log.debug(scopes.toString());
 
         filteredScopes = scopes.stream()
                 .filter(s -> s.getDiscussionId().equals(discussionId) &&

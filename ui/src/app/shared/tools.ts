@@ -1,18 +1,11 @@
-import * as Zooming from 'zooming';
+import Zooming from 'zooming';
 
 export class Tools {
   static zooming = new Zooming({
     enableGrab: false,
     preloadImage: false,
     closeOnWindowResize: true,
-    transitionDuration: 0.2,
-    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0, 1)',
-    bgColor: 'rgb(0,0,0)',
-    bgOpacity: 1,
-    scaleBase: 1.0,
-    scaleExtra: 0.5,
-    scrollThreshold: 40,
-    zIndex: 998,
+    transitionDuration: 0.2
   });
 
   static createCookie(name: string, value: any, expireTime: number) {

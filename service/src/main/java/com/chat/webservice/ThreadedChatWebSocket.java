@@ -83,6 +83,7 @@ public class ThreadedChatWebSocket {
 
         broadcastMessage(filteredScopes, Users.create(SessionScope.getUserObjects(filteredScopes)).json());
 
+
     }
 
     @OnWebSocketMessage

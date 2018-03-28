@@ -8,11 +8,9 @@ USER node
 RUN npm i -g @angular/cli@latest
 USER root
 
-COPY ui/package.json ${UI_PATH}/package.json
 WORKDIR ${UI_PATH}
-RUN yarn
-
 COPY ui ${UI_PATH}
+RUN yarn
 RUN ng build -prod -aot
 
 
@@ -22,7 +20,7 @@ COPY service /opt/flowchat/service
 COPY --from=node-builder /opt/flowchat/ui/dist /opt/flowchat/service/src/main/resources
 
 WORKDIR /opt/flowchat/service
-RUN mvn clean install
+RUN mvn clean install -DskipTests
 
 
 FROM openjdk:8-jre-slim

@@ -16,7 +16,7 @@
 				number_of_votes*number_of_votes_weight +
 				avg_rank*avg_rank_weight-->
 		<sorting_created_weight>3600</sorting_created_weight>
-		<sorting_number_of_votes_weight>0.1</sorting_number_of_votes_weight>
+		<sorting_number_of_votes_weight>0.001</sorting_number_of_votes_weight>
 		<sorting_avg_rank_weight>0.01</sorting_avg_rank_weight>
 
 		<reddit_username></reddit_username>
@@ -211,7 +211,7 @@
 		<dependency>
 			<groupId>com.sparkjava</groupId>
 			<artifactId>spark-core</artifactId>
-			<version>2.5</version>
+			<version>2.7.1</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-simple</artifactId>

@@ -88,6 +88,17 @@ public class Tools {
                 case "FLOWCHAT_DB_PASSWORD":
                     prop.setProperty("jdbc.password", env.get(varName));
                     break;
+                case "SORTING_CREATED_WEIGHT":
+                    prop.setProperty("sorting_created_weight", env.get(varName));
+                    break;
+                case "SORTING_NUMBER_OF_VOTES_WEIGHT":
+                    prop.setProperty("sorting_number_of_votes_weight", env.get(varName));
+                    break;
+                case "SORTING_AVG_RANK_WEIGHT":
+                    prop.setProperty("sorting_avg_rank_weight", env.get(varName));
+                    break;
+
+
             }
         }
 
