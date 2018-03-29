@@ -191,3 +191,8 @@ ngx-masonry-item, .masonry-column-sizer {
     width: calc(100%);
   }
 }
+
+img {
+  max-width: 100%;
+  height: auto;
+}

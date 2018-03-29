@@ -3,8 +3,8 @@ import Zooming from 'zooming';
 export class Tools {
   static zooming = new Zooming({
     enableGrab: false,
-    preloadImage: true,
-    zIndex: 9001
+    preloadImage: false,
+    zIndex: 998
   });
 
   static createCookie(name: string, value: any, expireTime: number) {
