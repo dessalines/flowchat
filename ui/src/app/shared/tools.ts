@@ -2,7 +2,7 @@ import Zooming from 'zooming';
 
 export class Tools {
   static zooming = new Zooming({
-    enableGrab: false
+    enableGrab: false,
     zIndex: 9001
   });
 
