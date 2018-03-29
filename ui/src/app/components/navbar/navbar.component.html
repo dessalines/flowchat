@@ -55,8 +55,7 @@
             <span *ngIf="unreadMessages?.length > 0" class="badge badge-info navbar-label ml-2">{{unreadMessages?.length}}</span>
               <i class="fa fa-fw fa-envelope-o"></i>
             </a>
-            <ul class="dropdown-menu messages-dropdown dropdown-menu-right"
-            role="menu">
+            <ul *dropdownMenu class="dropdown-menu dropdown-menu-right messages-dropdown" role="menu">
               <h6 class="dropdown-header">Messages 
                 <small role="button" (click)="markAllNotificationsAsRead()" placement="bottom"
             tooltip="Mark all as read"><i class="fa fa-fw fa-check"></i></small>
