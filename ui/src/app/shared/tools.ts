@@ -1,12 +1,7 @@
 import Zooming from 'zooming';
 
 export class Tools {
-  static zooming = new Zooming({
-    enableGrab: false,
-    preloadImage: false,
-    closeOnWindowResize: true,
-    transitionDuration: 0.2
-  });
+  static zooming = new Zooming({});
 
   static createCookie(name: string, value: any, expireTime: number) {
     var expires = "; expires=" + new Date(9999999999999);;
