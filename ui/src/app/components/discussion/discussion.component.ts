@@ -98,12 +98,7 @@ export class DiscussionComponent implements OnInit {
   }
 
   editingChanged($event) {
-    if (!$event) {
-      this.unloadSubscriptions();
-      this.sub.unsubscribe();
-      this.ngOnInit();
-      this.editing = false;
-    }
+    this.editing = $event;
   }
 
   unloadSubscriptions() {
