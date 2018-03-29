@@ -60,7 +60,7 @@
           <li *ngIf="discussion.link" class="list-inline-item">
             <a class="link-unstyled" href="{{discussion.link}}"
               target="_blank"><i class="fa fa-external-link"
-              aria-hidden="true" placement="bottom" tooltip="Link"></i></a>
+              aria-hidden="true" placement="bottom" tooltip="{{discussion.link}}"></i></a>
           </li>
           <li class="list-inline-item" role="button">
             <a [routerLink]="['/discussion', discussion.id]"
