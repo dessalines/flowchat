@@ -1,28 +1,5 @@
 package com.chat.tools;
 
-import ch.qos.logback.classic.Logger;
-import com.chat.DataSources;
-import com.chat.db.Actions;
-import com.chat.db.Tables;
-import com.chat.types.community.CommunityRole;
-import com.chat.types.user.User;
-import com.chat.webservice.ConstantsService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.MapType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
-import liquibase.Liquibase;
-import liquibase.changelog.DatabaseChangeLog;
-import liquibase.database.Database;
-import liquibase.database.DatabaseFactory;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.exception.LiquibaseException;
-import liquibase.resource.FileSystemResourceAccessor;
-import org.jasypt.util.password.BasicPasswordEncryptor;
-import org.javalite.activejdbc.*;
-import org.javalite.http.Http;
-import org.postgresql.jdbc.PgArray;
-import org.slf4j.LoggerFactory;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,11 +8,49 @@ import java.math.BigInteger;
 import java.net.HttpCookie;
 import java.net.URLDecoder;
 import java.security.SecureRandom;
-import java.sql.*;
-import java.util.*;
+import java.sql.Array;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Properties;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import com.chat.DataSources;
+import com.chat.db.Tables;
+import com.chat.types.community.CommunityRole;
+import com.chat.types.user.User;
+import com.chat.webservice.ConstantsService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.MapType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
+import org.jasypt.util.password.BasicPasswordEncryptor;
+import org.javalite.activejdbc.Base;
+import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Logger;
+import liquibase.Liquibase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.LiquibaseException;
+import liquibase.resource.ClassLoaderResourceAccessor;
 
 /**
  * Created by tyler on 5/24/16.
@@ -51,24 +66,26 @@ public class Tools {
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
-    public static final BasicPasswordEncryptor PASS_ENCRYPT = new BasicPasswordEncryptor();
+    public static final BasicPasswordEncryptor PASS_ENCRYPT = new BasicPasswordEncryptor();   
+    
+    public static final HikariConfig hikariConfig() {
+        HikariConfig hc = new HikariConfig();
+        hc.setDataSourceClassName("org.postgresql.ds.PGSimpleDataSource");
+        hc.setJdbcUrl(DataSources.PROPERTIES.getProperty("jdbc.url"));
+        hc.setUsername(DataSources.PROPERTIES.getProperty("jdbc.username"));
+        hc.setPassword(DataSources.PROPERTIES.getProperty("jdbc.password"));
+        hc.setMaximumPoolSize(10);
+        return hc;
+    }
+
+    public static final HikariDataSource hikariDataSource = new HikariDataSource(hikariConfig());
 
     public static final void dbInit() {
-        try {
-            new DB("default").open("org.postgresql.Driver",
-                    DataSources.PROPERTIES.getProperty("jdbc.url"),
-                    DataSources.PROPERTIES.getProperty("jdbc.username"),
-                    DataSources.PROPERTIES.getProperty("jdbc.password"));
-        } catch (DBException e) {
-            e.printStackTrace();
-            dbClose();
-            dbInit();
-        }
-
+        Base.open(hikariDataSource); // get connection from pool
     }
 
     public static final void dbClose() {
-        new DB("default").close();
+        Base.close();
     }
 
 
@@ -299,7 +316,7 @@ public class Tools {
 
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(c));
             log.debug(DataSources.CHANGELOG_MASTER);
-            liquibase = new Liquibase(DataSources.CHANGELOG_MASTER, new FileSystemResourceAccessor(), database);
+            liquibase = new Liquibase(DataSources.CHANGELOG_MASTER, new ClassLoaderResourceAccessor(), database);
             liquibase.update("main");
         } catch (SQLException | LiquibaseException e) {
             e.printStackTrace();

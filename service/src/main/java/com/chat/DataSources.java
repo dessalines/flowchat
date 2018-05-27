@@ -20,6 +20,6 @@ public class DataSources {
 
     public static Properties PROPERTIES = Tools.loadProperties(PROPERTIES_FILE);
 
-    public static final String CHANGELOG_MASTER = "/tmp/.flowchat.tmp/liquibase/db.changelog-master.xml";
+    public static final String CHANGELOG_MASTER = "liquibase/db.changelog-master.xml";
 
 }
