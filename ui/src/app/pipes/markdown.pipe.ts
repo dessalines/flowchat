@@ -19,9 +19,12 @@ export class MarkdownPipe implements PipeTransform {
   }
 
   transform(value: string, link: boolean = false): any {
-    let out = this.markdownIt.render(value);
+    let out: string = value;
     if (link) {
       out = Tools.linkReplacements(out);
+    } else {
+      out = Tools.linkReplacements(out);
+      out = this.markdownIt.render(out);
     }
     return this.sanitizer.bypassSecurityTrustHtml(out);
   }
