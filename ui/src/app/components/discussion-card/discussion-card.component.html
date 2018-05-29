@@ -7,7 +7,7 @@
           <ng-template #voteTemplate>
             <div [innerHtml]="voteHtml()"></div>
           </ng-template>
-          <h1 class="pointer" placement="bottom" [tooltip]="voteTemplate" (click)="toggleShowVoteSlider()">
+          <h1 class="pointer text-center" placement="bottom" [tooltip]="voteTemplate" (click)="toggleShowVoteSlider()">
             <span class="badge badge-secondary badge-pill">{{avgVote()}}</span>
           </h1>
         </div>

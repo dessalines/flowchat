@@ -147,17 +147,16 @@ export class DiscussionComponent implements OnInit {
       });
   }
 
-  websocketCloseWatcher() {
-    this.threadedChatService.ws.onClose(cb => {
+	websocketCloseWatcher() {
+		// check every 5 seconds for websocket disconnect status
+		setInterval(() => {
 
-      if (!this.websocketSoftClose) {
-        console.error('ws connection closed');
+			if (this.threadedChatService.ws.getReadyState() != 1) {
+				this.websocketReconnect();
+			}
+		}, 5000);
 
-        this.reconnectModal.show();
-      }
-    });
   }
-
 
   websocketReconnect() {
     this.threadedChatService.connect(this.discussionId, this.topParentId);

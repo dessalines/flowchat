@@ -335,8 +335,11 @@ export class DiscussionCardComponent implements OnInit {
     let yourVote: string = (this.discussion.userRank == null) ? 
       'None' : 
       this.discussion.userRank.toString();
+    let voteLine: string = (this.isCreator) 
+      ? 'You can\'t vote on your own post' 
+      : 'Click to vote';
     return `<span>` + 
-      `<b>Click to vote</b><br><br>` + 
+      `<b>` + voteLine + `</b><br><br>` + 
       `Average Score: ` + this.avgVote() +  `<br>` + 
       `Your Vote: ` + yourVote + `<br>` +
       `# of Votes: ` + this.discussion.numberOfVotes + ` votes <br>` + 
