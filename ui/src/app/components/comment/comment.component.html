@@ -1,6 +1,6 @@
 <div [id]="'comment_' + comment.id" class="card-body pb-0">
   <ul class="list-inline mb-0">
-    <li class="text-muted list-inline-item" role="button"
+    <li class="text-muted list-inline-item pointer" role="button"
       (click)="collapsed = !collapsed">{{collapseText()}}</li>
     <li class="list-inline-item">
       <a [routerLink]="['/user',comment.user.id]"
@@ -67,7 +67,7 @@
     <input [value]="rank" (mouseup)="saveRank($event.target.value)"
       (touchend)="saveRank($event.target.value)"
       (input)="updateRank($event.target.value)"
-      type="range" min="0" max="100" step="1"
+      type="range" min="0" max="100" step="1" class="vote_input"
       (value)="rank" />
   </div>
   <fieldset *ngIf="showReply" class="form-group">

@@ -1,6 +1,6 @@
-
 <!-- Modals -->
-<div bsModal #loginModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" (onHidden)="hiddenEvent()">
+<div bsModal #loginModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
+  (onHidden)="hiddenEvent()">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
@@ -64,8 +64,8 @@
             <form #loginForm="ngForm" (ngSubmit)="loginSubmit()" class="form-horizontal">
               <div class="form-group">
                 <div class="col-sm-12">
-                  <input id="login-input" [(ngModel)]="login.usernameOrEmail" #loginName="ngModel" ngControl="loginName" class="form-control" placeholder="username or email"
-                    minlength="5" maxlength="140" required name="login_username" />
+                  <input id="login-input" [(ngModel)]="login.usernameOrEmail" #loginName="ngModel" ngControl="loginName" class="form-control"
+                    placeholder="username or email" minlength="5" maxlength="140" required name="login_username" />
                   <div *ngIf="loginName.dirty" class="row col-sm-12 help-block text-danger">
                     <small *ngIf="loginName.errors?.required">A username is required</small>
                     <small *ngIf="loginName.errors?.minlength">Username must be more than 5 characters</small>

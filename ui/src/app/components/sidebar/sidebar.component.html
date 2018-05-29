@@ -9,25 +9,19 @@
     <li class="list-group-item" [class.active]="isActive('all')">
       <a [routerLink]="['/all']" class="link-unstyled overflow">All</a>
     </li>
-    <li *ngFor="let community of userService.getFavoriteCommunities()"
-      class="list-group-item" [class.active]="isActive('community', community.id)">
-      <a [routerLink]="['/community', community.id]"
-        class="link-unstyled overflow">{{community.name}}</a>
+    <li *ngFor="let community of userService.getFavoriteCommunities()" class="list-group-item" [class.active]="isActive('community', community.id)">
+      <a [routerLink]="['/community', community.id]" class="link-unstyled overflow">{{community.name}}</a>
     </li>
   </ul>
 </div>
-<div *ngIf="userService?.getFavoriteDiscussions()"
-  class="card">
+<div *ngIf="userService?.getFavoriteDiscussions()" class="card mb-2">
   <div role="button" class="card-header pointer" (click)="toggleDiscussionCollapse()">
-    <i class="fa fa-fw fa-comments"></i>    Discussions
+    <i class="fa fa-fw fa-comments"></i> Discussions
   </div>
   <ul *ngIf="!discussionCollapsed" class="list-group">
-    <li *ngFor="let discussion of userService.getFavoriteDiscussions()"
-      class="list-group-item overflow" [class.active]="isActive('discussion', discussion.id)">
-      <a [routerLink]="['/discussion', discussion.id]"
-        class="link-unstyled">{{discussion.title}}</a>
-      <span role="button" (click)="userService.removeFavoriteDiscussion(discussion.id)"
-        class="remove-btn fa fa-fw fa-remove float-xs-right"></span>
+    <li *ngFor="let discussion of userService.getFavoriteDiscussions()" class="list-group-item overflow" [class.active]="isActive('discussion', discussion.id)">
+      <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">{{discussion.title}}</a>
+      <span role="button" (click)="userService.removeFavoriteDiscussion(discussion.id)" class="remove-btn fa fa-fw fa-remove float-xs-right"></span>
     </li>
   </ul>
 </div>
