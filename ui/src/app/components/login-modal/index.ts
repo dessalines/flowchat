@@ -1,0 +1,1 @@
+export { LoginModalComponent } from './login-modal.component';
