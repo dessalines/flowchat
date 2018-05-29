@@ -140,7 +140,9 @@ export class DiscussionCardComponent implements OnInit {
   }
 
   toggleShowVoteSlider() {
-    this.showVoteSlider = !this.showVoteSlider;
+    if (!this.isCreator) {
+      this.showVoteSlider = !this.showVoteSlider;
+    }
   }
 
   updateDiscussionRank($event) {
@@ -323,6 +325,26 @@ export class DiscussionCardComponent implements OnInit {
 
   hasImage(): boolean {
     return this.discussion.link && this.isImageType(this.discussion.link);
+  }
+
+  shortenedDiscussionLink(): string {
+    return new URL(this.discussion.link).hostname;
+  }
+
+  voteHtml() {
+    let yourVote: string = (this.discussion.userRank == null) ? 
+      'None' : 
+      this.discussion.userRank.toString();
+    return `<span>` + 
+      `<b>Click to vote</b><br><br>` + 
+      `Average Score: ` + this.avgVote() +  `<br>` + 
+      `Your Vote: ` + yourVote + `<br>` +
+      `# of Votes: ` + this.discussion.numberOfVotes + ` votes <br>` + 
+      `</span>`;
+  }
+
+  avgVote(): Number {
+    return (this.discussion.avgRank == null) ? 0 : this.discussion.avgRank;
   }
 
 }

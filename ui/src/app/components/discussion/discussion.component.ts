@@ -276,7 +276,7 @@ export class DiscussionComponent implements OnInit {
     // If its the top level, stop and return
     if (newComment.parentId == null) {
       this.comments.unshift(newComment);
-      setTimeout(() => { document.getElementById("comment_" + newComment.id).scrollIntoView(); }, 50);
+      setTimeout(() => { document.getElementById("comment_" + newComment.id).scrollIntoView(); }, 100);
       return;
     }
 
@@ -286,7 +286,7 @@ export class DiscussionComponent implements OnInit {
 
     // Focus on the new comment if not replying
     if (!this.isReplying) {
-      setTimeout(() => { document.getElementById("comment_" + newComment.id).scrollIntoView(); }, 50);
+      setTimeout(() => { document.getElementById("comment_" + newComment.id).scrollIntoView(); }, 100);
     }
 
   }

@@ -1,5 +1,5 @@
-<div class="card">
-  <div role="button" class="card-header" (click)="toggleCommunityCollapse()">
+<div class="card mb-2">
+  <div role="button" class="card-header pointer" (click)="toggleCommunityCollapse()">
     <i class="fa fa-fw fa-users"></i> Communities
   </div>
   <ul *ngIf="!communityCollapsed" class="list-group">
@@ -18,7 +18,7 @@
 </div>
 <div *ngIf="userService?.getFavoriteDiscussions()"
   class="card">
-  <div role="button" class="card-header" (click)="toggleDiscussionCollapse()">
+  <div role="button" class="card-header pointer" (click)="toggleDiscussionCollapse()">
     <i class="fa fa-fw fa-comments"></i>    Discussions
   </div>
   <ul *ngIf="!discussionCollapsed" class="list-group">

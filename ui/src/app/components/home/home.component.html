@@ -2,21 +2,19 @@
   <app-onboard-alert *ngIf="!userService.getUserSettings().readOnboardAlert"></app-onboard-alert>
   <div class="row">
     <div class="col-xs-12 col-md-8 trending-discussions">
-        <ul *ngIf="popularTags " class="list-inline mb-1">
-          Trending tags:
-          <li class="badge badge-info list-inline-item"
-          *ngFor="let tag of popularTags">
-            <a class="link-unstyled
+      <ul *ngIf="popularTags " class="list-inline mb-1">
+        Trending tags:
+        <li class="list-inline-item" *ngFor="let tag of popularTags">
+          <a class="badge badge-info
         " [routerLink]="[ '/tag', tag.id] ">{{removeQuotes(tag.name)}}</a>
-          </li>
-        </ul>
-        <ul *ngIf="popularCommunities " class="list-inline mb-1">Trending communities:
-          <li class="badge badge-primary list-inline-item"
-          *ngFor="let community of popularCommunities ">
-            <a class="link-unstyled
+        </li>
+      </ul>
+      <ul *ngIf="popularCommunities " class="list-inline mb-1">Trending communities:
+        <li class=" list-inline-item" *ngFor="let community of popularCommunities ">
+          <a class="badge badge-primary
         " [routerLink]="[ '/community', community.id] ">{{removeQuotes(community.name)}}</a>
-          </li>
-        </ul>
+        </li>
+      </ul>
     </div>
     <div class="col-xs-12 col-md-2
         ">
@@ -33,10 +31,10 @@
     </div>
     <div *ngIf="isCard()">
       <div class="row">
-        <ngx-masonry [options]="{gutter: 10, initLayout: true, transitionDuration: '0.4s'}" [useImagesLoaded]="true" [updateLayout]="updateMasonryLayout">
-          <ngx-masonry-item class="masonry-item" *ngFor="let discussion of discussions">
+        <ngx-masonry [options]="{gutter: 10, transitionDuration: '0.2s'}" [useImagesLoaded]="true">
+          <ngxMasonryItem class="masonry-item mb-2" *ngFor="let discussion of discussions">
             <app-discussion-card [viewType]="viewType" [discussion]="discussion "></app-discussion-card>
-          </ngx-masonry-item>
+          </ngxMasonryItem>
         </ngx-masonry>
       </div>
     </div>
@@ -46,7 +44,8 @@
       <i *ngIf="loadingDiscussions" [hidden]="loadingDiscussions" class="fa fa-circle-o-notch
         fa-spin fa-5x fa-center"></i>
       <h4 *ngIf="discussions?.length==0
-        ">Subscribe to some communities such as <a class="link-unstyled badge badge-primary
+        ">Subscribe to some communities such as
+        <a class="link-unstyled badge badge-primary
         " [routerLink]="[ '/community', 1] ">vanilla</a> to see discussions</h4>
     </div>
   </div>

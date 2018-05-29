@@ -20,7 +20,8 @@ import { HomeComponent,
   SidebarComponent,
   FooterComponent,
   MarkdownEditComponent,
-  OnboardAlertComponent } from './components';
+  OnboardAlertComponent,
+  LoginModalComponent } from './components';
 import { MomentPipe,
   MarkdownPipe } from './pipes';
 import {ToasterModule,
@@ -36,9 +37,7 @@ import { Title } from '@angular/platform-browser'
 
 import { AppRoutingModule } from './app.routing';
 
-import { NgxMasonryModule } from './ngx-masonry/ngx-masonry.module';
-
-// import { NgxMasonryModule } from 'ngx-masonry';
+import { NgxMasonryModule } from 'ngx-masonry';
 
 window['imagesLoaded'] = require('imagesloaded');
 
@@ -63,11 +62,13 @@ window['imagesLoaded'] = require('imagesloaded');
     FooterComponent,
     MarkdownEditComponent,
     OnboardAlertComponent,
+    LoginModalComponent,
 
     // Pipes
     MomentPipe,
     MarkdownPipe,
     OnboardAlertComponent,
+    LoginModalComponent,
     
   ],
   imports: [

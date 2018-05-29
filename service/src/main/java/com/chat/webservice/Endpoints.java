@@ -1,6 +1,17 @@
 package com.chat.webservice;
 
-import ch.qos.logback.classic.Logger;
+import static spark.Spark.after;
+import static spark.Spark.before;
+import static spark.Spark.delete;
+import static spark.Spark.exception;
+import static spark.Spark.get;
+import static spark.Spark.post;
+import static spark.Spark.put;
+
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+
 import com.chat.DataSources;
 import com.chat.db.Actions;
 import com.chat.db.Tables;
@@ -15,18 +26,12 @@ import com.chat.types.tag.Tag;
 import com.chat.types.tag.Tags;
 import com.chat.types.user.User;
 import com.chat.types.user.Users;
-import org.apache.commons.lang3.StringEscapeUtils;
+
 import org.eclipse.jetty.http.HttpStatus;
 import org.javalite.activejdbc.LazyList;
-import org.javalite.activejdbc.Model;
 import org.slf4j.LoggerFactory;
-import spark.Request;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import static spark.Spark.*;
+import ch.qos.logback.classic.Logger;
 
 /**
  * Created by tyler on 7/29/16.
@@ -53,6 +58,11 @@ public class Endpoints {
             res.header("Content-Encoding", "gzip");
             Tools.dbClose();
         });
+
+        exception(NoSuchElementException.class, (e, req, res) -> {
+            Tools.dbClose();
+        });
+
 
     }
 

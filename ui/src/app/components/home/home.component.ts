@@ -78,7 +78,6 @@ export class HomeComponent implements OnInit {
         // you're at the bottom of the page
         this.currentPageNum += 1;
         this.getDiscussions(this.communityId, this.currentPageNum, this.sortType);
-        console.log(this.currentPageNum);
         setTimeout(() => this.scrollDebounce = 0, 200);
       }
     }
