@@ -1,7 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 
+
+@import './app/styles/bootstrap';
+@import './app/styles/extras';
+@import './app/styles/slider';
 @import '../node_modules/angular2-toaster/toaster.css';
 @import '../node_modules/font-awesome/css/font-awesome.min.css';
-@import './app/styles/bootstrap';
-@import './app/styles/slider';
-@import './app/styles/extras';
+

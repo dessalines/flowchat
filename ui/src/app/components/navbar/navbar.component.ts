@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormControl} from '@angular/forms';
-import {LoginService, UserService, DiscussionService, CommunityService, NotificationsService} from '../../services';
-import {User, Discussion, Comment, Tools} from '../../shared';
+import { FormGroup, FormControl } from '@angular/forms';
+import { LoginService, UserService, DiscussionService, CommunityService, NotificationsService } from '../../services';
+import { User, Discussion, Comment, Tools } from '../../shared';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import {ToasterService} from 'angular2-toaster';
+import { ToasterService } from 'angular2-toaster';
 
 declare var Favico: any;
 
@@ -17,8 +17,7 @@ declare var Favico: any;
 })
 export class NavbarComponent implements OnInit {
 
-  public signup: Signup = {};
-  public login: Login = {};
+  public showLoginModal: boolean = false;
 
   // The search bar
   public discussionSearchControl: FormControl = new FormControl();
@@ -75,50 +74,13 @@ export class NavbarComponent implements OnInit {
       });
   }
 
-  signupSubmit() {
-    this.loginService.signup(this.signup.username,
-      this.signup.password,
-      this.signup.verifyPassword,
-      this.signup.email).subscribe(
-      user => {
-        this.setupUser(user);
-      },
-      error => {
-        console.error(error);
-        this.toasterService.pop("error", "Error", error);
-      });
-
-  }
-
-  loginSubmit() {
-    this.loginService.login(this.login.usernameOrEmail,
-      this.login.password).subscribe(
-      user => {
-        this.setupUser(user);
-      },
-      error => {
-        console.error(error);
-        this.toasterService.pop("error", "Error", error);
-      });
-  }
-
   setupUser(user: any) {
     this.userService.setUser(user);
     this.userService.sendLoginEvent(user);
-    document.getElementById('closeModalButton').click();
   }
 
   gotoSample() {
     this.router.navigate(['/discussion']);
-  }
-
-  logout() {
-    this.userService.logout();
-
-    // Then relog back in as a random user (Necessary because a lot of fetches fail otherwise)
-    this.getOrCreateUser();
-    this.router.navigate(['/']);
-
   }
 
   createDiscussion() {
@@ -192,11 +154,11 @@ export class NavbarComponent implements OnInit {
       this.router.navigate(['/discussion', message.discussionId,
         'comment', message.parentId]);
 
-    }, 
-    error => {
-      console.error(error);
-      this.toasterService.pop("error", "Error", error);
-    });
+    },
+      error => {
+        console.error(error);
+        this.toasterService.pop("error", "Error", error);
+      });
   }
 
   markAllNotificationsAsRead() {
@@ -211,20 +173,23 @@ export class NavbarComponent implements OnInit {
     this.collapseNavbar = !this.collapseNavbar;
   }
 
+  toggleLoginModal() {
+    this.showLoginModal = true;
+  }
+  
+  hiddenEvent() {
+    this.showLoginModal = false;
+  }
 
+  logout() {
+    this.userService.logout();
 
-}
+    // Then relog back in as a random user (Necessary because a lot of fetches fail otherwise)
+    this.getOrCreateUser();
+    this.router.navigate(['/']);
 
-interface Signup {
-  username?: string;
-  password?: string;
-  verifyPassword?: string;
-  email?: string;
-}
+  }
 
-interface Login {
-  usernameOrEmail?: string;
-  password?: string;
 }
 
 

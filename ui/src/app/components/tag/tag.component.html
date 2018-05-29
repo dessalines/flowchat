@@ -12,8 +12,7 @@
   </div>
   <small *ngIf="communities?.length > 0">
     <ul class="list-inline trending-communities">trending communities:
-      <li class="badge badge-primary list-inline-item"
-          *ngFor="let community of communities">
+      <li class="badge badge-primary list-inline-item" *ngFor="let community of communities">
         <a class="link-unstyled" [routerLink]="['/community', community.id]">{{removeQuotes(community.name)}}</a>
       </li>
     </ul>
@@ -24,18 +23,18 @@
     </div>
     <div *ngIf="isCard()">
       <div class="row">
-        <ngx-masonry [options]="{gutter: 10, initLayout: true, transitionDuration: '0.4s'}" [useImagesLoaded]="true" [updateLayout]="updateMasonryLayout">
-          <ngx-masonry-item class="masonry-item" *ngFor="let discussion of discussions">
+        <ngx-masonry [options]="{gutter: 10, transitionDuration: '0.2s'}" [useImagesLoaded]="true">
+          <ngxMasonryItem class="masonry-item mb-2" *ngFor="let discussion of discussions">
             <app-discussion-card [viewType]="viewType" [discussion]="discussion "></app-discussion-card>
-          </ngx-masonry-item>
+          </ngxMasonryItem>
         </ngx-masonry>
       </div>
     </div>
-  <div class="row">
-    <div class="col-xs-12 col-md-12">
-      <i *ngIf="loadingDiscussions" class="fa fa-circle-o-notch fa-spin fa-5x fa-center"></i>
-      <h4 *ngIf="discussions?.length == 0">No Discussions</h4>
+    <div class="row">
+      <div class="col-xs-12 col-md-12">
+        <i *ngIf="loadingDiscussions" class="fa fa-circle-o-notch fa-spin fa-5x fa-center"></i>
+        <h4 *ngIf="discussions?.length == 0">No Discussions</h4>
+      </div>
     </div>
+    <app-footer></app-footer>
   </div>
-  <app-footer></app-footer>
-</div>

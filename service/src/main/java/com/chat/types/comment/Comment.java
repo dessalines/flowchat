@@ -106,7 +106,7 @@ public class Comment implements JSONWriter {
     public static List<Long> setBreadCrumbsArr(String breadCrumbs) {
         List<Long> breadcrumbs = new ArrayList<>();
         for (String br : Tools.pgArrayAggToArray(breadCrumbs)) {
-            breadcrumbs.add(Long.valueOf(br));
+            breadcrumbs.add(Long.valueOf(br.replace("\"", "")));
         }
         return breadcrumbs;
     }

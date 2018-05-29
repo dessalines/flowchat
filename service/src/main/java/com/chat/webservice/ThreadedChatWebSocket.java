@@ -40,8 +40,8 @@ public class ThreadedChatWebSocket {
 
     static Set<SessionScope> sessionScopes = new HashSet<>();
 
-    public ThreadedChatWebSocket() {}
-
+    public ThreadedChatWebSocket() {
+    }
 
     @OnWebSocketConnect
     public void onConnect(Session session) throws Exception {
@@ -57,11 +57,12 @@ public class ThreadedChatWebSocket {
         LazyList<Model> comments = fetchComments(ss);
 
         // send the comments
-        session.getRemote().sendString(Comments.create(comments,
-                fetchVotesMap(ss.getUserObj().getId()), topLimit, maxDepth).json());
+        session.getRemote().sendString(
+                Comments.create(comments, fetchVotesMap(ss.getUserObj().getId()), topLimit, maxDepth).json());
 
         // send the updated users to everyone in the right scope(just discussion)
-        Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes, session);
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes,
+                session);
         broadcastMessage(filteredScopes, Users.create(SessionScope.getUserObjects(filteredScopes)).json());
 
         log.debug("session scope " + ss + " joined");
@@ -79,21 +80,21 @@ public class ThreadedChatWebSocket {
         log.debug("session scope " + ss + " left, " + statusCode + " " + reason);
 
         // Send the updated users to everyone in the right scope
-        Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes, session);
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes,
+                session);
 
         broadcastMessage(filteredScopes, Users.create(SessionScope.getUserObjects(filteredScopes)).json());
-
 
     }
 
     @OnWebSocketMessage
     public void onMessage(Session session, String dataStr) {
 
-
         // Save the data
-        Tools.dbInit();
+        try {
+            Tools.dbInit();
 
-        switch(getMessageType(dataStr)) {
+            switch (getMessageType(dataStr)) {
             case Reply:
                 messageReply(session, dataStr);
                 break;
@@ -112,38 +113,37 @@ public class ThreadedChatWebSocket {
             case NextPage:
                 messageNextPage(session, dataStr);
                 break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Tools.dbClose();
         }
 
-
-        Tools.dbClose();
-
-
     }
-
-
 
     public MessageType getMessageType(String someData) {
 
         try {
-        JsonNode rootNode = Tools.JACKSON.readTree(someData);
+            JsonNode rootNode = Tools.JACKSON.readTree(someData);
 
             Iterator<String> it = rootNode.fieldNames();
             log.debug(rootNode.asText());
             while (it.hasNext()) {
                 String nodeName = it.next();
-                switch(nodeName) {
-                    case "reply" :
-                        return MessageType.Reply;
-                    case "edit":
-                        return MessageType.Edit;
-                    case "topReply":
-                        return MessageType.TopReply;
-                    case "rank":
-                        return MessageType.Vote;
-                    case "deleteId":
-                        return MessageType.Delete;
-                    case "topLimit":
-                        return MessageType.NextPage;
+                switch (nodeName) {
+                case "reply":
+                    return MessageType.Reply;
+                case "edit":
+                    return MessageType.Edit;
+                case "topReply":
+                    return MessageType.TopReply;
+                case "rank":
+                    return MessageType.Vote;
+                case "deleteId":
+                    return MessageType.Delete;
+                case "topLimit":
+                    return MessageType.NextPage;
                 }
             }
         } catch (IOException e) {
@@ -167,8 +167,7 @@ public class ThreadedChatWebSocket {
         LazyList<Model> comments = fetchComments(ss);
 
         // send the comments from up to the new limit to them
-        sendMessage(session, Comments.create(comments,
-                fetchVotesMap(ss.getUserObj().getId()),
+        sendMessage(session, Comments.create(comments, fetchVotesMap(ss.getUserObj().getId()),
                 nextPageData.getTopLimit(), nextPageData.getMaxDepth()).json());
 
     }
@@ -190,32 +189,26 @@ public class ThreadedChatWebSocket {
 
         List<Long> parentBreadCrumbs = Tools.convertArrayToList(arr);
 
-
-        com.chat.db.Tables.Comment newComment = Actions.createComment(ss.getUserObj().getId(),
-                ss.getDiscussionId(),
-                parentBreadCrumbs,
-                replyData.getReply());
+        com.chat.db.Tables.Comment newComment = Actions.createComment(ss.getUserObj().getId(), ss.getDiscussionId(),
+                parentBreadCrumbs, replyData.getReply());
 
         // Fetch the comment threaded view
         CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", newComment.getLongId());
 
-
         // Convert to a proper commentObj
         Comment co = Comment.create(ctv, null);
 
-
-        Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
-                sessionScopes, session, co.getBreadcrumbs());
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(sessionScopes,
+                session, co.getBreadcrumbs());
 
         broadcastMessage(filteredScopes, co.json("reply"));
 
         // TODO find a way to do this without having to query every time?
-        com.chat.types.discussion.Discussion do_ = Actions.saveFavoriteDiscussion(ss.getUserObj().getId(), ss.getDiscussionId());
-        if (do_ != null) sendMessage(session, do_.json("discussion"));
+        com.chat.types.discussion.Discussion do_ = Actions.saveFavoriteDiscussion(ss.getUserObj().getId(),
+                ss.getDiscussionId());
+        if (do_ != null)
+            sendMessage(session, do_.json("discussion"));
     }
-
-
-
 
     public void messageEdit(Session session, String editDataStr) {
 
@@ -223,15 +216,16 @@ public class ThreadedChatWebSocket {
 
         EditData editData = EditData.fromJson(editDataStr);
 
-        com.chat.db.Tables.Comment c = Actions.editComment(ss.getUserObj().getId(), editData.getId(), editData.getEdit());
+        com.chat.db.Tables.Comment c = Actions.editComment(ss.getUserObj().getId(), editData.getId(),
+                editData.getEdit());
 
         CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", c.getLongId());
 
         // Convert to a proper commentObj, but with nothing embedded
         Comment co = Comment.create(ctv, null);
 
-        Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
-                sessionScopes, session, co.getBreadcrumbs());
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(sessionScopes,
+                session, co.getBreadcrumbs());
 
         broadcastMessage(filteredScopes, co.json("edit"));
 
@@ -250,8 +244,8 @@ public class ThreadedChatWebSocket {
         // Convert to a proper commentObj, but with nothing embedded
         Comment co = Comment.create(ctv, null);
 
-        Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
-                sessionScopes, session, co.getBreadcrumbs());
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(sessionScopes,
+                session, co.getBreadcrumbs());
 
         broadcastMessage(filteredScopes, co.json("edit"));
 
@@ -264,11 +258,8 @@ public class ThreadedChatWebSocket {
         // Get the object
         TopReplyData topReplyData = TopReplyData.fromJson(topReplyDataStr);
 
-
-        com.chat.db.Tables.Comment newComment = Actions.createComment(ss.getUserObj().getId(),
-                ss.getDiscussionId(),
-                null,
-                topReplyData.getTopReply());
+        com.chat.db.Tables.Comment newComment = Actions.createComment(ss.getUserObj().getId(), ss.getDiscussionId(),
+                null, topReplyData.getTopReply());
 
         // Fetch the comment threaded view
         CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", newComment.getLongId());
@@ -276,15 +267,15 @@ public class ThreadedChatWebSocket {
         // Convert to a proper commentObj
         Comment co = Comment.create(ctv, null);
 
-
-        Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
-                sessionScopes, session, co.getBreadcrumbs());
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(sessionScopes,
+                session, co.getBreadcrumbs());
 
         broadcastMessage(filteredScopes, co.json("reply"));
 
         // TODO find a way to do this without having to query every time?
         Discussion do_ = Actions.saveFavoriteDiscussion(ss.getUserObj().getId(), ss.getDiscussionId());
-        if (do_ != null) sendMessage(session, do_.json("discussion"));
+        if (do_ != null)
+            sendMessage(session, do_.json("discussion"));
 
     }
 
@@ -308,17 +299,15 @@ public class ThreadedChatWebSocket {
         // Convert to a proper commentObj, but with nothing embedded
         Comment co = Comment.create(ctv, null);
 
-        Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(
-                sessionScopes, session, co.getBreadcrumbs());
+        Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(sessionScopes,
+                session, co.getBreadcrumbs());
 
         // This sends an edit, which contains the average rank
         broadcastMessage(filteredScopes, co.json("edit"));
 
-
-
     }
 
-    //Sends a message from one user to all users
+    // Sends a message from one user to all users
     // TODO need to get subsets of sessions based on discussion_id, and parent_id
     // Maybe Map<discussion_id, List<sessions>
 
@@ -335,7 +324,7 @@ public class ThreadedChatWebSocket {
     public static void sendMessage(Session session, String json) {
         try {
             session.getRemote().sendString(json);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -355,29 +344,24 @@ public class ThreadedChatWebSocket {
 
     }
 
-
     private static LazyList<Model> fetchComments(SessionScope scope) {
         if (scope.getTopParentId() != null) {
-            return CommentBreadcrumbsView.where("discussion_id = ? and parent_id = ?",
-                    scope.getDiscussionId(), scope.getTopParentId());
+            return CommentBreadcrumbsView.where("discussion_id = ? and parent_id = ?", scope.getDiscussionId(),
+                    scope.getTopParentId());
         } else {
             return CommentThreadedView.where("discussion_id = ?", scope.getDiscussionId());
         }
     }
 
-
-
     // These create maps from a user's comment id, to their rank/vote
     private static Map<Long, Integer> fetchVotesMap(Long userId) {
-        List<CommentRank> ranks = CommentRank.where("user_id = ?",
-                userId);
+        List<CommentRank> ranks = CommentRank.where("user_id = ?", userId);
 
         return convertCommentRanksToVoteMap(ranks);
     }
 
     private static Map<Long, Integer> fetchVotesMap(Long userId, Long commentId) {
-        List<CommentRank> ranks = CommentRank.where("comment_id = ? and user_id = ?",
-                commentId, userId);
+        List<CommentRank> ranks = CommentRank.where("comment_id = ? and user_id = ?", commentId, userId);
 
         return convertCommentRanksToVoteMap(ranks);
 
@@ -391,6 +375,5 @@ public class ThreadedChatWebSocket {
         }
         return map;
     }
-
 
 }

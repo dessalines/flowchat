@@ -1,235 +1,105 @@
-<nav class="navbar navbar-light bg-light navbar-expand-md">
-  <a class="navbar-brand" [routerLink]="['/']"><i class="fa fa-fw fa-comment-o"></i>&nbsp;FlowChat</a>
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+
   <button (click)="toggleCollapseNavbar()" class="navbar-toggler navbar-toggler-right" type="button">
-    &#9776;
+    <span class="navbar-toggler-icon"></span>
   </button>
+  <a class="navbar-brand" [routerLink]="['/']">
+    <i class="fa fa-fw fa-pencil-square-o"></i>&nbsp;FlowChat</a>
   <div [class.collapse]="collapseNavbar" class="collapse navbar-collapse">
-      <ul class="nav navbar-nav">
-        <li class="nav-item nav-link">
-          <form [formGroup]="discussionSearchForm" class="form-inline">
-            <input 
-              formControlName="discussionSearchControl"
-              [(ngModel)]="discussionSearchSelected"
-              [typeahead]="discussionSearchResultsObservable"
-              (typeaheadOnSelect)="discussionTypeaheadOnSelect($event.item)"
-              [typeaheadOptionField]="'title'"
-              (typeaheadLoading)="discussionChangeTypeaheadLoading($event)"
-              (typeaheadNoResults)="discussionChangeTypeaheadNoResults($event)"
-              [typeaheadWaitMs]="200"
-              class="form-control ml-sm-1 mr-sm-2 search-box" type="text"
-              placeholder="Search"
-              name="discussion_form"
-              autocomplete="off"
-              >
-            <button class="btn btn-outline-primary mr-3" type="submit"><i class="fa fa-search"></i></button>
-          </form>
-        </li>
-        <li class="nav-item nav-link">
-          <button role="button" class="btn btn-outline-primary mr-2"
-            (click)="createDiscussion()">Create a discussion</button>
-        </li>
-        <li class="nav-item nav-link">
-          <button role="button" class="btn btn-outline-primary mr-2"
-            (click)="createCommunity()">Create a community</button>
-        </li>
-        <li class="nav-item nav-link">
-          <a class="nav-link link-unstyled" href="https://github.com/tchoulihan/flowchat"
-            target="_blank">About</a>
-        </li>
-        <li class="nav-item nav-link">
-           <a role="button" class="nav-link link-unstyled" href="https://github.com/dessalines/flowchat" tooltip="Github" placement="bottom" target="_blank"><i class="fa fa-fw fa-github"></i></a>
-         </li>
-        <li class="nav-item nav-link">
-          <a role="button" class="nav-link link-unstyled"
-            placement="bottom" tooltip="Donate to the developer"
-            href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2XTHDEBUNQ47U&lc=US&item_name=FlowChat&item_number=flowchat_02&amount=5%2e00&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
-            target="_blank"><i class="fa fa-fw fa-beer"></i></a>
-        </li>
-      </ul>
-      <div class="ml-auto">
-        <ul *ngIf="userService.isFullUser()" class="nav navbar-nav">
-          <li dropdown class="nav-item" keyboardNav="true">
-            <a class="nav-link link-unstyled" role="button"
-            type="button" dropdownToggle placement="bottom"
-            tooltip="Messages">
-            <span *ngIf="unreadMessages?.length > 0" class="badge badge-info navbar-label ml-2">{{unreadMessages?.length}}</span>
-              <i class="fa fa-fw fa-envelope-o"></i>
-            </a>
-            <ul *dropdownMenu class="dropdown-menu dropdown-menu-right messages-dropdown" role="menu">
-              <h6 class="dropdown-header">Messages 
-                <small role="button" (click)="markAllNotificationsAsRead()" placement="bottom"
-            tooltip="Mark all as read"><i class="fa fa-fw fa-check"></i></small>
-              </h6>
-              <li *ngFor="let message of unreadMessages"
-              role="menuitem">
-                <div class="dropdown-item" role="button"
-                (click)="gotoMessage(message)">
-                  <div [innerHTML]="message.text | markdown"></div>
-                  <small>
-                    <ul class="list-inline">
-                      <li class="list-inline-item">from {{message.user.name}}</li>
-                      <li *ngIf="message.deleted" class="text-muted list-inline-item"><small><i>deleted {{message.modified | moment}}</i></small></li>
-                      <span *ngIf="!message.deleted">
-                        <li *ngIf="!message.modified" class="text-muted list-inline-item"><small>{{message.created | moment}}</small></li>
-                        <li *ngIf="message.modified" class="text-muted list-inline-item"><small><i>modified {{message.modified | moment}}</i></small></li>
-                      </span>
-                    </ul>
-                  </small>
-                </div>
-              </li>
-            </ul>
-          </li>
-        <li dropdown class="nav-item" keyboardNav="true">
-          <a class="nav-link link-unstyled" role="button"
-          type="button" dropdownToggle>
-            {{userService.getUser().name}}<i class="ml-2 fa fa-caret-down"></i>
-          </a>
-          <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
-          <!--             <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
-            <li class="divider dropdown-divider"></li> -->
-            <li role="menuitem"><a (click)="logout()" class="dropdown-item"
-              href="#"><i class="fa fa-fw fa-sign-out"></i>Logout</a></li>
-          </ul>
-        </li>
-      </ul>
-        <ul class="nav navbar-nav">
-          <li *ngIf="!userService.isFullUser()" class="nav-item">
-            <a role="button" class="nav-link link-unstyled"
-            (click)="loginModal.show()">Login/Signup</a>
-          </li>
-          <li *ngIf="userService.isAnonymousUser()"
-          class="nav-item hidden-xs-up">
-            <a (click)="logout()" role="button" class="nav-link link-unstyled">Logout</a>
+    <ul class="navbar-nav">
+
+      <form [formGroup]="discussionSearchForm" class="form-inline">
+        <input formControlName="discussionSearchControl" [(ngModel)]="discussionSearchSelected" [typeahead]="discussionSearchResultsObservable"
+          (typeaheadOnSelect)="discussionTypeaheadOnSelect($event.item)" [typeaheadOptionField]="'title'" (typeaheadLoading)="discussionChangeTypeaheadLoading($event)"
+          (typeaheadNoResults)="discussionChangeTypeaheadNoResults($event)" [typeaheadWaitMs]="200" class="form-control mr-sm-2 search-box"
+          type="text" placeholder="Search" name="discussion_form" autocomplete="off">
+        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">
+          <i class="fa fa-search"></i>
+        </button>
+      </form>
+    </ul>
+    <ul class="navbar-nav ml-2 mr-auto">
+      <li class="nav-item">
+        <button role="button" class="btn btn-outline-primary mr-2" (click)="createDiscussion()">Create a discussion</button>
+      </li>
+      <li class="nav-item">
+        <button role="button" class="btn btn-outline-primary mr-2" (click)="createCommunity()">Create a community</button>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/tchoulihan/flowchat" target="_blank">about</a>
+      </li>
+      <li class="nav-item">
+        <a role="button" class="nav-link" href="https://github.com/dessalines/flowchat" placement="bottom" target="_blank">
+          github
+        </a>
+      </li>
+      <li class="nav-item">
+        <a role="button" class="nav-link" placement="bottom" tooltip="Donate to the developer" href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2XTHDEBUNQ47U&lc=US&item_name=FlowChat&item_number=flowchat_02&amount=5%2e00&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
+          target="_blank">
+          donate
+        </a>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav my-lg-0">
+      <li dropdown class="nav-item" keyboardNav="true">
+        <a class="nav-link pointer" role="button" type="button" dropdownToggle placement="bottom">
+          <span *ngIf="unreadMessages?.length > 0" class="badge badge-info navbar-label ml-2">{{unreadMessages?.length}}</span>
+          Messages
+        </a>
+        <ul *dropdownMenu class="dropdown-menu dropdown-menu-right messages-dropdown" role="menu">
+          <h6 class="dropdown-header">Messages
+            <small role="button" (click)="markAllNotificationsAsRead()" placement="bottom" tooltip="Mark all as read">
+              <i class="fa fa-fw fa-check"></i>
+            </small>
+          </h6>
+          <li *ngFor="let message of unreadMessages" role="menuitem">
+            <div class="dropdown-item" role="button" (click)="gotoMessage(message)">
+              <div [innerHTML]="message.text | markdown"></div>
+              <small>
+                <ul class="list-inline">
+                  <li class="list-inline-item">from {{message.user.name}}</li>
+                  <li *ngIf="message.deleted" class="text-muted list-inline-item">
+                    <small>
+                      <i>deleted {{message.modified | moment}}</i>
+                    </small>
+                  </li>
+                  <span *ngIf="!message.deleted">
+                    <li *ngIf="!message.modified" class="text-muted list-inline-item">
+                      <small>{{message.created | moment}}</small>
+                    </li>
+                    <li *ngIf="message.modified" class="text-muted list-inline-item">
+                      <small>
+                        <i>modified {{message.modified | moment}}</i>
+                      </small>
+                    </li>
+                  </span>
+                </ul>
+              </small>
+            </div>
           </li>
         </ul>
-      </div>
-    </div>
-</nav>
-<!-- Modals -->
-<div bsModal #loginModal="bs-modal" class="modal fade"
-  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button id="closeModalButton" type="button"
-          class="close" (click)="loginModal.hide()"
-          aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <div class="row">
-          <div class="col-md-6 vertical-line-right">
-            <h4 class="text-center"> Signup </h4>
-            <br>
-            <form #signupForm="ngForm" (ngSubmit)="signupSubmit()"
-              class="form-horizontal" role="form">
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <input [(ngModel)]="signup.username" #signupName="ngModel"
-                    ngControl="signupName"
-                    class="form-control" placeholder="choose a username"
-                    required minlength="5"
-                    maxlength="20" pattern="[a-zA-Z0-9_-]+"
-                    name="signup_username"
-                  />
-                  <div *ngIf="signupName.dirty" class="row col-sm-12 help-block text-danger">
-                    <small *ngIf="signupName.errors?.required">A username is required</small>
-                    <small *ngIf="signupName.errors?.minlength">Username must be more than 5 characters</small>
-                    <small *ngIf="signupName.errors?.pattern">Illegal Characters</small>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <input [(ngModel)]="signup.password" #signupPassword="ngModel"
-                    ngControl="signupPassword"
-                    type="password" class="form-control"
-                    placeholder="password"
-                    required 
-                    name="signup_password"/>
-                  <div *ngIf="signupPassword.dirty" class="row col-sm-12 help-block text-danger">
-                    <small *ngIf="signupPassword.errors?.required">a password is required</small>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <input [(ngModel)]="signup.verifyPassword"
-                    #signupVerifyPassword="ngModel"
-                    ngControl="signupVerifyPassword"
-                    type="password" class="form-control"
-                    placeholder="verify password"
-                    required 
-                    name="signup_verify_password"/>
-                  <div *ngIf="signupVerifyPassword.dirty" class="row col-sm-12 help-block text-danger">
-                    <small *ngIf="signupVerifyPassword.errors?.required">a password is required</small>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <input [(ngModel)]="signup.email" #signupEmail="ngModel"
-                    ngControl="signupEmail"
-                    class="form-control" placeholder="email (optional)"
-                    pattern="\S+@\S+\.\S+"
-                    name="signup_email"
-                  />
-                  <div *ngIf="signupEmail.dirty" class="row col-sm-12 help-block text-danger">
-                    <small *ngIf="signupEmail.errors?.pattern">Invalid Email</small>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <button [disabled]="!signupForm.form.valid"
-                    type="submit" class="btn btn-outline-primary btn-lg btn-block">Sign up</button>
-                </div>
-              </div>
-            </form>
-          </div>
-          <!-- The sign up tab -->
-          <div class="col-md-6">
-            <h4 class="text-center"> Log in </h4>
-            <br>
-            <form #loginForm="ngForm" (ngSubmit)="loginSubmit()"
-              class="form-horizontal">
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <input [(ngModel)]="login.usernameOrEmail"
-                    #loginName="ngModel" ngControl="loginName"
-                    class="form-control" placeholder="username or email"
-                    minlength="5" maxlength="140"
-                    required 
-                    name="login_username"/>
-                  <div *ngIf="loginName.dirty" class="row col-sm-12 help-block text-danger">
-                    <small *ngIf="loginName.errors?.required">A username is required</small>
-                    <small *ngIf="loginName.errors?.minlength">Username must be more than 5 characters</small>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <input [(ngModel)]="login.password" #loginPassword="ngModel"
-                    ngControl="loginPassword"
-                    type="password" type="password"
-                    class="form-control" placeholder="password"
-                    required 
-                    name="login_password"/>
-                  <div *ngIf="loginPassword.dirty" class="row col-sm-12 help-block text-danger">
-                    <small *ngIf="loginPassword.errors?.required">a password is required</small>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <button [disabled]="!loginForm.form.valid"
-                    type="submit" class="btn btn-outline-primary btn-lg btn-block">Login</button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+      </li>
+      <li *ngIf="!userService.isAnonymousUser()" dropdown class="nav-item pointer" keyboardNav="true">
+        <a class="nav-link" role="button" type="button" dropdownToggle>
+          {{userService.getUser().name}}
+          <i class="ml-2 fa fa-caret-down"></i>
+        </a>
+        <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
+          <li role="menuitem">
+            <a (click)="logout()" class="dropdown-item" href="#">
+              <i class="fa fa-fw fa-sign-out"></i>Logout</a>
+          </li>
+        </ul>
+      </li>
+      <li *ngIf="!userService.isFullUser()" class="nav-item pointer">
+        <a role="button" class="nav-link" (click)="toggleLoginModal()">Login/Signup</a>
+      </li>
+      <!-- <li *ngIf="userService.isAnonymousUser()" class="nav-item hidden-xs-up pointer">
+        <a (click)="logout()" role="button" class="nav-link">Logout</a>
+      </li> -->
+    </ul>
   </div>
-</div>
+</nav>
+
+<app-login-modal *ngIf="showLoginModal" (hideEvent)="hiddenEvent()"></app-login-modal>
+
