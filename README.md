@@ -96,7 +96,7 @@ Edit it to point to your own database:
 jdbc.url=jdbc\:postgresql\://127.0.0.1/flowchat
 jdbc.username=flowchat
 jdbc.password=asdf
-sorting_created_weight=3600
+sorting_created_weight=86400
 sorting_number_of_votes_weight=0.001
 sorting_avg_rank_weight=0.01
 reddit_client_id=
