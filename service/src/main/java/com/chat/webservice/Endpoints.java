@@ -287,6 +287,8 @@ public class Endpoints {
 
             orderBy = Tools.constructOrderByCustom(orderBy);
 
+            log.info(orderBy);
+
             User userObj = Actions.getOrCreateUserObj(req);
 
             Set<Long> communityIds = Tools.fetchCommunitiesFromParams(req.params(":communityId"), userObj);
