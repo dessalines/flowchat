@@ -1,8 +1,15 @@
 version: '2'
 
 services:
+  flowchat_db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: flowchat
   flowchat:
     build: .
+    command: "bash -c 'sleep 7s; java -jar /opt/flowchat.jar -liquibase'"
     depends_on:
       - flowchat_db
     ports:
@@ -11,12 +18,6 @@ services:
       FLOWCHAT_DB_URL: "jdbc:postgresql://flowchat_db/flowchat"
       FLOWCHAT_DB_USERNAME: "postgres"
       FLOWCHAT_DB_PASSWORD: "example"
-      SORTING_CREATED_WEIGHT:  3600.0000
-      SORTING_NUMBER_OF_VOTES_WEIGHT: 0.0010
-      SORTING_AVG_RANK_WEIGHT: 0.0100
-
-  flowchat_db:
-    image: postgres
-    environment:
-      POSTGRES_PASSWORD: example
-      POSTGRES_DB: flowchat
+      SORTING_CREATED_WEIGHT: 86400
+      SORTING_NUMBER_OF_VOTES_WEIGHT: 0.001
+      SORTING_AVG_RANK_WEIGHT: 0.01
