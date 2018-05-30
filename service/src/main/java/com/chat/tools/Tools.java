@@ -70,7 +70,7 @@ public class Tools {
     
     public static final HikariConfig hikariConfig() {
         HikariConfig hc = new HikariConfig();
-        hc.setDataSourceClassName("org.postgresql.ds.PGSimpleDataSource");
+        DataSources.PROPERTIES = Tools.loadProperties(DataSources.PROPERTIES_FILE);
         hc.setJdbcUrl(DataSources.PROPERTIES.getProperty("jdbc.url"));
         hc.setUsername(DataSources.PROPERTIES.getProperty("jdbc.username"));
         hc.setPassword(DataSources.PROPERTIES.getProperty("jdbc.password"));

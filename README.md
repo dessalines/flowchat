@@ -59,6 +59,7 @@ Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
 ```sh
 git clone https://github.com/dessalines/flowchat
 cd flowchat
+// edit ARG ENDPOINT_NAME=http://localhost:4567 in ./Dockerfile to your hostname
 docker-compose up
 ```
 
