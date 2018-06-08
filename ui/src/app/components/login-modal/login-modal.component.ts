@@ -14,11 +14,14 @@ import { ToasterService } from 'angular2-toaster';
 })
 export class LoginModalComponent implements OnInit {
 
-  public signup: Signup = {};
+  public signup: Signup = {
+    username: (this.userService.getUser()) ? this.userService.getUser().name : undefined
+  };
+
   public login: Login = {};
 
   @ViewChild('loginModal') private loginModal: ModalDirective;
-	@Output() hideEvent = new EventEmitter();	
+  @Output() hideEvent = new EventEmitter();
 
   constructor(public userService: UserService,
     private loginService: LoginService,
@@ -36,30 +39,16 @@ export class LoginModalComponent implements OnInit {
 
   }
 
-  setupUser(user: any) {
-    this.userService.setUser(user);
-    this.userService.sendLoginEvent(user);
-    document.getElementById('closeModalButton').click();
-  }
-
-  getOrCreateUser() {
-    this.loginService.getOrCreateUser().subscribe(
-      user => {
-        this.setupUser(user);
-      },
-      error => {
-        console.error(error);
-        this.toasterService.pop("error", "Error", error);
-      });
-  }
-
   signupSubmit() {
     this.loginService.signup(this.signup.username,
       this.signup.password,
       this.signup.verifyPassword,
       this.signup.email).subscribe(
-        user => {
-          this.setupUser(user);
+        jwt => {
+          Tools.createCookie('jwt', jwt, 9999);
+          this.userService.setUserFromCookie();
+          document.getElementById('closeModalButton').click();
+
         },
         error => {
           console.error(error);
@@ -71,8 +60,11 @@ export class LoginModalComponent implements OnInit {
   loginSubmit() {
     this.loginService.login(this.login.usernameOrEmail,
       this.login.password).subscribe(
-        user => {
-          this.setupUser(user);
+        jwt => {
+          Tools.createCookie('jwt', jwt, 9999);
+          this.userService.setUserFromCookie();
+          document.getElementById('closeModalButton').click();
+
         },
         error => {
           console.error(error);

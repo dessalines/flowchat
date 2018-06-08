@@ -15,9 +15,7 @@ export class OnboardAlertComponent implements OnInit {
 
   readOnboardAlert() {
     this.userService.getUser().settings.readOnboardAlert = true;
-    this.userService.saveUser().subscribe(u => {
-      this.userService.setUserSettings(u.settings);
-    });
+    this.userService.saveUserSettings();
   }
 
 }

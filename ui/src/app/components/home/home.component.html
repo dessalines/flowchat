@@ -1,5 +1,5 @@
 <div>
-  <app-onboard-alert *ngIf="!userService.getUserSettings().readOnboardAlert"></app-onboard-alert>
+  <app-onboard-alert *ngIf="!userService.getUserSettings().readOnboardAlert && !loadingDiscussions"></app-onboard-alert>
   <div class="row">
     <div class="col-xs-12 col-md-8 trending-discussions">
       <ul *ngIf="popularTags " class="list-inline mb-1">
@@ -18,22 +18,22 @@
     </div>
     <div class="col-xs-12 col-md-2
         ">
-      <app-discussion-card-view-type-select [(viewType)]="viewType "></app-discussion-card-view-type-select>
+      <app-discussion-card-view-type-select *ngIf="false"></app-discussion-card-view-type-select>
     </div>
     <div class="col-xs-12 col-md-2
         ">
-      <app-discussion-card-sort-select [sortType]="sortType " (sortTypeChange)="resort($event) "></app-discussion-card-sort-select>
+      <app-discussion-card-sort-select></app-discussion-card-sort-select>
     </div>
   </div>
   <div (window:scroll)="onScroll($event)">
     <div *ngIf="!isCard()" class="list-group">
-      <app-discussion-card [viewType]="viewType" *ngFor="let discussion of discussions" [discussion]="discussion "></app-discussion-card>
+      <app-discussion-card *ngFor="let discussion of discussions" [discussion]="discussion "></app-discussion-card>
     </div>
     <div *ngIf="isCard()">
       <div class="col-xs-12">
-        <ngx-masonry [options]="{gutter: 10, transitionDuration: '0.2s'}" [useImagesLoaded]="true">
+        <ngx-masonry [options]="{gutter: 10, transitionDuration: '0.2s', horizontalOrder: true}" [useImagesLoaded]="true">
           <ngxMasonryItem class="masonry-item mb-2" *ngFor="let discussion of discussions">
-            <app-discussion-card [viewType]="viewType" [discussion]="discussion "></app-discussion-card>
+            <app-discussion-card [discussion]="discussion "></app-discussion-card>
           </ngxMasonryItem>
         </ngx-masonry>
       </div>

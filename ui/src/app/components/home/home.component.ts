@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Title }     from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { ToasterContainerComponent, ToasterService, ToasterConfig } from 'angular2-toaster/angular2-toaster';
@@ -20,15 +20,13 @@ export class HomeComponent implements OnInit {
   public currentCount: number = 0;
   public popularTags: Array<Tag>;
   public popularCommunities: Array<Community>;
-  public sortType: string = this.userService.getUserSettings().defaultSortTypeRadioValue;
-  public viewType: string = this.userService.getUserSettings().defaultViewTypeRadioValue;
 
   public currentPageNum: number = 1;
   public scrollDebounce: number = 0;
 
   public communityId: string;
 
-  public loadingDiscussions: boolean = false;
+  public loadingDiscussions: boolean = true;
   public updateMasonryLayout: boolean = false;
 
   constructor(private router: Router,
@@ -54,20 +52,19 @@ export class HomeComponent implements OnInit {
       this.communityId = "all";
     }
 
-    this.getDiscussions(this.communityId, this.currentPageNum, this.sortType);
+    this.userService.userObservable.subscribe(user => {
+      this.discussions = undefined;
+      this.currentPageNum = 1;
+      this.scrollDebounce = 0;
+      if (user) {
 
-    this.getPopularTags(this.sortType);
-    this.getPopularCommunities(this.sortType);
+        this.getDiscussions(this.communityId, this.currentPageNum, this.userService.getUserSettings().defaultSortTypeRadioValue);
+        this.getPopularTags(this.userService.getUserSettings().defaultSortTypeRadioValue);
+        this.getPopularCommunities(this.userService.getUserSettings().defaultSortTypeRadioValue);
+      }
+    });
 
     this.titleService.setTitle('FlowChat');
-  }
-
-  resort($event) {
-    this.sortType = $event;
-    this.discussions = undefined;
-    this.currentPageNum = 1;
-    this.scrollDebounce = 0;
-    this.ngOnInit();
   }
 
   onScroll(event) {
@@ -77,7 +74,7 @@ export class HomeComponent implements OnInit {
         this.scrollDebounce = 1;
         // you're at the bottom of the page
         this.currentPageNum += 1;
-        this.getDiscussions(this.communityId, this.currentPageNum, this.sortType);
+        this.getDiscussions(this.communityId, this.currentPageNum, this.userService.getUserSettings().defaultSortTypeRadioValue);
         setTimeout(() => this.scrollDebounce = 0, 200);
       }
     }
@@ -88,7 +85,7 @@ export class HomeComponent implements OnInit {
 
     if (this.discussions === undefined || this.discussions.length < this.currentCount) {
 
-      this.loadingDiscussions = true;
+
       this.discussionService.getDiscussions(page, undefined, undefined, communityId, orderBy).subscribe(
         d => {
           // Append them
@@ -99,8 +96,8 @@ export class HomeComponent implements OnInit {
           this.currentCount = d.count;
           this.discussions.push(...d.discussions);
           this.loadingDiscussions = false;
-          setTimeout(() => this.updateMasonryLayout = !this.updateMasonryLayout, 2000);
-          
+          // setTimeout(() => this.updateMasonryLayout = !this.updateMasonryLayout, 2000);
+
         });
 
     }
@@ -125,14 +122,7 @@ export class HomeComponent implements OnInit {
   }
 
   isCard(): boolean {
-    return this.viewType === 'card';
-  }
-
-  readOnboardAlert() {
-    // this.userService.getUserSettings().readOnboardAlert = true;
-    this.userService.saveUser().subscribe(u => {
-      this.userService.setUserSettings(u.settings);
-    });
+    return this.userService.getUserSettings().defaultViewTypeRadioValue === 'card';
   }
 
 }

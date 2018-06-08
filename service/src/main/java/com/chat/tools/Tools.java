@@ -27,6 +27,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.chat.DataSources;
 import com.chat.db.Tables;
 import com.chat.types.community.CommunityRole;
@@ -51,6 +57,8 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
+
+import spark.Request;
 
 /**
  * Created by tyler on 5/24/16.
@@ -88,6 +96,32 @@ public class Tools {
         Base.close();
     }
 
+    public static final Algorithm getJWTAlgorithm() {
+        Algorithm JWTAlgorithm = null;
+        try {
+            JWTAlgorithm = Algorithm.HMAC256(DataSources.PROPERTIES.getProperty("jdbc.password"));
+        } catch (UnsupportedEncodingException | JWTCreationException exception) {
+        }
+
+        return JWTAlgorithm;
+    }
+
+    public static final DecodedJWT decodeJWTToken(String token) {
+
+        DecodedJWT jwt = null;
+
+        try {
+            JWTVerifier verifier = JWT.require(getJWTAlgorithm()).withIssuer("flowchat").build(); 
+            jwt = verifier.verify(token);
+        } catch (JWTVerificationException e) {
+        }
+
+        return jwt;
+    }
+
+    public static final User getUserFromJWTHeader(Request req) {
+        return User.create(req.headers("token"));
+    }
 
     public static Properties loadProperties(String propertiesFileLocation) {
 

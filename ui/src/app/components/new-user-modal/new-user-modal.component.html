@@ -1,0 +1,28 @@
+<div bsModal #smModal="bs-modal" class="modal fade"
+  [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
+  aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form #userForm="ngForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <div class="input-group">
+              <input id="new-user-input" type="text" class="form-control"
+                required maxlength="100" pattern="[a-zA-Z0-9_-]+"
+                [(ngModel)]="name" name="name" placeholder="Enter your name...."
+                #namev="ngModel" autofocus="" [class.is-invalid]="!(namev.valid || namev.pristine)">
+              <span class="input-group-btn">
+                  <button type="submit" class="btn btn-primary btn-block" [disabled]="!userForm.form.valid">Okay</button>
+              </span>
+            </div>
+            <div [hidden]="namev.valid || namev.pristine" class="text-danger">Name must be < 100 characters and contain no spaces.
+            </div>
+          </div>
+        </form>
+        <button class="btn btn-block btn-secondary" (click)="showLoginModal = true">Login/Signup</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-login-modal *ngIf="showLoginModal" (hideEvent)="hiddenEvent()"></app-login-modal>
+

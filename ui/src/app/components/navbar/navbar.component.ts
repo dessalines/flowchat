@@ -49,12 +49,10 @@ export class NavbarComponent implements OnInit {
 
     this.setupFavIcon();
 
-    if (!this.userService.getUser()) {
-      this.getOrCreateUser();
-    }
-
     this.setupDiscussionSearch();
-    this.fetchNotifications();
+    if (this.userService.getUser()) {
+      this.fetchNotifications();
+    }
   }
 
   setupFavIcon() {
@@ -63,20 +61,8 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  getOrCreateUser() {
-    this.loginService.getOrCreateUser().subscribe(
-      user => {
-        this.setupUser(user);
-      },
-      error => {
-        console.error(error);
-        this.toasterService.pop("error", "Error", error);
-      });
-  }
-
   setupUser(user: any) {
-    this.userService.setUser(user);
-    this.userService.sendLoginEvent(user);
+    this.userService.setUserFromCookie();
   }
 
   gotoSample() {
@@ -181,14 +167,10 @@ export class NavbarComponent implements OnInit {
     this.showLoginModal = false;
   }
 
-  logout() {
-    this.userService.logout();
-
-    // Then relog back in as a random user (Necessary because a lot of fetches fail otherwise)
-    this.getOrCreateUser();
-    this.router.navigate(['/']);
-
-  }
+	logout() {
+		Tools.eraseCookie('jwt');
+		location.reload();
+	}
 
 }
 

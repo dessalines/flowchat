@@ -190,12 +190,10 @@ public class ThreadedChatWebSocket {
     log.debug(ss.toString());
 
     // Necessary for comment tree
-    Array arr = (Array) comments.collect("breadcrumbs", "id", replyData.getParentId()).get(0);
-
-    List<Long> parentBreadCrumbs = Tools.convertArrayToList(arr);
+    Long parentId = replyData.getParentId();
 
     com.chat.db.Tables.Comment newComment = Actions.createComment(ss.getUserObj().getId(), ss.getDiscussionId(),
-        parentBreadCrumbs, replyData.getReply());
+    parentId, replyData.getReply());
 
     // Fetch the comment threaded view
     CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", newComment.getLongId());

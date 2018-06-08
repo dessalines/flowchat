@@ -18,9 +18,6 @@ export class TagComponent implements OnInit {
   public currentCount: number = 0;
   public communities: Array<Community>;
 
-  public sortType: string = this.userService.getUserSettings().defaultSortTypeRadioValue;
-  public viewType: string = this.userService.getUserSettings().defaultViewTypeRadioValue;
-
   public tag: Tag;
 
   public currentPageNum: number = 1;
@@ -28,7 +25,7 @@ export class TagComponent implements OnInit {
 
   public sub: any;
 
-  public loadingDiscussions: boolean = false;
+  public loadingDiscussions: boolean = true;
   public updateMasonryLayout: boolean = false;
 
   constructor(private route: ActivatedRoute,
@@ -47,8 +44,17 @@ export class TagComponent implements OnInit {
       this.currentPageNum = 1;
       this.scrollDebounce = 0;
       this.getTag(tagId);
-      this.getDiscussions(tagId, this.currentPageNum, this.sortType, true);
-      this.getCommunities(tagId, this.sortType);
+      
+      this.userService.userObservable.subscribe(user => {
+        if (user) {
+          this.discussions = undefined;
+          this.currentPageNum = 1;
+          this.scrollDebounce = 0;
+          console.log(this.userService.getUserSettings());
+          this.getDiscussions(tagId, this.currentPageNum, this.userService.getUserSettings().defaultSortTypeRadioValue, true);
+          this.getCommunities(tagId, this.userService.getUserSettings().defaultSortTypeRadioValue);
+        }
+      });
     });
 
   }
@@ -96,18 +102,10 @@ export class TagComponent implements OnInit {
         this.scrollDebounce = 1;
         // you're at the bottom of the page
         this.currentPageNum += 1;
-        this.getDiscussions(this.tag.id, this.currentPageNum, this.sortType);
+        this.getDiscussions(this.tag.id, this.currentPageNum, this.userService.getUserSettings().defaultSortTypeRadioValue);
         setTimeout(() => this.scrollDebounce = 0, 1000);
       }
     }
-  }
-
-  resort($event) {
-    this.sortType = $event;
-    this.discussions = undefined;
-    this.currentPageNum = 1;
-    this.scrollDebounce = 0;
-    this.getDiscussions(this.tag.id, this.currentPageNum, this.sortType);
   }
 
   removeQuotes(text: string) {
@@ -115,7 +113,7 @@ export class TagComponent implements OnInit {
   }
 
   isCard(): boolean {
-    return this.viewType === 'card';
+    return this.userService.getUserSettings().defaultViewTypeRadioValue === 'card';
   }
 
 }
