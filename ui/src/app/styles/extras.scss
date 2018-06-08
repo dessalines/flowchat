@@ -143,13 +143,6 @@
   display: inline;
 }
 
-ngx-masonry {
-  display: block;
-  height: 100%;
-  width: 100%;
-}
-
-
 .masonry-item {
   @media (min-width: 480px) {
     width: calc(32%);

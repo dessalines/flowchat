@@ -1,4 +1,4 @@
-<select [ngModel]="sortType" (ngModelChange)="changeEvent($event)"
+<select [ngModel]="userService.getUserSettings().defaultSortTypeRadioValue" (ngModelChange)="changeEvent($event)"
   class="form-control discussion-card-select">
   <option disabled>Sorting</option>
   <option disabled>──────────</option>

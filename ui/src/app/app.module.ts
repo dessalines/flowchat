@@ -1,11 +1,15 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, } from '@angular/core';
-import { FormsModule,
-  ReactiveFormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import {Location, LocationStrategy, HashLocationStrategy} from '@angular/common';
+import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { AppComponent } from './app.component';
-import { HomeComponent,
+import {
+  HomeComponent,
   TagComponent,
   CommunityComponent,
   CommunityModlogComponent,
@@ -21,17 +25,25 @@ import { HomeComponent,
   FooterComponent,
   MarkdownEditComponent,
   OnboardAlertComponent,
-  LoginModalComponent } from './components';
-import { MomentPipe,
-  MarkdownPipe } from './pipes';
-import {ToasterModule,
-  ToasterService} from 'angular2-toaster';
-import { TooltipModule,
+  LoginModalComponent,
+  NewUserModalComponent
+} from './components';
+import {
+  MomentPipe,
+  MarkdownPipe
+} from './pipes';
+import {
+  ToasterModule,
+  ToasterService
+} from 'angular2-toaster';
+import {
+  TooltipModule,
   BsDropdownModule,
   ModalModule,
   TabsModule,
   TypeaheadModule,
-  AlertModule } from 'ngx-bootstrap';
+  AlertModule
+} from 'ngx-bootstrap';
 
 import { Title } from '@angular/platform-browser'
 
@@ -63,16 +75,17 @@ window['imagesLoaded'] = require('imagesloaded');
     MarkdownEditComponent,
     OnboardAlertComponent,
     LoginModalComponent,
+    NewUserModalComponent,
 
     // Pipes
     MomentPipe,
     MarkdownPipe,
     OnboardAlertComponent,
-    LoginModalComponent,
-    
+
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     HttpModule,

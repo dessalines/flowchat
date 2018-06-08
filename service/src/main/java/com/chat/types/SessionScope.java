@@ -1,14 +1,18 @@
 package com.chat.types;
 
-import ch.qos.logback.classic.Logger;
-import com.chat.db.Actions;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.chat.tools.Tools;
 import com.chat.types.user.User;
+
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import ch.qos.logback.classic.Logger;
 
 /**
  * This helps determine what information gets broadcast to who.
@@ -98,20 +102,11 @@ public class SessionScope {
     }
 
     public static User getUserFromSession(Session session) {
-
         Map<String, String> cookieMap = Tools.cookieListToMap(session.getUpgradeRequest().getCookies());
-        String userObjStr = cookieMap.get("user");
-
-        User user;
-        if (userObjStr == null) {
-            user = Actions.getOrCreateUserObj(null, null);
-        } else {
-            user = User.fromJson(userObjStr);
-        }
-
-        return user;
-
-    }
+        String jwt = cookieMap.get("jwt");
+    
+        return User.create(jwt);
+      }
 
     public Long getDiscussionId() {
         return discussionId;

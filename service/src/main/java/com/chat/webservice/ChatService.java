@@ -84,7 +84,6 @@ public class ChatService {
         Endpoints.community();
         Endpoints.tag();
         Endpoints.reply();
-        Endpoints.exceptions();
 
         init();
 

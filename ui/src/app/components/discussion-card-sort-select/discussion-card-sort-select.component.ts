@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import {UserService} from '../../services';
+import { UserService } from '../../services';
 
 @Component({
   selector: 'app-discussion-card-sort-select',
@@ -8,21 +8,14 @@ import {UserService} from '../../services';
 })
 export class DiscussionCardSortSelectComponent implements OnInit {
 
-  @Input() sortType: string;
-
-  @Output() sortTypeChange = new EventEmitter();
-
   constructor(private userService: UserService) { }
 
   ngOnInit() {
   }
 
   changeEvent($event) {
-    this.sortTypeChange.next($event);
-    this.userService.getUser().settings.defaultSortTypeRadioValue = $event;
-    this.userService.saveUser().subscribe(u => {
-      this.userService.setUserSettings(u.settings);
-    });
+    this.userService.getUserSettings().defaultSortTypeRadioValue = $event;
+    this.userService.saveUserSettings();
   }
 
 }

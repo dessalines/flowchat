@@ -15,8 +15,6 @@ export class CommunityComponent implements OnInit {
 
   public discussions: Array<Discussion>;
   public currentCount: number = 0;
-  public sortType: string = this.userService.getUserSettings().defaultSortTypeRadioValue;
-  public viewType: string = this.userService.getUserSettings().defaultViewTypeRadioValue;
 
   public community: Community;
 
@@ -27,7 +25,7 @@ export class CommunityComponent implements OnInit {
 
   public editing: Boolean = false;
 
-  public loadingDiscussions: boolean = false;
+  public loadingDiscussions: boolean = true;
   public updateMasonryLayout: boolean = false;
 
   constructor(private route: ActivatedRoute,
@@ -45,8 +43,16 @@ export class CommunityComponent implements OnInit {
       let communityId: number = +params['communityId'];
       this.currentPageNum = 1;
       this.scrollDebounce = 0;
+
       this.getCommunity(communityId);
-      this.getDiscussions(communityId, this.currentPageNum, this.sortType);
+      this.userService.userObservable.subscribe(user => {
+        if (user) {
+          this.discussions = undefined;
+          this.currentPageNum = 1;
+          this.scrollDebounce = 0;
+          this.getDiscussions(communityId, this.currentPageNum, this.userService.getUserSettings().defaultSortTypeRadioValue);
+        }
+      });
       this.editing = Boolean(this.route.snapshot.params["editMode"]);
     });
 
@@ -71,8 +77,6 @@ export class CommunityComponent implements OnInit {
 
     if (this.discussions === undefined || this.discussions.length < this.currentCount) {
 
-      this.loadingDiscussions = true;
-
       this.discussionService.getDiscussions(page, undefined, undefined, communityId.toString(), orderBy).subscribe(
         d => {
           if (this.discussions === undefined) {
@@ -94,27 +98,15 @@ export class CommunityComponent implements OnInit {
         this.scrollDebounce = 1;
         // you're at the bottom of the page
         this.currentPageNum += 1;
-        this.getDiscussions(this.community.id, this.currentPageNum, this.sortType);
+        this.getDiscussions(this.community.id, this.currentPageNum, this.userService.getUserSettings().defaultSortTypeRadioValue);
         setTimeout(() => this.scrollDebounce = 0, 1000);
       }
     }
   }
 
 
-  // editing($event) {
-  //   this.route.snapshot.params["editMode"] = $event;
-  // }
-
-  resort($event) {
-    this.sortType = $event;
-    this.discussions = undefined;
-    this.currentPageNum = 1;
-    this.scrollDebounce = 0;
-    this.getDiscussions(this.community.id, this.currentPageNum, this.sortType);
-  }
-
   isCard(): boolean {
-    return this.viewType==='card';
+    return this.userService.getUserSettings().defaultViewTypeRadioValue==='card';
   }
 
 }

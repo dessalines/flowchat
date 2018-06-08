@@ -1,19 +1,22 @@
 import { Injectable } from '@angular/core';
 import {User, UserSettings, Discussion, Discussions, Tools, Community, Communities} from '../shared';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import { Headers, RequestOptions } from '@angular/http';
+import { Headers, RequestOptions, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
-import { Http, Response } from '@angular/http';
 import {environment} from '../../environments/environment';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { ToasterService } from 'angular2-toaster';
 
 @Injectable()
 export class UserService {
 
   private user: User;
+  private jwtHelper: JwtHelperService = new JwtHelperService();
+
 
   private favoriteDiscussions: Array<Discussion> = [];
   private favoriteCommunities: Array<Community> = [];
@@ -22,18 +25,18 @@ export class UserService {
 
   public userObservable = this.userSource.asObservable();
 
-  private queryUsersUrl: string = environment.endpoint + 'user_search/';
+  private userSearchUrl: string = environment.endpoint + 'user_search/';
 
-  private fetchFavoriteDiscussionsUrl: string = environment.endpoint + 'favorite_discussions';
-  private removeFavoriteDiscussionUrl: string = environment.endpoint + 'favorite_discussion/';
+  private favoriteDiscussionUrl: string = environment.endpoint + 'favorite_discussion';
+  private favoriteDiscussionsUrl: string = environment.endpoint + 'favorite_discussions';
 
-  private saveFavoriteCommunityUrl: string = environment.endpoint + 'favorite_community/';
-  private fetchFavoriteCommunitiesUrl: string = environment.endpoint + 'favorite_communities';
-  private removeFavoriteCommunityUrl: string = environment.endpoint + 'favorite_community/';
+  private favoriteCommunityUrl: string = environment.endpoint + 'favorite_community';
+  private favoriteCommunitiesUrl: string = environment.endpoint + 'favorite_communities';
 
-  private getUserLogUrl: string = environment.endpoint + 'user_log/';
+  private userUrl: string = environment.endpoint + 'user';
+  private userSettingUrl: string = environment.endpoint + 'user_setting';
+  private getUserLogUrl: string = environment.endpoint + 'user_log';
 
-  private saveUserUrl: string = environment.endpoint + 'user';
 
   private defaultSettings: UserSettings = {
     defaultViewTypeRadioValue: 'card',
@@ -43,12 +46,53 @@ export class UserService {
 
   constructor(private http: Http) {
     this.setUserFromCookie();
-    this.fetchFavoriteDiscussions();
-    this.fetchFavoriteCommunities();
   }
 
-  public getUser(): User {
-    return this.user;
+	public setUserFromCookie() {
+		let jwt = Tools.readCookie('jwt');
+		if (jwt) {
+      this.setUser(jwt);
+		}
+	}
+
+	public setUser(jwt: string) {
+		let dJWT = this.jwtHelper.decodeToken(jwt);
+		this.user = {
+			id: dJWT.user_id,
+			name: dJWT.user_name,
+      jwt: jwt,
+      fullUser: dJWT.full_user
+    };
+    this.fetchFavoriteDiscussions();
+    this.fetchFavoriteCommunities();
+    this.fetchUserSettings();
+
+	}
+
+	public getUser(): User {
+		return this.user;
+	}
+
+	createNewUser(nameStr: string): Observable<string> {
+		let name = JSON.stringify({ name: nameStr });
+
+		return this.http.post(this.userUrl, name)
+			.map(r => r.text())
+			.catch(this.handleError);
+  }
+
+  logout() {
+    // Log out
+    this.user = {
+      id: null,
+      name: null,
+      jwt: null,
+      settings: this.defaultSettings
+    };
+
+    this.favoriteDiscussions = [];
+    this.clearCookies();
+
   }
 
   public getFavoriteDiscussions(): Array<Discussion> {
@@ -59,88 +103,33 @@ export class UserService {
     return this.favoriteCommunities;
   }
 
-  public isAnonymousUser(): boolean {
-    return this.user != null &&
-      (this.user.auth === undefined || this.user.auth == 'undefined' || this.user.auth == null);
-  }
-
-  public isFullUser() {
-    return this.user != null &&
-      !(this.user.auth === undefined || this.user.auth == 'undefined' || this.user.auth == null);
-  }
-
   getUserSettings(): UserSettings {
-    if (this.user == undefined) {
+    if (this.user === undefined || this.user.settings === undefined) {
       return this.defaultSettings;
     } else {
       return this.user.settings;
     }
   }
 
-  setUser(user: User) {
-    this.user = user;
-    this.setCookies(user);
-    this.fetchFavoriteDiscussions();
-    this.fetchFavoriteCommunities();
-  }
-
-  setUserSettings(settings: UserSettings) {
-    this.user.settings = settings;
-    this.setCookies(this.user);
-  }
-
-  setUserFromCookie() {
-    if (Tools.readCookie("user") != null) {
-      this.user = JSON.parse(Tools.readCookie("user"));
-    }
-  }
-
-  logout() {
-    // Log out
-    this.user = {
-      id: null,
-      name: null,
-      auth: null,
-      settings: this.defaultSettings
-    };
-
-    this.favoriteDiscussions = [];
-    this.clearCookies();
-
-  }
-
-  sendLoginEvent(user: User) {
-    this.userSource.next(user);
-  }
-
-
-  public saveUser(): Observable<User> {
-    return this.http.put(this.saveUserUrl, this.user)
-      .map(r => r.json())
-      .catch(this.handleError);
-  }
-
-
-  setCookies(user: User) {
-    this.clearCookies();
-    Tools.createCookie("user", JSON.stringify(user), user.expire_time);
+  sendLoginEvent() {
+    this.userSource.next(this.user);
   }
 
   clearCookies() {
-    Tools.eraseCookie("user");
+    Tools.eraseCookie("jwt");
   }
 
+	getOptions(): RequestOptions {
+		let headers = new Headers({
+			// 'Content-Type': 'application/json',
+			'token': this.getUser().jwt
+		});
+		return new RequestOptions({ headers: headers });
+	}
 
-  getOptions(): RequestOptions {
-    let headers = new Headers({
-      // 'Content-Type': 'application/json',
-      'user': JSON.stringify(this.getUser())
-    });
-    return new RequestOptions({ headers: headers });
-  }
 
   searchUsers(query: string): Observable<Array<User>> {
-    return this.http.get(this.queryUsersUrl + query)
+    return this.http.get(this.userSearchUrl + query)
       .map(r => r.json().users)
       .catch(this.handleError);
   }
@@ -154,7 +143,7 @@ export class UserService {
 
 
   private fetchFavoriteDiscussionsObs(): Observable<Discussions> {
-    return this.http.get(this.fetchFavoriteDiscussionsUrl, this.getOptions())
+    return this.http.get(this.favoriteDiscussionsUrl, this.getOptions())
       .map(r => r.json())
       .catch(this.handleError);
   }
@@ -172,7 +161,7 @@ export class UserService {
   }
 
   private removeFavoriteDiscussionObjs(discussionId: number) {
-    return this.http.delete(this.removeFavoriteDiscussionUrl + discussionId, this.getOptions())
+    return this.http.delete(this.favoriteDiscussionUrl + '/' + discussionId, this.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
@@ -196,7 +185,7 @@ export class UserService {
   }
 
   private fetchFavoriteCommunitiesObs(): Observable<Communities> {
-    return this.http.get(this.fetchFavoriteCommunitiesUrl, this.getOptions())
+    return this.http.get(this.favoriteCommunitiesUrl, this.getOptions())
       .map(r => r.json())
       .catch(this.handleError);
   }
@@ -214,7 +203,7 @@ export class UserService {
   }
 
   private removeFavoriteCommunityObjs(communityId: number) {
-    return this.http.delete(this.removeFavoriteCommunityUrl + communityId, this.getOptions())
+    return this.http.delete(this.favoriteCommunityUrl +  '/' + communityId, this.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
@@ -230,7 +219,7 @@ export class UserService {
   }
 
   private saveFavoriteCommunityObjs(communityId: number) {
-    return this.http.post(this.saveFavoriteCommunityUrl + communityId, null, this.getOptions())
+    return this.http.post(this.favoriteCommunityUrl +  '/' +  communityId, null, this.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
@@ -238,6 +227,38 @@ export class UserService {
   hasFavoriteCommunity(community: Community): boolean {
     return (this.favoriteCommunities !== undefined &&
       this.favoriteCommunities.filter(c => community.id == c.id)[0] !== undefined);
+  }
+
+  fetchUserSettings() {
+    this.fetchUserSettingsObs().subscribe(d => {
+      
+      this.user.settings = {
+        defaultSortTypeRadioValue: d["defaultSortTypeRadioValue"],
+        defaultViewTypeRadioValue: d["defaultViewTypeRadioValue"],
+        readOnboardAlert: d["readOnboardAlert"]
+      }
+      this.sendLoginEvent();
+    },
+      error => console.error(error));
+  }
+
+  private fetchUserSettingsObs(): Observable<UserSettings> {
+    return this.http.get(this.userSettingUrl, this.getOptions())
+      .map(r => r.json())
+      .catch(this.handleError);
+  }
+
+  saveUserSettings() {
+    this.saveUserSettingsObs().subscribe(d => {
+      this.sendLoginEvent();
+    },
+      error => console.error(error));
+  }
+
+  private saveUserSettingsObs() {
+    return this.http.put(this.userSettingUrl, this.user.settings, this.getOptions())
+      .map(this.extractData)
+      .catch(this.handleError);
   }
 
   getUserLog(id: number) {
@@ -260,3 +281,8 @@ export class UserService {
   }
 
 }
+
+
+
+
+

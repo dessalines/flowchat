@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import {UserService} from '../../services';
+import { UserService } from '../../services';
 
 @Component({
 	selector: 'app-discussion-card-view-type-select',
@@ -8,21 +8,14 @@ import {UserService} from '../../services';
 })
 export class DiscussionCardViewTypeSelectComponent implements OnInit {
 
-	@Input() viewType: string;
-
-	@Output() viewTypeChange = new EventEmitter();
-
 	constructor(private userService: UserService) { }
 
 	ngOnInit() {
 	}
 
 	changeEvent($event) {
-		this.viewTypeChange.next($event);
-		this.userService.getUser().settings.defaultViewTypeRadioValue = $event;
-		this.userService.saveUser().subscribe(u => {
-      		this.userService.setUserSettings(u.settings);
-    	});
+		this.userService.getUserSettings().defaultViewTypeRadioValue = $event;
+		this.userService.saveUserSettings();
 	}
 
 }

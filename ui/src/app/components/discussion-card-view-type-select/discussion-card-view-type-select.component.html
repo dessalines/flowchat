@@ -1,4 +1,4 @@
-<select [ngModel]="viewType" (ngModelChange)="changeEvent($event)"
+<select [ngModel]="userService.getUserSettings().defaultViewTypeRadioValue" (ngModelChange)="changeEvent($event)"
   class="form-control discussion-card-select">
   <option disabled>Switch View</option>
   <option disabled>──────────</option>

@@ -5,9 +5,9 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
-import {User} from '../shared';
-import {UserService} from './user.service';
-import {environment} from '../../environments/environment';
+import { User } from '../shared';
+import { UserService } from './user.service';
+import { environment } from '../../environments/environment';
 
 
 @Injectable()
@@ -21,28 +21,25 @@ export class LoginService {
     private userService: UserService) {
   }
 
-  getOrCreateUser(): Observable<User> {
-    return this.http.get(this.getOrCreateUrl, this.userService.getOptions())
-      .map(r => r.json())
-      .catch(this.handleError);
-  }
-
-  login(usernameOrEmail: string, password: string): Observable<User> {
+  login(usernameOrEmail: string, password: string): Observable<string> {
     let reqBody: string = JSON.stringify({ usernameOrEmail, password });
     return this.http.post(this.loginUrl, reqBody)
-      .map(r => r.json())
+      .map(r => r.text())
       .catch(this.handleError);
   }
 
-  signup(username: string, password: string, verifyPassword: string, email: string): Observable<User> {
+  signup(username: string, password: string, verifyPassword: string, email: string): Observable<string> {
+    let options = (this.userService.getUser()) ? this.userService.getOptions() : null;
+    console.log(options);
     let reqBody: string = JSON.stringify({ username, password, verifyPassword, email });
-    return this.http.post(this.signupUrl, reqBody)
-      .map(r => r.json())
+    return this.http.post(this.signupUrl, reqBody, options)
+      .map(r => r.text())
       .catch(this.handleError);
   }
 
   private handleError(error: any) {
     // We'd also dig deeper into the error to get a better message
+    console.log(error);
     let errMsg = error._body;
     return Observable.throw(errMsg);
   }

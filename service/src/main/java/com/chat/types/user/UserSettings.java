@@ -7,8 +7,7 @@ import com.chat.types.JSONWriter;
  * Created by tyler on 9/23/16.
  */
 public class UserSettings implements JSONWriter {
-    private String defaultViewTypeRadioValue,
-        defaultSortTypeRadioValue;
+    private String defaultViewTypeRadioValue, defaultSortTypeRadioValue;
     private Boolean readOnboardAlert;
 
     public UserSettings(String defaultViewTypeRadioValue, String defaultSortTypeRadioValue, Boolean readOnboardAlert) {
@@ -17,23 +16,28 @@ public class UserSettings implements JSONWriter {
         this.readOnboardAlert = readOnboardAlert;
     }
 
-    public UserSettings() {}
+    public UserSettings() {
+    }
 
-    public static UserSettings create(Tables.UserView uv) {
-        return new UserSettings(uv.getString("default_view_type_radio_value"),
-                uv.getString("default_sort_type_radio_value"),
+    public static UserSettings create(Tables.UserSetting uv) {
+        
+        return new UserSettings(ViewType.values()[uv.getInteger("default_view_type_id") - 1].getRadioValue(),SortType.values()[uv.getInteger("default_sort_type_id") - 1].getRadioValue(),
                 uv.getBoolean("read_onboard_alert"));
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         UserSettings that = (UserSettings) o;
 
-        if (!defaultViewTypeRadioValue.equals(that.defaultViewTypeRadioValue)) return false;
-        if (!defaultSortTypeRadioValue.equals(that.defaultSortTypeRadioValue)) return false;
+        if (!defaultViewTypeRadioValue.equals(that.defaultViewTypeRadioValue))
+            return false;
+        if (!defaultSortTypeRadioValue.equals(that.defaultSortTypeRadioValue))
+            return false;
         return readOnboardAlert.equals(that.readOnboardAlert);
 
     }

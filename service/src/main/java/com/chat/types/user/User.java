@@ -1,18 +1,18 @@
 package com.chat.types.user;
 
-import com.chat.db.Tables;
+import java.io.IOException;
+
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.chat.tools.Tools;
 import com.chat.types.JSONWriter;
 import com.chat.webservice.ConstantsService;
-
-import java.io.IOException;
 
 /**
  * Created by tyler on 6/10/16.
  */
 public class User implements JSONWriter {
     private Long id;
-    private String name, auth;
+    private String name, jwt;
 
     private UserSettings settings;
 
@@ -28,17 +28,15 @@ public class User implements JSONWriter {
                 user.getString("name"));
     }
 
-    public static User create(Tables.UserView uv) {
-        User user = new User(uv.getLongId(),
-                uv.getString("name"));
-
-        user.settings = UserSettings.create(uv);
-
-        return user;
-    }
-
     public static User create(Long id, String name) {
         return new User(id, name);
+    }
+
+    public static User create(String jwt) {
+        DecodedJWT dJWT = Tools.decodeJWTToken(jwt);
+        return new User(
+            Long.valueOf(dJWT.getClaim("user_id").asString()),
+            dJWT.getClaim("user_name").asString());
     }
 
     public Long getId() {
@@ -53,12 +51,12 @@ public class User implements JSONWriter {
         return settings;
     }
 
-    public String getAuth() {
-        return auth;
+    public String getJwt() {
+        return jwt;
     }
 
-    public void setAuth(String auth) {
-        this.auth = auth;
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
     }
 
     @Override

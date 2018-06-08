@@ -40,7 +40,7 @@
         </a>
       </li>
     </ul>
-    <ul class="nav navbar-nav my-lg-0">
+    <ul *ngIf="userService.getUser()" class="nav navbar-nav my-lg-0">
       <li dropdown class="nav-item" keyboardNav="true">
         <a class="nav-link pointer" role="button" type="button" dropdownToggle placement="bottom">
           <span *ngIf="unreadMessages?.length > 0" class="badge badge-info navbar-label ml-2">{{unreadMessages?.length}}</span>
@@ -79,7 +79,10 @@
           </li>
         </ul>
       </li>
-      <li *ngIf="!userService.isAnonymousUser()" dropdown class="nav-item pointer" keyboardNav="true">
+      <li *ngIf="!userService.getUser().fullUser" class="nav-item pointer">
+        <a role="button" class="nav-link" (click)="toggleLoginModal()">Login/Signup</a>
+      </li>
+      <li dropdown class="nav-item pointer" keyboardNav="true">
         <a class="nav-link" role="button" type="button" dropdownToggle>
           {{userService.getUser().name}}
           <i class="ml-2 fa fa-caret-down"></i>
@@ -91,15 +94,13 @@
           </li>
         </ul>
       </li>
-      <li *ngIf="!userService.isFullUser()" class="nav-item pointer">
-        <a role="button" class="nav-link" (click)="toggleLoginModal()">Login/Signup</a>
-      </li>
+
+
       <!-- <li *ngIf="userService.isAnonymousUser()" class="nav-item hidden-xs-up pointer">
         <a (click)="logout()" role="button" class="nav-link">Logout</a>
       </li> -->
     </ul>
   </div>
 </nav>
-
+<app-new-user-modal></app-new-user-modal>
 <app-login-modal *ngIf="showLoginModal" (hideEvent)="hiddenEvent()"></app-login-modal>
-

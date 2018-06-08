@@ -14,12 +14,6 @@ public class Tables {
     @Table("user_setting")
     public static class UserSetting extends Model {}
 
-    @Table("full_user")
-    public static class FullUser extends Model {}
-
-    @Table("user_view")
-    public static class UserView extends Model {}
-
     @Table("user_audit_view")
     public static class UserAuditView extends Model {}
 
