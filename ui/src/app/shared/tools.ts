@@ -2,9 +2,11 @@ import Zooming from 'zooming';
 
 export class Tools {
   static zooming = new Zooming({
-    enableGrab: false,
-    preloadImage: false,
-    zIndex: 998
+    // enableGrab: false,
+    // preloadImage: false,
+    bgOpacity: 0,
+    // bgColor: 'rgb(0, 0, 0)',
+    zIndex: 2000
   });
 
   static createCookie(name: string, value: any, expireTime: number) {
@@ -53,7 +55,7 @@ export class Tools {
 
   static replaceVideos(text: string): string {
     return text.replace(/(https?:\/\/.*\.(?:mp4))/g,
-      '<video onPlay="" class="img-fluid" muted="" loop="" poster="$1" controls><source src="$1" type="video/mp4"></source></video>');
+      '<video onPlay="" class="img-fluid" muted="" loop="" poster="$1" controls loop><source src="$1" type="video/mp4"></source></video>');
   }
 
   static replaceImgur(text: string): string {
