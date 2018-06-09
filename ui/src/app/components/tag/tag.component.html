@@ -12,8 +12,8 @@
   </div>
   <small *ngIf="communities?.length > 0">
     <ul class="list-inline trending-communities">trending communities:
-      <li class="badge badge-primary list-inline-item" *ngFor="let community of communities">
-        <a class="link-unstyled" [routerLink]="['/community', community.id]">{{removeQuotes(community.name)}}</a>
+      <li class="list-inline-item" *ngFor="let community of communities">
+        <a class="link-unstyled" [routerLink]="['/community', community.id]">~{{removeQuotes(community.name)}}</a>
       </li>
     </ul>
   </small>

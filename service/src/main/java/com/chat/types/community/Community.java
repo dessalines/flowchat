@@ -23,7 +23,7 @@ public class Community implements JSONWriter {
     private Long id;
     private User creator, modifiedByUser;
     private String name, text;
-    private Boolean private_, deleted;
+    private Boolean private_, deleted, nsfw;
     private Integer avgRank, userRank, numberOfVotes;
     private List<Tag> tags;
     private List<User> moderators, privateUsers, blockedUsers;
@@ -35,6 +35,7 @@ public class Community implements JSONWriter {
                      String name,
                      String text,
                      Boolean private_,
+                     Boolean nsfw,
                      Integer avgRank,
                      Integer userRank,
                      Integer numberOfVotes,
@@ -53,6 +54,7 @@ public class Community implements JSONWriter {
         this.name = name;
         this.text = text;
         this.private_ = private_;
+        this.nsfw = nsfw;
         this.avgRank = avgRank;
         this.userRank = userRank;
         this.numberOfVotes = numberOfVotes;
@@ -137,6 +139,7 @@ public class Community implements JSONWriter {
                 c.getString("name"),
                 c.getString("text_"),
                 c.getBoolean("private"),
+                c.getBoolean("nsfw"),
                 c.getInteger("avg_rank"),
                 vote,
                 c.getInteger("number_of_votes"),
@@ -178,6 +181,10 @@ public class Community implements JSONWriter {
 
     public Boolean getPrivate_() {
         return private_;
+    }
+
+    public Boolean getNsfw() {
+        return nsfw;
     }
 
     public Integer getAvgRank() {

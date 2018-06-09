@@ -20,7 +20,7 @@ public class Discussion implements JSONWriter {
     private Long id;
     private User creator, modifiedByUser;
     private String title, link, text;
-    private Boolean private_, deleted;
+    private Boolean private_, deleted, nsfw;
     private Integer avgRank, userRank, numberOfVotes, numberOfComments;
     private Community community;
     private List<Tag> tags;
@@ -35,6 +35,7 @@ public class Discussion implements JSONWriter {
                       String link,
                       String text,
                       Boolean private_,
+                      Boolean nsfw,
                       Integer avgRank,
                       Integer userRank,
                       Integer numberOfVotes,
@@ -55,6 +56,7 @@ public class Discussion implements JSONWriter {
         this.link = link;
         this.text = text;
         this.private_ = private_;
+        this.nsfw = nsfw;
         this.avgRank = avgRank;
         this.userRank = userRank;
         this.numberOfVotes = numberOfVotes;
@@ -129,6 +131,9 @@ public class Discussion implements JSONWriter {
         // Create the community
         Community community = (cntv != null) ? Community.create(cntv, null, communityUsers, null) : null;
 
+        // If the community is NSFW, the discussion must be
+        Boolean nsfw = (community.getNsfw()) ? true :  d.getBoolean("nsfw");
+
         // Create the modified by user
         User modifiedByUser = User.create(d.getLong("modified_by_user_id"), d.getString("modified_by_user_name"));
 
@@ -137,6 +142,7 @@ public class Discussion implements JSONWriter {
                 d.getString("link"),
                 d.getString("text_"),
                 d.getBoolean("private"),
+                nsfw,
                 d.getInteger("avg_rank"),
                 vote,
                 d.getInteger("number_of_votes"),
@@ -181,6 +187,10 @@ public class Discussion implements JSONWriter {
 
     public Boolean getPrivate_() {
         return private_;
+    }
+
+    public Boolean getNsfw() {
+        return nsfw;
     }
 
     public Integer getAvgRank() {

@@ -65,7 +65,7 @@ export class CommunityComponent implements OnInit {
   getCommunity(communityId: number) {
     this.communityService.getCommunity(communityId).subscribe(c => {
       this.community = c;
-      this.titleService.setTitle(c.name + ' - FlowChat');
+      this.titleService.setTitle('~' + c.name + ' - FlowChat');
     },
       error => {
         this.toasterService.pop("error", "Error", error);

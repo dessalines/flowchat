@@ -3,37 +3,38 @@
     <div *ngIf="!editing">
       <div class="card-body card-body-no-bottom">
         <h4 class="card-title">
-          <span role="button" class="link-unstyled pointer" (click)="toggleCollapseText()" placement="bottom" tooltip="Show/Hide Description">{{community.name}}</span>
+          <span role="button" class="link-unstyled pointer" (click)="toggleCollapseText()" placement="bottom" tooltip="Show/Hide Description">~{{community.name}}</span>
         </h4>
       </div>
-      <div class="card-body card-body-no-top">
+      <div class="card-body card-body-no-top text-muted">
         <p *ngIf="community.text && !textCollapsed" class="card-text" [innerHTML]="community.text | markdown"></p>
-        <ul *ngIf="community.tags" class="list-inline mb-0">
+        <ul *ngIf="community.tags.length > 0" class="list-inline mb-0">
           <li class="list-inline-item">Tags: </li>
           <li class="list-inline-item" *ngFor="let tag of community.tags">
-            <a class="badge badge-info" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
+            <a class="link-unstyled" [routerLink]="['/tag', tag.id]">#{{removeQuotes(tag.name)}}</a>
           </li>
         </ul>
-        <ul *ngIf="!textCollapsed" class="list-inline mb-0">
+        <ul *ngIf="!textCollapsed" class="list-inline mb-0 text-muted">
           <li class="list-inline-item"> creator:
-            <a [routerLink]="['/user',community.creator.id]" class="badge badge-success">{{community.creator.name}}</a>
+            <a [routerLink]="['/user',community.creator.id]" class="link-unstyled">@{{community.creator.name}}</a>
           </li>
           <li class="list-inline-item" *ngIf="community.moderators.length > 0"> moderators: </li>
           <li class="list-inline-item" *ngFor="let moderator of community.moderators">
-            <a [routerLink]="['/user',moderator.id]" class="badge badge-warning">{{moderator.name}}</a>
+            <a [routerLink]="['/user',moderator.id]" class="link-unstyled">@{{moderator.name}}</a>
           </li>
         </ul>
 
-        <small class="text-muted">
+        <div class="text-muted">
           <span *ngIf="!community.modified">created {{community.created | moment}}</span>
           <span *ngIf="community.modified">
             <i>modified {{community.modified | moment}}</i>
           </span>
           by
-          <a [routerLink]="['/user',community.creator.id]" class="link-unstyled">{{community.creator.name}}</a>
-        </small>
+          <a [routerLink]="['/user',community.creator.id]" class="link-unstyled">@{{community.creator.name}}</a>
+        </div>
         <ul class="list-inline font-weight-bold text-muted mb-0">
-          <li *ngIf="community.private_" class="badge badge-danger list-inline-item">Private</li>
+          <li *ngIf="community.private_" class="list-inline-item">Private</li>
+          <li *ngIf="community.nsfw" class="list-inline-item">NSFW</li>
           <li *ngIf="isModerator" class="list-inline-item pointer">
             <span role="button" (click)="toggleEditing()">edit</span>
           </li>
@@ -47,12 +48,12 @@
             <a class="link-unstyled" [routerLink]="['modlog']">view modlog</a>
           </li>
           <li *ngIf="!isCreator" role="button" class="list-inline-item pointer" (click)="toggleShowVoteSlider()">vote</li>
-          <li *ngIf="community.avgRank" class="badge badge-pill badge-info list-inline-item" placement="bottom" tooltip="Average Score">
-            {{community.avgRank}}</li>
-          <li *ngIf="community.userRank" class="badge badge-pill badge-warning list-inline-item" placement="bottom" tooltip="Your Vote">
-            {{community.userRank}}</li>
+          <li *ngIf="community.avgRank" class="list-inline-item">Score: {{community.avgRank}}
+          </li>
+          <li *ngIf="community.userRank" class="list-inline-item">Your Vote: {{community.userRank}}
+          </li>
           <li *ngIf="community.numberOfVotes" class="text-muted list-inline-item">
-            <small> {{community.numberOfVotes}} votes</small>
+            {{community.numberOfVotes}} votes
           </li>
         </ul>
         <div *ngIf="showVoteSlider">
@@ -81,6 +82,11 @@
             <input [(ngModel)]="community.private_" type="checkbox" name="community_private" /> Private
           </label>
         </div>
+        <div *ngIf="isCreator" class="checkbox">
+          <label>
+            <input [(ngModel)]="community.nsfw" type="checkbox" name="community_nsfw" /> NSFW
+          </label>
+        </div>
         <app-markdown-edit *ngIf="refresh && isCreator" [focus]="false" [inputText]="community.text" (textEvent)="setEditText($event)">
         </app-markdown-edit>
         <br>
@@ -97,8 +103,8 @@
             </button>
           </div>
           <ul *ngIf="community.tags" class="col-md-6 list-inline form-control-label">
-            <li role="button" (click)="removeTag(tag)" class="badge badge-info list-inline-item" *ngFor="let tag of community.tags">
-              <span>{{removeQuotes(tag.name)}}
+            <li role="button" (click)="removeTag(tag)" class="list-inline-item" *ngFor="let tag of community.tags">
+              <span>#{{removeQuotes(tag.name)}}
                 <i class="fa fa-fw fa-remove"></i>
               </span>
             </li>
@@ -130,8 +136,8 @@
             </div>
           </div>
           <ul *ngIf="community.moderators" class="col-md-6 list-inline form-control-label">
-            <li role="button" (click)="removeModerator(moderator)" class="badge badge-info list-inline-item" *ngFor="let moderator of community.moderators">
-              <span>{{moderator.name}}
+            <li role="button" (click)="removeModerator(moderator)" class="list-inline-item" *ngFor="let moderator of community.moderators">
+              <span>@{{moderator.name}}
                 <i class="fa fa-fw fa-remove"></i>
               </span>
             </li>
@@ -151,8 +157,8 @@
             </div>
           </div>
           <ul *ngIf="community.privateUsers" class="col-md-6 list-inline form-control-label">
-            <li role="button" (click)="removePrivateUser(privateUser)" class="badge badge-info list-inline-item" *ngFor="let privateUser of community.privateUsers">
-              <span>{{privateUser.name}}
+            <li role="button" (click)="removePrivateUser(privateUser)" class="list-inline-item" *ngFor="let privateUser of community.privateUsers">
+              <span>@{{privateUser.name}}
                 <i class="fa fa-fw fa-remove"></i>
               </span>
             </li>
@@ -172,8 +178,8 @@
             </div>
           </div>
           <ul *ngIf="community.blockedUsers" class="col-md-6 list-inline form-control-label">
-            <li role="button" (click)="removeBlockedUser(blockedUser)" class="badge badge-info list-inline-item" *ngFor="let blockedUser of community.blockedUsers">
-              <span>{{blockedUser.name}}
+            <li role="button" (click)="removeBlockedUser(blockedUser)" class="list-inline-item" *ngFor="let blockedUser of community.blockedUsers">
+              <span>@{{blockedUser.name}}
                 <i class="fa fa-fw fa-remove"></i>
               </span>
             </li>
@@ -198,6 +204,6 @@
   </div>
   <div *ngIf="community.deleted">
     <i>deleted {{community.modified | moment}}</i> by
-    <a [routerLink]="['/user',community.creator.id]" class="link-unstyled">{{community.creator.name}}</a>
+    <a [routerLink]="['/user',community.creator.id]" class="link-unstyled">@{{community.creator.name}}</a>
   </div>
 </div>
