@@ -132,7 +132,7 @@ public class Discussion implements JSONWriter {
         Community community = (cntv != null) ? Community.create(cntv, null, communityUsers, null) : null;
 
         // If the community is NSFW, the discussion must be
-        Boolean nsfw = (community.getNsfw()) ? true :  d.getBoolean("nsfw");
+        Boolean nsfw = (community != null && community.getNsfw()) ? true :  d.getBoolean("nsfw");
 
         // Create the modified by user
         User modifiedByUser = User.create(d.getLong("modified_by_user_id"), d.getString("modified_by_user_name"));
