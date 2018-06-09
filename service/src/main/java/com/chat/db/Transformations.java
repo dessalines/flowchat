@@ -42,7 +42,7 @@ public class Transformations {
 
     public static List<Comment> convertCommentsMapToEmbeddedObjects(
             Map<Long, Comment> commentObjMap,
-            Long topLimit, Long maxDepth) {
+            Long topLimit, Long maxDepth, Comparator<Comment> comparator) {
 
         List<Comment> cos = new ArrayList<>();
 
@@ -66,14 +66,14 @@ public class Transformations {
                 // Add it to the embedded object, if the path length/maxDepth is below a certain limit
                 if (co.getPathLength() < maxDepth) {
                     parent.getEmbedded().add(co);
-                    Collections.sort(parent.getEmbedded(), new Comment.CommentObjComparator());
+                    Collections.sort(parent.getEmbedded(), comparator);
                 }
 
             }
 
         }
 
-        Collections.sort(cos, new Comment.CommentObjComparator());
+        Collections.sort(cos, comparator);
 
         Integer limit = (topLimit < cos.size()) ? topLimit.intValue() : cos.size();
 
@@ -83,19 +83,20 @@ public class Transformations {
     public static List<Comment> convertCommentsToEmbeddedObjects(
             List<? extends Model> cvs,
             Map<Long, Integer> votes,
-            Long topLimit, Long maxDepth) {
+            Long topLimit, Long maxDepth, Comparator<Comment> comparator) {
 
         Map<Long, Comment> commentObjMap = convertCommentThreadedViewToMap(cvs, votes);
 
-        List<Comment> cos = convertCommentsMapToEmbeddedObjects(commentObjMap, topLimit, maxDepth);
+        List<Comment> cos = convertCommentsMapToEmbeddedObjects(commentObjMap, topLimit, maxDepth, comparator);
 
         return cos;
     }
 
     public static List<Comment> convertCommentsToEmbeddedObjects(
             List<? extends Model> cvs,
-            Map<Long, Integer> votes) {
-        return convertCommentsToEmbeddedObjects(cvs, votes, Long.MAX_VALUE, Long.MAX_VALUE);
+            Map<Long, Integer> votes,
+            Comparator<Comment> comparator) {
+        return convertCommentsToEmbeddedObjects(cvs, votes, Long.MAX_VALUE, Long.MAX_VALUE, comparator);
     }
 
 

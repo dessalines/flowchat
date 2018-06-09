@@ -59,7 +59,7 @@ public class ThreadedChatWebSocket {
 
       // send the comments
       session.getRemote()
-          .sendString(Comments.create(comments, fetchVotesMap(ss.getUserObj().getId()), topLimit, maxDepth).json());
+          .sendString(Comments.create(comments, fetchVotesMap(ss.getUserObj().getId()), topLimit, maxDepth, ss.getCommentComparator()).json());
 
       // send the updated users to everyone in the right scope(just discussion)
       Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes,
@@ -173,7 +173,7 @@ public class ThreadedChatWebSocket {
 
     // send the comments from up to the new limit to them
     sendMessage(session, Comments.create(comments, fetchVotesMap(ss.getUserObj().getId()), nextPageData.getTopLimit(),
-        nextPageData.getMaxDepth()).json());
+        nextPageData.getMaxDepth(), ss.getCommentComparator()).json());
 
   }
 
@@ -337,10 +337,11 @@ public class ThreadedChatWebSocket {
     User userObj = SessionScope.getUserFromSession(session);
     Long discussionId = SessionScope.getDiscussionIdFromSession(session);
     Long topParentId = SessionScope.getTopParentIdFromSession(session);
+    String sortType = SessionScope.getSortTypeFromSession(session);
 
     log.debug(userObj.json());
 
-    SessionScope ss = new SessionScope(session, userObj, discussionId, topParentId);
+    SessionScope ss = new SessionScope(session, userObj, discussionId, topParentId, sortType);
     sessionScopes.add(ss);
 
     return ss;

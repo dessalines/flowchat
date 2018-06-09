@@ -20,10 +20,10 @@ public class Comments implements JSONWriter {
     public static Comments create(
             LazyList<? extends Model> comments,
             Map<Long, Integer> votes,
-            Long topLimit, Long maxDepth) {
+            Long topLimit, Long maxDepth, Comparator<Comment> comparator) {
 
         List<Comment> commentObjs = Transformations.convertCommentsToEmbeddedObjects(
-                comments, votes, topLimit, maxDepth);
+                comments, votes, topLimit, maxDepth, comparator);
 
         return new Comments(commentObjs);
     }

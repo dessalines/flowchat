@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { Title }     from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -36,6 +36,7 @@ export class DiscussionComponent implements OnInit {
 
   public discussionId: number = null;
   public topParentId: number = null;
+  public sortType: string = 'new';
 
   public discussion: Discussion;
 
@@ -66,6 +67,7 @@ export class DiscussionComponent implements OnInit {
 
   ngOnInit() {
 
+
     this.sub = this.route.params.subscribe(params => {
       this.discussionId = +params["discussionId"];
       this.editing = Boolean(this.route.snapshot.params["editMode"]);
@@ -78,7 +80,7 @@ export class DiscussionComponent implements OnInit {
         this.unloadSubscriptions();
       }
 
-      this.threadedChatService.connect(this.discussionId, this.topParentId);
+      this.threadedChatService.connect(this.discussionId, this.topParentId, this.sortType);
 
 
       this.subscribeToChat();
@@ -141,25 +143,25 @@ export class DiscussionComponent implements OnInit {
         this.titleService.setTitle(d.title + ' - FlowChat');
         this.setIsModerator();
       },
-      error => {
-        this.toasterService.pop("error", "Error", error);
-        this.router.navigate(['/']);
-      });
+        error => {
+          this.toasterService.pop("error", "Error", error);
+          this.router.navigate(['/']);
+        });
   }
 
-	websocketCloseWatcher() {
-		// check every 5 seconds for websocket disconnect status
-		setInterval(() => {
+  websocketCloseWatcher() {
+    // check every 5 seconds for websocket disconnect status
+    setInterval(() => {
 
-			if (this.threadedChatService.ws.getReadyState() != 1) {
-				this.websocketReconnect();
-			}
-		}, 5000);
+      if (this.threadedChatService.ws.getReadyState() != 1) {
+        this.websocketReconnect();
+      }
+    }, 5000);
 
   }
 
   websocketReconnect() {
-    this.threadedChatService.connect(this.discussionId, this.topParentId);
+    this.threadedChatService.connect(this.discussionId, this.topParentId, this.sortType);
     this.subscribeToChat();
     this.reconnectModal.hide();
   }
@@ -324,12 +326,22 @@ export class DiscussionComponent implements OnInit {
     comments[index].deleted = editedComment.deleted;
 
     // do a sort at that level:
-    comments.sort((a, b) => {
-      return b.avgRank - a.avgRank;
-    });
-
+    this.resort(comments);
 
     this.recursiveCommentStopper = true;
+  }
+
+
+  private resort(comments) {
+    if (this.sortType == 'top') {
+      comments.sort((a, b) => {
+        return b.avgRank - a.avgRank;
+      });
+    } else if (this.sortType == 'new') {
+      comments.sort((a, b) => {
+        return b.created - a.created;
+      });
+    }
   }
 
 
@@ -361,6 +373,13 @@ export class DiscussionComponent implements OnInit {
     } else {
       return CommentRole.User;
     }
+  }
+
+  changeSortType($event) {
+    this.sortType = $event;
+    this.unloadSubscriptions();
+    this.comments = undefined;
+    this.websocketReconnect();
   }
 
 }

@@ -1,12 +1,14 @@
 package com.chat.types;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.chat.tools.Tools;
+import com.chat.types.comment.Comment;
 import com.chat.types.user.User;
 
 import org.eclipse.jetty.websocket.api.Session;
@@ -28,12 +30,14 @@ public class SessionScope {
     private final User userObj;
     private Long discussionId;
     private Long topParentId;
+    private String sortType;
 
-    public SessionScope(Session session, User userObj, Long discussionId, Long topParentId) {
+    public SessionScope(Session session, User userObj, Long discussionId, Long topParentId, String sortType) {
         this.session = session;
         this.userObj = userObj;
         this.discussionId = discussionId;
         this.topParentId = topParentId;
+        this.sortType = sortType;
     }
 
     public static Set<User> getUserObjects(Set<SessionScope> scopes) {
@@ -101,6 +105,10 @@ public class SessionScope {
         return Long.valueOf(session.getUpgradeRequest().getParameterMap().get("discussionId").iterator().next());
     }
 
+    public static String getSortTypeFromSession(Session session) {
+        return session.getUpgradeRequest().getParameterMap().get("sortType").iterator().next();
+    }
+
     public static User getUserFromSession(Session session) {
         Map<String, String> cookieMap = Tools.cookieListToMap(session.getUpgradeRequest().getCookies());
         String jwt = cookieMap.get("jwt");
@@ -124,12 +132,15 @@ public class SessionScope {
         return topParentId;
     }
 
-    public void setDiscussionId(Long discussionId) {
-        this.discussionId = discussionId;
-    }
-
-    public void setTopParentId(Long topParentId) {
-        this.topParentId = topParentId;
+    public Comparator<Comment> getCommentComparator() {
+        if (this.sortType.equals("new")) {
+            return new Comment.CommentObjComparatorNew();
+        } else if (this.sortType.equals("top")) {
+            return new Comment.CommentObjComparatorTop();
+        } else {
+            return new Comment.CommentObjComparatorHot();
+        }
+        
     }
 
     @Override
@@ -161,6 +172,7 @@ public class SessionScope {
                 ", userObj=" + userObj +
                 ", discussionId=" + discussionId +
                 ", topParentId=" + topParentId +
+                ", sortTYpe=" + sortType +
                 '}';
     }
 }
