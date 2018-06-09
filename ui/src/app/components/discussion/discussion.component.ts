@@ -69,26 +69,30 @@ export class DiscussionComponent implements OnInit {
 
 
     this.sub = this.route.params.subscribe(params => {
-      this.discussionId = +params["discussionId"];
-      this.editing = Boolean(this.route.snapshot.params["editMode"]);
 
-      if (+params["commentId"] != null) {
-        this.topParentId = +params["commentId"];
-      }
+      this.userService.userObservable.subscribe(user => {
+        if (user) {
+          this.discussionId = +params["discussionId"];
+          this.editing = Boolean(this.route.snapshot.params["editMode"]);
 
-      if (this.threadedChatService.ws != null) {
-        this.unloadSubscriptions();
-      }
+          if (+params["commentId"] != null) {
+            this.topParentId = +params["commentId"];
+          }
 
-      this.threadedChatService.connect(this.discussionId, this.topParentId, this.sortType);
+          if (this.threadedChatService.ws != null) {
+            this.unloadSubscriptions();
+          }
+
+          this.threadedChatService.connect(this.discussionId, this.topParentId, this.sortType);
 
 
-      this.subscribeToChat();
-      this.subscribeToUserServiceWatcher();
-      this.websocketCloseWatcher();
+          this.subscribeToChat();
+          this.subscribeToUserServiceWatcher();
+          this.websocketCloseWatcher();
 
-      this.subscribeToDiscussion();
-
+          this.subscribeToDiscussion();
+        }
+      });
 
     });
 
