@@ -44,11 +44,6 @@ export class NewUserModalComponent implements OnInit {
 			this.userService.setUserFromCookie();
 			this.smModal.hide();
 			this.userCreated.emit();
-
-			// TODO 
-			// if (!this.createNewUser) {
-			// 	location.reload();
-			// }
 		},
 			error => {
 				console.error(error);

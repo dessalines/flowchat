@@ -395,7 +395,8 @@ public class Endpoints {
       User userObj = Tools.getUserFromJWTHeader(req);
 
       Long discussionId = Long.valueOf(req.params(":id"));
-      Integer rank = Integer.valueOf(req.params(":rank"));
+
+      Integer rank  = (!req.params(":rank").equals("null")) ? Integer.valueOf(req.params(":rank")) : null;
 
       Actions.saveDiscussionVote(userObj.getId(), discussionId, rank);
 

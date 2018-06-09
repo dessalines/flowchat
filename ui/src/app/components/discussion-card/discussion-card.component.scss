@@ -12,11 +12,19 @@
   margin-bottom: 10px;
 }
 
-h1 {
-  font-size: 2.6vw;
+.vote-number {
+  font-size: 16px;
+}
+
+.vote-thumb {
+  font-size: 16px;
 }
 
 .progress {
   display: inline-flex;
   width: 85%;
+}
+
+.vote-width {
+  max-width: 50px;
 }

@@ -2,14 +2,14 @@
   <div *ngIf="!discussion.deleted">
     <div *ngIf="!editing">
       <div class="row">
-        <div class="px-1 col-xs-2" [ngClass]="{'col-sm-2': isCard(),
+        <div class="px-1 col-xs-2 text-center vote-width" [ngClass]="{'col-sm-2': isCard(),
         'col-sm-1': !isCard()}">
           <ng-template #voteTemplate>
             <div [innerHtml]="voteHtml()"></div>
           </ng-template>
-          <h1 class="pointer text-center" placement="bottom" [tooltip]="voteTemplate" (click)="toggleShowVoteSlider()">
-            <span class="badge badge-secondary badge-pill">{{avgVote()}}</span>
-          </h1>
+          <div class="fa fa-fw fa-arrow-up pointer vote-thumb" [class.text-success]="discussion.userRank > 50"(click)="upvote()"></div>
+          <div class="pointer vote-number" placement="bottom" [tooltip]="voteTemplate" (click)="toggleShowVoteSlider()">{{avgVote()}}</div>
+          <div class="fa fa-fw fa-arrow-down pointer vote-thumb" [class.text-danger]="voteExists() &&discussion.userRank < 50" (click)="downvote()"></div>
         </div>
         <div *ngIf="!isCard() && hasImage()" class="col-xs-2 col-sm-2">
           <div [innerHTML]="discussion.link | markdown:true"></div>
