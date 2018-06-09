@@ -1,35 +1,37 @@
 <div [id]="'comment_' + comment.id" class="card-body pb-0">
   <ul class="list-inline mb-0">
-    <li class="text-muted list-inline-item pointer" role="button"
-      (click)="collapsed = !collapsed">{{collapseText()}}</li>
+    <li class="text-muted list-inline-item pointer" role="button" (click)="collapsed = !collapsed">{{collapseText()}}</li>
     <li class="list-inline-item">
-      <a [routerLink]="['/user',comment.user.id]"
-      [ngClass]="{'badge-primary':isCommunityCreator(), 'badge-warning': isCommunityModerator(), 'badge-success': isDiscussionCreator(), 'badge': !isDiscussionUser(), 'text-primary': isDiscussionUser()}" >{{comment.user.name}}
+      <a [routerLink]="['/user',comment.user.id]" [ngClass]="{'badge-primary':isCommunityCreator(), 'badge-warning': isCommunityModerator(), 'badge-success': isDiscussionCreator(), 'badge': !isDiscussionUser(), 'text-primary': isDiscussionUser()}">{{comment.user.name}}
       </a>
     </li>
-    <li *ngIf="comment.avgRank" class="badge badge-pill badge-info list-inline-item"
-      placement="bottom" tooltip="Average Score">{{comment.avgRank}}</li>
-    <li *ngIf="rank" class="badge badge-pill badge-warning list-inline-item"
-      placement="bottom" tooltip="Your Vote">{{rank}}</li>
-    <li *ngIf="comment.avgRank" class="text-muted list-inline-item"><small>{{comment.numberOfVotes}} votes</small></li>
-    <li *ngIf="comment.deleted" class="text-muted list-inline-item"><small><i>deleted {{comment.modified | moment}} by 
-      <a class="link-unstyled" [routerLink]="['/user',comment.modifiedByUser.id]">{{comment.modifiedByUser.name}}</a></i></small>
+    <li *ngIf="comment.avgRank" class="text-muted small list-inline-item">score: {{voteAvg()}}</li>
+    <li *ngIf="voteExists()" class="text-muted small list-inline-item">your vote: {{rank}}</li>
+    <li *ngIf="comment.avgRank" class="text-muted small list-inline-item">
+      {{comment.numberOfVotes}} votes
+    </li>
+    <li *ngIf="comment.deleted" class="text-muted small list-inline-item">
+      <i>deleted {{comment.modified | moment}} by
+        <a class="link-unstyled" [routerLink]="['/user',comment.modifiedByUser.id]">{{comment.modifiedByUser.name}}</a>
+      </i>
     </li>
     <span *ngIf="!comment.deleted">
-      <li *ngIf="!comment.modified" class="text-muted list-inline-item"><small>{{comment.created | moment}}</small></li>
-      <li *ngIf="comment.modified" class="text-muted list-inline-item"><small><i>modified {{comment.modified | moment}}</i></small></li>
+      <li *ngIf="!comment.modified" class="text-muted small list-inline-item">
+        {{comment.created | moment}}
+      </li>
+      <li *ngIf="comment.modified" class="text-muted small list-inline-item">
+        <i>modified {{comment.modified | moment}}</i>
+      </li>
     </span>
   </ul>
 </div>
 <div *ngIf="!collapsed" class="card-body pt-0">
   <div *ngIf="!comment.deleted">
-    <div *ngIf="!showEdit" class="card-text"
-      [class.mark]="isCommentNew()" [innerHTML]="comment.text | markdown">
+    <div *ngIf="!showEdit" class="card-text" [class.mark]="isCommentNew()" [innerHTML]="comment.text | markdown">
     </div>
   </div>
   <div *ngIf="showEdit" class="card-text">
-    <app-markdown-edit [inputText]="comment.text"
-      (textEvent)="setEdit($event)"></app-markdown-edit>
+    <app-markdown-edit [inputText]="comment.text" (textEvent)="setEdit($event)"></app-markdown-edit>
     <br>
     <div class="btn-group" role="group">
       <button class="btn btn-outline-primary" (click)="editMessage()">Edit</button>
@@ -39,36 +41,45 @@
   <small *ngIf="!showReply && !showEdit">
     <ul class="list-inline font-weight-bold text-muted">
       <span *ngIf="!comment.deleted">
-      <li *ngIf="userService.getUser().id != comment.user.id" role="button" class="list-inline-item pointer" (click)="toggleShowVoteSlider()">
-        vote
-      </li>
-      <li role="button" class="list-inline-item pointer" (click)="toggleShowReply()">
-        reply
-      </li>
-      <li role="button" *ngIf="editable" (click)="toggleShowEdit()" class="list-inline-item pointer">
-        edit
-      </li>
-      <li role="button" *ngIf="editable || deleteable" (click)="deleteComment()" class="list-inline-item pointer">
-        delete
-      </li>
+        <li *ngIf="userService.getUser().id != comment.user.id" class="list-inline-item fa fa-fw fa-arrow-up pointer" [class.text-success]="rank > 50"
+          (click)="upvote()">
+        </li>
+        <li *ngIf="userService.getUser().id != comment.user.id" class="list-inline-item fa fa-fw fa-arrow-down pointer" [class.text-danger]="voteExists() && rank < 50"
+          (click)="downvote()">
+        </li>
+        <li *ngIf="userService.getUser().id != comment.user.id" role="button" class="list-inline-item pointer" (click)="toggleShowVoteSlider()">
+          vote
+        </li>
+        <li role="button" class="list-inline-item pointer" (click)="toggleShowReply()">
+          reply
+        </li>
+        <li role="button" *ngIf="editable" (click)="toggleShowEdit()" class="list-inline-item pointer">
+          edit
+        </li>
+        <li role="button" *ngIf="editable || deleteable" (click)="deleteComment()" class="list-inline-item pointer">
+          delete
+        </li>
       </span>
       <li *ngIf="comment.parentId" role="button" class="ml-1 list-inline-item">
-        <a class="link-unstyled" [routerLink]="['/discussion', comment.discussionId, 'comment', comment.parentId]"><i class="fa fa-fw fa-level-up" placement="bottom" tooltip="View Parent"></i></a>
+        <a class="link-unstyled" [routerLink]="['/discussion', comment.discussionId, 'comment', comment.parentId]">
+          <i class="fa fa-fw fa-level-up" placement="bottom" tooltip="View Parent"></i>
+        </a>
       </li>
       <li *ngIf="!comment.parentId" role="button" class="ml-1 list-inline-item">
-        <a class="link-unstyled" [routerLink]="['/discussion', comment.discussionId]"><i class="fa fa-fw fa-level-up" placement="bottom" tooltip="View Discussion"></i></a>
+        <a class="link-unstyled" [routerLink]="['/discussion', comment.discussionId]">
+          <i class="fa fa-fw fa-level-up" placement="bottom" tooltip="View Discussion"></i>
+        </a>
       </li>
       <li *ngIf="comment.id != comment.topParentId || comment.parentId == null" role="button" class="list-inline-item">
-        <a class="link-unstyled" [routerLink]="['/discussion', comment.discussionId, 'comment', comment.id]"><i class="fa fa-fw fa-level-down" placement="bottom" tooltip="View Children"></i></a>
+        <a class="link-unstyled" [routerLink]="['/discussion', comment.discussionId, 'comment', comment.id]">
+          <i class="fa fa-fw fa-level-down" placement="bottom" tooltip="View Children"></i>
+        </a>
       </li>
     </ul>
   </small>
   <div *ngIf="showVoteSlider">
-    <input [value]="rank" (mouseup)="saveRank($event.target.value)"
-      (touchend)="saveRank($event.target.value)"
-      (input)="updateRank($event.target.value)"
-      type="range" min="0" max="100" step="1" class="vote_input"
-      (value)="rank" />
+    <input [value]="rank" (mouseup)="saveRank($event.target.value)" (touchend)="saveRank($event.target.value)" (input)="updateRank($event.target.value)"
+      type="range" min="0" max="100" step="1" class="vote_input" (value)="rank" />
   </div>
   <fieldset *ngIf="showReply" class="form-group">
     <app-markdown-edit (textEvent)="setReply($event)"></app-markdown-edit>

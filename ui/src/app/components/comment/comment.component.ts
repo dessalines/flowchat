@@ -114,6 +114,7 @@ export class CommentComponent implements OnInit {
   saveRank($event) {
     this.rank = $event;
     this.showVoteSlider = false;
+    console.log(this.commentRankData());
     this.threadedChatService.send(this.commentRankData());
   }
 
@@ -211,6 +212,30 @@ export class CommentComponent implements OnInit {
   isDiscussionUser() {
     return this.commentRole == CommentRole.User;
   }
+
+  voteAvg(): string {
+		return (this.comment.avgRank !== undefined) ? (this.comment.avgRank).toFixed(0).toString() : 'none';
+	}
+
+	voteCount(): string {
+		return (this.comment.voteCount) ? this.comment.voteCount.toString() : '0';
+  }
+
+  voteExists(): boolean {
+    return this.rank !== undefined && this.rank !== null;
+  }
+
+  upvote() {
+    let newVote: number = (this.rank !== 100) ? 100 : null;
+    this.saveRank(newVote);
+  }
+
+  downvote() {
+    let newVote: number = (this.rank !== 0) ? 0 : null;
+    this.saveRank(newVote);
+  }
+
+  
 
 }
 
