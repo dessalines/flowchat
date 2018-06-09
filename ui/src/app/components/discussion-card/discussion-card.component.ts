@@ -330,22 +330,36 @@ export class DiscussionCardComponent implements OnInit {
   }
 
   voteHtml() {
-    let yourVote: string = (this.discussion.userRank == null) ? 
-      'None' : 
+    let yourVote: string = (this.discussion.userRank == null) ?
+      'None' :
       this.discussion.userRank.toString();
-    let voteLine: string = (this.isCreator) 
-      ? 'You can\'t vote on your own post' 
+    let voteLine: string = (this.isCreator)
+      ? 'You can\'t vote on your own post'
       : 'Click to vote';
-    return `<span>` + 
-      `<b>` + voteLine + `</b><br><br>` + 
-      `Average Score: ` + this.avgVote() +  `<br>` + 
+    return `<span>` +
+      `<b>` + voteLine + `</b><br><br>` +
+      `Average Score: ` + this.avgVote() + `<br>` +
       `Your Vote: ` + yourVote + `<br>` +
-      `# of Votes: ` + this.discussion.numberOfVotes + ` votes <br>` + 
+      `# of Votes: ` + this.discussion.numberOfVotes + ` votes <br>` +
       `</span>`;
   }
 
   avgVote(): Number {
     return (this.discussion.avgRank == null) ? 0 : this.discussion.avgRank;
+  }
+
+  voteExists(): boolean {
+    return this.discussion.userRank !== undefined && this.discussion.userRank !== null;
+  }
+
+  upvote() {
+    let newVote: number = (this.discussion.userRank !== 100) ? 100 : null;
+    this.saveDiscussionRank(newVote);
+  }
+
+  downvote() {
+    let newVote: number = (this.discussion.userRank !== 0) ? 0 : null;
+    this.saveDiscussionRank(newVote);
   }
 
 }

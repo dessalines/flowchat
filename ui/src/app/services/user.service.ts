@@ -55,7 +55,7 @@ export class UserService {
 		}
 	}
 
-	public setUser(jwt: string) {
+	private setUser(jwt: string) {
 		let dJWT = this.jwtHelper.decodeToken(jwt);
 		this.user = {
 			id: dJWT.user_id,
@@ -67,7 +67,11 @@ export class UserService {
     this.fetchFavoriteCommunities();
     this.fetchUserSettings();
 
-	}
+  }
+  
+  public setUserAndCookie(jwt: string) {
+    
+  }
 
 	public getUser(): User {
 		return this.user;
