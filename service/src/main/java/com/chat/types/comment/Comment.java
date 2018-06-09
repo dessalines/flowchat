@@ -134,7 +134,7 @@ public class Comment implements JSONWriter {
 
     }
 
-    public static class CommentObjComparator implements Comparator<Comment> {
+    public static class CommentObjComparatorHot implements Comparator<Comment> {
 
         @Override
         public int compare(Comment o1, Comment o2) {
@@ -164,7 +164,14 @@ public class Comment implements JSONWriter {
 
     }
 
-    public static class CommentObjComparatorOld implements Comparator<Comment> {
+    public static class CommentObjComparatorNew implements Comparator<Comment> {
+        @Override
+        public int compare(Comment o1, Comment o2) {
+            return o2.getCreated().compareTo(o1.getCreated());
+        }
+    }
+
+    public static class CommentObjComparatorTop implements Comparator<Comment> {
 
         @Override
         public int compare(Comment o1, Comment o2) {

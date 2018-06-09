@@ -10,6 +10,13 @@
     </div>
   </div>
   <div class="col-xs-12 col-lg-2">
+    <select [ngModel]="sortType" (ngModelChange)="changeSortType($event)" class="form-control mb-2">
+      <option disabled>Sorting</option>
+      <option disabled>──────────</option>
+      <option value="new">New</option>
+      <option value="hot">Hot</option>
+      <option value="top">Top</option>
+    </select>
     <div class="card">
       <div role="button" class="card-header pointer" (click)="toggleUsersCollapsed()">
         <i class="fa fa-fw fa-user"></i>Users
@@ -28,7 +35,8 @@
     <button (click)="sendTopReply()" class="btn btn-outline-primary col-sm-2 col-md-1 special-nav-button" type="submit">Send</button>
   </div>
 </nav>
-<div bsModal #reconnectModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div bsModal #reconnectModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-body text-center">

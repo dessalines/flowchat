@@ -102,7 +102,7 @@ export class CommentComponent implements OnInit {
   }
 
   setRank() {
-    if (this.comment.userRank) {
+    if (this.comment.userRank !== undefined) {
       this.rank = this.comment.userRank;
     }
   }
@@ -114,7 +114,6 @@ export class CommentComponent implements OnInit {
   saveRank($event) {
     this.rank = $event;
     this.showVoteSlider = false;
-    console.log(this.commentRankData());
     this.threadedChatService.send(this.commentRankData());
   }
 

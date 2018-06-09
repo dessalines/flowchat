@@ -12,6 +12,7 @@ export class ThreadedChatService {
 
   private discussionId: number;
   private topParentId: number;
+  private sortType: string;
 
   constructor() {
     // this.config = {
@@ -22,11 +23,12 @@ export class ThreadedChatService {
 
   }
 
-  connect(discussionId: number, topParentId: number) {
+  connect(discussionId: number, topParentId: number, sortType: string) {
     this.discussionId = discussionId;
     this.topParentId = topParentId;
+    this.sortType = sortType;
 
-    let url = environment.websocket + "?discussionId=" + discussionId + "&topParentId=" + topParentId;
+    let url = environment.websocket + "?discussionId=" + discussionId + "&topParentId=" + topParentId + "&sortType=" + sortType;
     // this.ws = new $WebSocket(url, null, this.config);
     this.ws = new NG2WebSocket(url);
     this.ws.connect();
@@ -42,7 +44,7 @@ export class ThreadedChatService {
   }
 
   reconnect() {
-    return this.connect(this.discussionId, this.topParentId);
+    return this.connect(this.discussionId, this.topParentId, this.sortType);
   }
 
 
