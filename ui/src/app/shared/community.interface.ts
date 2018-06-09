@@ -5,6 +5,7 @@ export interface Community {
   name: string;
   text?: string;
   private_?: boolean;
+  nsfw: boolean;
   creator: User;
   modifiedByUser: User;
   moderators?: Array<User>;

@@ -160,6 +160,8 @@ public class Actions {
       d.set("text_", do_.getText());
     if (do_.getPrivate_() != null)
       d.set("private", do_.getPrivate_());
+    if (do_.getNsfw() != null)
+      d.set("nsfw", do_.getNsfw());
     if (do_.getDeleted() != null)
       d.set("deleted", do_.getDeleted());
     if (do_.getCommunity() != null)
@@ -473,6 +475,8 @@ public class Actions {
       c.set("text_", co_.getText());
     if (co_.getPrivate_() != null)
       c.set("private", co_.getPrivate_());
+    if (co_.getNsfw() != null)
+      c.set("nsfw", co_.getNsfw());
     if (co_.getDeleted() != null)
       c.set("deleted", co_.getDeleted());
 

@@ -7,7 +7,7 @@
           <ng-template #voteTemplate>
             <div [innerHtml]="voteHtml()"></div>
           </ng-template>
-          <div class="fa fa-fw fa-arrow-up pointer vote-thumb" [class.text-success]="discussion.userRank > 50"(click)="upvote()"></div>
+          <div class="fa fa-fw fa-arrow-up pointer vote-thumb" [class.text-success]="discussion.userRank > 50" (click)="upvote()"></div>
           <div class="pointer vote-number" placement="bottom" [tooltip]="voteTemplate" (click)="toggleShowVoteSlider()">{{avgVote()}}</div>
           <div class="fa fa-fw fa-arrow-down pointer vote-thumb" [class.text-danger]="voteExists() &&discussion.userRank < 50" (click)="downvote()"></div>
         </div>
@@ -30,9 +30,9 @@
         'card-body-no-top': isCard()}">
             <p *ngIf="discussion.text" class="card-text" [innerHTML]="discussion.text | markdown"></p>
 
-            <ul class="list-inline small mb-1">
+            <ul class="list-inline small mb-1 text-muted">
               <li class="list-inline-item">
-                <span class="text-muted">
+                <span class="">
                   <span *ngIf="!discussion.modified">created {{discussion.created | moment}}</span>
                   <span *ngIf="discussion.modified">
                     <i>modified {{discussion.modified | moment}}</i>
@@ -43,16 +43,17 @@
                 </span>
               </li>
               <li *ngIf="discussion.community" class="list-inline-item">
-                <a class="badge badge-primary" [routerLink]="['/community', discussion.community.id]">{{removeQuotes(discussion.community.name)}}</a>
+                <a class="link-unstyled" [routerLink]="['/community', discussion.community.id]">~{{removeQuotes(discussion.community.name)}}</a>
               </li>
               <li class="list-inline-item" *ngFor="let tag of discussion.tags">
-                <a class="badge badge-info" [routerLink]="['/tag', tag.id]">{{removeQuotes(tag.name)}}</a>
+                <a class="link-unstyled" [routerLink]="['/tag', tag.id]">#{{removeQuotes(tag.name)}}</a>
               </li>
             </ul>
 
 
             <ul class="list-inline small font-weight-bold text-muted link-unstyled mb-0">
-              <li *ngIf="discussion.private_" class="badge badge-danger list-inline-item">Private</li>
+              <li *ngIf="discussion.private_" class="list-inline-item">Private</li>
+              <li *ngIf="discussion.nsfw" class="list-inline-item">NSFW</li>
               <li role="button" *ngIf="isCreator" (click)="toggleEditing()" class="list-inline-item pointer">edit</li>
               <li role="button" *ngIf="isCreator || isModerator" (click)="deleteDiscussion()" class="list-inline-item pointer">delete</li>
               <li *ngIf="discussion.numberOfComments" class="list-inline-item" role="button">
@@ -133,6 +134,11 @@
         <div class="checkbox">
           <label>
             <input [(ngModel)]="discussion.private_" type="checkbox" name="discussion_private" /> Private
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input [disabled]="discussion.community.nsfw" [(ngModel)]="discussion.nsfw" type="checkbox" name="discussion_nsfw" /> NSFW
           </label>
         </div>
         <app-markdown-edit [focus]="false" [inputText]="discussion.text" (textEvent)="setEditText($event)"></app-markdown-edit>

@@ -5,14 +5,14 @@
       <ul *ngIf="popularTags " class="list-inline mb-1">
         Trending tags:
         <li class="list-inline-item" *ngFor="let tag of popularTags">
-          <a class="badge badge-info
-        " [routerLink]="[ '/tag', tag.id] ">{{removeQuotes(tag.name)}}</a>
+          <a class="link-unstyled
+        " [routerLink]="[ '/tag', tag.id] ">#{{removeQuotes(tag.name)}}</a>
         </li>
       </ul>
       <ul *ngIf="popularCommunities " class="list-inline mb-1">Trending communities:
         <li class=" list-inline-item" *ngFor="let community of popularCommunities ">
-          <a class="badge badge-primary
-        " [routerLink]="[ '/community', community.id] ">{{removeQuotes(community.name)}}</a>
+          <a class="link-unstyled
+        " [routerLink]="[ '/community', community.id] ">~{{removeQuotes(community.name)}}</a>
         </li>
       </ul>
     </div>

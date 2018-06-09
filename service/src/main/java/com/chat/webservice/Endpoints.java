@@ -9,7 +9,6 @@ import static spark.Spark.post;
 import static spark.Spark.put;
 
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import com.chat.DataSources;
@@ -105,8 +104,6 @@ public class Endpoints {
 
       User userObj = Actions.login(userOrEmail, password);
 
-      log.info(userObj.toString());
-
       return userObj.getJwt();
 
     });
@@ -171,7 +168,6 @@ public class Endpoints {
     put("/user_setting", (req, res) -> {
       User userObj = Tools.getUserFromJWTHeader(req);
       Map<String, String> vars = Tools.createMapFromReqBody(req.body());
-      log.info(Tools.JACKSON.writeValueAsString(vars));
       Actions.saveUserSettings(userObj.getId(), vars.get("defaultViewTypeRadioValue"),
           vars.get("defaultSortTypeRadioValue"), Boolean.valueOf(vars.get("readOnboardAlert")));
 
@@ -329,9 +325,11 @@ public class Endpoints {
               .find("community_id in " + Tools.convertListToInQuery(communityIds) + " "
                   + "and private is false and deleted is false and title != ?", "A new discussion")
               .orderBy(orderBy).limit(limit).offset(offset);
-        } else {
+        } 
+        // Don't show nsfw in all
+        else {
           dntvs = Tables.DiscussionNoTextView
-              .find("private is false and deleted is false and title != ?", "A new discussion").orderBy(orderBy)
+              .find("private is false and deleted is false and nsfw is false and title != ?", "A new discussion").orderBy(orderBy)
               .limit(limit).offset(offset);
         }
       }
@@ -572,9 +570,11 @@ public class Endpoints {
             .find("tag_ids @> ARRAY[?]::bigint[] " + "and private is false and deleted is false and name not like ?",
                 tagId, "new_community%")
             .orderBy(orderBy).limit(limit).offset(offset);
-      } else {
+      } 
+      // Don't fetch nsfw communities
+      else {
         cv = Tables.CommunityNoTextView
-            .find("private is false and deleted is false and name not like ?", "new_community%").orderBy(orderBy)
+            .find("private is false and deleted is false and nsfw is false and name not like ?", "new_community%").orderBy(orderBy)
             .limit(limit).offset(offset);
       }
 

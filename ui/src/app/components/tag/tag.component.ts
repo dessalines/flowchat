@@ -66,7 +66,7 @@ export class TagComponent implements OnInit {
   getTag(tagId: number) {
     this.tagService.getTag(tagId).subscribe(t => {
       this.tag = t;
-      this.titleService.setTitle(t.name + ' - FlowChat');
+      this.titleService.setTitle('#' + t.name + ' - FlowChat');
     });
   }
 

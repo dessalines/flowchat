@@ -14,6 +14,7 @@ export interface Discussion {
   numberOfComments?: number;
   tags?: Array<Tag>;
   private_?: boolean;
+  nsfw: boolean;
   privateUsers?: Array<User>;
   blockedUsers?: Array<User>;
   deleted?: boolean;
