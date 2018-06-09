@@ -1,6 +1,7 @@
 package com.chat.db;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.Collections;
 
 import com.auth0.jwt.JWT;
 import com.chat.db.Tables.Comment;
@@ -52,7 +54,9 @@ public class Actions {
 
   public static Logger log = (Logger) LoggerFactory.getLogger(Actions.class);
 
-  public static Comment createComment(Long userId, Long discussionId, Long parentId, String text) {
+  public static Comment createComment(Long userId, Long discussionId, List<Long> parentBreadCrumbs, String text) {
+
+    List<Long> pbs = (parentBreadCrumbs != null) ? new ArrayList<Long>(parentBreadCrumbs) : new ArrayList<Long>();
 
     // find the candidate
     Comment c = Comment.createIt("discussion_id", discussionId, "text_", text, "user_id", userId, "modified_by_user_id",
@@ -60,16 +64,18 @@ public class Actions {
 
     Long childId = c.getLong("id");
 
-    // TODO rework this
-    List<Long> parents = findCommentParents(parentId);
+    // This is necessary, because of the 0 path length to itself one
+    pbs.add(childId);
+
+    Collections.reverse(pbs);
 
     // Create the comment_tree
-    for (int i = 0; i < parents.size(); i++) {
+    for (int i = 0; i < pbs.size(); i++) {
 
-      Long cParent = parents.get(i);
+      Long parentId = pbs.get(i);
 
       // i is the path length
-      CommentTree.createIt("parent_id", cParent, "child_id", childId, "path_length", i);
+      CommentTree.createIt("parent_id", parentId, "child_id", childId, "path_length", i);
     }
 
     return c;
@@ -636,10 +642,6 @@ public class Actions {
     Tables.Login login = Tables.Login.createIt("user_id", user.getLongId(), "jwt", jwt);
 
     return userObj;
-  }
-
-  public static List<Long> findCommentParents(Long parentId) {
-    return null;
   }
 
 }
