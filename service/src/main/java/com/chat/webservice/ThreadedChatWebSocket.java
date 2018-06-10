@@ -59,7 +59,9 @@ public class ThreadedChatWebSocket {
 
       // send the comments
       session.getRemote()
-          .sendString(Comments.create(comments, fetchVotesMap(ss.getUserObj().getId()), topLimit, maxDepth, ss.getCommentComparator()).json());
+          .sendString(Comments
+              .create(comments, fetchVotesMap(ss.getUserObj().getId()), topLimit, maxDepth, ss.getCommentComparator())
+              .json());
 
       // send the updated users to everyone in the right scope(just discussion)
       Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes,
@@ -68,7 +70,7 @@ public class ThreadedChatWebSocket {
 
       log.debug("session scope " + ss + " joined");
 
-    } catch (Exception e){
+    } catch (Exception e) {
       e.printStackTrace();
     } finally {
       Tools.dbClose();
@@ -106,6 +108,9 @@ public class ThreadedChatWebSocket {
       case Edit:
         messageEdit(session, dataStr);
         break;
+      case Sticky:
+        messageSticky(session, dataStr);
+        break;
       case TopReply:
         messageTopReply(session, dataStr);
         break;
@@ -141,6 +146,8 @@ public class ThreadedChatWebSocket {
           return MessageType.Reply;
         case "edit":
           return MessageType.Edit;
+        case "sticky":
+          return MessageType.Sticky;
         case "topReply":
           return MessageType.TopReply;
         case "rank":
@@ -159,7 +166,7 @@ public class ThreadedChatWebSocket {
   }
 
   enum MessageType {
-    Edit, Reply, TopReply, Vote, Delete, NextPage
+    Edit, Reply, TopReply, Vote, Delete, NextPage, Sticky;
   }
 
   public void messageNextPage(Session session, String nextPageDataStr) {
@@ -194,7 +201,7 @@ public class ThreadedChatWebSocket {
     List<Long> parentBreadCrumbs = Tools.convertArrayToList(arr);
 
     com.chat.db.Tables.Comment newComment = Actions.createComment(ss.getUserObj().getId(), ss.getDiscussionId(),
-    parentBreadCrumbs, replyData.getReply());
+        parentBreadCrumbs, replyData.getReply());
 
     // Fetch the comment threaded view
     CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", newComment.getLongId());
@@ -232,6 +239,23 @@ public class ThreadedChatWebSocket {
 
     broadcastMessage(filteredScopes, co.json("edit"));
 
+  }
+
+  public void messageSticky(Session session, String stickyDataStr) {
+
+    StickyData stickyData = StickyData.fromJson(stickyDataStr);
+
+    com.chat.db.Tables.Comment c = Actions.stickyComment(stickyData.getId(), stickyData.getSticky());
+
+    CommentThreadedView ctv = CommentThreadedView.findFirst("id = ?", c.getLongId());
+
+    // Convert to a proper commentObj, but with nothing embedded
+    Comment co = Comment.create(ctv, null);
+
+    Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(sessionScopes,
+        session, co.getBreadcrumbs());
+
+    broadcastMessage(filteredScopes, co.json("edit"));
   }
 
   public void messageDelete(Session session, String deleteDataStr) {

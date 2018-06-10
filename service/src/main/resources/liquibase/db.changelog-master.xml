@@ -25,6 +25,8 @@
     <include file="changelogs/2017-09-17.1.sql" relativeToChangelogFile="true"/>
     <include file="changelogs/2018-06-06.1.sql" relativeToChangelogFile="true"/>
     <include file="changelogs/2018-06-09.1.sql" relativeToChangelogFile="true"/>
+    <include file="changelogs/2018-06-09.2.sql" relativeToChangelogFile="true"/>
+
 
 
 

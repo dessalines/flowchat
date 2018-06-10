@@ -1,6 +1,5 @@
 package com.chat.types.comment;
 
-
 import com.chat.tools.Tools;
 import com.chat.types.JSONWriter;
 import com.chat.types.RankingConstants;
@@ -18,37 +17,21 @@ import java.util.List;
  * Created by tyler on 6/7/16.
  */
 public class Comment implements JSONWriter {
-    private Long id, discussionId, discussionOwnerId, parentId, topParentId, parentUserId,
-            pathLength, numOfParents, numOfChildren;
+    private Long id, discussionId, discussionOwnerId, parentId, topParentId, parentUserId, pathLength, numOfParents,
+            numOfChildren;
     private String text;
     private Timestamp created, modified;
     private List<Comment> embedded;
     private List<Long> breadcrumbs;
     private Integer avgRank, userRank, numberOfVotes;
-    private Boolean deleted, read;
+    private Boolean deleted, read, stickied;
 
     private User user, modifiedByUser;
 
-    public Comment(Long id,
-                   User user,
-                   User modifiedByUser,
-                   Long discussionId,
-                   Long discussionOwnerId,
-                   String text,
-                   Long pathLength,
-                   Long topParentId,
-                   Long parentUserId,
-                   String breadcrumbs,
-                   Long numOfParents,
-                   Long numOfChildren,
-                   Integer avgRank,
-                   Integer userRank,
-                   Integer numberOfVotes,
-                   Boolean deleted,
-                   Boolean read,
-                   Timestamp created,
-                   Timestamp modified
-    ) {
+    public Comment(Long id, User user, User modifiedByUser, Long discussionId, Long discussionOwnerId, String text,
+            Long pathLength, Long topParentId, Long parentUserId, String breadcrumbs, Long numOfParents,
+            Long numOfChildren, Integer avgRank, Integer userRank, Integer numberOfVotes, Boolean deleted, Boolean read,
+            Boolean stickied, Timestamp created, Timestamp modified) {
         this.id = id;
         this.user = user;
         this.modifiedByUser = modifiedByUser;
@@ -67,6 +50,7 @@ public class Comment implements JSONWriter {
         this.numberOfVotes = numberOfVotes;
         this.deleted = deleted;
         this.read = read;
+        this.stickied = stickied;
 
         this.embedded = new ArrayList<>();
 
@@ -80,28 +64,13 @@ public class Comment implements JSONWriter {
         User user = User.create(cv.getLong("user_id"), cv.getString("user_name"));
         User modifiedByUser = User.create(cv.getLong("modified_by_user_id"), cv.getString("modified_by_user_name"));
 
-
-        return new Comment(cv.getLong("id"),
-                user,
-                modifiedByUser,
-                cv.getLong("discussion_id"),
-                cv.getLong("discussion_owner_id"),
-                cv.getString("text_"),
-                cv.getLong("path_length"),
-                cv.getLong("parent_id"),
-                cv.getLong("parent_user_id"),
-                cv.getString("breadcrumbs"),
-                cv.getLong("num_of_parents"),
-                cv.getLong("num_of_children"),
-                cv.getInteger("avg_rank"),
-                vote,
-                cv.getInteger("number_of_votes"),
-                cv.getBoolean("deleted"),
-                cv.getBoolean("read"),
-                cv.getTimestamp("created"),
-                cv.getTimestamp("modified"));
+        return new Comment(cv.getLong("id"), user, modifiedByUser, cv.getLong("discussion_id"),
+                cv.getLong("discussion_owner_id"), cv.getString("text_"), cv.getLong("path_length"),
+                cv.getLong("parent_id"), cv.getLong("parent_user_id"), cv.getString("breadcrumbs"),
+                cv.getLong("num_of_parents"), cv.getLong("num_of_children"), cv.getInteger("avg_rank"), vote,
+                cv.getInteger("number_of_votes"), cv.getBoolean("deleted"), cv.getBoolean("read"),
+                cv.getBoolean("stickied"), cv.getTimestamp("created"), cv.getTimestamp("modified"));
     }
-
 
     public static List<Long> setBreadCrumbsArr(String breadCrumbs) {
         List<Long> breadcrumbs = new ArrayList<>();
@@ -119,7 +88,6 @@ public class Comment implements JSONWriter {
         }
 
     }
-
 
     public static Comment findInEmbeddedById(List<Comment> cos, Comment co) {
         Long id = co.getParentId();
@@ -139,23 +107,27 @@ public class Comment implements JSONWriter {
         @Override
         public int compare(Comment o1, Comment o2) {
 
+            Integer stickyComp = stickyComparison(o1, o2);
+            if (stickyComp != 0) {
+                return stickyComp;
+            }
+
             Double o1R = getRank(o1);
             Double o2R = getRank(o2);
 
             return o2R.compareTo(o1R);
         }
 
-
         private static Double getRank(Comment co) {
 
             RankingConstants rco = ConstantsService.INSTANCE.getRankingConstants();
 
-            Double timeDifference= (new Date().getTime()-co.getCreated().getTime())*0.001;
-            Double timeRank = rco.getCreatedWeight()/timeDifference;
-            Double numberOfVotesRank = (co.getNumberOfVotes() != null) ?
-                    co.getNumberOfVotes() * rco.getNumberOfVotesWeight() : 0;
-            Double avgScoreRank = (co.getAvgRank() != null) ?
-                    co.getAvgRank() * rco.getAvgRankWeight() : 0;
+            Double timeDifference = (new Date().getTime() - co.getCreated().getTime()) * 0.001;
+            Double timeRank = rco.getCreatedWeight() / timeDifference;
+            Double numberOfVotesRank = (co.getNumberOfVotes() != null)
+                    ? co.getNumberOfVotes() * rco.getNumberOfVotesWeight()
+                    : 0;
+            Double avgScoreRank = (co.getAvgRank() != null) ? co.getAvgRank() * rco.getAvgRankWeight() : 0;
             Double rank = timeRank + numberOfVotesRank + avgScoreRank;
 
             return rank;
@@ -167,6 +139,12 @@ public class Comment implements JSONWriter {
     public static class CommentObjComparatorNew implements Comparator<Comment> {
         @Override
         public int compare(Comment o1, Comment o2) {
+
+            Integer stickyComp = stickyComparison(o1, o2);
+            if (stickyComp != 0) {
+                return stickyComp;
+            }
+
             return o2.getCreated().compareTo(o1.getCreated());
         }
     }
@@ -175,6 +153,13 @@ public class Comment implements JSONWriter {
 
         @Override
         public int compare(Comment o1, Comment o2) {
+
+            Integer stickyComp = stickyComparison(o1, o2);
+            if (stickyComp != 0) {
+                return stickyComp;
+            }
+
+
             Integer o1R = (o1.getAvgRank() != null) ? o1.getAvgRank() : 50;
             Integer o2R = (o2.getAvgRank() != null) ? o2.getAvgRank() : 50;
 
@@ -183,16 +168,25 @@ public class Comment implements JSONWriter {
 
     }
 
+    public static Integer stickyComparison(Comment o1, Comment o2) {
+        return o2.getStickied().compareTo(o1.getStickied());
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         Comment that = (Comment) o;
 
-        if (!id.equals(that.id)) return false;
-        if (user.getId() != null ? !user.getId().equals(that.user.getId()) : that.user.getId() != null) return false;
-        if (discussionId != null ? !discussionId.equals(that.discussionId) : that.discussionId != null) return false;
+        if (!id.equals(that.id))
+            return false;
+        if (user.getId() != null ? !user.getId().equals(that.user.getId()) : that.user.getId() != null)
+            return false;
+        if (discussionId != null ? !discussionId.equals(that.discussionId) : that.discussionId != null)
+            return false;
 
         return read != null ? read.equals(that.read) : that.read == null;
 
@@ -254,6 +248,10 @@ public class Comment implements JSONWriter {
         return ConstantsService.INSTANCE.replaceCensoredText(text);
     }
 
+    public Boolean getStickied() {
+        return stickied;
+    }
+
     public Timestamp getCreated() {
         return created;
     }
@@ -270,11 +268,17 @@ public class Comment implements JSONWriter {
         return breadcrumbs;
     }
 
-    public Boolean getDeleted() {return deleted;}
+    public Boolean getDeleted() {
+        return deleted;
+    }
 
-    public Long getParentUserId() {return parentUserId;}
+    public Long getParentUserId() {
+        return parentUserId;
+    }
 
-    public Boolean getRead() {return read;}
+    public Boolean getRead() {
+        return read;
+    }
 
     public User getUser() {
         return user;
@@ -283,6 +287,5 @@ public class Comment implements JSONWriter {
     public User getModifiedByUser() {
         return modifiedByUser;
     }
-
 
 }

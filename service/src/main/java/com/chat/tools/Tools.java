@@ -280,20 +280,20 @@ public class Tools {
 
     }
 
-    public static String constructOrderByCustom(String orderBy) {
+    public static String constructOrderByCustom(String orderBy, Boolean singleCommunity) {
 
-        String orderByOut;
+        String orderByOut = (singleCommunity) ? "stickied desc, " : "";
         if (orderBy.startsWith("time-")) {
             Long timeValue = Long.valueOf(orderBy.split("-")[1]);
 
             // For the custom sorting based on ranking
-            orderByOut = "ranking(created, " + timeValue +
+            orderByOut += "ranking(created, " + timeValue +
                     ",number_of_votes, " + ConstantsService.INSTANCE.getRankingConstants().getNumberOfVotesWeight() +
                     ",avg_rank, " + ConstantsService.INSTANCE.getRankingConstants().getAvgRankWeight() +
                     ") desc nulls last";
 
         } else {
-            orderByOut = orderBy.replaceAll("__", " ").concat(" nulls last");
+            orderByOut += orderBy.replaceAll("__", " ").concat(" nulls last");
         }
 
         return orderByOut;

@@ -19,4 +19,5 @@ export interface Comment {
 	userRank?: number;
 	numberOfVotes?: number;
 	deleted?: boolean;
+	stickied: boolean;
 }

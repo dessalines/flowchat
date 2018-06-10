@@ -161,7 +161,7 @@ public class Endpoints {
       UserSetting us = UserSetting.findFirst("user_id = ?", userObj.getId());
 
       UserSettings uv = UserSettings.create(us);
-      
+
       return uv.json();
     });
 
@@ -294,14 +294,17 @@ public class Endpoints {
       Integer page = (req.params(":page") != null) ? Integer.valueOf(req.params(":page")) : 1;
       Integer offset = (page - 1) * limit;
 
-      String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy")
-          : "time-" + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight().intValue();
-
-      orderBy = Tools.constructOrderByCustom(orderBy);
-
       User userObj = Tools.getUserFromJWTHeader(req);
 
       Set<Long> communityIds = Tools.fetchCommunitiesFromParams(req.params(":communityId"), userObj);
+
+      String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy")
+          : "time-" + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight().intValue();
+
+      Boolean singleCommunity = (req.params(":communityId") != null && !req.params(":communityId").equals("all")
+          && !req.params(":communityId").equals("favorites"));
+
+      orderBy = Tools.constructOrderByCustom(orderBy, singleCommunity);
 
       LazyList<Tables.DiscussionNoTextView> dntvs;
       // TODO refactor this to a communitiesQueryBuilder, same with discussion(don't
@@ -325,12 +328,12 @@ public class Endpoints {
               .find("community_id in " + Tools.convertListToInQuery(communityIds) + " "
                   + "and private is false and deleted is false and title != ?", "A new discussion")
               .orderBy(orderBy).limit(limit).offset(offset);
-        } 
+        }
         // Don't show nsfw in all
         else {
           dntvs = Tables.DiscussionNoTextView
-              .find("private is false and deleted is false and nsfw is false and title != ?", "A new discussion").orderBy(orderBy)
-              .limit(limit).offset(offset);
+              .find("private is false and deleted is false and nsfw is false and title != ?", "A new discussion")
+              .orderBy(orderBy).limit(limit).offset(offset);
         }
       }
 
@@ -394,7 +397,7 @@ public class Endpoints {
 
       Long discussionId = Long.valueOf(req.params(":id"));
 
-      Integer rank  = (!req.params(":rank").equals("null")) ? Integer.valueOf(req.params(":rank")) : null;
+      Integer rank = (!req.params(":rank").equals("null")) ? Integer.valueOf(req.params(":rank")) : null;
 
       Actions.saveDiscussionVote(userObj.getId(), discussionId, rank);
 
@@ -478,7 +481,7 @@ public class Endpoints {
 
       // Fetch your unread replies
       LazyList<Tables.CommentBreadcrumbsView> cbv = Tables.CommentBreadcrumbsView
-          .where("parent_user_id = ? and user_id != ? and read = false", userObj.getId(), userObj.getId());
+          .where("parent_user_id = ? and user_id != ? and read = ?", userObj.getId(), userObj.getId(), false);
 
       Comments comments = Comments.replies(cbv);
 
@@ -559,7 +562,7 @@ public class Endpoints {
       String orderBy = (req.params(":orderBy") != null) ? req.params(":orderBy")
           : "time-" + ConstantsService.INSTANCE.getRankingConstants().getCreatedWeight().intValue();
 
-      orderBy = Tools.constructOrderByCustom(orderBy);
+      orderBy = Tools.constructOrderByCustom(orderBy, false);
       User userObj = Tools.getUserFromJWTHeader(req);
 
       LazyList<Tables.CommunityNoTextView> cv;
@@ -570,12 +573,12 @@ public class Endpoints {
             .find("tag_ids @> ARRAY[?]::bigint[] " + "and private is false and deleted is false and name not like ?",
                 tagId, "new_community%")
             .orderBy(orderBy).limit(limit).offset(offset);
-      } 
+      }
       // Don't fetch nsfw communities
       else {
         cv = Tables.CommunityNoTextView
-            .find("private is false and deleted is false and nsfw is false and name not like ?", "new_community%").orderBy(orderBy)
-            .limit(limit).offset(offset);
+            .find("private is false and deleted is false and nsfw is false and name not like ?", "new_community%")
+            .orderBy(orderBy).limit(limit).offset(offset);
       }
 
       Communities communities;

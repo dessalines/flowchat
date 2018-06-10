@@ -1,4 +1,4 @@
-<div [class.card]="isCard()" [class.list-group-item]="!isCard()" [class.card-body]="isCard()" [class.mr-1]="isCard()">
+<div [class.card]="isCard()" [class.list-group-item]="!isCard()" [class.card-body]="isCard()" [class.mr-1]="isCard()" [class.border-primary]="discussion.stickied">
   <div *ngIf="!discussion.deleted">
     <div *ngIf="!editing">
       <div class="row">
@@ -56,6 +56,14 @@
               <li *ngIf="discussion.nsfw" class="list-inline-item">NSFW</li>
               <li role="button" *ngIf="isCreator" (click)="toggleEditing()" class="list-inline-item pointer">edit</li>
               <li role="button" *ngIf="isCreator || isModerator" (click)="deleteDiscussion()" class="list-inline-item pointer">delete</li>
+              <li role="button" *ngIf="(isCreator || isModerator)" (click)="toggleNsfw()" class="list-inline-item pointer">
+                <span *ngIf="discussion.nsfw">mark as sfw</span>
+                <span *ngIf="!discussion.nsfw">mark as nsfw</span>
+              </li>
+              <li role="button" *ngIf="(isModerator)" (click)="toggleSticky()" class="list-inline-item pointer">
+                  <span *ngIf="discussion.stickied">unsticky</span>
+                  <span *ngIf="!discussion.stickied">make sticky</span>
+              </li>
               <li *ngIf="discussion.numberOfComments" class="list-inline-item" role="button">
                 <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">{{discussion.numberOfComments}} comments
                 </a>
