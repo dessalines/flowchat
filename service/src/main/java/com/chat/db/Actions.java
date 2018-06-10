@@ -93,8 +93,17 @@ public class Actions {
     c.set("text_", text, "modified", cTime, "modified_by_user_id", userId).saveIt();
 
     return c;
-
   }
+
+  public static Comment stickyComment(Long commentId, Boolean stickied) {
+
+    Comment c = Comment.findFirst("id = ?", commentId);
+
+    c.set("stickied", stickied).saveIt();
+
+    return c;
+  }
+
 
   public static Comment deleteComment(Long userId, Long commentId) {
     // Find the comment
@@ -162,6 +171,8 @@ public class Actions {
       d.set("private", do_.getPrivate_());
     if (do_.getNsfw() != null)
       d.set("nsfw", do_.getNsfw());
+    if (do_.getStickied() != null)
+      d.set("stickied", do_.getStickied());
     if (do_.getDeleted() != null)
       d.set("deleted", do_.getDeleted());
     if (do_.getCommunity() != null)
@@ -189,6 +200,7 @@ public class Actions {
     List<DiscussionTagView> dtv = DiscussionTagView.where("discussion_id = ?", do_.getId());
     List<DiscussionUserView> ud = DiscussionUserView.where("discussion_id = ?", do_.getId());
     CommunityNoTextView cntv = CommunityNoTextView.findFirst("id = ?", dfv.getLong("community_id"));
+
     List<Tables.CommunityUserView> communityUsers = Tables.CommunityUserView.where("community_id = ?",
         cntv.getLong("id"));
 

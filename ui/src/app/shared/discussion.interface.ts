@@ -15,6 +15,7 @@ export interface Discussion {
   tags?: Array<Tag>;
   private_?: boolean;
   nsfw: boolean;
+  stickied: boolean;
   privateUsers?: Array<User>;
   blockedUsers?: Array<User>;
   deleted?: boolean;

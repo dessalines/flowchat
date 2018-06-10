@@ -33,9 +33,9 @@ export class CommentComponent implements OnInit {
 
   public rank: number;
 
-  public editable: boolean = false;
+  public isCreator: boolean = false;
 
-  public deleteable: boolean = false;
+  public isModerator: boolean = false;
 
   public commentRole: CommentRole;
 
@@ -72,8 +72,8 @@ export class CommentComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setEditable();
-    this.setDeleteable();
+    this.setIsCreator();
+    this.setIsModerator();
     this.setCommentRole();
     this.setRank();
   }
@@ -117,6 +117,13 @@ export class CommentComponent implements OnInit {
     this.threadedChatService.send(this.commentRankData());
   }
 
+  toggleStickyComment() {
+    this.comment.stickied = !this.comment.stickied;
+    this.threadedChatService.send(this.stickyData());
+  }
+
+
+
   replyData(): ReplyData {
     return {
       parentId: this.comment.id,
@@ -128,6 +135,13 @@ export class CommentComponent implements OnInit {
     return {
       id: this.comment.id,
       edit: this.editText,
+    }
+  }
+
+  stickyData(): StickyData {
+    return {
+      id: this.comment.id,
+      sticky: this.comment.stickied,
     }
   }
 
@@ -164,22 +178,22 @@ export class CommentComponent implements OnInit {
     this.editText = $event;
   }
 
-  setEditable() {
+  setIsCreator() {
     if (this.userService.getUser() != null &&
       this.comment.user.id == this.userService.getUser().id) {
-      this.editable = true;
+      this.isCreator = true;
     }
   }
 
-  setDeleteable() {
+  setIsModerator() {
     if (this.discussion.community.creator.id === this.userService.getUser().id) {
-      this.deleteable = true;
+      this.isModerator = true;
     } else {
       let m = this.discussion.community.moderators.filter(m => m.id == this.userService.getUser().id)[0];
       if (m !== undefined) {
-        this.deleteable = true;
+        this.isModerator = true;
       } else {
-        this.deleteable = false;
+        this.isModerator = false;
       }
     }
   }
@@ -246,6 +260,11 @@ interface ReplyData {
 interface EditData {
   id: number;
   edit: string;
+}
+
+interface StickyData {
+  id: number;
+  sticky: boolean;
 }
 
 interface DeleteData {

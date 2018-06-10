@@ -94,7 +94,6 @@ export class DiscussionCardComponent implements OnInit {
         (this.discussion.community.creator != null && userId == this.discussion.community.creator.id)) {
         // Creators also have mod abilities
         this.isCreator = true;
-        this.isModerator = true;
 
       } else {
         let m = this.discussion.community.moderators.filter(m => m.id == userId)[0];
@@ -130,6 +129,16 @@ export class DiscussionCardComponent implements OnInit {
         this.toasterService.pop("error", "Error", error);
         this.isSaving = false;
       });
+  }
+
+  toggleSticky() {
+    this.discussion.stickied = !this.discussion.stickied;
+    this.saveDiscussion();
+  }
+
+  toggleNsfw() {
+    this.discussion.nsfw = !this.discussion.nsfw;
+    this.saveDiscussion();
   }
 
   deleteDiscussion() {

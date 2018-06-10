@@ -20,7 +20,7 @@ public class Discussion implements JSONWriter {
     private Long id;
     private User creator, modifiedByUser;
     private String title, link, text;
-    private Boolean private_, deleted, nsfw;
+    private Boolean private_, deleted, nsfw, stickied;
     private Integer avgRank, userRank, numberOfVotes, numberOfComments;
     private Community community;
     private List<Tag> tags;
@@ -36,6 +36,7 @@ public class Discussion implements JSONWriter {
                       String text,
                       Boolean private_,
                       Boolean nsfw,
+                      Boolean stickied,
                       Integer avgRank,
                       Integer userRank,
                       Integer numberOfVotes,
@@ -57,6 +58,7 @@ public class Discussion implements JSONWriter {
         this.text = text;
         this.private_ = private_;
         this.nsfw = nsfw;
+        this.stickied = stickied;
         this.avgRank = avgRank;
         this.userRank = userRank;
         this.numberOfVotes = numberOfVotes;
@@ -143,6 +145,7 @@ public class Discussion implements JSONWriter {
                 d.getString("text_"),
                 d.getBoolean("private"),
                 nsfw,
+                d.getBoolean("stickied"),
                 d.getInteger("avg_rank"),
                 vote,
                 d.getInteger("number_of_votes"),
@@ -191,6 +194,10 @@ public class Discussion implements JSONWriter {
 
     public Boolean getNsfw() {
         return nsfw;
+    }
+
+    public Boolean getStickied() {
+        return stickied;
     }
 
     public Integer getAvgRank() {
