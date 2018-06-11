@@ -52,8 +52,9 @@
 
 
             <ul class="list-inline small font-weight-bold text-muted link-unstyled mb-0">
-              <li *ngIf="discussion.private_" class="list-inline-item">Private</li>
+              <li *ngIf="discussion.private_" class="list-inline-item">private</li>
               <li *ngIf="discussion.nsfw" class="list-inline-item">NSFW</li>
+              <li *ngIf="discussion.stickied" class="list-inline-item">stickied</li>
               <li role="button" *ngIf="isCreator" (click)="toggleEditing()" class="list-inline-item pointer">edit</li>
               <li role="button" *ngIf="isCreator || isModerator" (click)="deleteDiscussion()" class="list-inline-item pointer">delete</li>
               <li role="button" *ngIf="(isCreator || isModerator)" (click)="toggleNsfw()" class="list-inline-item pointer">
