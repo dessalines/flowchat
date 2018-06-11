@@ -268,7 +268,7 @@ export class UserService {
   }
 
   getUserLog(id: number) {
-    return this.http.get(this.getUserLogUrl + id, this.getOptions())
+    return this.http.get(this.getUserLogUrl + '/' + id, this.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }

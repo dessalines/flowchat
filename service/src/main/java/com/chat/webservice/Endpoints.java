@@ -141,7 +141,7 @@ public class Endpoints {
 
     get("/user_log/:id", (req, res) -> {
 
-      Long userId = Tools.getUserFromJWTHeader(req).getId();
+      Long userId = Long.valueOf(req.params(":id"));
 
       LazyList<Tables.UserAuditView> auditRows = Tables.UserAuditView.find("user_id = ?", userId);
 

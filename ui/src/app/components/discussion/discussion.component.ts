@@ -55,13 +55,13 @@ export class DiscussionComponent implements OnInit {
 
   @ViewChild('reconnectModal') reconnectModal;
 
-  constructor(private threadedChatService: ThreadedChatService,
-    private userService: UserService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private titleService: Title,
-    private discussionService: DiscussionService,
-    private toasterService: ToasterService) {
+  constructor(public threadedChatService: ThreadedChatService,
+    public userService: UserService,
+    public route: ActivatedRoute,
+    public router: Router,
+    public titleService: Title,
+    public discussionService: DiscussionService,
+    public toasterService: ToasterService) {
   }
 
   ngOnInit() {

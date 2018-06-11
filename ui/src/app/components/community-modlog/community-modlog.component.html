@@ -3,11 +3,11 @@
     <i *ngIf="!modlog" class="fa fa-circle-o-notch fa-spin fa-5x fa-center"></i>
     <div *ngFor="let modRow of modlog">
       <span class="text-muted">{{modRow.action_tstamp | moment}} &mdash;</span>
-      <a *ngIf="modRow.modified_by_user_id" [routerLink]="['/user', modRow.modified_by_user_id]">{{modRow.modified_by_user_name}}</a>
+      <a *ngIf="modRow.modified_by_user_id" [routerLink]="['/user', modRow.modified_by_user_id]">{{modRow.modified_by_user_name}} </a>
       <span [ngSwitch]="modRow.action">
-      	<span *ngSwitchCase="'I'">added</span>
-      	<span *ngSwitchCase="'U'">altered</span>
-      	<span *ngSwitchCase="'D'">deleted</span>
+      	<span *ngSwitchCase="'I'">added </span>
+      	<span *ngSwitchCase="'U'">altered </span>
+      	<span *ngSwitchCase="'D'">deleted </span>
       </span>
       <span [ngSwitch]="modRow.table_name">
         <span *ngSwitchCase="'discussion'">
