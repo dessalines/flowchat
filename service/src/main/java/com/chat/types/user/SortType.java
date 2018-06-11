@@ -10,7 +10,7 @@ import java.util.Map;
 
 // TODO alter the front end code to use numbers as the radio values, and then do the string inflation from this code
 public enum SortType {
-    NEW(1, "modified__desc"),
+    NEW(1, "created__desc"),
     HOUR(2, "time-3600"),
     DAY(3, "time-86400"),
     WEEK(4, "time-604800"),

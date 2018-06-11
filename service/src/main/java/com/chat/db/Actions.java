@@ -104,7 +104,6 @@ public class Actions {
     return c;
   }
 
-
   public static Comment deleteComment(Long userId, Long commentId) {
     // Find the comment
     Comment c = Comment.findFirst("id = ?", commentId);
@@ -149,6 +148,21 @@ public class Actions {
     CommunityNoTextView cntv = CommunityNoTextView.findFirst("id = ?", dfv.getLong("community_id"));
 
     return Discussion.create(dfv, cntv, null, udv, null, null);
+  }
+
+  public static void createCommunityChat(Community c) {
+
+    String title = "chat";
+    Long userId = c.getCreator().getId();
+
+    Tables.Discussion d = Tables.Discussion.createIt("title", title, "modified_by_user_id", userId, "community_id",
+        c.getId(), "stickied", true);
+
+    DiscussionUser.createIt("user_id", userId, "discussion_id", d.getLong("id"), "discussion_role_id",
+        DiscussionRole.CREATOR.getVal());
+
+    FavoriteDiscussionUser.createIt("user_id", userId, "discussion_id", d.getLong("id"));
+
   }
 
   public static Discussion saveDiscussion(Long userId, Discussion do_) {
@@ -468,7 +482,12 @@ public class Actions {
     CommunityView dfv = CommunityView.findFirst("id = ?", c.getLongId());
     List<CommunityUserView> udv = CommunityUserView.where("community_id = ?", c.getLongId());
 
-    return Community.create(dfv, null, udv, null);
+    Community community = Community.create(dfv, null, udv, null);
+
+    // Create the community stickied chat
+    createCommunityChat(community);
+
+    return community;
   }
 
   public static Community saveCommunity(Long userId, Community co_) {
@@ -502,6 +521,13 @@ public class Actions {
       if (e.getLocalizedMessage().contains("already exists")) {
         throw new NoSuchElementException("Community already exists");
       }
+    }
+
+    // Update the community chat name
+    Tables.Discussion d = Tables.Discussion.findFirst("title like '%chat%' and community_id = ? and modified_by_user_id = ? and stickied = ?", co_.getId(), co_.getCreator().getId(), true);
+
+    if (d != null) {
+      d.set("title", co_.getName() + " chat").saveIt();
     }
 
     // Add the community tags
