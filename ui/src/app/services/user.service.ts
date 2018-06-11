@@ -41,6 +41,7 @@ export class UserService {
   private defaultSettings: UserSettings = {
     defaultViewTypeRadioValue: 'card',
     defaultSortTypeRadioValue: 'time-86400',
+    defaultCommentSortTypeRadioValue: 'new',
     readOnboardAlert: false
   }
 
@@ -239,6 +240,7 @@ export class UserService {
       this.user.settings = {
         defaultSortTypeRadioValue: d["defaultSortTypeRadioValue"],
         defaultViewTypeRadioValue: d["defaultViewTypeRadioValue"],
+        defaultCommentSortTypeRadioValue: d["defaultCommentSortTypeRadioValue"],
         readOnboardAlert: d["readOnboardAlert"]
       }
       this.sendLoginEvent();

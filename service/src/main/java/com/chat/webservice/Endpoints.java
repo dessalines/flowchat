@@ -169,7 +169,7 @@ public class Endpoints {
       User userObj = Tools.getUserFromJWTHeader(req);
       Map<String, String> vars = Tools.createMapFromReqBody(req.body());
       Actions.saveUserSettings(userObj.getId(), vars.get("defaultViewTypeRadioValue"),
-          vars.get("defaultSortTypeRadioValue"), Boolean.valueOf(vars.get("readOnboardAlert")));
+          vars.get("defaultSortTypeRadioValue"), vars.get("defaultCommentSortTypeRadioValue"), Boolean.valueOf(vars.get("readOnboardAlert")));
 
       res.status(HttpStatus.OK_200);
 

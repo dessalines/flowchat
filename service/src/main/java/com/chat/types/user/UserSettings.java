@@ -7,12 +7,13 @@ import com.chat.types.JSONWriter;
  * Created by tyler on 9/23/16.
  */
 public class UserSettings implements JSONWriter {
-    private String defaultViewTypeRadioValue, defaultSortTypeRadioValue;
+    private String defaultViewTypeRadioValue, defaultSortTypeRadioValue, defaultCommentSortTypeRadioValue;
     private Boolean readOnboardAlert;
 
-    public UserSettings(String defaultViewTypeRadioValue, String defaultSortTypeRadioValue, Boolean readOnboardAlert) {
+    public UserSettings(String defaultViewTypeRadioValue, String defaultSortTypeRadioValue, String defaultCommentSortTypeRadioValue, Boolean readOnboardAlert) {
         this.defaultViewTypeRadioValue = defaultViewTypeRadioValue;
         this.defaultSortTypeRadioValue = defaultSortTypeRadioValue;
+        this.defaultCommentSortTypeRadioValue = defaultCommentSortTypeRadioValue;
         this.readOnboardAlert = readOnboardAlert;
     }
 
@@ -21,7 +22,7 @@ public class UserSettings implements JSONWriter {
 
     public static UserSettings create(Tables.UserSetting uv) {
         
-        return new UserSettings(ViewType.values()[uv.getInteger("default_view_type_id") - 1].getRadioValue(),SortType.values()[uv.getInteger("default_sort_type_id") - 1].getRadioValue(),
+        return new UserSettings(ViewType.values()[uv.getInteger("default_view_type_id") - 1].getRadioValue(),SortType.values()[uv.getInteger("default_sort_type_id") - 1].getRadioValue(),CommentSortType.values()[uv.getInteger("default_comment_sort_type_id") - 1].getRadioValue(),
                 uv.getBoolean("read_onboard_alert"));
     }
 
@@ -56,6 +57,10 @@ public class UserSettings implements JSONWriter {
 
     public String getDefaultSortTypeRadioValue() {
         return defaultSortTypeRadioValue;
+    }
+
+    public String getDefaultCommentSortTypeRadioValue() {
+        return defaultCommentSortTypeRadioValue;
     }
 
     public Boolean getReadOnboardAlert() {

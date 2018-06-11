@@ -36,7 +36,6 @@ export class DiscussionComponent implements OnInit {
 
   public discussionId: number = null;
   public topParentId: number = null;
-  public sortType: string = 'new';
 
   public discussion: Discussion;
 
@@ -83,7 +82,7 @@ export class DiscussionComponent implements OnInit {
             this.unloadSubscriptions();
           }
 
-          this.threadedChatService.connect(this.discussionId, this.topParentId, this.sortType);
+          this.threadedChatService.connect(this.discussionId, this.topParentId, this.userService.getUserSettings().defaultCommentSortTypeRadioValue);
 
 
           this.subscribeToChat();
@@ -165,7 +164,7 @@ export class DiscussionComponent implements OnInit {
   }
 
   websocketReconnect() {
-    this.threadedChatService.connect(this.discussionId, this.topParentId, this.sortType);
+    this.threadedChatService.connect(this.discussionId, this.topParentId, this.userService.getUserSettings().defaultCommentSortTypeRadioValue);
     this.subscribeToChat();
     this.reconnectModal.hide();
   }
@@ -350,9 +349,9 @@ export class DiscussionComponent implements OnInit {
       if (stickyComp != 0) {
         return stickyComp;
       }
-      if (this.sortType == 'top') {
+      if (this.userService.getUserSettings().defaultCommentSortTypeRadioValue == 'top') {
         return b.avgRank - a.avgRank;
-      } else if (this.sortType == 'new') {
+      } else if (this.userService.getUserSettings().defaultCommentSortTypeRadioValue == 'new') {
         return b.created - a.created;
       } else {
         return 0;
@@ -393,7 +392,8 @@ export class DiscussionComponent implements OnInit {
   }
 
   changeSortType($event) {
-    this.sortType = $event;
+    this.userService.getUserSettings().defaultCommentSortTypeRadioValue = $event;
+    this.userService.saveUserSettings();
     this.unloadSubscriptions();
     this.comments = undefined;
     this.websocketReconnect();
