@@ -259,6 +259,9 @@ export class DiscussionComponent implements OnInit {
     if (editedComment.parentId == null) {
       this.replaceEditedComment(this.comments, editedComment);
 
+      // could be a sticky change
+      this.resort(this.comments);
+
       // setTimeout(() => { location.hash = "#comment_" + editedComment.id; }, 50);
       return;
     }
@@ -281,6 +284,7 @@ export class DiscussionComponent implements OnInit {
     if (newComment.parentId == null) {
       this.comments.unshift(newComment);
       setTimeout(() => { document.getElementById("comment_" + newComment.id).scrollIntoView(); }, 100);
+      this.resort(this.comments);
       return;
     }
 
@@ -337,16 +341,25 @@ export class DiscussionComponent implements OnInit {
 
 
   private resort(comments) {
-    if (this.sortType == 'top') {
-      comments.sort((a, b) => {
+
+    comments.sort((a: Comment, b:Comment) => {
+      // sort the stickies first
+    
+      let stickyComp: number = (b.stickied === a.stickied)? 0 : a.stickied? -1 : 1;
+
+      if (stickyComp != 0) {
+        return stickyComp;
+      }
+      if (this.sortType == 'top') {
         return b.avgRank - a.avgRank;
-      });
-    } else if (this.sortType == 'new') {
-      comments.sort((a, b) => {
+      } else if (this.sortType == 'new') {
         return b.created - a.created;
-      });
-    }
+      } else {
+        return 0;
+      }
+    });
   }
+
 
 
   setIsReplying($event) {

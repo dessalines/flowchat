@@ -3,6 +3,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
 import {UserService} from './user.service';
@@ -19,7 +21,6 @@ export class CommunityService {
   private createCommunityUrl: string = environment.endpoint + 'community';
   private saveCommunityUrl: string = environment.endpoint + 'community';
   private getCommunityModlogUrl: string = environment.endpoint + 'community_modlog/';
-
 
   private getCommunitiesUrl(page: number, limit: number, tagId: string,
     orderBy: string): string {
