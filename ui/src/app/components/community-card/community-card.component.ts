@@ -83,20 +83,22 @@ export class CommunityCardComponent implements OnInit {
   }
 
   setPermissions() {
-      this.isModerator = false;
-      this.isCreator = false;
-      if (this.userService.getUser().id == this.community.creator.id) {
-        // Creators also have mod abilities
+    this.isModerator = false;
+    this.isCreator = false;
+    if (this.userService.getUser()) {
+      let userId: number = this.userService.getUser().id;
 
+      // The multi-discussion fetch doesnt grab each communities creators, so check for this
+      if (userId == this.community.creator.id) {
         this.isCreator = true;
-        this.isModerator = true;
-
-      } else {
-        let m = this.community.moderators.filter(m => m.id == this.userService.getUser().id)[0];
-        if (m !== undefined) {
-          this.isModerator = true;
-        }
       }
+
+      // check community mods
+      let m = this.community.moderators.filter(m => m.id == userId)[0];
+      if (m !== undefined || this.community.creator.id == userId) {
+        this.isModerator = true;
+      }
+    }
   }
 
   toggleEditing() {

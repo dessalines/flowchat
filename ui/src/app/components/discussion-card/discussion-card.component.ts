@@ -90,17 +90,14 @@ export class DiscussionCardComponent implements OnInit {
       let userId: number = this.userService.getUser().id;
 
       // The multi-discussion fetch doesnt grab each communities creators, so check for this
-      if (userId == this.discussion.creator.id ||
-        (this.discussion.community.creator != null && userId == this.discussion.community.creator.id)) {
-        // Creators also have mod abilities
+      if (userId == this.discussion.creator.id) {
         this.isCreator = true;
+      }
 
-      } else {
-        let m = this.discussion.community.moderators.filter(m => m.id == userId)[0];
-        if (m !== undefined) {
-          this.isModerator = true;
-        }
-
+      // check community mods
+      let m = this.discussion.community.moderators.filter(m => m.id == userId)[0];
+      if (m !== undefined || (this.discussion.community.creator != null && this.discussion.community.creator.id == userId)) {
+        this.isModerator = true;
       }
     }
   }
