@@ -8,7 +8,7 @@ import { UserService } from '../../services';
 })
 export class DiscussionCardViewTypeSelectComponent implements OnInit {
 
-	constructor(private userService: UserService) { }
+	constructor(public userService: UserService) { }
 
 	ngOnInit() {
 	}
