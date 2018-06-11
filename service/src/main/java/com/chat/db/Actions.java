@@ -2,6 +2,7 @@ package com.chat.db;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -9,7 +10,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.Collections;
 
 import com.auth0.jwt.JWT;
 import com.chat.db.Tables.Comment;
@@ -38,6 +38,7 @@ import com.chat.types.community.CommunityRole;
 import com.chat.types.discussion.Discussion;
 import com.chat.types.discussion.DiscussionRole;
 import com.chat.types.tag.Tag;
+import com.chat.types.user.CommentSortType;
 import com.chat.types.user.SortType;
 import com.chat.types.user.User;
 import com.chat.types.user.ViewType;
@@ -116,7 +117,7 @@ public class Actions {
     return c;
   }
 
-  public static void saveUserSettings(Long userId, String defaultViewTypeRadioValue, String defaultSortTypeRadioValue,
+  public static void saveUserSettings(Long userId, String defaultViewTypeRadioValue, String defaultSortTypeRadioValue, String defaultCommentSortTypeRadioValue,
       Boolean readOnboardAlert) {
 
     UserSetting us = UserSetting.findFirst("user_id = ?", userId);
@@ -125,6 +126,8 @@ public class Actions {
       us.setInteger("default_view_type_id", ViewType.getFromRadioValue(defaultViewTypeRadioValue).getVal());
     if (defaultSortTypeRadioValue != null)
       us.setInteger("default_sort_type_id", SortType.getFromRadioValue(defaultSortTypeRadioValue).getVal());
+    if (defaultCommentSortTypeRadioValue != null)
+      us.setInteger("default_comment_sort_type_id", CommentSortType.getFromRadioValue(defaultCommentSortTypeRadioValue).getVal());
     if (readOnboardAlert != null)
       us.setBoolean("read_onboard_alert", readOnboardAlert);
 

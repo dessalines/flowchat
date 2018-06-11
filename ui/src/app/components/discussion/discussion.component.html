@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="col-xs-12 col-lg-2">
-    <select [ngModel]="sortType" (ngModelChange)="changeSortType($event)" class="form-control mb-2">
+    <select [ngModel]="this.userService.getUserSettings().defaultCommentSortTypeRadioValue" (ngModelChange)="changeSortType($event)" class="form-control mb-2">
       <option disabled>Sorting</option>
       <option disabled>──────────</option>
       <option value="new">New</option>
