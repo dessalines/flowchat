@@ -248,7 +248,10 @@ export class CommentComponent implements OnInit {
     this.saveRank(newVote);
   }
 
-  
+  colors = ['transparent', 'red', 'blue', 'green', 'yellow', 'purple', 'cyan','orange','white'];
+  commentBorderColor(): string {
+    return this.colors[(this.comment.pathLength % (this.colors.length))];
+  }
 
 }
 

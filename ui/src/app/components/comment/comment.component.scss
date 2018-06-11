@@ -18,6 +18,13 @@ p,
     margin-bottom: $card-padding-top;
 }
 
+.comment-border {
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-left-color: transparent;
+    padding-left: 4px;
+}
+
 // input[type=range]:focus::-webkit-slider-runnable-track {
 //   background: #367ebd;
 // }
