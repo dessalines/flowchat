@@ -43,13 +43,13 @@ export class CommunityComponent implements OnInit {
       let communityId: number = +params['communityId'];
       this.currentPageNum = 1;
       this.scrollDebounce = 0;
-
-      this.getCommunity(communityId);
+      
       this.userService.userObservable.subscribe(user => {
         if (user) {
           this.discussions = undefined;
           this.currentPageNum = 1;
           this.scrollDebounce = 0;
+          this.getCommunity(communityId);
           this.getDiscussions(communityId, this.currentPageNum, this.userService.getUserSettings().defaultSortTypeRadioValue);
         }
       });
