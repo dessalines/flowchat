@@ -7,9 +7,9 @@
           <ng-template #voteTemplate>
             <div [innerHtml]="voteHtml()"></div>
           </ng-template>
-          <div class="fa fa-fw fa-arrow-up pointer vote-thumb" [class.text-success]="discussion.userRank > 50" (click)="upvote()"></div>
-          <div class="pointer vote-number" placement="bottom" [tooltip]="voteTemplate" (click)="toggleShowVoteSlider()">{{avgVote()}}</div>
-          <div class="fa fa-fw fa-arrow-down pointer vote-thumb" [class.text-danger]="voteExists() &&discussion.userRank < 50" (click)="downvote()"></div>
+          <div class="fa fa-fw fa-arrow-up vote-thumb" [class.pointer]="!this.isCreator"[class.text-success]="discussion.userRank > 50" (click)="upvote()"></div>
+          <div class="pointer vote-number" placement="bottom" placement="right" [tooltip]="voteTemplate" (click)="toggleShowVoteSlider()">{{avgVote()}}</div>
+          <div class="fa fa-fw fa-arrow-down vote-thumb" [class.pointer]="!this.isCreator" [class.text-danger]="voteExists() &&discussion.userRank < 50" (click)="downvote()"></div>
         </div>
         <div *ngIf="!isCard() && hasImage()" class="col-xs-2 col-sm-2">
           <div [innerHTML]="discussion.link | markdown:true"></div>

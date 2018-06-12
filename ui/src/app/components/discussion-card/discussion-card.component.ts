@@ -359,13 +359,17 @@ export class DiscussionCardComponent implements OnInit {
   }
 
   upvote() {
-    let newVote: number = (this.discussion.userRank !== 100) ? 100 : null;
-    this.saveDiscussionRank(newVote);
+    if (!this.isCreator) {
+      let newVote: number = (this.discussion.userRank !== 100) ? 100 : null;
+      this.saveDiscussionRank(newVote);
+    }
   }
 
   downvote() {
-    let newVote: number = (this.discussion.userRank !== 0) ? 0 : null;
-    this.saveDiscussionRank(newVote);
+    if (!this.isCreator) {
+      let newVote: number = (this.discussion.userRank !== 0) ? 0 : null;
+      this.saveDiscussionRank(newVote);
+    }
   }
 
 }
