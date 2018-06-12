@@ -104,6 +104,10 @@ export class DiscussionComponent implements OnInit {
 
   editingChanged($event) {
     this.editing = $event;
+    if (this.editing == false) {
+      // Removing editing from the window location hash
+      window.history.pushState('', 'title', window.location.hash.split(";")[0]);
+    }
   }
 
   unloadSubscriptions() {
@@ -341,10 +345,10 @@ export class DiscussionComponent implements OnInit {
 
   private resort(comments) {
 
-    comments.sort((a: Comment, b:Comment) => {
+    comments.sort((a: Comment, b: Comment) => {
       // sort the stickies first
-    
-      let stickyComp: number = (b.stickied === a.stickied)? 0 : a.stickied? -1 : 1;
+
+      let stickyComp: number = (b.stickied === a.stickied) ? 0 : a.stickied ? -1 : 1;
 
       if (stickyComp != 0) {
         return stickyComp;
