@@ -27,6 +27,8 @@ import com.chat.types.tag.Tags;
 import com.chat.types.user.User;
 import com.chat.types.user.UserSettings;
 import com.chat.types.user.Users;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.eclipse.jetty.http.HttpStatus;
 import org.javalite.activejdbc.LazyList;
@@ -149,9 +151,15 @@ public class Endpoints {
           "discussion_id", "discussion_title", "id", "modified_by_user_id", "modified_by_user_name", "table_name",
           "user_id", "user_name", "role_id");
 
-      json = json.replaceAll("\\\\", "").replace("\n", "\\n");
+      // Converting with jackson corrects the double quote issues
+      Tools.JACKSON.configure(JsonParser.Feature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER, true);
 
-      return json;
+      JsonNode j = Tools.JACKSON.readTree(json);
+
+      //       json = json.replaceAll("\\\\", "\n").replaceAll("\n", "\\n");
+
+
+      return j.toString();
 
     });
 
@@ -169,7 +177,8 @@ public class Endpoints {
       User userObj = Tools.getUserFromJWTHeader(req);
       Map<String, String> vars = Tools.createMapFromReqBody(req.body());
       Actions.saveUserSettings(userObj.getId(), vars.get("defaultViewTypeRadioValue"),
-          vars.get("defaultSortTypeRadioValue"), vars.get("defaultCommentSortTypeRadioValue"), Boolean.valueOf(vars.get("readOnboardAlert")));
+          vars.get("defaultSortTypeRadioValue"), vars.get("defaultCommentSortTypeRadioValue"),
+          Boolean.valueOf(vars.get("readOnboardAlert")));
 
       res.status(HttpStatus.OK_200);
 
