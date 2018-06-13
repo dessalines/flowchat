@@ -55,7 +55,7 @@ export class Tools {
 
   static replaceVideos(text: string): string {
     return text.replace(/(https?:\/\/.*\.(?:mp4))/g,
-      '<video onPlay="" class="img-fluid" muted="" loop="" poster="$1" controls loop><source src="$1" type="video/mp4"></source></video>');
+      '<video preload="metadata" onPlay="" class="img-fluid" muted="" loop="" poster="$1" controls loop><source src="$1" type="video/mp4"></source></video>');
   }
 
   static replaceImgur(text: string): string {

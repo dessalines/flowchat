@@ -1,43 +1,48 @@
-[FlowChat](http://flow-chat.com) &mdash; An open-source, live updating, threaded chat platform with range voting. 
+[FlowChat](http://flow-chat.com) &mdash; An open-source, self-hostable reddit alternative featuring communities and live-updating threaded conversations.
 ==========
 ![](http://img.shields.io/version/0.3.1.png?color=green)
 [![Build Status](https://travis-ci.org/dessalines/flowchat.svg?branch=master)](https://travis-ci.org/dessalines/flowchat)
 
 <!---
-	FlowChat: a live-updating, threaded discussion app, featuring reddit-like communities, and slack-like chatrooms. Self-hostable, open-source, written in java and angular2.
+	FlowChat: An open-source, self-hostable reddit alternative featuring communities and live-updating threaded conversations.
 
-	Hey /r/blank, marxist and programmer here. I made an app called FlowChat: a live-updating, threaded discussion app, featuring reddit-like communities, and slack-like chatrooms. Self-hostable, open-source.
+	Hey /r/blank, leftist programmer here. I've made a reddit alternative called Flowchat, featuring communities, and live updating threaded conversations. Self-hostable, open-source, explicitly anti-racist.
+
+	Description from the [github](https://github.com/dessalines/flowchat)
+
+	I'd also like to invite the moderators of this sub to take over the equivalent leftist community on it. Message my reddit user if your community's already been created and I'll gladly do this. 
 -->
 
-[FlowChat](http://flow-chat.com) is an open-source, self-hostable, **live-updating** discussion platform, featuring communities, discussions with threaded conversations, and voting.
+[FlowChat](http://flow-chat.com) is an open-source, self-hostable reddit alternative. It has communities, hashtags, **live-updating** threaded conversations, and voting.
 
-It can act as an alternative to forums, as a private team communication platform(like slack), a content creation platform(like reddit), or a voting/polling platform like [SimpleVote](https://simplevote.ml).
+Flowchat tries to solve the problem of having a fluid, free-feeling group chat, while allowing for side conversations so that every comment isn't at the top level, and doesn't disrupt the flow. 
 
-Flowchat tries to solve the problem of having a fluid, free-feeling group chat, while allowing for side conversations so that every comment isn't at the top level. Multiple conversations can take place **at once**, without interrupting the flow of the chatroom.
-
-It uses [range voting](http://rangevoting.org/UniqBest.html)(also known as olympic score voting) for sorting comments, discussions, and communities. Range voting is *more expressive* than simple :thumbsup: or :thumbsdown: votes.
+Multiple conversations can take place **at once**, without interrupting the flow of the chatroom.
 
 Check out the default community, [vanilla](http://flow-chat.com/#/community/1), or create your own.
 
 It features:
-- A complete discussion platform with communities, and live-updating threaded discussions.
-- Private or public discussions and communities
-- Customizable sorting, by recentness, and popularity.
-- Hashtags for discussions and communities. 
-- Discussion/Community creators can block users, appoint moderators, or delete comments.
+- Private or public discussions and communities.
+- Sorting by recentness, hotness, or popularity.
+- Antiracist policies including a global slur filter (No racism will be allowed on the main Flowchat instance).
+- Image and video focused, with auto-zoom.
+- Moderation including blocking users, appointing moderators, or deleting comments.
+- NSFW filtering.
+- Stickied posts.
+- Hashtags.
 
 Tech used:
-- [Java Spark](https://github.com/perwendel/spark), [Bootstrap v4](https://github.com/twbs/bootstrap), [Angular2](https://github.com/angular/angular), [Angular-cli](https://github.com/angular/angular-cli), [ng2-bootstrap](http://valor-software.com/ng2-bootstrap/), [ActiveJDBC](http://javalite.io/activejdbc), [Liquibase](http://www.liquibase.org/), [Postgres](https://www.postgresql.org/), [Markdown-it](https://github.com/markdown-it/markdown-it), [angular2-toaster](https://github.com/Stabzs/Angular2-Toaster)
+- [Java Spark](https://github.com/perwendel/spark), [Bootstrap v4](https://github.com/twbs/bootstrap), [Angular.io](https://github.com/angular/angular), [Angular-cli](https://github.com/angular/angular-cli), [ngx-bootstrap](http://valor-software.com/ngx-bootstrap/), [ActiveJDBC](http://javalite.io/activejdbc), [Liquibase](http://www.liquibase.org/), [Postgres](https://www.postgresql.org/), [Markdown-it](https://github.com/markdown-it/markdown-it), [angular2-toaster](https://github.com/Stabzs/Angular2-Toaster)
 
 Check out a sample discussion [here](http://flow-chat.com/#/discussion/13).
 
-Join the subreddit: [/r/flowchat](https://www.reddit.com/r/flowchat/)
+Join the community: [flowchat](https://www.reddit.com/r/flowchat/)
 
 [Change log](https://github.com/dessalines/flowchat/issues?q=is%3Aissue+is%3Aclosed)
 
-![screen1](https://i.imgur.com/8YSbqa8.jpg)
+![screen1](https://i.imgur.com/hDeDamH.png)
 
-![screen2](https://i.imgur.com/OgUMpwp.png)
+![screen2](https://i.imgur.com/yTKwfhd.png)
 
 
 
@@ -70,7 +75,7 @@ Goto to http://localhost:4567
 #### Requirements
 - Java 8 + Maven
 - Node + npm/yarn, [nvm](https://github.com/creationix/nvm) is the preferred installation method.
-- angular-cli: `npm i -g angular-cli@latest`
+- angular-cli: `npm i -g @angular/cli`
 - Postgres 9.3 or higher
 
 #### Download Flowchat
