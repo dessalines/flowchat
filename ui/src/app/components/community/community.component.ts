@@ -73,6 +73,14 @@ export class CommunityComponent implements OnInit {
       });
   }
 
+  editingChanged($event) {
+    this.editing = $event;
+    if (this.editing == false) {
+      // Removing editing from the window location hash
+      window.history.pushState('', 'title', window.location.hash.split(";")[0]);
+    }
+  }
+  
   getDiscussions(communityId: number, page: number, orderBy: string) {
 
     if (this.discussions === undefined || this.discussions.length < this.currentCount) {
