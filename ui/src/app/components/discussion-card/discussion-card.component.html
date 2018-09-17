@@ -2,30 +2,28 @@
   <div *ngIf="!discussion.deleted">
     <div *ngIf="!editing">
       <div class="row">
-        <div class="px-1 col-xs-2 text-center vote-width" [ngClass]="{'col-sm-2': isCard(),
-        'col-sm-1': !isCard()}">
+        <div class="px-1 col-sm-1 col-1 text-center vote-width">
           <ng-template #voteTemplate>
             <div [innerHtml]="voteHtml()"></div>
           </ng-template>
-          <div class="fa fa-fw fa-arrow-up vote-thumb" [class.pointer]="!this.isCreator"[class.text-success]="discussion.userRank > 50" (click)="upvote()"></div>
-          <div class="pointer vote-number" placement="bottom" placement="right" [tooltip]="voteTemplate" container="body" (click)="toggleShowVoteSlider()">{{avgVote()}}</div>
-          <div class="fa fa-fw fa-arrow-down vote-thumb" [class.pointer]="!this.isCreator" [class.text-danger]="voteExists() && discussion.userRank < 50" (click)="downvote()"></div>
+          <div class="fa fa-fw fa-arrow-up vote-thumb" [class.pointer]="!this.isCreator"[class.text-success]="discussion.userRank > 50" (click)="upvote()" placement="right" [tooltip]="voteTemplate" container="body"></div>
+          <div class="pointer vote-number" placement="bottom" placement="right" [class.pointer]="!this.isCreator" [tooltip]="voteTemplate" container="body" (click)="toggleShowVoteSlider()">{{avgVote()}}</div>
+          <div class="fa fa-fw fa-arrow-down vote-thumb" [class.pointer]="!this.isCreator" [class.text-danger]="voteExists() && discussion.userRank < 50" (click)="downvote()" placement="right" [tooltip]="voteTemplate" container="body"></div>
         </div>
-        <div *ngIf="!isCard() && hasImage()" class="col-xs-2 col-sm-2">
+        <div *ngIf="hasImage()" [ngClass]="{'col-sm-1 col-11': !isCard(),
+        'col-sm-11': isCard()}">
           <div [innerHTML]="discussion.link | markdown:true"></div>
         </div>
-        <div [ngClass]="{'col-xs-8 col-sm-9': hasImage() && !isCard(),
-          'col-xs-10 col-sm-10': isCard() ,
-         'col-xs-10 col-sm-11': !hasImage() && !isCard()}">
+        <div [ngClass]="{'col-sm-10': hasImage() && !isCard(),
+          'col-sm-12': isCard() ,
+         'col-sm-11': !hasImage() && !isCard()}">
           <div [ngClass]="{
         'card-body-no-bottom': isCard()}">
             <h5 [class.card-title]="isCard()" class="card-body-no-bottom">
               <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">{{discussion.title}} </a>
             </h5>
           </div>
-          <div *ngIf="isCard() && hasImage()">
-            <div [innerHTML]="discussion.link | markdown:true"></div>
-          </div>
+
           <div [ngClass]="{
         'card-body-no-top': isCard()}">
             <p *ngIf="discussion.text" class="card-text" [innerHTML]="discussion.text | markdown"></p>

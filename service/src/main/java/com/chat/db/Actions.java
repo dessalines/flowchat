@@ -393,7 +393,7 @@ public class Actions {
       UserSetting.createIt("user_id", user.getLongId());
       return createUserObj(user, true);
 
-    } else if (loggedInUserId == uv.getId()) {
+    } else if (loggedInUserId.equals(uv.getLongId())) {
 
       String encryptedPassword = Tools.PASS_ENCRYPT.encryptPassword(password);
       uv.set("password_encrypted", encryptedPassword, "email", email).saveIt();

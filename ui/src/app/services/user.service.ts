@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import {User, UserSettings, Discussion, Discussions, Tools, Community, Communities} from '../shared';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import { User, UserSettings, Discussion, Discussions, Tools, Community, Communities } from '../shared';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Headers, RequestOptions, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
-import {environment} from '../../environments/environment';
+import { environment } from '../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { ToasterService } from 'angular2-toaster';
 
@@ -22,7 +22,6 @@ export class UserService {
   private favoriteCommunities: Array<Community> = [];
 
   private userSource = new BehaviorSubject<User>(this.user);
-
   public userObservable = this.userSource.asObservable();
 
   private userSearchUrl: string = environment.endpoint + 'user_search/';
@@ -49,18 +48,18 @@ export class UserService {
     this.setUserFromCookie();
   }
 
-	public setUserFromCookie() {
-		let jwt = Tools.readCookie('jwt');
-		if (jwt) {
+  public setUserFromCookie() {
+    let jwt = Tools.readCookie('jwt');
+    if (jwt) {
       this.setUser(jwt);
-		}
-	}
+    }
+  }
 
-	private setUser(jwt: string) {
-		let dJWT = this.jwtHelper.decodeToken(jwt);
-		this.user = {
-			id: dJWT.user_id,
-			name: dJWT.user_name,
+  private setUser(jwt: string) {
+    let dJWT = this.jwtHelper.decodeToken(jwt);
+    this.user = {
+      id: dJWT.user_id,
+      name: dJWT.user_name,
       jwt: jwt,
       fullUser: dJWT.full_user
     };
@@ -69,21 +68,17 @@ export class UserService {
     this.fetchUserSettings();
 
   }
-  
-  public setUserAndCookie(jwt: string) {
-    
+
+  public getUser(): User {
+    return this.user;
   }
 
-	public getUser(): User {
-		return this.user;
-	}
+  createNewUser(nameStr: string): Observable<string> {
+    let name = JSON.stringify({ name: nameStr });
 
-	createNewUser(nameStr: string): Observable<string> {
-		let name = JSON.stringify({ name: nameStr });
-
-		return this.http.post(this.userUrl, name)
-			.map(r => r.text())
-			.catch(this.handleError);
+    return this.http.post(this.userUrl, name)
+      .map(r => r.text())
+      .catch(this.handleError);
   }
 
   logout() {
@@ -124,13 +119,13 @@ export class UserService {
     Tools.eraseCookie("jwt");
   }
 
-	getOptions(): RequestOptions {
-		let headers = new Headers({
-			// 'Content-Type': 'application/json',
-			'token': this.getUser().jwt
-		});
-		return new RequestOptions({ headers: headers });
-	}
+  getOptions(): RequestOptions {
+    let headers = new Headers({
+      // 'Content-Type': 'application/json',
+      'token': this.getUser().jwt
+    });
+    return new RequestOptions({ headers: headers });
+  }
 
 
   searchUsers(query: string): Observable<Array<User>> {
@@ -208,7 +203,7 @@ export class UserService {
   }
 
   private removeFavoriteCommunityObjs(communityId: number) {
-    return this.http.delete(this.favoriteCommunityUrl +  '/' + communityId, this.getOptions())
+    return this.http.delete(this.favoriteCommunityUrl + '/' + communityId, this.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
@@ -224,7 +219,7 @@ export class UserService {
   }
 
   private saveFavoriteCommunityObjs(communityId: number) {
-    return this.http.post(this.favoriteCommunityUrl +  '/' +  communityId, null, this.getOptions())
+    return this.http.post(this.favoriteCommunityUrl + '/' + communityId, null, this.getOptions())
       .map(this.extractData)
       .catch(this.handleError);
   }
@@ -236,7 +231,7 @@ export class UserService {
 
   fetchUserSettings() {
     this.fetchUserSettingsObs().subscribe(d => {
-      
+
       this.user.settings = {
         defaultSortTypeRadioValue: d["defaultSortTypeRadioValue"],
         defaultViewTypeRadioValue: d["defaultViewTypeRadioValue"],
