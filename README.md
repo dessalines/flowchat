@@ -8,7 +8,25 @@
 
 	Hey /r/blank, leftist programmer here. I've made a reddit alternative called Flowchat, featuring communities, and live updating threaded conversations. Self-hostable, open-source, explicitly anti-racist.
 
-	Description from the [github](https://github.com/dessalines/flowchat)
+	Description from the [github](https://github.com/dessalines/flowchat):
+
+> [FlowChat](http://flow-chat.com) is an open-source, self-hostable reddit alternative. It has communities, hashtags, **live-updating** threaded conversations, and voting.
+
+> Flowchat tries to solve the problem of having a fluid, free-feeling group chat, while allowing for side conversations so that every comment isn't at the top level, and doesn't disrupt the flow. 
+
+> Multiple conversations can take place **at once**, without interrupting the flow of the chatroom.
+
+> Check out the default community, [vanilla](http://flow-chat.com/#/community/1), or create your own.
+
+> It features:
+- Private or public discussions and communities.
+- Sorting by recentness, hotness, or popularity.
+- Antiracist policies including a global slur filter (No racism will be allowed on the main Flowchat instance).
+- Image and video focused, with auto-zoom.
+- Moderation including blocking users, appointing moderators, or deleting comments.
+- NSFW filtering.
+- Stickied posts.
+- Hashtags.
 
 	I'd also like to invite the moderators of this sub to take over the equivalent leftist community on it. Message my reddit user if your community's already been created and I'll gladly do this. 
 -->

@@ -24,6 +24,7 @@ export class DiscussionCardComponent implements OnInit {
   private showVoteSlider: boolean = false;
 
   @Input() editing: boolean = false;
+  @Input() card: boolean = false;
   @Output() editingChange = new EventEmitter();
 
   private isCreator: boolean = false;
@@ -324,7 +325,7 @@ export class DiscussionCardComponent implements OnInit {
   }
 
   isCard(): boolean {
-    return this.userService.getUserSettings().defaultViewTypeRadioValue === 'card';
+    return this.card;
   }
 
   hasImage(): boolean {
