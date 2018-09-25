@@ -28,7 +28,6 @@ export class NewUserModalComponent implements OnInit {
 	ngOnInit() {
 		// focus when the modal is shown
 		this.smModal.onShown.subscribe(() => document.getElementById("new-user-input").focus());
-
 		if (this.userService.getUser() == null) {
 			setTimeout(() => this.smModal.show(), 100);
 		} else {
@@ -39,6 +38,20 @@ export class NewUserModalComponent implements OnInit {
 	onSubmit() {
 
 		let obs: Observable<string> = this.userService.createNewUser(this.name);
+		obs.subscribe(rJWT => {
+			Tools.createCookie('jwt', rJWT, 9999);
+			this.userService.setUserFromCookie();
+			this.smModal.hide();
+			this.userCreated.emit();
+		},
+			error => {
+				console.error(error);
+				this.toasterService.pop("error", error._body);
+			});
+	}
+
+	dismiss() {
+		let obs: Observable<string> = this.userService.createAnonymousUser();
 		obs.subscribe(rJWT => {
 			Tools.createCookie('jwt', rJWT, 9999);
 			this.userService.setUserFromCookie();

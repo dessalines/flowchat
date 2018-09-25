@@ -81,6 +81,12 @@ export class UserService {
       .catch(this.handleError);
   }
 
+  createAnonymousUser(): Observable<string> {
+    return this.http.post(this.userUrl, "")
+      .map(r => r.text())
+      .catch(this.handleError);
+  }
+
   logout() {
     // Log out
     this.user = {

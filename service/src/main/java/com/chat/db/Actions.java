@@ -342,6 +342,12 @@ public class Actions {
 
   }
 
+  public static User createNewAnonymousUser() {
+      Long lastId = Tables.User.findAll().orderBy("id desc").limit(1).get(0).getLongId();
+      String userName = "user_" + ++lastId;
+      return createNewSimpleUser(userName);
+  }
+
   public static User login(String userOrEmail, String password) {
 
     // Find the user, then create a login for them

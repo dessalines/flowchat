@@ -91,7 +91,8 @@ public class Endpoints {
       Map<String, String> vars = Tools.createMapFromReqBody(req.body());
 
       String name = vars.get("name");
-      User user = Actions.createNewSimpleUser(name);
+
+      User user = (name != null) ? Actions.createNewSimpleUser(name) : Actions.createNewAnonymousUser();
 
       return user.getJwt();
 
@@ -156,8 +157,7 @@ public class Endpoints {
 
       JsonNode j = Tools.JACKSON.readTree(json);
 
-      //       json = json.replaceAll("\\\\", "\n").replaceAll("\n", "\\n");
-
+      // json = json.replaceAll("\\\\", "\n").replaceAll("\n", "\\n");
 
       return j.toString();
 
