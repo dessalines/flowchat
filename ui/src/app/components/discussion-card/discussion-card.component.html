@@ -1,4 +1,5 @@
-<div [class.card]="isCard()" [class.list-group-item]="!isCard()" [class.card-body]="isCard()" [class.mr-1]="isCard()" [class.border-primary]="discussion.stickied">
+<div [class.card]="isCard()" [class.list-group-item]="!isCard()" [class.card-body]="isCard()" [class.mr-1]="isCard()"
+  [class.border-primary]="discussion.stickied">
   <div *ngIf="!discussion.deleted">
     <div *ngIf="!editing">
       <div class="row">
@@ -6,9 +7,12 @@
           <ng-template #voteTemplate>
             <div [innerHtml]="voteHtml()"></div>
           </ng-template>
-          <div class="fa fa-fw fa-arrow-up vote-thumb" [class.pointer]="!this.isCreator"[class.text-success]="discussion.userRank > 50" (click)="upvote()" placement="right" [tooltip]="voteTemplate" container="body"></div>
-          <div class="pointer vote-number" placement="bottom" placement="right" [class.pointer]="!this.isCreator" [tooltip]="voteTemplate" container="body" (click)="toggleShowVoteSlider()">{{avgVote()}}</div>
-          <div class="fa fa-fw fa-arrow-down vote-thumb" [class.pointer]="!this.isCreator" [class.text-danger]="voteExists() && discussion.userRank < 50" (click)="downvote()" placement="right" [tooltip]="voteTemplate" container="body"></div>
+          <div class="fa fa-fw fa-arrow-up vote-thumb" [class.pointer]="!this.isCreator" [class.text-success]="discussion.userRank > 50"
+            (click)="upvote()" placement="right" [tooltip]="voteTemplate" container="body"></div>
+          <div class="pointer vote-number" placement="bottom" placement="right" [class.pointer]="!this.isCreator"
+            [tooltip]="voteTemplate" container="body" (click)="toggleShowVoteSlider()">{{avgVote()}}</div>
+          <div class="fa fa-fw fa-arrow-down vote-thumb" [class.pointer]="!this.isCreator" [class.text-danger]="voteExists() && discussion.userRank < 50"
+            (click)="downvote()" placement="right" [tooltip]="voteTemplate" container="body"></div>
         </div>
         <div *ngIf="hasImage()" [ngClass]="{'col-sm-1 col-11': !isCard(),
         'col-sm-11': isCard()}">
@@ -60,11 +64,12 @@
                 <span *ngIf="!discussion.nsfw">mark as nsfw</span>
               </li>
               <li role="button" *ngIf="(isModerator)" (click)="toggleSticky()" class="list-inline-item pointer">
-                  <span *ngIf="discussion.stickied">unsticky</span>
-                  <span *ngIf="!discussion.stickied">make sticky</span>
+                <span *ngIf="discussion.stickied">unsticky</span>
+                <span *ngIf="!discussion.stickied">make sticky</span>
               </li>
               <li *ngIf="discussion.numberOfComments" class="list-inline-item" role="button">
-                <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">{{discussion.numberOfComments}} comments
+                <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">{{discussion.numberOfComments}}
+                  comments
                 </a>
               </li>
               <li *ngIf="discussion.link" class="list-inline-item">
@@ -112,8 +117,9 @@
         <div class="form-group row">
           <label class="col-sm-2 form-control-label">Link</label>
           <div class="col-sm-10">
-            <input [(ngModel)]="discussion.link" #discussionLink="ngModel" placeholder="optional" class="form-control" pattern="[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?"
-              name="discussion_link" autocomplete="off" />
+            <input [(ngModel)]="discussion.link" #discussionLink="ngModel" placeholder="optional" class="form-control"
+              pattern="[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?" name="discussion_link"
+              autocomplete="off" />
             <div *ngIf="discussionLink.dirty" class="row col-sm-12 help-block text-danger">
               <small *ngIf="discussionLink.errors?.pattern">Invalid URL</small>
             </div>
@@ -122,8 +128,9 @@
         <div class="form-group row">
           <label class="col-sm-2 form-control-label">Community</label>
           <div class="col-sm-4">
-            <input [(ngModel)]="communitySearchSelected" [typeahead]="communitySearchResultsObservable" (typeaheadOnSelect)="communityTypeaheadOnSelect($event.item)"
-              [typeaheadOptionField]="'name'" (typeaheadLoading)="communityChangeTypeaheadLoading($event)" (typeaheadNoResults)="communityChangeTypeaheadNoResults($event)"
+            <input [(ngModel)]="communitySearchSelected" [typeahead]="communitySearchResultsObservable"
+              (typeaheadOnSelect)="communityTypeaheadOnSelect($event.item)" [typeaheadOptionField]="'name'"
+              (typeaheadLoading)="communityChangeTypeaheadLoading($event)" (typeaheadNoResults)="communityChangeTypeaheadNoResults($event)"
               [typeaheadWaitMs]="200" class="form-control" autocomplete="off" name="community_search">
             <div *ngIf="communityTypeaheadLoading===true">
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
@@ -145,7 +152,8 @@
         </div>
         <div class="checkbox">
           <label>
-            <input [disabled]="discussion.community.nsfw" [(ngModel)]="discussion.nsfw" type="checkbox" name="discussion_nsfw" /> NSFW
+            <input [disabled]="discussion.community.nsfw" [(ngModel)]="discussion.nsfw" type="checkbox" name="discussion_nsfw" />
+            NSFW
           </label>
         </div>
         <app-markdown-edit [focus]="false" [inputText]="discussion.text" (textEvent)="setEditText($event)"></app-markdown-edit>
@@ -154,9 +162,9 @@
           <label class="col-sm-2 form-control-label">Tags</label>
           <div class="col-sm-4 input-group">
             <input [(ngModel)]="tagSearchSelected" [typeahead]="tagSearchResultsObservable" (typeaheadOnSelect)="tagTypeaheadOnSelect($event.item)"
-              [typeaheadOptionField]="'name'" (typeaheadLoading)="tagChangeTypeaheadLoading($event)" (typeaheadNoResults)="tagChangeTypeaheadNoResults($event)"
-              [typeaheadWaitMs]="200" class="form-control" minlength="5" maxlength="20" pattern="[a-zA-Z0-9_-]+" name="tag_search"
-              #tagTerm="ngModel" autocomplete="off">
+              [typeaheadOptionField]="'name'" (typeaheadLoading)="tagChangeTypeaheadLoading($event)"
+              (typeaheadNoResults)="tagChangeTypeaheadNoResults($event)" [typeaheadWaitMs]="200" class="form-control"
+              minlength="5" maxlength="20" pattern="[a-zA-Z0-9_-]+" name="tag_search" #tagTerm="ngModel" autocomplete="off">
             <button [disabled]="tagSearchSelected.length < 5 || tagSearchSelected.length > 20 || rgex.test(tagSearchSelected) == false"
               (click)="createTag()" class="input-group-addon btn btn-outline-primary">
               <i class="fa fa-fw fa-plus"></i>
@@ -189,8 +197,9 @@
           <label class="col-sm-2 form-control-label">Invite Users</label>
           <div class="col-sm-4">
             <input [(ngModel)]="userSearchSelected" [typeahead]="userSearchResultsObservable" (typeaheadOnSelect)="userTypeaheadOnSelect($event.item)"
-              [typeaheadOptionField]="'name'" (typeaheadLoading)="userChangeTypeaheadLoading($event)" (typeaheadNoResults)="userChangeTypeaheadNoResults($event)"
-              [typeaheadWaitMs]="200" class="form-control" autocomplete="off" name="user_search">
+              [typeaheadOptionField]="'name'" (typeaheadLoading)="userChangeTypeaheadLoading($event)"
+              (typeaheadNoResults)="userChangeTypeaheadNoResults($event)" [typeaheadWaitMs]="200" class="form-control"
+              autocomplete="off" name="user_search">
             <div *ngIf="userTypeaheadLoading===true">
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
             </div>
@@ -209,8 +218,9 @@
         <div class="form-group row">
           <label class="col-sm-2 form-control-label">Block Users</label>
           <div class="col-sm-4">
-            <input [(ngModel)]="blockedUserSearchSelected" [typeahead]="blockedUserSearchResultsObservable" (typeaheadOnSelect)="blockedUserTypeaheadOnSelect($event.item)"
-              [typeaheadOptionField]="'name'" (typeaheadLoading)="blockedUserChangeTypeaheadLoading($event)" (typeaheadNoResults)="blockedUserChangeTypeaheadNoResults($event)"
+            <input [(ngModel)]="blockedUserSearchSelected" [typeahead]="blockedUserSearchResultsObservable"
+              (typeaheadOnSelect)="blockedUserTypeaheadOnSelect($event.item)" [typeaheadOptionField]="'name'"
+              (typeaheadLoading)="blockedUserChangeTypeaheadLoading($event)" (typeaheadNoResults)="blockedUserChangeTypeaheadNoResults($event)"
               [typeaheadWaitMs]="200" class="form-control" autocomplete="off" name="block_user_search">
             <div *ngIf="blockedUserTypeaheadLoading===true">
               <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>

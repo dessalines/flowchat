@@ -2,3 +2,4 @@
 service/src/main/resources/dist/
 service/flowchat.properties
 service/flowchat.db.changelog-master.xml
+.vscode/
