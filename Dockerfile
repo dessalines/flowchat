@@ -2,9 +2,9 @@
 FROM node:9 as node-builder
 
 # Hacky workaround for installing @angular/cli
-RUN chmod a+w /usr/local/lib/node_modules && chmod a+w /usr/local/bin
-USER node
-RUN npm i -g @angular/cli@latest
+# RUN chmod a+w /usr/local/lib/node_modules && chmod a+w /usr/local/bin
+# USER node
+# RUN npm i -g @angular/cli@latest
 
 # Build front end resources
 USER root
@@ -17,7 +17,7 @@ RUN echo "ENDPOINT_NAME is ${ENDPOINT_NAME}"
 RUN echo "export const environment = {production: true,endpoint: '${ENDPOINT_NAME}/',websocket: 'ws`echo ${ENDPOINT_NAME}|cut -b 5-999`/poll'};" > src/environments/environment.prod.ts
 RUN cat src/environments/environment.prod.ts
 RUN yarn
-RUN ng build --prod --aot
+RUN yarn build --prod --aot
 
 
 FROM maven:3.5-jdk-8 as java-builder
