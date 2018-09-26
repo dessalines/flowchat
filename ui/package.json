@@ -4,7 +4,10 @@
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
+    "prestart": "ts-node git.version.ts",
     "start": "ng serve",
+    "prebuild": "ts-node git.version.ts",
+    "build": "ng build",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test",
     "pree2e": "webdriver-manager update",
@@ -58,7 +61,7 @@
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "^5.3.2",
-    "ts-node": "~2.0.0",
+    "ts-node": "^7.0.1",
     "tslint": "~4.5.0",
     "typescript": "2.7.2"
   }

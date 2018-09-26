@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { ToasterService } from 'angular2-toaster';
+import { versions } from 'environments/versions';
 
 declare var Favico: any;
 
@@ -34,6 +35,8 @@ export class NavbarComponent implements OnInit {
   public favIcon: any;
 
   public collapseNavbar: boolean = true;
+
+  public version: string = JSON.stringify(versions, null, 2);
 
   constructor(public userService: UserService,
     private loginService: LoginService,

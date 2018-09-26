@@ -6,7 +6,7 @@ services:
 before_install:
 - psql -c "create user flowchat with password 'asdf' superuser" -U postgres
 - psql -c 'create database flowchat;' -U postgres
-- cd ui; npm i -g @angular/cli; yarn; ng build --prod --aot;
+- cd ui; yarn; yarn build --prod --aot;
 - cp -R dist/ ../service/src/main/resources
 - cd ../service
 - echo -e 'jdbc.url=jdbc\:postgresql\://127.0.0.1/flowchat\njdbc.username=flowchat\njdbc.password=asdf\nsorting_created_weight=86400\nsorting_number_of_votes_weight=0.001\nsorting_avg_rank_weight=0.01\nreddit_client_id=\nreddit_client_secret=\nreddit_username=\nreddit_password='>flowchat.properties
