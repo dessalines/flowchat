@@ -15,4 +15,3 @@ export * from './tag';
 export * from './user';
 export * from './onboard-alert';
 export * from './login-modal';
-export * from './new-user-modal';
