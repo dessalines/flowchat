@@ -333,7 +333,12 @@ export class DiscussionCardComponent implements OnInit {
   }
 
   shortenedDiscussionLink(): string {
-    return new URL(this.discussion.link).hostname;
+    try {
+      return new URL(this.discussion.link).hostname;
+    } catch(e) {
+      return new URL("https://lmgtfy.com").hostname;
+    }
+    
   }
 
   voteHtml() {
