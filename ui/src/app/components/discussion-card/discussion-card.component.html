@@ -6,9 +6,9 @@
         <ng-template #voteTemplate>
           <div [innerHtml]="voteHtml()"></div>
         </ng-template>
-        <div class="px-1 col-sm-1 col-1 text-center vote-width" [class.disabled-pointer]="this.isCreator" [class.pointer]="!this.isCreator" placement="right" [tooltip]="voteTemplate" container="body">
-          <div class="fa fa-fw fa-arrow-up vote-thumb" [class.text-success]="discussion.userRank > 50"
-            (click)="upvote()"></div>
+        <div class="px-1 col-sm-1 col-1 text-center vote-width" [class.disabled-pointer]="this.isCreator"
+          [class.pointer]="!this.isCreator" placement="right" [tooltip]="voteTemplate" container="body">
+          <div class="fa fa-fw fa-arrow-up vote-thumb" [class.text-success]="discussion.userRank > 50" (click)="upvote()"></div>
           <div class="vote-number" (click)="toggleShowVoteSlider()">{{avgVote()}}</div>
           <div class="fa fa-fw fa-arrow-down vote-thumb" [class.text-danger]="voteExists() && discussion.userRank < 50"
             (click)="downvote()"></div>
@@ -24,6 +24,11 @@
         'card-body-no-bottom': isCard()}">
             <h5 [class.card-title]="isCard()" class="card-body-no-bottom">
               <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">{{discussion.title}} </a>
+              <small *ngIf="discussion.link && !hasImage()" class="text-muted h6 ml-1">
+                <a href="{{discussion.link}}" target="_blank" class="link-unstyled">
+                  <span aria-hidden="true" placement="bottom" tooltip="{{discussion.link}}">({{shortenedDiscussionLink()}})</span>
+                </a>
+              </small>
             </h5>
           </div>
 
@@ -66,14 +71,10 @@
                 <span *ngIf="discussion.stickied">unsticky</span>
                 <span *ngIf="!discussion.stickied">make sticky</span>
               </li>
-              <li *ngIf="discussion.numberOfComments" class="list-inline-item" role="button">
-                <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">{{discussion.numberOfComments}}
+              <li class="list-inline-item" role="button">
+                <a [routerLink]="['/discussion', discussion.id]" class="link-unstyled">
+                  <span *ngIf="discussion.numberOfComments > 1">{{discussion.numberOfComments}}</span>
                   comments
-                </a>
-              </li>
-              <li *ngIf="discussion.link" class="list-inline-item">
-                <a href="{{discussion.link}}" target="_blank" class="link-unstyled">
-                  <span aria-hidden="true" placement="bottom" tooltip="{{discussion.link}}">{{shortenedDiscussionLink()}}</span>
                 </a>
               </li>
             </ul>
