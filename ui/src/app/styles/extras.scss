@@ -2,6 +2,10 @@
   cursor: pointer;
 }
 
+.disabled-pointer {
+  cursor: not-allowed;
+}
+
 .link-unstyled, .link-unstyled:link {
   color: inherit;
   text-decoration: inherit;

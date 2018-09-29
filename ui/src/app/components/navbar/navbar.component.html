@@ -98,5 +98,4 @@
     </ul>
   </div>
 </nav>
-<app-new-user-modal></app-new-user-modal>
-<app-login-modal *ngIf="showLoginModal" (hideEvent)="hiddenEvent()"></app-login-modal>
+<app-login-modal [show]="showLoginModal" (hideEvent)="hiddenEvent()"></app-login-modal>

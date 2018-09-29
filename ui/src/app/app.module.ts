@@ -25,8 +25,7 @@ import {
   FooterComponent,
   MarkdownEditComponent,
   OnboardAlertComponent,
-  LoginModalComponent,
-  NewUserModalComponent
+  LoginModalComponent
 } from './components';
 import {
   MomentPipe,
@@ -75,7 +74,6 @@ window['imagesLoaded'] = require('imagesloaded');
     MarkdownEditComponent,
     OnboardAlertComponent,
     LoginModalComponent,
-    NewUserModalComponent,
 
     // Pipes
     MomentPipe,

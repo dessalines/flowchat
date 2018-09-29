@@ -21,6 +21,7 @@ export class LoginModalComponent implements OnInit {
   public login: Login = {};
 
   @ViewChild('loginModal') private loginModal: ModalDirective;
+  @Input() show: boolean;
   @Output() hideEvent = new EventEmitter();
 
   constructor(public userService: UserService,
@@ -32,11 +33,15 @@ export class LoginModalComponent implements OnInit {
 
     this.loginModal.onShown.subscribe(() => document.getElementById("login-input").focus());
 
-    setTimeout(() => {
-      this.loginModal.show();
-      // document.getElementById("login-input").focus()
-    }, 100);
+    // Create a new user if there is none
+    if (this.userService.getUser() == null) {
+      this.createNewUser();
+    }
 
+  }
+
+  ngOnChanges() {
+    this.showModal();
   }
 
   signupSubmit() {
@@ -72,9 +77,30 @@ export class LoginModalComponent implements OnInit {
         });
   }
 
+  showModal() {
+    if (this.show) {
+      this.loginModal.show();
+      this.show = false;
+    }
+  }
+
   hiddenEvent() {
     this.hideEvent.next(true);
   }
+
+  createNewUser() {
+    let obs: Observable<string> = this.userService.createAnonymousUser();
+    obs.subscribe(rJWT => {
+      Tools.createCookie('jwt', rJWT, 9999);
+      this.userService.setUserFromCookie();
+    },
+      error => {
+        console.error(error);
+        this.toasterService.pop("error", error._body);
+      });
+  }
+
+
 
 }
 

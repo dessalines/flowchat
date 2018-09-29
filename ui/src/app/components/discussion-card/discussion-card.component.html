@@ -3,24 +3,23 @@
   <div *ngIf="!discussion.deleted">
     <div *ngIf="!editing">
       <div class="row">
-        <div class="px-1 col-sm-1 col-1 text-center vote-width">
-          <ng-template #voteTemplate>
-            <div [innerHtml]="voteHtml()"></div>
-          </ng-template>
-          <div class="fa fa-fw fa-arrow-up vote-thumb" [class.pointer]="!this.isCreator" [class.text-success]="discussion.userRank > 50"
-            (click)="upvote()" placement="right" [tooltip]="voteTemplate" container="body"></div>
-          <div class="pointer vote-number" placement="bottom" placement="right" [class.pointer]="!this.isCreator"
-            [tooltip]="voteTemplate" container="body" (click)="toggleShowVoteSlider()">{{avgVote()}}</div>
-          <div class="fa fa-fw fa-arrow-down vote-thumb" [class.pointer]="!this.isCreator" [class.text-danger]="voteExists() && discussion.userRank < 50"
-            (click)="downvote()" placement="right" [tooltip]="voteTemplate" container="body"></div>
+        <ng-template #voteTemplate>
+          <div [innerHtml]="voteHtml()"></div>
+        </ng-template>
+        <div class="px-1 col-sm-1 col-1 text-center vote-width" [class.disabled-pointer]="this.isCreator" [class.pointer]="!this.isCreator" placement="right" [tooltip]="voteTemplate" container="body">
+          <div class="fa fa-fw fa-arrow-up vote-thumb" [class.text-success]="discussion.userRank > 50"
+            (click)="upvote()"></div>
+          <div class="vote-number" (click)="toggleShowVoteSlider()">{{avgVote()}}</div>
+          <div class="fa fa-fw fa-arrow-down vote-thumb" [class.text-danger]="voteExists() && discussion.userRank < 50"
+            (click)="downvote()"></div>
         </div>
         <div *ngIf="hasImage()" [ngClass]="{'col-sm-1 col-11': !isCard(),
         'col-sm-11': isCard()}">
           <div [innerHTML]="discussion.link | markdown:true"></div>
         </div>
         <div [ngClass]="{'col-sm-10': hasImage() && !isCard(),
-          'col-sm-12': isCard() ,
-         'col-sm-11': !hasImage() && !isCard()}">
+          'col-sm-12': hasImage() && isCard(),
+          'col-sm-11': !hasImage()}">
           <div [ngClass]="{
         'card-body-no-bottom': isCard()}">
             <h5 [class.card-title]="isCard()" class="card-body-no-bottom">
