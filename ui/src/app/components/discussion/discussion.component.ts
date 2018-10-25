@@ -86,9 +86,6 @@ export class DiscussionComponent implements OnInit {
 
 
           this.subscribeToChat();
-          this.subscribeToUserServiceWatcher();
-          this.websocketCloseWatcher();
-
           this.subscribeToDiscussion();
         }
       });
@@ -99,7 +96,6 @@ export class DiscussionComponent implements OnInit {
 
   ngOnDestroy() {
     this.unloadSubscriptions();
-    this.sub.unsubscribe();
   }
 
   editingChanged($event) {
@@ -111,28 +107,19 @@ export class DiscussionComponent implements OnInit {
   }
 
   unloadSubscriptions() {
-    this.websocketSoftClose = true;
-    if (this.userServiceWatcher != null) {
-      this.scrollDebounce = 0;
-      this.currentTopLimit = 20;
-      this.threadedChatService.ws.close(true);
-      this.userServiceWatcher.unsubscribe();
-      this.threadedChatSubscription.unsubscribe();
-      // this.threadedChatService = null;
-      this.discussionSubscription.unsubscribe();
-      // this.sub.unsubscribe();
-    }
-  }
+    // this.websocketSoftClose = true;
+    this.scrollDebounce = 0;
+    this.currentTopLimit = 20;
+    this.threadedChatService.ws.close(true);
+    // this.userServiceWatcher.unsubscribe();
+    this.threadedChatSubscription.unsubscribe();
 
-  subscribeToUserServiceWatcher() {
-    this.userServiceWatcher = this.userService.userObservable.subscribe(res => {
-      if (res != null) {
-        this.threadedChatService.ws.close(true);
-        this.threadedChatSubscription.unsubscribe();
-        this.threadedChatService.reconnect();
-        this.subscribeToChat();
-      }
-    });
+    this.discussionSubscription.unsubscribe();
+    this.sub.unsubscribe();
+    this.threadedChatService.ws.close(true);
+    this.threadedChatService = null;
+    clearInterval(this.websocketCloseWatcher);
+
   }
 
   subscribeToChat() {
@@ -156,16 +143,12 @@ export class DiscussionComponent implements OnInit {
         });
   }
 
-  websocketCloseWatcher() {
-    // check every 5 seconds for websocket disconnect status
-    setInterval(() => {
-
-      if (this.threadedChatService.ws.getReadyState() != 1) {
-        this.websocketReconnect();
-      }
-    }, 5000);
-
-  }
+  websocketCloseWatcher = setInterval(() => {
+    // check every 5 seconds for websocket disconnect 
+    if (this.threadedChatService.ws.getReadyState() != 1) {
+      this.websocketReconnect();
+    }
+  }, 5000);
 
   websocketReconnect() {
     this.threadedChatService.connect(this.discussionId, this.topParentId, this.userService.getUserSettings().defaultCommentSortTypeRadioValue);
@@ -212,6 +195,10 @@ export class DiscussionComponent implements OnInit {
 
     if (data.discussion) {
       this.userService.pushToFavoriteDiscussions(data.discussion);
+    }
+
+    if (data.ping) {
+      this.sendPong();
     }
 
   }
@@ -401,6 +388,11 @@ export class DiscussionComponent implements OnInit {
     this.unloadSubscriptions();
     this.comments = undefined;
     this.websocketReconnect();
+  }
+
+  sendPong() {
+    console.debug("Received ping, sending pong");
+    this.threadedChatService.send("{\"pong\":\"pong\"}");
   }
 
 }
