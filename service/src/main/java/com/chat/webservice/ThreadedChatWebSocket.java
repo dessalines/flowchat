@@ -40,6 +40,8 @@ public class ThreadedChatWebSocket {
 
   static Set<SessionScope> sessionScopes = new HashSet<>();
 
+  private static final Integer PING_DELAY = 10000;
+
   public ThreadedChatWebSocket() {
   }
 
@@ -51,6 +53,8 @@ public class ThreadedChatWebSocket {
 
       // Get or create the session scope
       SessionScope ss = setupSessionScope(session);
+
+      sendRecurringPings(session);
 
       // Send them their user info
       session.getRemote().sendString(ss.getUserObj().json("user"));
@@ -123,6 +127,9 @@ public class ThreadedChatWebSocket {
       case NextPage:
         messageNextPage(session, dataStr);
         break;
+      case Pong:
+        pongReceived(session);
+        break;
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -156,6 +163,8 @@ public class ThreadedChatWebSocket {
           return MessageType.Delete;
         case "topLimit":
           return MessageType.NextPage;
+        case "pong":
+          return MessageType.Pong;
         }
       }
     } catch (IOException e) {
@@ -166,7 +175,7 @@ public class ThreadedChatWebSocket {
   }
 
   enum MessageType {
-    Edit, Reply, TopReply, Vote, Delete, NextPage, Sticky;
+    Edit, Reply, TopReply, Vote, Delete, NextPage, Sticky, Ping, Pong;
   }
 
   public void messageNextPage(Session session, String nextPageDataStr) {
@@ -402,6 +411,27 @@ public class ThreadedChatWebSocket {
       map.put(rank.getLong("comment_id"), rank.getInteger("rank"));
     }
     return map;
+  }
+
+   private void sendRecurringPings(Session session) {
+    final Timer timer = new Timer();
+    final TimerTask tt = new TimerTask() {
+      @Override
+      public void run() {
+        if (session.isOpen()) {
+          sendMessage(session, "{\"ping\":\"ping\"}");
+        } else {
+          timer.cancel();
+          timer.purge();
+        }
+      }
+    };
+
+    timer.scheduleAtFixedRate(tt, PING_DELAY, PING_DELAY);
+  }
+
+  private void pongReceived(Session session) {
+    log.info("Pong received from " + session.getRemoteAddress());
   }
 
 }
