@@ -3,4 +3,9 @@ export interface UserSettings {
 	defaultSortTypeRadioValue: string;
 	defaultCommentSortTypeRadioValue: string;
 	readOnboardAlert: boolean;
+	theme: Theme;
+}
+
+export enum Theme {
+	Dark, Light
 }

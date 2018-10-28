@@ -1,6 +1,6 @@
 export { Comment } from './comment.interface';
 export { User } from './user.interface';
-export { UserSettings } from './user-settings.interface';
+export { UserSettings, Theme } from './user-settings.interface';
 export { Tag } from './tag.interface';
 export { Discussion } from './discussion.interface';
 export { Discussions } from './discussions.interface';

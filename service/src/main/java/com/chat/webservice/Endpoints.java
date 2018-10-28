@@ -178,7 +178,7 @@ public class Endpoints {
       Map<String, String> vars = Tools.createMapFromReqBody(req.body());
       Actions.saveUserSettings(userObj.getId(), vars.get("defaultViewTypeRadioValue"),
           vars.get("defaultSortTypeRadioValue"), vars.get("defaultCommentSortTypeRadioValue"),
-          Boolean.valueOf(vars.get("readOnboardAlert")));
+          Boolean.valueOf(vars.get("readOnboardAlert")), Integer.valueOf(vars.get("theme")));
 
       res.status(HttpStatus.OK_200);
 

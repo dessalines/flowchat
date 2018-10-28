@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { LoginService, UserService, DiscussionService, CommunityService, NotificationsService } from '../../services';
-import { User, Discussion, Comment, Tools } from '../../shared';
+import { User, Discussion, Comment, Tools, Theme } from '../../shared';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs/Rx';
 import { ToasterService } from 'angular2-toaster';
@@ -164,15 +164,26 @@ export class NavbarComponent implements OnInit {
   toggleLoginModal() {
     this.showLoginModal = true;
   }
-  
+
   hiddenEvent() {
     this.showLoginModal = false;
   }
 
-	logout() {
-		Tools.eraseCookie('jwt');
-		location.reload();
-	}
+  logout() {
+    Tools.eraseCookie('jwt');
+    location.reload();
+  }
+
+  changeTheme() {
+
+    // Toggle the theme, save the new one.
+    let newTheme: Theme = (this.userService.getUserSettings().theme == Theme.Light) ? Theme.Dark :  Theme.Light;
+    this.userService.getUserSettings().theme = newTheme;
+    this.userService.saveUserSettings();
+
+    // Tools.applyTheme(newTheme);
+    location.reload();
+  }
 
 }
 

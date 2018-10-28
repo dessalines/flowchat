@@ -40,6 +40,7 @@ import com.chat.types.discussion.DiscussionRole;
 import com.chat.types.tag.Tag;
 import com.chat.types.user.CommentSortType;
 import com.chat.types.user.SortType;
+import com.chat.types.user.Theme;
 import com.chat.types.user.User;
 import com.chat.types.user.ViewType;
 
@@ -118,7 +119,7 @@ public class Actions {
   }
 
   public static void saveUserSettings(Long userId, String defaultViewTypeRadioValue, String defaultSortTypeRadioValue, String defaultCommentSortTypeRadioValue,
-      Boolean readOnboardAlert) {
+      Boolean readOnboardAlert, Integer theme) {
 
     UserSetting us = UserSetting.findFirst("user_id = ?", userId);
 
@@ -130,6 +131,8 @@ public class Actions {
       us.setInteger("default_comment_sort_type_id", CommentSortType.getFromRadioValue(defaultCommentSortTypeRadioValue).getVal());
     if (readOnboardAlert != null)
       us.setBoolean("read_onboard_alert", readOnboardAlert);
+    if (theme != null) 
+      us.setInteger("theme", theme);
 
     us.saveIt();
   }

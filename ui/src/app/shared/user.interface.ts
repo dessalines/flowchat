@@ -1,4 +1,4 @@
-import {UserSettings} from './user-settings.interface';
+import { UserSettings } from './user-settings.interface';
 
 export interface User {
   id: number;

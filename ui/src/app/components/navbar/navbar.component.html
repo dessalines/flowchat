@@ -1,4 +1,4 @@
-<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+<nav class="navbar navbar-dark bg-dark navbar-expand-xl">
 
   <button (click)="toggleCollapseNavbar()" class="navbar-toggler navbar-toggler-right" type="button">
     <span class="navbar-toggler-icon"></span>
@@ -9,9 +9,10 @@
     <ul class="navbar-nav">
       <form [formGroup]="discussionSearchForm" class="form-inline">
         <input formControlName="discussionSearchControl" [(ngModel)]="discussionSearchSelected" [typeahead]="discussionSearchResultsObservable"
-          (typeaheadOnSelect)="discussionTypeaheadOnSelect($event.item)" [typeaheadOptionField]="'title'" (typeaheadLoading)="discussionChangeTypeaheadLoading($event)"
-          (typeaheadNoResults)="discussionChangeTypeaheadNoResults($event)" [typeaheadWaitMs]="200" class="form-control mr-sm-2"
-          type="text" placeholder="Search" name="discussion_form" autocomplete="off">
+          (typeaheadOnSelect)="discussionTypeaheadOnSelect($event.item)" [typeaheadOptionField]="'title'"
+          (typeaheadLoading)="discussionChangeTypeaheadLoading($event)" (typeaheadNoResults)="discussionChangeTypeaheadNoResults($event)"
+          [typeaheadWaitMs]="200" class="form-control mr-sm-2" type="text" placeholder="Search" name="discussion_form"
+          autocomplete="off">
       </form>
     </ul>
     <ul class="navbar-nav ml-2 mr-auto">
@@ -34,6 +35,11 @@
           target="_blank">
           donate
         </a>
+      </li>
+      <li class="nav-item">
+        <button class="btn btn-outline-primary" (click)="changeTheme()" placement="bottom" tooltip="Change theme">
+          <i class="fa fa-fw fa-paint-brush"></i>
+        </button>
       </li>
     </ul>
     <ul *ngIf="userService.getUser()" class="nav navbar-nav my-lg-0">
