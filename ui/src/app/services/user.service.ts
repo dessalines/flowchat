@@ -5,6 +5,7 @@ import { Observable, Subscription, BehaviorSubject } from 'rxjs/Rx';
 import { environment } from '../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { ToasterService } from 'angular2-toaster';
+import { Theme } from '../shared/user-settings.interface';
 
 @Injectable()
 export class UserService {
@@ -35,7 +36,8 @@ export class UserService {
     defaultViewTypeRadioValue: 'card',
     defaultSortTypeRadioValue: 'time-86400',
     defaultCommentSortTypeRadioValue: 'new',
-    readOnboardAlert: false
+    readOnboardAlert: false,
+    theme: Theme.Dark
   }
 
   constructor(private http: Http) {
@@ -231,12 +233,16 @@ export class UserService {
 
   fetchUserSettings() {
     this.fetchUserSettingsObs().subscribe(d => {
-
       this.user.settings = {
         defaultSortTypeRadioValue: d["defaultSortTypeRadioValue"],
         defaultViewTypeRadioValue: d["defaultViewTypeRadioValue"],
         defaultCommentSortTypeRadioValue: d["defaultCommentSortTypeRadioValue"],
-        readOnboardAlert: d["readOnboardAlert"]
+        readOnboardAlert: d["readOnboardAlert"],
+        theme: Theme[Theme[d["theme"]]]
+      }
+      
+      if (this.user.settings.theme == Theme.Light) {
+        Tools.applyTheme(Theme.Light);
       }
       this.sendLoginEvent();
     },

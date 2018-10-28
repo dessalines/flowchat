@@ -431,7 +431,7 @@ public class ThreadedChatWebSocket {
   }
 
   private void pongReceived(Session session) {
-    log.info("Pong received from " + session.getRemoteAddress());
+    log.debug("Pong received from " + session.getRemoteAddress());
   }
 
 }
