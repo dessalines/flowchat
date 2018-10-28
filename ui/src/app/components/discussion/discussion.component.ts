@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs/Rx';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { ThreadedChatService, DiscussionService, UserService } from '../../services';

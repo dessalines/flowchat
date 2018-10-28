@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild, Output, EventEmitter, Input } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Rx';
 import { LoginService, UserService, DiscussionService, CommunityService, NotificationsService } from '../../services';
 import { User, Discussion, Comment, Tools } from '../../shared';
 import { Router } from '@angular/router';
 import { ToasterService } from 'angular2-toaster';
-
 
 @Component({
   selector: 'app-login-modal',

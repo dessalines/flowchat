@@ -1,16 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/observable/interval';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/mergeMap';
+import { Observable } from 'rxjs/Rx';
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
-import {UserService} from './user.service';
-import {Comment} from '../shared/comment.interface';
-import {environment} from '../../environments/environment';
+import { UserService } from './user.service';
+import { Comment } from '../shared/comment.interface';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class NotificationsService {

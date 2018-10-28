@@ -4,13 +4,7 @@ import { Discussion, Tag, User, Community, Tools } from '../../shared';
 import { UserService, DiscussionService, CommunityService, TagService } from '../../services';
 import { Router } from '@angular/router';
 import { ToasterService } from 'angular2-toaster/angular2-toaster';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
-
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/switchMap';
-
+import { Observable } from 'rxjs/Rx';
 
 @Component({
   selector: 'app-discussion-card',
@@ -335,10 +329,10 @@ export class DiscussionCardComponent implements OnInit {
   shortenedDiscussionLink(): string {
     try {
       return new URL(this.discussion.link).hostname;
-    } catch(e) {
+    } catch (e) {
       return new URL("https://lmgtfy.com").hostname;
     }
-    
+
   }
 
   voteHtml() {
