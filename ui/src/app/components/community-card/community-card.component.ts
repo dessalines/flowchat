@@ -1,15 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import { FormGroup, FormControl} from '@angular/forms';
-import {Router, ActivatedRoute} from '@angular/router';
-import {Community, Tag, User, Tools} from '../../shared';
-import {UserService, CommunityService, TagService} from '../../services';
-import {ToasterService} from 'angular2-toaster/angular2-toaster';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
-
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/switchMap';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Community, Tag, User, Tools } from '../../shared';
+import { UserService, CommunityService, TagService } from '../../services';
+import { ToasterService } from 'angular2-toaster/angular2-toaster';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
 
@@ -78,7 +73,7 @@ export class CommunityCardComponent implements OnInit {
 
   ngOnChanges() {
     this.refresh = false;
-    setTimeout(() => this.refresh = true,0);
+    setTimeout(() => this.refresh = true, 0);
     this.setPermissions();
   }
 

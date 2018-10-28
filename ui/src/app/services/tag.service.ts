@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
+import { Observable } from 'rxjs/Rx';
 import { Http, Response } from '@angular/http';
-import {environment} from '../../environments/environment';
-import {Tag} from '../shared';
+import { environment } from '../../environments/environment';
+import { Tag } from '../shared';
 
 @Injectable()
 export class TagService {
@@ -19,7 +16,7 @@ export class TagService {
       limit + '/' + page + '/' + orderBy;
   }
 
-  constructor(private http: Http) {}
+  constructor(private http: Http) { }
 
   getTag(id: number): Observable<Tag> {
     return this.http.get(this.getTagUrl + id)
@@ -43,7 +40,7 @@ export class TagService {
   }
 
   getPopularTags(limit: number = 10, page: number = 1,
-    orderBy: string = 'time-86400'): Observable<Array<Tag>>{
+    orderBy: string = 'time-86400'): Observable<Array<Tag>> {
     return this.http.get(this.getPopularTagsUrl(limit, page, orderBy))
       .map(r => r.json())
       .catch(this.handleError);

@@ -15,15 +15,15 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^6.1.9",
-    "@angular/common": "^6.1.9",
-    "@angular/compiler": "^6.1.9",
-    "@angular/core": "^6.1.9",
-    "@angular/forms": "^6.1.9",
-    "@angular/http": "^6.1.9",
-    "@angular/platform-browser": "^6.1.9",
-    "@angular/platform-browser-dynamic": "^6.1.9",
-    "@angular/router": "^6.1.9",
+    "@angular/animations": "^7.0.1",
+    "@angular/common": "^7.0.1",
+    "@angular/compiler": "^7.0.1",
+    "@angular/core": "^7.0.1",
+    "@angular/forms": "^7.0.1",
+    "@angular/http": "^7.0.1",
+    "@angular/platform-browser": "^7.0.1",
+    "@angular/platform-browser-dynamic": "^7.0.1",
+    "@angular/router": "^7.0.1",
     "@auth0/angular-jwt": "^2.0.0",
     "angular2-toaster": "^6.1.0",
     "autosize": "^3.0.15",
@@ -34,10 +34,10 @@
     "imagesloaded": "^4.1.4",
     "markdown-it": "^8.3.1",
     "markdown-it-emoji": "^1.2.0",
+    "masonry-layout": "^4.2.1",
     "moment": "^2.17.1",
     "ngx-bootstrap": "^3.0.1",
     "ngx-masonry": "^1.1.2",
-    "masonry-layout": "^4.2.1",
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.1.0",
     "ts-helpers": "^1.1.1",
@@ -45,9 +45,9 @@
     "zooming": "^1.4.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.6.1",
-    "@angular/cli": "^6.2.3",
-    "@angular/compiler-cli": "^6.1.9",
+    "@angular-devkit/build-angular": "~0.10.0",
+    "@angular/cli": "^7.0.3",
+    "@angular/compiler-cli": "^7.0.1",
     "@types/jasmine": "2.5.38",
     "@types/node": "~6.0.60",
     "codelyzer": "^4.4.4",
@@ -62,6 +62,6 @@
     "protractor": "^5.4.1",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
-    "typescript": "~2.7.0"
+    "typescript": "~3.1.3"
   }
 }

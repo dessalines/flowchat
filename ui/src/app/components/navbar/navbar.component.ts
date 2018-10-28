@@ -3,8 +3,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { LoginService, UserService, DiscussionService, CommunityService, NotificationsService } from '../../services';
 import { User, Discussion, Comment, Tools } from '../../shared';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
+import { Observable, Subject } from 'rxjs/Rx';
 import { ToasterService } from 'angular2-toaster';
 import { versions } from 'environments/versions';
 

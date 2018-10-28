@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { User, UserSettings, Discussion, Discussions, Tools, Community, Communities } from '../shared';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Headers, RequestOptions, Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
+import { Observable, Subscription, BehaviorSubject } from 'rxjs/Rx';
 import { environment } from '../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { ToasterService } from 'angular2-toaster';
@@ -16,7 +11,6 @@ export class UserService {
 
   private user: User;
   private jwtHelper: JwtHelperService = new JwtHelperService();
-
 
   private favoriteDiscussions: Array<Discussion> = [];
   private favoriteCommunities: Array<Community> = [];
