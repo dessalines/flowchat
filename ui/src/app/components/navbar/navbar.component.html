@@ -36,13 +36,13 @@
           donate
         </a>
       </li>
+    </ul>
+    <ul *ngIf="userService.getUser()" class="nav navbar-nav my-lg-0">
       <li class="nav-item">
-        <button class="btn btn-outline-primary" (click)="changeTheme()" placement="bottom" tooltip="Change theme">
+        <button class="btn btn-sm btn-outline-secondary mt-1" (click)="changeTheme()" placement="bottom" tooltip="Change theme">
           <i class="fa fa-fw fa-paint-brush"></i>
         </button>
       </li>
-    </ul>
-    <ul *ngIf="userService.getUser()" class="nav navbar-nav my-lg-0">
       <li dropdown class="nav-item" keyboardNav="true">
         <a class="nav-link pointer" role="button" type="button" dropdownToggle placement="bottom">
           <span *ngIf="unreadMessages?.length > 0" class="badge badge-info navbar-label ml-2">{{unreadMessages?.length}}</span>
