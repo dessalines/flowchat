@@ -1,39 +1,24 @@
 package com.chat.webservice;
 
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
+import static spark.Spark.init;
+import static spark.Spark.staticFiles;
+import static spark.Spark.webSocket;
+
+import java.io.File;
+
 import com.chat.DataSources;
-import com.chat.db.Actions;
-import com.chat.db.Transformations;
 import com.chat.scheduled.ScheduledJobs;
 import com.chat.tools.Tools;
-import com.chat.types.*;
-import liquibase.Contexts;
-import liquibase.Liquibase;
-import liquibase.database.Database;
-import liquibase.database.DatabaseFactory;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.exception.DatabaseException;
-import liquibase.exception.LiquibaseException;
-import liquibase.resource.FileSystemResourceAccessor;
-import liquibase.sdk.Context;
-import org.javalite.activejdbc.LazyList;
-import org.javalite.activejdbc.Paginator;
+
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import spark.Spark;
-
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.*;
-
-import static com.chat.db.Tables.*;
-import static spark.Spark.*;
 
 public class ChatService {
 

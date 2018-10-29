@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Comment, CommentRole, Discussion, Tools } from '../../shared';
+import { Comment, CommentRole, Discussion, Tools, MessageType } from '../../shared';
 import { UserService, ThreadedChatService } from '../../services';
 import * as moment from 'moment';
 
@@ -84,7 +84,7 @@ export class CommentComponent implements OnInit {
 
   sendMessage() {
 
-    this.threadedChatService.send(this.replyData());
+    this.threadedChatService.send(Tools.messageWrapper(MessageType.Reply, this.replyData()));
 
     this.showReply = false;
     this.replyingEvent.emit(this.showReply);
@@ -92,11 +92,11 @@ export class CommentComponent implements OnInit {
   }
 
   deleteComment() {
-    this.threadedChatService.send(this.deleteData());
+    this.threadedChatService.send(Tools.messageWrapper(MessageType.Delete, this.deleteData()));
   }
 
   editMessage() {
-    this.threadedChatService.send(this.editData());
+    this.threadedChatService.send(Tools.messageWrapper(MessageType.Edit, this.editData()));
     this.showEdit = false;
     this.replyingEvent.emit(this.showEdit);
   }
@@ -114,12 +114,12 @@ export class CommentComponent implements OnInit {
   saveRank($event) {
     this.rank = $event;
     this.showVoteSlider = false;
-    this.threadedChatService.send(this.commentRankData());
+    this.threadedChatService.send(Tools.messageWrapper(MessageType.Vote, this.commentRankData()));
   }
 
   toggleStickyComment() {
     this.comment.stickied = !this.comment.stickied;
-    this.threadedChatService.send(this.stickyData());
+    this.threadedChatService.send(Tools.messageWrapper(MessageType.Sticky, this.stickyData()));
   }
 
 

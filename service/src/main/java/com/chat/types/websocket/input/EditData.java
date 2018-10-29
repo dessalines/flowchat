@@ -17,24 +17,11 @@ public class EditData implements JSONWriter {
         this.edit = edit;
     }
 
-    public EditData() {}
-
     public Long getId() {
         return id;
     }
 
     public String getEdit() {
         return edit;
-    }
-
-    public static EditData fromJson(String editDataStr) {
-
-        try {
-            return Tools.JACKSON.readValue(editDataStr, EditData.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 }

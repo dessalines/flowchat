@@ -12,8 +12,6 @@ public class CommentRankData implements JSONWriter {
     private Integer rank;
     private Long commentId;
 
-    public CommentRankData() {}
-
     public CommentRankData(Integer rank, Long commentId) {
         this.rank = rank;
         this.commentId = commentId;
@@ -27,13 +25,4 @@ public class CommentRankData implements JSONWriter {
         return commentId;
     }
 
-    public static CommentRankData fromJson(String dataStr) {
-        try {
-            return Tools.JACKSON.readValue(dataStr, CommentRankData.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 }

@@ -1,6 +1,5 @@
 package com.chat.types.websocket.input;
 
-import com.chat.tools.Tools;
 import com.chat.types.JSONWriter;
 
 import java.io.IOException;
@@ -11,17 +10,9 @@ import java.io.IOException;
 public class NextPageData implements JSONWriter {
     private Long topLimit, maxDepth;
 
-    public NextPageData() {}
-
-    public static NextPageData fromJson(String nextPageDataStr) {
-
-        try {
-            return Tools.JACKSON.readValue(nextPageDataStr, NextPageData.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public NextPageData(Long topLimit, Long maxDepth) {
+        this.topLimit = topLimit;
+        this.maxDepth = maxDepth;
     }
 
     public Long getTopLimit() {

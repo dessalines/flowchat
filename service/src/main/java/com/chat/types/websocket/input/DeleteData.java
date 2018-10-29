@@ -15,20 +15,8 @@ public class DeleteData implements JSONWriter {
         this.deleteId = deleteId;
     }
 
-    public DeleteData() {}
-
     public Long getDeleteId() {
         return deleteId;
     }
-    
-    public static DeleteData fromJson(String deleteDataStr) {
 
-        try {
-            return Tools.JACKSON.readValue(deleteDataStr, DeleteData.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 }
