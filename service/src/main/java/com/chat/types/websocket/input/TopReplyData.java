@@ -15,22 +15,8 @@ public class TopReplyData implements JSONWriter {
         this.topReply = topReply;
     }
 
-    public TopReplyData() {}
-
-
-
     public String getTopReply() {
         return topReply;
     }
 
-    public static TopReplyData fromJson(String replyDataStr) {
-
-        try {
-            return Tools.JACKSON.readValue(replyDataStr, TopReplyData.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 }

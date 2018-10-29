@@ -4,10 +4,9 @@ import { Subscription } from 'rxjs/Rx';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { ThreadedChatService, DiscussionService, UserService } from '../../services';
-import { Comment, User, Discussion, Tag, CommentRole } from '../../shared';
+import { Comment, User, Discussion, Tag, CommentRole, MessageType, Tools } from '../../shared';
 import { MarkdownEditComponent } from '../markdown-edit/index';
 import { ToasterService } from 'angular2-toaster/angular2-toaster';
-
 
 @Component({
   selector: 'app-discussion',
@@ -66,7 +65,6 @@ export class DiscussionComponent implements OnInit {
 
   ngOnInit() {
 
-
     this.sub = this.route.params.subscribe(params => {
 
       this.userService.userObservable.subscribe(user => {
@@ -117,7 +115,7 @@ export class DiscussionComponent implements OnInit {
     this.discussionSubscription.unsubscribe();
     this.sub.unsubscribe();
     this.threadedChatService.ws.close(true);
-    this.threadedChatService = null;
+    // this.threadedChatService = null;
     clearInterval(this.websocketCloseWatcher);
 
   }
@@ -125,7 +123,7 @@ export class DiscussionComponent implements OnInit {
   subscribeToChat() {
     this.threadedChatSubscription = this.threadedChatService.ws.getDataStream().
       subscribe(res => {
-        this.updateThreadedChat(res.data);
+        this.update(res.data);
       });
   }
 
@@ -163,44 +161,44 @@ export class DiscussionComponent implements OnInit {
 
   // The replying mode should be event emitters pushed up to this top component,
   // not the specific one
-  updateThreadedChat(someData: string) {
-    let data = JSON.parse(someData);
 
-    if (data.comments) {
-      this.comments = data.comments;
+  update(dataStr: string) {
+    let msg = JSON.parse(dataStr);
+
+    switch (msg.message_type) {
+      case MessageType.Comments:
+        this.setComments(msg.data.comments);
+        break;
+      case MessageType.Users:
+        this.setUsers(msg.data.users);
+        break;
+      case MessageType.Reply:
+        this.addNewComment(msg.data);
+        break;
+      case MessageType.TopReply:
+        this.addNewComment(msg.data);
+        break;
+      case MessageType.Edit:
+        this.editComment(msg.data);
+        break;
+      case MessageType.SaveFavoriteDiscussion:
+        this.userService.pushToFavoriteDiscussions(msg.data);
+        break;
+      case MessageType.Ping:
+        this.sendPong();
+        break;
+      default:
+        alert('wrong message: ' + dataStr);
     }
 
-    if (data.users) {
-      this.users = data.users;
-    }
+  }
 
-    // For only new comments
-    if (data.reply) {
-      let newComment: Comment = data.reply;
+  setComments(comments: Array<Comment>) {
+    this.comments = comments;
+  }
 
-      // Gotta place this new comment in the correct location in the array of comments
-      this.addNewComment(newComment);
-    }
-
-    if (data.edit) {
-      let editedComment: Comment = data.edit;
-      this.editComment(editedComment);
-    }
-
-    if (data.user) {
-      if (this.userService.getUser() == null) {
-        alert("no user set");
-      }
-    }
-
-    if (data.discussion) {
-      this.userService.pushToFavoriteDiscussions(data.discussion);
-    }
-
-    if (data.ping) {
-      this.sendPong();
-    }
-
+  setUsers(users: Array<User>) {
+    this.users = users;
   }
 
   setTopReply($event) {
@@ -211,7 +209,7 @@ export class DiscussionComponent implements OnInit {
     let reply: TopReplyData = {
       topReply: this.topReply
     }
-    this.threadedChatService.send(reply);
+    this.threadedChatService.send(Tools.messageWrapper(MessageType.TopReply, reply));
 
     this.topReply = "";
 
@@ -240,7 +238,7 @@ export class DiscussionComponent implements OnInit {
       maxDepth: this.maxDepth
     }
 
-    this.threadedChatService.send(nextPageData);
+    this.threadedChatService.send(Tools.messageWrapper(MessageType.NextPage, nextPageData));
   }
 
   private editComment(editedComment: Comment) {
@@ -392,7 +390,10 @@ export class DiscussionComponent implements OnInit {
 
   sendPong() {
     console.debug("Received ping, sending pong");
-    this.threadedChatService.send("{\"pong\":\"pong\"}");
+    let pong = {
+      pong: "pong"
+    }
+    this.threadedChatService.send(Tools.messageWrapper(MessageType.Pong, pong));
   }
 
 }

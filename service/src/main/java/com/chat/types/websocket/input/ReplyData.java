@@ -12,7 +12,10 @@ public class ReplyData implements JSONWriter {
     private Long parentId;
     private String reply;
 
-    public ReplyData() {}
+    public ReplyData(Long parentId, String reply) {
+        this.parentId = parentId;
+        this.reply = reply;
+    }
 
     public Long getParentId() {
         return parentId;
@@ -22,14 +25,4 @@ public class ReplyData implements JSONWriter {
         return reply;
     }
 
-    public static ReplyData fromJson(String replyDataStr) {
-
-        try {
-            return Tools.JACKSON.readValue(replyDataStr, ReplyData.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 }

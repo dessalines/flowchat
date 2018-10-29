@@ -17,24 +17,11 @@ public class StickyData implements JSONWriter {
         this.sticky = sticky;
     }
 
-    public StickyData() {}
-
     public Long getId() {
         return id;
     }
 
     public Boolean getSticky() {
         return sticky;
-    }
-
-    public static StickyData fromJson(String stickyDataStr) {
-
-        try {
-            return Tools.JACKSON.readValue(stickyDataStr, StickyData.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 }

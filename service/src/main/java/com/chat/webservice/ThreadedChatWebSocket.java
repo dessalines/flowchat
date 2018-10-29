@@ -20,7 +20,6 @@ import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.sql.Array;
 import java.util.*;
 
@@ -42,6 +41,10 @@ public class ThreadedChatWebSocket {
 
   private static final Integer PING_DELAY = 10000;
 
+  enum MessageType {
+    Comments, Users, Edit, Reply, TopReply, Vote, Delete, NextPage, Sticky, SaveFavoriteDiscussion, Ping, Pong;
+  }
+
   public ThreadedChatWebSocket() {
   }
 
@@ -57,20 +60,22 @@ public class ThreadedChatWebSocket {
       sendRecurringPings(session);
 
       // Send them their user info
-      session.getRemote().sendString(ss.getUserObj().json("user"));
+      // TODO
+      // session.getRemote().sendString(ss.getUserObj().json("user"));
 
       LazyList<Model> comments = fetchComments(ss);
 
       // send the comments
-      session.getRemote()
-          .sendString(Comments
+      sendMessage(session,
+          messageWrapper(MessageType.Comments, Comments
               .create(comments, fetchVotesMap(ss.getUserObj().getId()), topLimit, maxDepth, ss.getCommentComparator())
-              .json());
+              .json()));
 
       // send the updated users to everyone in the right scope(just discussion)
       Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes,
           session);
-      broadcastMessage(filteredScopes, Users.create(SessionScope.getUserObjects(filteredScopes)).json());
+      broadcastMessage(filteredScopes,
+          messageWrapper(MessageType.Users, Users.create(SessionScope.getUserObjects(filteredScopes)).json()));
 
       log.debug("session scope " + ss + " joined");
 
@@ -94,41 +99,44 @@ public class ThreadedChatWebSocket {
     Set<SessionScope> filteredScopes = SessionScope.constructFilteredUserScopesFromSessionRequest(sessionScopes,
         session);
 
-    broadcastMessage(filteredScopes, Users.create(SessionScope.getUserObjects(filteredScopes)).json());
+    broadcastMessage(filteredScopes,
+        messageWrapper(MessageType.Users, Users.create(SessionScope.getUserObjects(filteredScopes)).json()));
 
   }
 
   @OnWebSocketMessage
   public void onMessage(Session session, String dataStr) {
-
-    // Save the data
     try {
       Tools.dbInit();
+      JsonNode node = null;
+      node = Tools.JACKSON.readTree(dataStr);
 
-      switch (getMessageType(dataStr)) {
+      JsonNode data = node.get("data");
+
+      switch (getMessageType(node)) {
       case Reply:
-        messageReply(session, dataStr);
+        messageReply(session, data);
         break;
       case Edit:
-        messageEdit(session, dataStr);
+        messageEdit(session, data);
         break;
       case Sticky:
-        messageSticky(session, dataStr);
+        messageSticky(session, data);
         break;
       case TopReply:
-        messageTopReply(session, dataStr);
+        messageTopReply(session, data);
         break;
       case Delete:
-        messageDelete(session, dataStr);
+        messageDelete(session, data);
         break;
       case Vote:
-        saveCommentVote(session, dataStr);
+        saveCommentVote(session, data);
         break;
       case NextPage:
-        messageNextPage(session, dataStr);
+        messageNextPage(session, data);
         break;
       case Pong:
-        pongReceived(session);
+        pongReceived(session, data);
         break;
       }
     } catch (Exception e) {
@@ -139,66 +147,32 @@ public class ThreadedChatWebSocket {
 
   }
 
-  public MessageType getMessageType(String someData) {
-
-    try {
-      JsonNode rootNode = Tools.JACKSON.readTree(someData);
-
-      Iterator<String> it = rootNode.fieldNames();
-      log.debug(rootNode.asText());
-      while (it.hasNext()) {
-        String nodeName = it.next();
-        switch (nodeName) {
-        case "reply":
-          return MessageType.Reply;
-        case "edit":
-          return MessageType.Edit;
-        case "sticky":
-          return MessageType.Sticky;
-        case "topReply":
-          return MessageType.TopReply;
-        case "rank":
-          return MessageType.Vote;
-        case "deleteId":
-          return MessageType.Delete;
-        case "topLimit":
-          return MessageType.NextPage;
-        case "pong":
-          return MessageType.Pong;
-        }
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    return null;
+  public MessageType getMessageType(JsonNode node) {
+    return MessageType.values()[node.get("message_type").asInt()];
   }
 
-  enum MessageType {
-    Edit, Reply, TopReply, Vote, Delete, NextPage, Sticky, Ping, Pong;
-  }
-
-  public void messageNextPage(Session session, String nextPageDataStr) {
+  public void messageNextPage(Session session, JsonNode data) {
     SessionScope ss = SessionScope.findBySession(sessionScopes, session);
 
     // Get the object
-    NextPageData nextPageData = NextPageData.fromJson(nextPageDataStr);
+    NextPageData nextPageData = new NextPageData(data.get("topLimit").asLong(), data.get("maxDepth").asLong());
 
     // Refetch the comments based on the new limit
     LazyList<Model> comments = fetchComments(ss);
 
     // send the comments from up to the new limit to them
-    sendMessage(session, Comments.create(comments, fetchVotesMap(ss.getUserObj().getId()), nextPageData.getTopLimit(),
-        nextPageData.getMaxDepth(), ss.getCommentComparator()).json());
+    sendMessage(session,
+        messageWrapper(MessageType.Comments, Comments.create(comments, fetchVotesMap(ss.getUserObj().getId()),
+            nextPageData.getTopLimit(), nextPageData.getMaxDepth(), ss.getCommentComparator()).json()));
 
   }
 
-  public void messageReply(Session session, String replyDataStr) {
+  public void messageReply(Session session, JsonNode data) {
 
     SessionScope ss = SessionScope.findBySession(sessionScopes, session);
 
     // Get the object
-    ReplyData replyData = ReplyData.fromJson(replyDataStr);
+    ReplyData replyData = new ReplyData(data.get("parentId").asLong(), data.get("reply").asText());
 
     // Collect only works on refetch
     LazyList<Model> comments = fetchComments(ss);
@@ -221,20 +195,20 @@ public class ThreadedChatWebSocket {
     Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(sessionScopes,
         session, co.getBreadcrumbs());
 
-    broadcastMessage(filteredScopes, co.json("reply"));
+    broadcastMessage(filteredScopes, messageWrapper(MessageType.Reply, co.json()));
 
     // TODO find a way to do this without having to query every time?
     com.chat.types.discussion.Discussion do_ = Actions.saveFavoriteDiscussion(ss.getUserObj().getId(),
         ss.getDiscussionId());
     if (do_ != null)
-      sendMessage(session, do_.json("discussion"));
+      sendMessage(session, messageWrapper(MessageType.SaveFavoriteDiscussion, do_.json()));
   }
 
-  public void messageEdit(Session session, String editDataStr) {
+  public void messageEdit(Session session, JsonNode data) {
 
     SessionScope ss = SessionScope.findBySession(sessionScopes, session);
 
-    EditData editData = EditData.fromJson(editDataStr);
+    EditData editData = new EditData(data.get("id").asLong(), data.get("edit").asText());
 
     com.chat.db.Tables.Comment c = Actions.editComment(ss.getUserObj().getId(), editData.getId(), editData.getEdit());
 
@@ -246,13 +220,13 @@ public class ThreadedChatWebSocket {
     Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(sessionScopes,
         session, co.getBreadcrumbs());
 
-    broadcastMessage(filteredScopes, co.json("edit"));
+    broadcastMessage(filteredScopes, messageWrapper(MessageType.Edit, co.json()));
 
   }
 
-  public void messageSticky(Session session, String stickyDataStr) {
+  public void messageSticky(Session session, JsonNode data) {
 
-    StickyData stickyData = StickyData.fromJson(stickyDataStr);
+    StickyData stickyData = new StickyData(data.get("id").asLong(), data.get("sticky").asBoolean());
 
     com.chat.db.Tables.Comment c = Actions.stickyComment(stickyData.getId(), stickyData.getSticky());
 
@@ -264,14 +238,15 @@ public class ThreadedChatWebSocket {
     Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(sessionScopes,
         session, co.getBreadcrumbs());
 
-    broadcastMessage(filteredScopes, co.json("edit"));
+    // Send an edit with the sticky info
+    broadcastMessage(filteredScopes, messageWrapper(MessageType.Edit, co.json()));
   }
 
-  public void messageDelete(Session session, String deleteDataStr) {
+  public void messageDelete(Session session, JsonNode data) {
 
     SessionScope ss = SessionScope.findBySession(sessionScopes, session);
 
-    DeleteData deleteData = DeleteData.fromJson(deleteDataStr);
+    DeleteData deleteData = new DeleteData(data.get("deleteId").asLong());
 
     com.chat.db.Tables.Comment c = Actions.deleteComment(ss.getUserObj().getId(), deleteData.getDeleteId());
 
@@ -283,16 +258,16 @@ public class ThreadedChatWebSocket {
     Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(sessionScopes,
         session, co.getBreadcrumbs());
 
-    broadcastMessage(filteredScopes, co.json("edit"));
+    broadcastMessage(filteredScopes, messageWrapper(MessageType.Delete, co.json()));
 
   }
 
-  public void messageTopReply(Session session, String topReplyDataStr) {
+  public void messageTopReply(Session session, JsonNode data) {
 
     SessionScope ss = SessionScope.findBySession(sessionScopes, session);
 
     // Get the object
-    TopReplyData topReplyData = TopReplyData.fromJson(topReplyDataStr);
+    TopReplyData topReplyData = new TopReplyData(data.get("topReply").asText());
 
     com.chat.db.Tables.Comment newComment = Actions.createComment(ss.getUserObj().getId(), ss.getDiscussionId(), null,
         topReplyData.getTopReply());
@@ -306,21 +281,21 @@ public class ThreadedChatWebSocket {
     Set<SessionScope> filteredScopes = SessionScope.constructFilteredMessageScopesFromSessionRequest(sessionScopes,
         session, co.getBreadcrumbs());
 
-    broadcastMessage(filteredScopes, co.json("reply"));
+    broadcastMessage(filteredScopes, messageWrapper(MessageType.TopReply, co.json()));
 
     // TODO find a way to do this without having to query every time?
     Discussion do_ = Actions.saveFavoriteDiscussion(ss.getUserObj().getId(), ss.getDiscussionId());
     if (do_ != null)
-      sendMessage(session, do_.json("discussion"));
+      sendMessage(session, messageWrapper(MessageType.SaveFavoriteDiscussion, do_.json()));
 
   }
 
-  public static void saveCommentVote(Session session, String voteStr) {
+  public static void saveCommentVote(Session session, JsonNode data) {
 
     SessionScope ss = SessionScope.findBySession(sessionScopes, session);
 
     // Get the object
-    CommentRankData commentRankData = CommentRankData.fromJson(voteStr);
+    CommentRankData commentRankData = new CommentRankData(data.get("rank").asInt(), data.get("commentId").asLong());
 
     Long userId = ss.getUserObj().getId();
     log.debug(userId.toString());
@@ -339,7 +314,7 @@ public class ThreadedChatWebSocket {
         session, co.getBreadcrumbs());
 
     // This sends an edit, which contains the average rank
-    broadcastMessage(filteredScopes, co.json("edit"));
+    broadcastMessage(filteredScopes, messageWrapper(MessageType.Edit, co.json()));
 
   }
 
@@ -413,13 +388,13 @@ public class ThreadedChatWebSocket {
     return map;
   }
 
-   private void sendRecurringPings(Session session) {
+  private void sendRecurringPings(Session session) {
     final Timer timer = new Timer();
     final TimerTask tt = new TimerTask() {
       @Override
       public void run() {
         if (session.isOpen()) {
-          sendMessage(session, "{\"ping\":\"ping\"}");
+          sendMessage(session, messageWrapper(MessageType.Ping, "{\"ping\":\"ping\"}"));
         } else {
           timer.cancel();
           timer.purge();
@@ -430,8 +405,12 @@ public class ThreadedChatWebSocket {
     timer.scheduleAtFixedRate(tt, PING_DELAY, PING_DELAY);
   }
 
-  private void pongReceived(Session session) {
+  private void pongReceived(Session session, JsonNode pongStr) {
     log.debug("Pong received from " + session.getRemoteAddress());
+  }
+
+  private static String messageWrapper(MessageType type, String data) {
+    return "{\"message_type\":" + type.ordinal() + ",\"data\":" + data + "}";
   }
 
 }

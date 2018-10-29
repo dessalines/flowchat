@@ -181,8 +181,8 @@ export class NavbarComponent implements OnInit {
     this.userService.getUserSettings().theme = newTheme;
     this.userService.saveUserSettings();
 
-    // Tools.applyTheme(newTheme);
-    location.reload();
+    Tools.applyTheme(newTheme);
+    // location.reload();
   }
 
 }

@@ -61,7 +61,7 @@
             <li role="button" *ngIf="isCreator || isModerator" (click)="deleteComment()" class="list-inline-item pointer">
               delete
             </li>
-            <li role="button" *ngIf="(isModerator) && !comment.parentId" (click)="toggleStickyComment()" class="list-inline-item pointer">
+            <li role="button" *ngIf="(isCreator || isModerator) && !comment.parentId" (click)="toggleStickyComment()" class="list-inline-item pointer">
               <span *ngIf="comment.stickied">unsticky</span>
               <span *ngIf="!comment.stickied">make stickied</span>
             </li>
