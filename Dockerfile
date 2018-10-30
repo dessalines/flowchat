@@ -21,7 +21,7 @@ RUN npm run-script build --prod --aot
 RUN ls /opt/flowchat/ui/dist
 
 
-FROM maven:3.5-jdk-8 as java-builder
+FROM maven:3.5.4-jdk-11-slim as java-builder
 
 COPY service /opt/flowchat/service
 COPY --from=node-builder /opt/flowchat/ui/dist /opt/flowchat/service/src/main/resources
@@ -29,6 +29,6 @@ COPY --from=node-builder /opt/flowchat/ui/dist /opt/flowchat/service/src/main/re
 WORKDIR /opt/flowchat/service
 RUN mvn clean install -DskipTests -Dliquibase.skip
 
-FROM openjdk:8-jre-slim
+FROM openjdk:11-slim
 
 COPY --from=java-builder /opt/flowchat/service/target/flowchat.jar /opt/flowchat.jar
