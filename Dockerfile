@@ -24,7 +24,7 @@ RUN ls /opt/flowchat/ui/dist
 FROM maven:3.5.4-jdk-11-slim as java-builder
 
 COPY service /opt/flowchat/service
-COPY --from=node-builder /opt/flowchat/ui/dist /opt/flowchat/service/src/main/resources
+COPY --from=node-builder /opt/flowchat/ui/dist/ /opt/flowchat/service/src/main/resources/dist/
 
 WORKDIR /opt/flowchat/service
 RUN mvn clean install -DskipTests -Dliquibase.skip
