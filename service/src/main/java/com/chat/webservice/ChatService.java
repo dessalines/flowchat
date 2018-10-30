@@ -53,8 +53,9 @@ public class ChatService {
             Tools.runLiquibase();
         }
 
-        staticFiles.location("/dist");
+        staticFiles.header("Content-Encoding", "gzip");
         staticFiles.expireTime(600);
+        staticFiles.location("/dist");
 
         // Instantiates the ranking constants
         ConstantsService.INSTANCE.getRankingConstants();
