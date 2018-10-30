@@ -1,5 +1,5 @@
 
-FROM node:9 as node-builder
+FROM node:8.12.0 as node-builder
 
 # Hacky workaround for installing @angular/cli
 # RUN chmod a+w /usr/local/lib/node_modules && chmod a+w /usr/local/bin
@@ -16,8 +16,9 @@ ARG ENDPOINT_NAME=http://localhost:4567
 RUN echo "ENDPOINT_NAME is ${ENDPOINT_NAME}"
 RUN echo "export const environment = {production: true,endpoint: '${ENDPOINT_NAME}/',websocket: 'ws`echo ${ENDPOINT_NAME}|cut -b 5-999`/poll'};" > src/environments/environment.prod.ts
 RUN cat src/environments/environment.prod.ts
-RUN yarn
-RUN yarn build --prod --aot
+RUN npm i
+RUN npm run-script build --prod --aot
+RUN ls /opt/flowchat/ui/dist
 
 
 FROM maven:3.5-jdk-8 as java-builder
