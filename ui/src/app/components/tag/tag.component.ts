@@ -50,7 +50,6 @@ export class TagComponent implements OnInit {
           this.discussions = undefined;
           this.currentPageNum = 1;
           this.scrollDebounce = 0;
-          console.log(this.userService.getUserSettings());
           this.getDiscussions(tagId, this.currentPageNum, this.userService.getUserSettings().defaultSortTypeRadioValue, true);
           this.getCommunities(tagId, this.userService.getUserSettings().defaultSortTypeRadioValue);
         }

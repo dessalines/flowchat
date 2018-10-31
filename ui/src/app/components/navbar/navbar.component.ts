@@ -72,7 +72,7 @@ export class NavbarComponent implements OnInit {
   }
 
   createDiscussion() {
-    this.discussionService.createDiscussion().subscribe(d => {
+    this.discussionService.createDiscussionBlank().subscribe(d => {
       this.userService.fetchFavoriteDiscussions();
       this.router.navigate(['/discussion', d.id, { editMode: true }]);
     },

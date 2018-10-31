@@ -1,0 +1,100 @@
+<div class="card border-secondary mb-2">
+  <div *ngIf="smallVersion" class="card-body">
+    <div class="input-group input-group-lg">
+      <input type="text" class="form-control" placeholder="What's happening?" (click)="toggleSmallVersion()">
+      <div class="input-group-append">
+        <button disabled type="submit" class="btn btn btn-outline-secondary">Save</button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!smallVersion" class="card-body">
+    <button type="button" class="close" (click)="toggleSmallVersion()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <form #discussionForm="ngForm" class="card-body">
+      <div class="form-group row">
+        <div class="col-sm-12">
+          <input [(ngModel)]="discussion.title" class="form-control" required minlength="3" maxlength="140" name="discussion_title"
+            placeholder="What's Happening?" #discussionTitle="ngModel" autocomplete="off" />
+          <div *ngIf="discussionTitle.dirty" class="help-block text-danger">
+            <small *ngIf="discussionTitle.errors?.pattern">Invalid title</small>
+            <small *ngIf="discussionTitle.errors?.required">A title is required</small>
+            <small *ngIf="discussionTitle.errors?.minlength">The title must be more than 3 characters</small>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-12">
+          <input [(ngModel)]="discussion.link" #discussionLink="ngModel" placeholder="optional" class="form-control"
+            pattern="[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?" name="discussion_link"
+            placeholder="Link/Image URL" autocomplete="off" />
+          <div *ngIf="discussionLink.dirty" class="row col-sm-12 help-block text-danger">
+            <small *ngIf="discussionLink.errors?.pattern">Invalid URL</small>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-6">
+          <input [(ngModel)]="communitySearchSelected" placeholder="Community" [typeahead]="communitySearchResultsObservable"
+            (typeaheadOnSelect)="communityTypeaheadOnSelect($event.item)" [typeaheadOptionField]="'name'"
+            (typeaheadLoading)="communityChangeTypeaheadLoading($event)" (typeaheadNoResults)="communityChangeTypeaheadNoResults($event)"
+            [typeaheadWaitMs]="200" class="form-control" autocomplete="off" name="community_search">
+          <div *ngIf="communityTypeaheadLoading===true">
+            <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+          </div>
+        </div>
+        <ul *ngIf="discussion.community" class="col-md-6 list-inline form-control-label">
+          <li class="list-inline-item">
+            <span>~{{discussion.community.name}}</span>
+          </li>
+        </ul>
+        <div *ngIf="communityTypeaheadNoResults===true" class="">
+          <i class="fa fa-fw fa-remove"></i>No Results Found
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-6 input-group">
+          <input placeholder="Tags" [(ngModel)]="tagSearchSelected" [typeahead]="tagSearchResultsObservable"
+            (typeaheadOnSelect)="tagTypeaheadOnSelect($event.item)" [typeaheadOptionField]="'name'" (typeaheadLoading)="tagChangeTypeaheadLoading($event)"
+            (typeaheadNoResults)="tagChangeTypeaheadNoResults($event)" [typeaheadWaitMs]="200" class="form-control"
+            minlength="5" maxlength="20" pattern="[a-zA-Z0-9_-]+" name="tag_search" #tagTerm="ngModel" autocomplete="off">
+          <button [disabled]="tagSearchSelected.length < 5 || tagSearchSelected.length > 20 || rgex.test(tagSearchSelected) == false"
+            (click)="createTag()" class="input-group-addon btn btn-outline-primary">
+            <i class="fa fa-fw fa-plus"></i>
+          </button>
+        </div>
+        <ul *ngIf="discussion.tags" class="col-md-6 list-inline form-control-label">
+          <li role="button" (click)="removeTag(tag)" class="list-inline-item" *ngFor="let tag of discussion.tags">
+            <span>#{{removeQuotes(tag.name)}}
+              <i class="fa fa-fw fa-remove"></i>
+            </span>
+          </li>
+        </ul>
+        <div *ngIf="tagTypeaheadLoading===true">
+          <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+        </div>
+        <div *ngIf="tagTerm.dirty" class="row col-sm-12 help-block text-danger">
+          <small *ngIf="tagTerm.errors?.pattern">Invalid Tag</small>
+        </div>
+        <div *ngIf="tagTypeaheadNoResults===true" class="">
+          <i class="fa fa-fw fa-remove"></i>No Results Found
+        </div>
+        <div *ngIf="tooManyTagsError" class="row col-sm-12 help-block text-danger">
+          <small>Can't Add more than 3 tags</small>
+        </div>
+        <div *ngIf="alreadyAddedTagError" class="row col-sm-12 help-block text-danger">
+          <small>Already added that tag</small>
+        </div>
+      </div>
+      <br>
+      <div class="btn-group" role="group">
+        <button [disabled]="!discussionForm.form.valid" (click)="saveDiscussion()" class="btn btn-outline-primary">
+          <span *ngIf="!isSaving">Create</span>
+          <span *ngIf="isSaving">Creating
+            <i class="fa fa-fw fa-circle-o-notch fa-spin"></i>
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

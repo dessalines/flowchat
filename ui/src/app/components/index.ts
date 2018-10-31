@@ -15,3 +15,4 @@ export * from './tag';
 export * from './user';
 export * from './onboard-alert';
 export * from './login-modal';
+export * from './status-update';

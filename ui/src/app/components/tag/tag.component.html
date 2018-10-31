@@ -17,6 +17,13 @@
       </li>
     </ul>
   </small>
+
+  <div class="row">
+    <div class="col-12">
+      <app-status-update *ngIf="tag" [tag]="tag"></app-status-update>
+    </div>
+  </div>
+
   <div (window:scroll)="onScroll($event)">
     <div *ngIf="!isCard()" class="list-group">
       <app-discussion-card *ngFor="let discussion of discussions" [discussion]="discussion "></app-discussion-card>

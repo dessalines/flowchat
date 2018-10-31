@@ -1,7 +1,7 @@
 <div>
   <app-onboard-alert *ngIf="!userService.getUserSettings().readOnboardAlert && !loadingDiscussions"></app-onboard-alert>
   <div class="row">
-    <div class="col-xs-12 col-md-8 trending-discussions">
+    <div class="col-12 col-md-8 trending-discussions">
       <ul *ngIf="popularTags " class="list-inline mb-1">
         Trending tags:
         <li class="list-inline-item" *ngFor="let tag of popularTags">
@@ -16,21 +16,27 @@
         </li>
       </ul>
     </div>
-    <div class="col-xs-12 col-md-2
+    <div class="col-12 col-md-2
         ">
       <app-discussion-card-view-type-select *ngIf="false"></app-discussion-card-view-type-select>
     </div>
-    <div class="col-xs-12 col-md-2
+    <div class="col-12 col-md-2
         ">
       <app-discussion-card-sort-select></app-discussion-card-sort-select>
     </div>
   </div>
+  <div class="row">
+    <div class="col-12">
+      <app-status-update></app-status-update>
+    </div>
+  </div>
+
   <div (window:scroll)="onScroll($event)">
     <div *ngIf="!isCard()" class="list-group">
       <app-discussion-card *ngFor="let discussion of discussions" [discussion]="discussion "></app-discussion-card>
     </div>
     <div *ngIf="isCard()">
-      <div class="col-xs-12">
+      <div class="col-12">
         <ngx-masonry [options]="{gutter: 10, transitionDuration: '0.2s', horizontalOrder: true}" [useImagesLoaded]="true">
           <ngxMasonryItem class="masonry-item mb-2" *ngFor="let discussion of discussions">
             <app-discussion-card [discussion]="discussion "></app-discussion-card>
@@ -40,13 +46,14 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-xs-12 col-md-12">
+    <div class="col-12 col-md-12">
       <i *ngIf="loadingDiscussions" [hidden]="loadingDiscussions" class="fa fa-circle-o-notch
         fa-spin fa-5x fa-center"></i>
       <h4 *ngIf="discussions?.length==0
         ">Subscribe to some communities such as
         <a class="link-unstyled badge badge-primary
-        " [routerLink]="[ '/community', 1] ">vanilla</a> to see discussions</h4>
+        " [routerLink]="[ '/community', 1] ">vanilla</a> to see
+        discussions</h4>
     </div>
   </div>
   <app-footer></app-footer>

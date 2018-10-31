@@ -180,6 +180,10 @@ public class Discussion implements JSONWriter {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return ConstantsService.INSTANCE.replaceCensoredText(title);
     }
