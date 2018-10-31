@@ -118,8 +118,8 @@ public class Actions {
     return c;
   }
 
-  public static void saveUserSettings(Long userId, String defaultViewTypeRadioValue, String defaultSortTypeRadioValue, String defaultCommentSortTypeRadioValue,
-      Boolean readOnboardAlert, Integer theme) {
+  public static void saveUserSettings(Long userId, String defaultViewTypeRadioValue, String defaultSortTypeRadioValue,
+      String defaultCommentSortTypeRadioValue, Boolean readOnboardAlert, Integer theme) {
 
     UserSetting us = UserSetting.findFirst("user_id = ?", userId);
 
@@ -128,16 +128,17 @@ public class Actions {
     if (defaultSortTypeRadioValue != null)
       us.setInteger("default_sort_type_id", SortType.getFromRadioValue(defaultSortTypeRadioValue).getVal());
     if (defaultCommentSortTypeRadioValue != null)
-      us.setInteger("default_comment_sort_type_id", CommentSortType.getFromRadioValue(defaultCommentSortTypeRadioValue).getVal());
+      us.setInteger("default_comment_sort_type_id",
+          CommentSortType.getFromRadioValue(defaultCommentSortTypeRadioValue).getVal());
     if (readOnboardAlert != null)
       us.setBoolean("read_onboard_alert", readOnboardAlert);
-    if (theme != null) 
+    if (theme != null)
       us.setInteger("theme", theme);
 
     us.saveIt();
   }
 
-  public static Discussion createDiscussion(Long userId) {
+  public static Discussion createDiscussionEmpty(Long userId) {
 
     log.debug("Creating discussion");
     String title = "A new discussion";
@@ -148,6 +149,29 @@ public class Actions {
         DiscussionRole.CREATOR.getVal());
 
     FavoriteDiscussionUser.createIt("user_id", userId, "discussion_id", d.getLong("id"));
+
+    DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", d.getLongId());
+    List<DiscussionUserView> udv = DiscussionUserView.where("discussion_id = ?", d.getLongId());
+    CommunityNoTextView cntv = CommunityNoTextView.findFirst("id = ?", dfv.getLong("community_id"));
+
+    return Discussion.create(dfv, cntv, null, udv, null, null);
+  }
+
+  public static Discussion createDiscussion(Long userId, Discussion do_) {
+    Tables.Discussion d = Tables.Discussion.createIt("title", do_.getTitle(), "modified_by_user_id", userId,
+        "community_id", do_.getCommunity().getId(), "link", do_.getLink());
+
+    DiscussionUser.createIt("user_id", userId, "discussion_id", d.getLong("id"), "discussion_role_id",
+        DiscussionRole.CREATOR.getVal());
+
+    FavoriteDiscussionUser.createIt("user_id", userId, "discussion_id", d.getLong("id"));
+
+    do_.setId(d.getLong("id"));
+    
+    // Add the discussion tags
+    if (do_.getTags() != null) {
+      diffCreateOrDeleteDiscussionTags(do_);
+    }
 
     DiscussionFullView dfv = DiscussionFullView.findFirst("id = ?", d.getLongId());
     List<DiscussionUserView> udv = DiscussionUserView.where("discussion_id = ?", d.getLongId());
@@ -346,9 +370,9 @@ public class Actions {
   }
 
   public static User createNewAnonymousUser() {
-      Long lastId = Tables.User.findAll().orderBy("id desc").limit(1).get(0).getLongId();
-      String userName = "user_" + ++lastId;
-      return createNewSimpleUser(userName);
+    Long lastId = Tables.User.findAll().orderBy("id desc").limit(1).get(0).getLongId();
+    String userName = "user_" + ++lastId;
+    return createNewSimpleUser(userName);
   }
 
   public static User login(String userOrEmail, String password) {
@@ -536,7 +560,9 @@ public class Actions {
     }
 
     // Update the community chat name
-    Tables.Discussion d = Tables.Discussion.findFirst("title like '%chat%' and community_id = ? and modified_by_user_id = ? and stickied = ?", co_.getId(), co_.getCreator().getId(), true);
+    Tables.Discussion d = Tables.Discussion.findFirst(
+        "title like '%chat%' and community_id = ? and modified_by_user_id = ? and stickied = ?", co_.getId(),
+        co_.getCreator().getId(), true);
 
     if (d != null) {
       d.set("title", co_.getName() + " chat").saveIt();

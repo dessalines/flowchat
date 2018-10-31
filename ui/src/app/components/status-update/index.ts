@@ -1,0 +1,1 @@
+export { StatusUpdateComponent } from './status-update.component';

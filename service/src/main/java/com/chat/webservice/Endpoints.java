@@ -416,11 +416,25 @@ public class Endpoints {
 
     });
 
+    post("/discussion_blank", (req, res) -> {
+
+      User userObj = Tools.getUserFromJWTHeader(req);
+
+      Discussion do_ = Actions.createDiscussionEmpty(userObj.getId());
+
+      res.status(HttpStatus.CREATED_201);
+
+      return do_.json();
+
+    });
+
     post("/discussion", (req, res) -> {
 
       User userObj = Tools.getUserFromJWTHeader(req);
 
-      Discussion do_ = Actions.createDiscussion(userObj.getId());
+      Discussion doIn = Discussion.fromJson(req.body());
+
+      Discussion do_ = Actions.createDiscussion(userObj.getId(), doIn);
 
       res.status(HttpStatus.CREATED_201);
 

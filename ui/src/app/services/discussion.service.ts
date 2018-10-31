@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Rx';
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
 import { UserService } from './user.service';
-import { Discussion, Discussions } from '../shared';
+import { Discussion, Discussions, EmptyDiscussion } from '../shared';
 import { environment } from '../../environments/environment';
 
 @Injectable()
@@ -12,6 +12,7 @@ export class DiscussionService {
   private getDiscussionUrl: string = environment.endpoint + 'discussion/';
   private queryDiscussionsUrl: string = environment.endpoint + 'discussion_search/';
   private saveRankUrl: string = environment.endpoint + 'discussion_rank/';
+  private createDiscussionBlankUrl: string = environment.endpoint + 'discussion_blank';
   private createDiscussionUrl: string = environment.endpoint + 'discussion';
   private saveDiscussionUrl: string = environment.endpoint + 'discussion';
 
@@ -55,8 +56,14 @@ export class DiscussionService {
       .catch(this.handleError);
   }
 
-  createDiscussion(): Observable<Discussion> {
-    return this.http.post(this.createDiscussionUrl, null, this.userService.getOptions())
+  createDiscussionBlank(): Observable<Discussion> {
+    return this.http.post(this.createDiscussionBlankUrl, null, this.userService.getOptions())
+      .map(r => r.json())
+      .catch(this.handleError);
+  }
+
+  createDiscussion(discussion: EmptyDiscussion): Observable<Discussion> {
+    return this.http.post(this.createDiscussionUrl, discussion, this.userService.getOptions())
       .map(r => r.json())
       .catch(this.handleError);
   }

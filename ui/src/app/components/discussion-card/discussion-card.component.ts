@@ -286,7 +286,7 @@ export class DiscussionCardComponent implements OnInit {
     this.discussion.blockedUsers.splice(index, 1);
   }
 
-  // User search methods
+  // Community search methods
   setupCommunitySearch() {
     this.communitySearchResultsObservable = Observable.create((observer: any) => {
       this.communityService.searchCommunities(this.communitySearchSelected)

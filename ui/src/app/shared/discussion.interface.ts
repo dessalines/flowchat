@@ -1,6 +1,6 @@
-import {Tag} from './tag.interface';
-import {User} from './user.interface';
-import {Community} from './community.interface';
+import { Tag } from './tag.interface';
+import { User } from './user.interface';
+import { Community } from './community.interface';
 
 export interface Discussion {
   id: number;
@@ -22,4 +22,11 @@ export interface Discussion {
   community?: Community;
   created: number;
   modified?: number;
+}
+
+export interface EmptyDiscussion {
+  title?: string;
+  link?: string;
+  tags?: Array<Tag>;
+  community?: Community;
 }

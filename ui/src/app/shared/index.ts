@@ -2,7 +2,7 @@ export { Comment } from './comment.interface';
 export { User } from './user.interface';
 export { UserSettings, Theme } from './user-settings.interface';
 export { Tag } from './tag.interface';
-export { Discussion } from './discussion.interface';
+export { Discussion, EmptyDiscussion } from './discussion.interface';
 export { Discussions } from './discussions.interface';
 export { Community } from './community.interface';
 export { Communities } from './communities.interface';
