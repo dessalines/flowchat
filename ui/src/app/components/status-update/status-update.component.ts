@@ -89,6 +89,7 @@ export class StatusUpdateComponent implements OnInit {
 
   toggleSmallVersion() {
     this.smallVersion = !this.smallVersion;
+    setTimeout(d=> document.getElementById("discussion_title").focus(), 100);
   }
 
   // Tag search methods

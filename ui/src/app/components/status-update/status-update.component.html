@@ -14,7 +14,7 @@
     <form #discussionForm="ngForm" class="card-body">
       <div class="form-group row">
         <div class="col-sm-12">
-          <input [(ngModel)]="discussion.title" class="form-control" required minlength="3" maxlength="140" name="discussion_title"
+          <input [(ngModel)]="discussion.title" class="form-control" required minlength="3" maxlength="140" name="discussion_title" id="discussion_title"
             placeholder="What's Happening?" #discussionTitle="ngModel" autocomplete="off" />
           <div *ngIf="discussionTitle.dirty" class="help-block text-danger">
             <small *ngIf="discussionTitle.errors?.pattern">Invalid title</small>
