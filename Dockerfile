@@ -17,7 +17,7 @@ RUN echo "ENDPOINT_NAME is ${ENDPOINT_NAME}"
 RUN echo "export const environment = {production: true,endpoint: '${ENDPOINT_NAME}/',websocket: 'ws`echo ${ENDPOINT_NAME}|cut -b 5-999`/poll'};" > src/environments/environment.prod.ts
 RUN cat src/environments/environment.prod.ts
 RUN npm i
-RUN npm run-script build --prod --aot
+RUN npm run-script build
 RUN ls /opt/flowchat/ui/dist
 
 

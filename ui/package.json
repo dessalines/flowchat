@@ -7,7 +7,7 @@
     "prestart": "ts-node git.version.ts",
     "start": "ng serve",
     "prebuild": "ts-node git.version.ts",
-    "build": "ng build",
+    "build": "ng build --prod --aot",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test",
     "pree2e": "webdriver-manager update",
