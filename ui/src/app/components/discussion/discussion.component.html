@@ -31,7 +31,7 @@
 </div>
 <nav *ngIf="!topParentId && !clearTopReply && !isReplying && !discussion?.deleted && !editing" class="navbar fixed-bottom navbar-dark bg-dark">
   <div class="row col-sm-12">
-    <app-markdown-edit class="col-10 col-md-11" (textEvent)="setTopReply($event)" [rows]="1"></app-markdown-edit>
+    <app-markdown-edit [focus]="false" class="col-10 col-md-11" (textEvent)="setTopReply($event)" [rows]="1"></app-markdown-edit>
     <button (click)="sendTopReply()" class="btn btn-sm btn-outline-primary col-2 col-md-1 special-nav-button" type="submit">Send</button>
   </div>
 </nav>
