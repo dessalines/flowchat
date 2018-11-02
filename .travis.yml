@@ -8,7 +8,7 @@ before_install:
 - psql -c 'create database flowchat;' -U postgres
 - cd ui; 
 - |- 
-  echo "export const environment = {production: true,endpoint: 'https://flow-chat.com/',websocket: 'ws://flow-chat.com/poll'};" > src/environments/environment.prod.ts
+  echo "export const environment = {production: true,endpoint: 'https://flow-chat.com/',websocket: 'wss://flow-chat.com/threaded_chat'};" > src/environments/environment.prod.ts
 - yarn; yarn build;
 - cp -R dist/ ../service/src/main/resources
 - cd ../service
